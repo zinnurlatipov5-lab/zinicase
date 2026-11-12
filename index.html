@@ -8,7 +8,7 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: Arial, sans-serif; background: #12141c; color: #fff; min-height: 100vh; }
 
-  /* ===== Боковое меню ===== */
+  /* ===== Меню ===== */
   .sidebar {
     position: fixed; left: 0; top: 0; bottom: 0; width: 230px;
     background: #1b1e2b; border-right: 1px solid #2a2e40;
@@ -23,14 +23,16 @@
   .side-btn:hover { background: #2a2e40; color: #fff; }
   .side-btn.active { background: #2a2e40; color: #f5b942; font-weight: bold; }
   .side-footer { position: absolute; bottom: 15px; left: 12px; right: 12px; font-size: 12px; color: #666; }
+  .burger { display: none; position: fixed; top: 12px; left: 12px; z-index: 200;
+    background: #2a2e40; border: none; color: #f5b942; font-size: 22px;
+    border-radius: 8px; padding: 6px 12px; cursor: pointer; }
 
-  /* ===== Контент ===== */
   .content { margin-left: 230px; padding: 25px; }
   .page { display: none; }
   .page.active { display: block; }
   .page-title { font-size: 22px; color: #f5b942; margin-bottom: 15px; }
 
-  /* ===== Экран входа ===== */
+  /* ===== Вход по телефону ===== */
   .auth-box {
     max-width: 400px; margin: 60px auto; background: #1b1e2b;
     border: 1px solid #2a2e40; border-radius: 14px; padding: 25px; text-align: center;
@@ -39,38 +41,81 @@
   .auth-box p { font-size: 13px; color: #999; margin-bottom: 15px; }
   .auth-box input {
     width: 100%; background: #0d0f16; border: 2px solid #2a2e40; border-radius: 8px;
-    color: #fff; padding: 12px; font-size: 15px; margin-bottom: 10px;
+    color: #fff; padding: 12px; font-size: 15px; margin-bottom: 10px; text-align: center;
   }
-  .auth-tabs { display: flex; gap: 8px; margin-bottom: 15px; }
-  .auth-tab {
-    flex: 1; padding: 10px; border-radius: 8px; border: none; cursor: pointer;
-    background: #2a2e40; color: #ccc; font-weight: bold;
-  }
-  .auth-tab.active { background: #f5b942; color: #12141c; }
   .auth-note { font-size: 12px; color: #f5b942; margin-top: 10px; }
 
-  /* ===== Кейсы ===== */
-  .cases { display: flex; gap: 14px; flex-wrap: wrap; }
-  .case-card {
-    background: #1b1e2b; border: 2px solid #2a2e40; border-radius: 14px;
-    padding: 16px; width: 200px; text-align: center;
-    transition: transform 0.2s, border-color 0.2s;
+  /* ===== Кейсы: сетка с разными размерами ===== */
+  .cases-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
   }
-  .case-card:hover { transform: translateY(-4px); border-color: #f5b942; }
-  .case-card.selected { border-color: #f5b942; background: #26202c; }
-  .case-emoji { font-size: 48px; }
-  .case-name { font-weight: bold; margin: 8px 0 4px; }
-  .case-price { color: #f5b942; font-weight: bold; margin-bottom: 10px; }
-  .case-open-btn {
-    background: #f5b942; color: #12141c; border: none; border-radius: 8px;
-    padding: 10px 18px; font-weight: bold; cursor: pointer; width: 100%;
+  .case-tile {
+    position: relative; border-radius: 16px; padding: 20px 14px;
+    text-align: center; cursor: pointer; overflow: hidden;
+    transition: transform 0.2s;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
   }
-  .case-open-btn:disabled { background: #444; color: #888; cursor: not-allowed; }
+  .case-tile:hover { transform: translateY(-5px) scale(1.02); }
+  .case-tile .glow {
+    position: absolute; top: -40px; right: -40px; width: 120px; height: 120px;
+    border-radius: 50%; opacity: 0.25;
+  }
+  .tile-emoji { font-size: 52px; z-index: 1; }
+  .tile-name { font-weight: bold; font-size: 16px; margin: 8px 0 2px; z-index: 1; }
+  .tile-price { font-weight: bold; z-index: 1; font-size: 14px; }
+  .tile-tag {
+    font-size: 11px; padding: 3px 10px; border-radius: 20px;
+    margin-top: 8px; z-index: 1; font-weight: bold;
+  }
+  /* цвета плиток */
+  .t-common  { background: linear-gradient(160deg, #2a2e40, #1b1e2b); border: 2px solid #3a3f58; }
+  .t-common .glow { background: #6c7bb3; }
+  .t-golden  { background: linear-gradient(160deg, #4a3810, #1b1e2b); border: 2px solid #f5b942; }
+  .t-golden .glow { background: #f5b942; }
+  .t-epic    { background: linear-gradient(160deg, #3a1a4a, #1b1e2b); border: 2px solid #a64ce6; }
+  .t-epic .glow { background: #a64ce6; }
+  .t-star    { background: linear-gradient(160deg, #103a4a, #1b1e2b); border: 2px solid #42c5f5; }
+  .t-star .glow { background: #42c5f5; }
+  .t-myth    { background: linear-gradient(160deg, #4a1020, #1b1e2b); border: 2px solid #ff4c6e; }
+  .t-myth .glow { background: #ff4c6e; }
+  /* «главный» кейс растянут на две клетки */
+  .tile-wide { grid-column: span 2; }
+  .tile-wide .tile-emoji { font-size: 70px; }
+  @media (max-width: 700px) {
+    .cases-grid { grid-template-columns: repeat(2, 1fr); }
+    .tile-wide { grid-column: span 2; }
+  }
 
-  /* ===== Рулетка ===== */
+  /* ===== Экран кейса ===== */
+  .case-hero {
+    border-radius: 16px; padding: 25px; text-align: center; margin-bottom: 15px;
+  }
+  .case-hero .big-emoji { font-size: 90px; }
+  .prize-list {
+    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 15px;
+  }
+  .prize-chip {
+    background: #1b1e2b; border: 1px solid #2a2e40; border-radius: 10px;
+    padding: 8px 12px; font-size: 13px;
+  }
+  .prize-chip b { color: #f5b942; }
+  .back-btn {
+    background: #2a2e40; color: #ccc; border: none; border-radius: 8px;
+    padding: 10px 16px; cursor: pointer; margin-bottom: 15px; font-size: 14px;
+  }
+  .open-big {
+    width: 100%; max-width: 460px; background: #f5b942; color: #12141c;
+    border: none; border-radius: 12px; padding: 16px; font-size: 18px;
+    font-weight: bold; cursor: pointer; display: block; margin: 0 auto;
+  }
+  .open-big:disabled { background: #444; color: #888; cursor: not-allowed; }
+
   .roulette {
-    background: #0d0f16; border: 2px solid #f5b942; border-radius: 10px;
-    height: 110px; overflow: hidden; position: relative; margin: 20px 0; display: none;
+    background: #0d0f16; border: 2px solid #f5b942; border-radius: 12px;
+    height: 130px; overflow: hidden; position: relative; margin: 20px auto;
+    max-width: 560px; display: none;
   }
   .roulette.active { display: block; }
   .roulette::before, .roulette::after {
@@ -81,16 +126,15 @@
   .roulette::after { margin-left: 28px; }
   .strip { display: flex; align-items: center; height: 100%; }
   .strip-item {
-    flex: 0 0 90px; height: 90px; margin: 0 3px; background: #1b1e2b;
-    border-radius: 8px; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; font-size: 30px;
+    flex: 0 0 100px; height: 105px; margin: 0 4px; background: #1b1e2b;
+    border-radius: 10px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; font-size: 34px;
   }
   .strip-item .val { font-size: 11px; color: #ccc; margin-top: 4px; }
-  .result { text-align: center; font-size: 18px; margin: 10px 0; min-height: 26px; }
+  .result { text-align: center; font-size: 19px; margin: 10px 0; min-height: 26px; }
   .win { color: #4caf50; font-weight: bold; }
   .lose { color: #ff6b6b; }
 
-  /* ===== Профиль ===== */
   .profile-card {
     background: #1b1e2b; border: 1px solid #2a2e40; border-radius: 14px;
     padding: 20px; max-width: 500px;
@@ -107,12 +151,11 @@
   .stats { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
   .stat-box {
     background: #0d0f16; border-radius: 10px; padding: 10px 14px;
-    flex: 1; min-width: 110px; text-align: center;
+    flex: 1; min-width: 100px; text-align: center;
   }
   .stat-box .num { font-size: 18px; font-weight: bold; color: #f5b942; }
   .stat-box .lbl { font-size: 12px; color: #999; }
 
-  /* ===== Прочее ===== */
   .balance-box {
     background: #2a2e40; padding: 8px 16px; border-radius: 20px; font-weight: bold;
     display: inline-block; margin-bottom: 15px;
@@ -138,9 +181,6 @@
     padding: 8px; font-size: 13px; min-height: 90px;
   }
   .exit-btn { color: #ff6b6b !important; }
-  .burger { display: none; position: fixed; top: 12px; left: 12px; z-index: 200;
-    background: #2a2e40; border: none; color: #f5b942; font-size: 22px;
-    border-radius: 8px; padding: 6px 12px; cursor: pointer; }
 
   @media (max-width: 768px) {
     .sidebar { display: none; }
@@ -163,21 +203,18 @@
   <button class="side-btn" data-page="drops" onclick="goTo('drops')">📋 Мои дропы</button>
   <button class="side-btn" data-page="withdraw" onclick="goTo('withdraw')">💸 Вывод</button>
   <button class="side-btn exit-btn" onclick="logout()">🚪 Выйти</button>
-  <div class="side-footer">Демо-версия. Авторизация через Telegram работает внутри бота.</div>
+  <div class="side-footer">Демо-версия. SMS-проверка появится после подключения сервера.</div>
 </div>
 
-<!-- ===== Экран входа ===== -->
+<!-- ===== Вход по телефону ===== -->
 <div class="content" id="authScreen">
   <div class="auth-box">
     <h2>🎰 Case Site</h2>
     <p>Открывай кейсы, собирай монеты, звёзды и подарки!</p>
-    <div class="auth-tabs">
-      <button class="auth-tab active" id="tabLogin" onclick="switchAuth('login')">Вход</button>
-      <button class="auth-tab" id="tabReg" onclick="switchAuth('reg')">Регистрация</button>
-    </div>
-    <input type="text" id="authNick" placeholder="Твой @ник или имя" maxlength="30">
-    <button class="btn" style="width:100%" onclick="authSubmit()">Войти в игру</button>
-    <div class="auth-note">🔐 Полная авторизация через Telegram работает, если открыть сайт внутри бота (кнопка меню). В браузере — демо-вход по нику.</div>
+    <input type="tel" id="authPhone" placeholder="+7 (___) ___-__-__" maxlength="18">
+    <input type="text" id="authName" placeholder="Твоё имя" maxlength="25">
+    <button class="btn" style="width:100%" onclick="authSubmit()">Войти по номеру</button>
+    <div class="auth-note">Если аккаунта с таким номером нет — он создастся автоматически. SMS-код подключим, когда появится сервер.</div>
   </div>
 </div>
 
@@ -190,11 +227,10 @@
     <div class="balance-box">💰 <span id="balance">0</span></div>
     <div class="profile-card">
       <div class="profile-top">
-        <div class="avatar" id="pAvatar">🙂</div>
+        <div class="avatar">🙂</div>
         <div>
           <div class="profile-name" id="pName">—</div>
           <div class="profile-id" id="pId">—</div>
-          <div class="profile-id" id="pSource">—</div>
         </div>
       </div>
       <div style="font-size:13px; color:#999">Уровень <b id="pLvlNum" style="color:#f5b942">1</b> — открыто <span id="pLvlProg">0</span>/<span id="pLvlNeed">5</span> кейсов</div>
@@ -208,11 +244,19 @@
     </div>
   </div>
 
-  <!-- КЕЙСЫ -->
+  <!-- КЕЙСЫ: сетка -->
   <div class="page" id="page-cases">
     <div class="page-title">📦 Кейсы</div>
-    <p style="color:#999; font-size:14px; margin-bottom:12px">Выбери кейс — и жми «Открыть». Анимация покажет приз!</p>
-    <div class="cases" id="cases"></div>
+    <p style="color:#999; font-size:14px; margin-bottom:12px">Нажми на кейс — откроется его окно с призами.</p>
+    <div class="cases-grid" id="cases"></div>
+  </div>
+
+  <!-- ЭКРАН КОНКРЕТНОГО КЕЙСА -->
+  <div class="page" id="page-case">
+    <button class="back-btn" onclick="goTo('cases')">← Назад к кейсам</button>
+    <div class="case-hero" id="caseHero"></div>
+    <div class="prize-list" id="prizeList"></div>
+    <button class="open-big" id="openBtn" onclick="openSelectedCase()">🔓 Открыть</button>
     <div class="roulette" id="roulette"><div class="strip" id="strip"></div></div>
     <div class="result" id="result"></div>
   </div>
@@ -221,7 +265,7 @@
   <div class="page" id="page-bonus">
     <div class="page-title">🎁 Ежедневный бонус</div>
     <div class="profile-card">
-      <p style="margin-bottom:12px">Раз в 20 часов — от 50 до 150 монет, а по особенным дням можно поймать ⭐ звезду!</p>
+      <p style="margin-bottom:12px">Раз в 20 часов — от 50 до 150 монет, а по счастливому дню можно поймать ⭐ звезду!</p>
       <button class="btn" onclick="claimBonus()">Забрать бонус</button>
     </div>
   </div>
@@ -261,7 +305,7 @@
 const START_BALANCE = 200;
 const WITHDRAW_MIN  = 1500;
 const BONUS_COOLDOWN = 20 * 60 * 60 * 1000;
-const LEVEL_STEP = 5; // кейсов на уровень
+const LEVEL_STEP = 5;
 
 const PROMO_CODES = {
   "START": 100,
@@ -269,10 +313,9 @@ const PROMO_CODES = {
   "GOLD2026": 500
 };
 
-// типы призов: coins — монеты, stars — звёзды, gift — подарки
 const CASES = [
   {
-    id: "common", name: "Обычный кейс", emoji: "📦", price: 100,
+    id: "common", name: "Обычный кейс", emoji: "📦", price: 100, style: "t-common", tag: "Старт", wide: true,
     prizes: [
       { name: "Пусто",       emoji: "💨", value: 0,    type: "coins", weight: 40 },
       { name: "5 монет",     emoji: "🪙", value: 5,    type: "coins", weight: 20 },
@@ -284,7 +327,7 @@ const CASES = [
     ]
   },
   {
-    id: "golden", name: "Золотой кейс", emoji: "🎁", price: 500,
+    id: "golden", name: "Золотой кейс", emoji: "🎁", price: 500, style: "t-golden", tag: "Популярный",
     prizes: [
       { name: "Пусто",       emoji: "💨", value: 0,    type: "coins", weight: 25 },
       { name: "50 монет",    emoji: "🪙", value: 50,   type: "coins", weight: 24 },
@@ -296,7 +339,7 @@ const CASES = [
     ]
   },
   {
-    id: "epic", name: "Эпический кейс", emoji: "🔮", price: 1000,
+    id: "epic", name: "Эпический кейс", emoji: "🔮", price: 1000, style: "t-epic", tag: "Хит",
     prizes: [
       { name: "Пусто",        emoji: "💨", value: 0,    type: "coins", weight: 20 },
       { name: "200 монет",    emoji: "🪙", value: 200,  type: "coins", weight: 25 },
@@ -308,7 +351,7 @@ const CASES = [
     ]
   },
   {
-    id: "star", name: "Звёздный кейс", emoji: "🌟", price: 2000,
+    id: "star", name: "Звёздный кейс", emoji: "🌟", price: 2000, style: "t-star", tag: "Звёзды",
     prizes: [
       { name: "Пусто",        emoji: "💨", value: 0,    type: "coins", weight: 22 },
       { name: "500 монет",    emoji: "💵", value: 500,  type: "coins", weight: 25 },
@@ -319,7 +362,7 @@ const CASES = [
     ]
   },
   {
-    id: "myth", name: "Мифический кейс", emoji: "🐉", price: 5000,
+    id: "myth", name: "Мифический кейс", emoji: "🐉", price: 5000, style: "t-myth", tag: "Топ", wide: true,
     prizes: [
       { name: "Пусто",         emoji: "💨", value: 0,     type: "coins", weight: 30 },
       { name: "2000 монет",    emoji: "💵", value: 2000,  type: "coins", weight: 30 },
@@ -331,45 +374,48 @@ const CASES = [
 ];
 // ================================================
 
-let user = null;      // {nick, id, source}
+let user = null;
 let balance = 0, opened = 0, wins = 0, stars = 0, gifts = 0;
 let spinning = false;
-let selectedCase = null;
+let currentCase = null;
 
-// ---------- ключи хранилища для каждого аккаунта ----------
 const k = (name) => "cs_" + (user ? user.id : "x") + "_" + name;
 
-// ---------- Telegram WebApp ----------
-function tryTelegramAuth() {
-  const tg = window.Telegram && window.Telegram.WebApp;
-  if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) {
-    const u = tg.initDataUnsafe.user;
-    login({ nick: (u.first_name || "") + (u.username ? " (@" + u.username + ")" : ""),
-            id: u.id, source: "telegram" });
-    return true;
-  }
-  return false;
-}
-
-// ---------- вход / регистрация ----------
-let authMode = "login";
-function switchAuth(mode) {
-  authMode = mode;
-  document.getElementById("tabLogin").classList.toggle("active", mode === "login");
-  document.getElementById("tabReg").classList.toggle("active", mode === "reg");
+// ---------- авторизация по телефону ----------
+function formatPhone(input) {
+  // маска +7 (XXX) XXX-XX-XX
+  let digits = input.value.replace(/\D/g, "");
+  if (digits.startsWith("8")) digits = "7" + digits.slice(1);
+  if (!digits.startsWith("7")) digits = "7" + digits;
+  digits = digits.slice(0, 11);
+  let out = "+7";
+  if (digits.length > 1) out += " (" + digits.slice(1, 4);
+  if (digits.length >= 4) out += ")";
+  if (digits.length > 4) out += " " + digits.slice(4, 7);
+  if (digits.length > 7) out += "-" + digits.slice(7, 9);
+  if (digits.length > 9) out += "-" + digits.slice(9, 11);
+  input.value = out;
 }
 
 function authSubmit() {
-  const nick = document.getElementById("authNick").value.trim();
-  if (!nick || nick.length < 2) { alert("Введи ник (минимум 2 символа)"); return; }
-  const accKey = "cs_acc_" + nick.toLowerCase();
+  const phoneEl = document.getElementById("authPhone");
+  formatPhone(phoneEl);
+  const phone = phoneEl.value.replace(/\D/g, "");
+  const name = document.getElementById("authName").value.trim();
+  if (phone.length !== 11) { alert("Введи номер полностью: +7 (XXX) XXX-XX-XX"); return; }
+  if (name.length < 2) { alert("Введи имя (минимум 2 символа)"); return; }
+
+  const accKey = "cs_acc_" + phone;
   const saved = localStorage.getItem(accKey);
-  if (authMode === "login" && !saved) {
-    if (!confirm("Такого аккаунта нет. Создать новый с этим ником?")) return;
-    authMode = "reg";
+  if (saved) {
+    const acc = JSON.parse(saved);
+    if (acc.name !== name && !confirm("Номер уже зарегистрирован на имя «" + acc.name + "». Войти в этот аккаунт?")) return;
+    login({ phone: phone, name: acc.name, id: phone });
+  } else {
+    // регистрация
+    localStorage.setItem(accKey, JSON.stringify({ name: name, created: new Date().toLocaleDateString("ru-RU") }));
+    login({ phone: phone, name: name, id: phone });
   }
-  if (authMode === "reg" && saved && !confirm("Аккаунт уже существует. Войти в него?")) return;
-  login({ nick: nick, id: nick.toLowerCase(), source: "demo" });
 }
 
 function login(u) {
@@ -417,13 +463,8 @@ function goTo(page) {
 
 function renderAll() {
   document.getElementById("balance").textContent = balance;
-  // профиль
-  document.getElementById("pName").textContent = user.nick;
-  document.getElementById("pId").textContent = "ID: " + user.id;
-  document.getElementById("pSource").textContent =
-    user.source === "telegram" ? "✅ Вход через Telegram" : "⚠️ Демо-вход (браузер)";
-  document.getElementById("pAvatar").textContent =
-    user.source === "telegram" ? "🇹🇬" : "🙂";
+  document.getElementById("pName").textContent = user.name;
+  document.getElementById("pId").textContent = "📞 " + formatPhoneDisplay(user.phone);
   document.getElementById("stCases").textContent = opened;
   document.getElementById("stWins").textContent = wins;
   document.getElementById("stStars").textContent = stars;
@@ -439,34 +480,57 @@ function renderAll() {
   document.getElementById("wdMinLabel").textContent = WITHDRAW_MIN;
 }
 
-// ---------- кейсы ----------
+function formatPhoneDisplay(phone) {
+  return "+7 (" + phone.slice(1,4) + ") " + phone.slice(4,7) + "-" + phone.slice(7,9) + "-" + phone.slice(9,11);
+}
+
+// ---------- сетка кейсов ----------
 function renderCases() {
   const box = document.getElementById("cases");
   box.innerHTML = "";
   CASES.forEach((c, i) => {
     const d = document.createElement("div");
-    d.className = "case-card" + (selectedCase === i ? " selected" : "");
-    d.innerHTML = `<div class="case-emoji">${c.emoji}</div>
-      <div class="case-name">${c.name}</div>
-      <div class="case-price">💰 ${c.price}</div>`;
-    d.onclick = () => { selectedCase = (selectedCase === i ? null : i); renderCases(); };
+    d.className = "case-tile " + c.style + (c.wide ? " tile-wide" : "");
+    d.innerHTML = `<div class="glow"></div>
+      <div class="tile-emoji">${c.emoji}</div>
+      <div class="tile-name">${c.name}</div>
+      <div class="tile-price">💰 ${c.price}</div>
+      <div class="tile-tag">${c.tag}</div>`;
+    d.onclick = () => openCasePage(i);
     box.appendChild(d);
   });
-  const btn = document.createElement("button");
-  btn.className = "case-open-btn";
-  btn.style.cssText = "flex-basis:100%;max-width:420px;font-size:16px;padding:14px";
-  if (selectedCase === null) {
-    btn.textContent = "⬆️ Сначала выбери кейс";
-    btn.disabled = true;
-  } else {
-    const c = CASES[selectedCase];
-    btn.textContent = "🔓 Открыть " + c.name + " (💰 " + c.price + ")";
-    btn.disabled = balance < c.price;
-    btn.onclick = openSelectedCase;
-  }
-  box.appendChild(btn);
 }
 
+// ---------- отдельное окно кейса ----------
+function openCasePage(index) {
+  currentCase = index;
+  const c = CASES[index];
+  const hero = document.getElementById("caseHero");
+  hero.className = "case-hero " + c.style;
+  hero.innerHTML = `
+    <div class="glow"></div>
+    <div class="big-emoji">${c.emoji}</div>
+    <div style="font-size:24px; font-weight:bold; margin-top:8px">${c.name}</div>
+    <div style="color:#f5b942; font-weight:bold; font-size:18px; margin-top:4px">💰 ${c.price} за открытие</div>
+    <div style="color:#999; font-size:13px; margin-top:6px">Крутка занимает 4 секунды — не отпирай экран 🙂</div>`;
+  // список призов с шансами
+  const total = c.prizes.reduce((s, p) => s + p.weight, 0);
+  document.getElementById("prizeList").innerHTML = c.prizes.map(p => {
+    const chance = (p.weight / total * 100).toFixed(1);
+    const suffix = p.type === "coins" ? "💰" : p.type === "stars" ? "⭐" : p.type === "gift" ? "🎁" : "";
+    return `<div class="prize-chip">${p.emoji} ${p.name} ${suffix} <b>${chance}%</b></div>`;
+  }).join("");
+  const btn = document.getElementById("openBtn");
+  btn.disabled = balance < c.price;
+  btn.textContent = balance < c.price
+    ? "Не хватает монет (нужно 💰 " + c.price + ")"
+    : "🔓 Открыть за 💰 " + c.price;
+  document.getElementById("result").textContent = "";
+  document.getElementById("roulette").classList.remove("active");
+  goTo("case");
+}
+
+// ---------- рулетка ----------
 function pickPrize(caseData) {
   const total = caseData.prizes.reduce((s, p) => s + p.weight, 0);
   let r = Math.random() * total;
@@ -475,9 +539,9 @@ function pickPrize(caseData) {
 }
 
 function openSelectedCase() {
-  if (spinning || selectedCase === null) return;
-  const c = CASES[selectedCase];
-  if (balance < c.price) { showResult("Не хватает монет на этот кейс!", "lose"); return; }
+  if (spinning || currentCase === null) return;
+  const c = CASES[currentCase];
+  if (balance < c.price) return;
   balance -= c.price; saveState(); renderAll();
 
   const prize = pickPrize(c);
@@ -489,7 +553,7 @@ function openSelectedCase() {
   for (let i = 0; i < 45; i++) items.push(c.prizes[Math.floor(Math.random() * c.prizes.length)]);
   items[40] = prize;
   strip.innerHTML = items.map(p =>
-    `<div class="strip-item">${p.emoji}<div class="val">${p.value}${p.type === "coins" ? " 💰" : p.type === "stars" ? " ⭐" : " 🎁"}</div></div>`
+    `<div class="strip-item">${p.emoji}<div class="val">${p.value}${p.type === "coins" ? "💰" : p.type === "stars" ? "⭐" : p.type === "gift" ? "🎁" : ""}</div></div>`
   ).join("");
 
   const rou = document.getElementById("roulette");
@@ -498,7 +562,7 @@ function openSelectedCase() {
   strip.style.transform = "translateX(0)";
   void strip.offsetWidth;
 
-  const itemWidth = 96;
+  const itemWidth = 108;
   const offset = itemWidth * 40 - (rou.clientWidth / 2 - itemWidth / 2) - (Math.random() * 40 - 20);
   requestAnimationFrame(() => {
     strip.style.transition = "transform 4s cubic-bezier(0.12, 0.8, 0.2, 1)";
@@ -518,6 +582,10 @@ function openSelectedCase() {
       showResult("💨 Пусто. Попробуй ещё!", "lose");
     }
     saveState(); renderAll();
+    openCasePage(currentCase); // обновим кнопку и шансы
+    document.getElementById("result").textContent =
+      prize.value > 0 ? `🎉 Выигрыш: ${prize.name}!` : "💨 Пусто. Попробуй ещё!";
+    document.getElementById("result").className = "result " + (prize.value > 0 ? "win" : "lose");
     addHistory(c, prize);
   }, 4100);
 }
@@ -546,7 +614,7 @@ function renderHistory() {
   if (!h.length) { box.textContent = "Пока пусто — открой первый кейс!"; return; }
   box.innerHTML = h.map(x => {
     const suffix = x.type === "coins" ? "💰" : x.type === "stars" ? "⭐" : x.type === "gift" ? "🎁" : "";
-    return `<div>${x.time} — ${x.case}: ${x.prize} ${suffix ? suffix : ""}<b style="color:#f5b942"> +${x.value}</b></div>`;
+    return `<div>${x.time} — ${x.case}: ${x.prize} ${suffix}<b style="color:#f5b942"> +${x.value}</b></div>`;
   }).join("");
 }
 
@@ -597,7 +665,7 @@ function showWithdraw() {
     return;
   }
   const reqId = "WD-" + Date.now().toString().slice(-6);
-  const text = `ЗАЯВКА ${reqId}\nИгрок: ${user.nick} (ID: ${user.id})\nБаланс: ${balance} монет\n⭐ звёзд: ${stars}\n🎁 подарков: ${gifts}\nК выплате: ${Math.floor(balance / 10)} ₽\nДата: ${new Date().toLocaleString("ru-RU")}`;
+  const text = `ЗАЯВКА ${reqId}\nИгрок: ${user.name} (📞 +${user.phone})\nБаланс: ${balance} монет\n⭐ звёзд: ${stars}\n🎁 подарков: ${gifts}\nК выплате: ${Math.floor(balance / 10)} ₽\nДата: ${new Date().toLocaleString("ru-RU")}`;
   box.style.display = "block";
   box.innerHTML = `<p>Скопируй заявку и отправь админу. После подтверждения баланс обнулится.</p>
     <textarea id="wdText">${text}</textarea>
@@ -615,12 +683,13 @@ function copyWithdraw(reqId) {
 // ---------- запуск ----------
 const savedUser = localStorage.getItem("cs_current");
 if (savedUser) {
-  try { login(JSON.parse(savedUser)); }
-  catch (e) { if (!tryTelegramAuth()) {} }
+  try { login(JSON.parse(savedUser)); } catch (e) {}
 } else {
-  tryTelegramAuth(); // если открыли в Telegram — войдёт автоматически
+  const ph = document.getElementById("authPhone");
+  ph.addEventListener("input", () => formatPhone(ph));
 }
 </script>
 
 </body>
 </html>
+
