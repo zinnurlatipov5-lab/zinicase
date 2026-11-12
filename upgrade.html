@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZINI DROP — Апгрейдер</title>
+<style>
+  :root {
+    --bg: #0d0f14; --panel: #161a22; --panel2: #1e2430; --line: #2a3242;
+    --accent: #ff8a00; --accent2: #ffb040; --text: #e8ebf2; --muted: #8b93a5;
+    --green: #3ddc84; --red: #ff5c6e; --star: #ffd54a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+  .bg-fx {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(600px 400px at 15% 10%, rgba(255,138,0,0.10), transparent 60%),
+      radial-gradient(700px 500px at 85% 25%, rgba(140,60,255,0.10), transparent 60%);
+  }
+
+  .topbar {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(22,26,34,0.92); border-bottom: 1px solid var(--line);
+    padding: 10px 16px; display: flex; align-items: center; gap: 14px;
+  }
+  .logo { font-size: 20px; font-weight: bold; letter-spacing: 1px; }
+  .logo b { color: var(--accent); }
+  .top-balance {
+    margin-left: auto; background: var(--panel2); border: 1px solid var(--line);
+    border-radius: 10px; padding: 8px 14px; font-weight: bold;
+  }
+  .top-balance span { color: var(--star); }
+  .home-link {
+    color: var(--muted); text-decoration: none; font-size: 14px;
+    background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 14px;
+  }
+  .home-link:hover { color: var(--accent); }
+
+  .container { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 18px 16px 60px; }
+  .page-title { font-size: 20px; font-weight: bold; color: var(--accent); margin-bottom: 4px; }
+  .page-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+
+  .game-wrap { display: flex; gap: 18px; flex-wrap: wrap; }
+  .game-col { flex: 1; min-width: 280px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+    padding: 18px; margin-bottom: 16px;
+  }
+  .card h3 { font-size: 15px; margin-bottom: 12px; color: var(--text); }
+
+  .bet-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+  .bet-input {
+    flex: 1; background: var(--panel2); border: 1px solid var(--line);
+    border-radius: 9px; color: var(--text); padding: 12px; font-size: 16px; font-weight: bold; text-align: center;
+  }
+  .qbtn {
+    background: var(--panel2); border: 1px solid var(--line); color: var(--muted);
+    border-radius: 8px; padding: 11px 12px; font-size: 13px; cursor: pointer; font-weight: bold;
+  }
+  .qbtn:hover { color: var(--accent); border-color: var(--accent); }
+
+  .mult-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 10px; }
+  .mult-btn {
+    background: var(--panel2); border: 1px solid var(--line); border-radius: 10px;
+    color: var(--text); padding: 10px 4px; cursor: pointer; text-align: center;
+  }
+  .mult-btn .mx { font-size: 15px; font-weight: bold; }
+  .mult-btn .ch { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .mult-btn.active { border-color: var(--accent); background: rgba(255,138,0,0.12); }
+  .mult-btn.active .mx { color: var(--accent); }
+
+  .chance-line { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
+  .chance-line b { color: var(--green); }
+
+  .spin-btn {
+    width: 100%; background: linear-gradient(180deg, var(--accent2), var(--accent));
+    color: #1a1206; border: none; border-radius: 11px; padding: 15px;
+    font-size: 17px; font-weight: bold; cursor: pointer;
+  }
+  .spin-btn:disabled { background: #333; color: #777; cursor: not-allowed; }
+
+  .bonus-note {
+    background: rgba(124,92,255,0.10); border: 1px solid rgba(124,92,255,0.35);
+    border-radius: 10px; padding: 10px 12px; font-size: 12px; margin-top: 12px; color: #c9baff;
+  }
+
+  /* Колесо */
+  .wheel-wrap { position: relative; width: 280px; height: 280px; margin: 6px auto; }
+  .wheel {
+    width: 100%; height: 100%; border-radius: 50%;
+    border: 4px solid var(--panel2);
+    box-shadow: 0 0 40px rgba(255,138,0,0.25);
+    transition: background 0.3s;
+  }
+  .wheel-arrow {
+    position: absolute; left: 50%; top: 50%; width: 6px; height: 140px;
+    margin-left: -3px; margin-top: -140px;
+    transform-origin: 50% 100%;
+    pointer-events: none;
+  }
+  .wheel-arrow::before {
+    content: ""; position: absolute; left: -8px; bottom: -4px;
+    border-left: 11px solid transparent; border-right: 11px solid transparent;
+    border-bottom: 26px solid var(--accent);
+    filter: drop-shadow(0 0 6px rgba(255,138,0,0.7));
+  }
+  .wheel-center {
+    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
+    width: 70px; height: 70px; border-radius: 50%;
+    background: var(--panel); border: 3px solid var(--line);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: bold; color: var(--accent);
+  }
+
+  .result { text-align: center; font-size: 20px; font-weight: bold; margin: 12px 0; min-height: 26px; }
+  .result.win { color: var(--green); }
+  .result.lose { color: var(--red); }
+  .result.bonus { color: #b9a4ff; }
+
+  .history div {
+    padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 13px;
+    display: flex; justify-content: space-between; gap: 8px;
+  }
+  .history .hwin { color: var(--green); font-weight: bold; }
+  .history .hlose { color: var(--red); font-weight: bold; }
+  .history .hbon { color: #b9a4ff; font-weight: bold; }
+
+  .auth-box {
+    max-width: 400px; margin: 60px auto; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 14px; padding: 25px; text-align: center;
+    position: relative; z-index: 1;
+  }
+  .auth-box h2 { color: var(--accent); margin-bottom: 8px; }
+  .auth-box input {
+    width: 100%; background: var(--panel2); border: 1px solid var(--line);
+    border-radius: 8px; color: var(--text); padding: 12px; font-size: 15px; margin-bottom: 10px; text-align: center;
+  }
+  .auth-note { font-size: 12px; color: var(--muted); margin-top: 10px; }
+  .btn {
+    background: linear-gradient(180deg, var(--accent2), var(--accent)); color: #1a1206;
+    border: none; border-radius: 8px; padding: 11px 18px; font-size: 14px; font-weight: bold; cursor: pointer;
+  }
+
+  @media (max-width: 640px) {
+    .mult-grid { grid-template-columns: repeat(3, 1fr); }
+    .wheel-wrap { width: 240px; height: 240px; }
+    .wheel-arrow { height: 120px; margin-top: -120px; }
+  }
+</style>
+</head>
+<body>
+<div class="bg-fx"></div>
+
+<div class="topbar">
+  <div class="logo">ZINI<b>DROP</b></div>
+  <div class="top-balance">⭐ <span id="balance">0</span></div>
+  <a class="home-link" href="index.html">← На сайт</a>
+</div>
+
+<!-- ===== Вход ===== -->
+<div id="authScreen">
+  <div class="auth-box">
+    <h2>Апгрейдер ZINI<b>DROP</b></h2>
+    <p style="font-size:13px; color:#8b93a5; margin-bottom:15px">Ставь звёзды, крути колесо, удваивай — и ловите подарки и Premium!</p>
+    <input type="tel" id="authPhone" placeholder="+7 (___) ___-__-__" maxlength="18">
+    <input type="text" id="authName" placeholder="Твоё имя" maxlength="25">
+    <button class="btn" style="width:100%" onclick="authSubmit()">Войти по номеру</button>
+    <div class="auth-note">Тот же аккаунт, что и на основном сайте. Баланс общий.</div>
+  </div>
+</div>
+
+<!-- ===== Игра ===== -->
+<div id="mainScreen" style="display:none">
+<div class="container">
+  <div class="page-title">🎰 Апгрейдер</div>
+  <div class="page-sub">Ставь звёзды → выбирай множитель → крути колесо. Победа умножает ставку. На высоких множителях — шанс поймать 🎁 подарок или 💎 Premium!</div>
+
+  <div class="game-wrap">
+
+    <div class="game-col">
+      <div class="card">
+        <h3>Твоя ставка</h3>
+        <div class="bet-row">
+          <button class="qbtn" onclick="betAdd(-10)">−10</button>
+          <input type="number" id="betInput" value="25" min="1" class="bet-input">
+          <button class="qbtn" onclick="betAdd(10)">+10</button>
+        </div>
+        <div class="bet-row">
+          <button class="qbtn" onclick="betSet(25)">25</button>
+          <button class="qbtn" onclick="betSet(50)">50</button>
+          <button class="qbtn" onclick="betSet(100)">100</button>
+          <button class="qbtn" onclick="betSet(balance)">ВСЁ</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Множитель</h3>
+        <div class="mult-grid" id="multGrid"></div>
+        <div class="chance-line" id="chanceLine"></div>
+        <button class="spin-btn" id="spinBtn" onclick="spin()">🎲 Крутить</button>
+        <div class="bonus-note">🎁 На ×3, ×5 и ×10 к выигрышу может добавить подарок. На ×10 — Корона или 💎 Premium!</div>
+      </div>
+
+      <div class="result" id="result"></div>
+    </div>
+
+    <div class="game-col">
+      <div class="card" style="text-align:center">
+        <div class="wheel-wrap">
+          <div class="wheel" id="wheel"></div>
+          <div class="wheel-arrow" id="wheelArrow"></div>
+          <div class="wheel-center" id="wheelCenter">x1.5</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Последние апгрейды</h3>
+        <div class="history" id="upHistory">Пока пусто — сделай первую крутку!</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<script>
+// ================== НАСТРОЙКИ ==================
+const MULTIPLIERS = [
+  { mult: 1.5, chance: 62, bonus: null },
+  { mult: 2.0, chance: 45, bonus: null },
+  { mult: 3.0, chance: 30, bonus: { chance: 8,  gifts: ["sticker", "teddy"] } },
+  { mult: 5.0, chance: 18, bonus: { chance: 10, gifts: ["bouquet", "rocket", "hamster"] } },
+  { mult: 10.0, chance: 8,  bonus: { chance: 15, gifts: ["crown"], premium: 1 } }
+];
+
+const GIFTS = {
+  sticker: { name: "Стикерпак",          emoji: "🎨", value: 10 },
+  teddy:   { name: "Плюшевый мишка",     emoji: "🧸", value: 25 },
+  bouquet: { name: "Букет роз",          emoji: "🌹", value: 40 },
+  rocket:  { name: "Космическая ракета", emoji: "🚀", value: 60 },
+  hamster: { name: "Золотой хомяк",      emoji: "🐹", value: 80 },
+  crown:   { name: "Корона",             emoji: "👑", value: 100 }
+};
+// ================================================
+
+let user = null;
+let balance = 0, giftItems = [], premium = 0;
+let currentMultIndex = 0;
+let spinning = false;
+let arrowAngle = 0;
+
+const k = (name) => "zd_" + (user ? user.id : "x") + "_" + name;
+
+// ---------- авторизация (общая с сайтом) ----------
+function formatPhone(input) {
+  let digits = input.value.replace(/\D/g, "");
+  if (digits.startsWith("8")) digits = "7" + digits.slice(1);
+  if (!digits.startsWith("7")) digits = "7" + digits;
+  digits = digits.slice(0, 11);
+  let out = "+7";
+  if (digits.length > 1) out += " (" + digits.slice(1, 4);
+  if (digits.length >= 4) out += ")";
+  if (digits.length > 4) out += " " + digits.slice(4, 7);
+  if (digits.length > 7) out += "-" + digits.slice(7, 9);
+  if (digits.length > 9) out += "-" + digits.slice(9, 11);
+  input.value = out;
+}
+
+function authSubmit() {
+  const phoneEl = document.getElementById("authPhone");
+  formatPhone(phoneEl);
+  const phone = phoneEl.value.replace(/\D/g, "");
+  const name = document.getElementById("authName").value.trim();
+  if (phone.length !== 11) { alert("Введи номер полностью: +7 (XXX) XXX-XX-XX"); return; }
+  if (name.length < 2) { alert("Введи имя (минимум 2 символа)"); return; }
+  const accKey = "zd_acc_" + phone;
+  const saved = localStorage.getItem(accKey);
+  if (saved) {
+    const acc = JSON.parse(saved);
+    login({ phone: phone, name: acc.name, id: phone });
+  } else {
+    localStorage.setItem(accKey, JSON.stringify({ name: name, created: new Date().toLocaleDateString("ru-RU") }));
+    login({ phone: phone, name: name, id: phone });
+  }
+}
+
+function login(u) {
+  user = u;
+  localStorage.setItem("zd_current", JSON.stringify(user));
+  document.getElementById("authScreen").style.display = "none";
+  document.getElementById("mainScreen").style.display = "block";
+  loadState(); renderGame();
+}
+
+// ---------- общее состояние (как на сайте) ----------
+function loadState() {
+  balance = parseInt(localStorage.getItem(k("balance"))) || 200;
+  premium = parseInt(localStorage.getItem(k("premium"))) || 0;
+  try { giftItems = JSON.parse(localStorage.getItem(k("giftItems"))) || []; } catch (e) { giftItems = []; }
+}
+function saveState() {
+  localStorage.setItem(k("balance"), balance);
+  localStorage.setItem(k("premium"), premium);
+  localStorage.setItem(k("giftItems"), JSON.stringify(giftItems));
+}
+
+// ---------- интерфейс ----------
+function renderGame() {
+  document.getElementById("balance").textContent = balance;
+  renderMultButtons();
+  updateChanceLine();
+  renderHistory();
+}
+
+function betAdd(d) {
+  const el = document.getElementById("betInput");
+  let v = Math.max(1, (parseInt(el.value) || 0) + d);
+  if (v > balance) v = balance;
+  el.value = v;
+}
+function betSet(v) {
+  const el = document.getElementById("betInput");
+  el.value = Math.max(1, Math.min(v, balance));
+}
+
+function renderMultButtons() {
+  const grid = document.getElementById("multGrid");
+  grid.innerHTML = MULTIPLIERS.map((m, i) => `
+    <button class="mult-btn${i === currentMultIndex ? " active" : ""}" onclick="pickMult(${i})">
+      <div class="mx">x${m.mult}</div>
+      <div class="ch">${m.chance}%</div>
+    </button>`).join("");
+}
+
+function pickMult(i) {
+  if (spinning) return;
+  currentMultIndex = i;
+  renderMultButtons();
+  updateChanceLine();
+}
+
+function updateChanceLine() {
+  const m = MULTIPLIERS[currentMultIndex];
+  const payout = m.mult === 1.5 ? Math.floor(m.mult * 10) / 10 : m.mult;
+  document.getElementById("wheelCenter").textContent = "x" + m.mult;
+  drawWheel(m.chance);
+  let txt = `Шанс победы: <b>${m.chance}%</b> · при победе получишь ставку × ${m.mult}`;
+  if (m.bonus) {
+    const parts = [];
+    if (m.bonus.gifts) parts.push(`🎁 подарок (${m.bonus.chance}%)`);
+    if (m.bonus.premium) parts.push(`или 💎 Premium ${m.bonus.premium} мес.`);
+    txt += ` · бонус: ${parts.join(" ")}`;
+  }
+  document.getElementById("chanceLine").innerHTML = txt;
+}
+
+function drawWheel(chance) {
+  const green = chance * 3.6; // градусов
+  const half = green / 2;
+  const wheel = document.getElementById("wheel");
+  wheel.style.background = `conic-gradient(from -${half}deg, var(--green) 0deg ${green}deg, var(--red) ${green}deg 360deg)`;
+}
+
+// ---------- крутка ----------
+function getBet() {
+  const v = parseInt(document.getElementById("betInput").value);
+  return isNaN(v) ? 0 : Math.max(1, Math.min(v, balance));
+}
+
+function spin() {
+  if (spinning) return;
+  const bet = getBet();
+  if (bet < 1) { alert("Введи ставку от 1 ⭐"); return; }
+  if (balance < bet) { alert("Не хватает звёзд на балансе!"); return; }
+
+  const m = MULTIPLIERS[currentMultIndex];
+  balance -= bet;
+  saveState();
+  document.getElementById("balance").textContent = balance;
+
+  spinning = true;
+  const isWin = Math.random() * 100 < m.chance;
+  const r = document.getElementById("result");
+  r.className = "result";
+  r.textContent = "Крутим...";
+  document.getElementById("spinBtn").disabled = true;
+
+  // рисуем стрелку в нужный сектор
+  const green = m.chance * 3.6;
+  const half = green / 2;
+  let target;
+  if (isWin) {
+    target = -half + 4 + Math.random() * (green - 8); // внутри зелёной зоны
+  } else {
+    const span = 360 - green - 8;
+    target = half + 4 + Math.random() * span; // в красной зоне
+  }
+  const finalAngle = arrowAngle - (arrowAngle % 360) + 360 * 4 + target;
+
+  const arrow = document.getElementById("wheelArrow");
+  arrow.style.transition = "none";
+  arrow.style.transform = `rotate(${arrowAngle}deg)`;
+  void arrow.offsetWidth;
+  arrow.style.transition = "transform 4s cubic-bezier(0.12, 0.8, 0.2, 1)";
+  arrow.style.transform = `rotate(${finalAngle}deg)`;
+  arrowAngle = finalAngle;
+
+  setTimeout(() => {
+    spinning = false;
+    document.getElementById("spinBtn").disabled = false;
+
+    if (isWin) {
+      const win = Math.floor(bet * m.mult);
+      balance += win;
+      let extra = "";
+      let bonusType = null, bonusName = "";
+
+      // бонус на высоких множителях
+      if (m.bonus && Math.random() * 100 < m.bonus.chance) {
+        if (m.bonus.gifts && (!m.bonus.premium || Math.random() < 0.5)) {
+          const g = m.bonus.gifts[Math.floor(Math.random() * m.bonus.gifts.length)];
+          giftItems.push(g);
+          bonusType = "gift";
+          bonusName = GIFTS[g].emoji + " " + GIFTS[g].name;
+          extra = ` + ${bonusName}!`;
+        } else if (m.bonus.premium) {
+          premium += m.bonus.premium;
+          bonusType = "premium";
+          bonusName = `💎 Premium ${m.bonus.premium} мес.`;
+          extra = ` + ${bonusName}!`;
+        }
+      }
+
+      saveState();
+      document.getElementById("balance").textContent = balance;
+      r.className = "result win" + (bonusType ? " bonus" : "");
+      r.textContent = `🎉 Победа! +${win} ⭐${extra}`;
+      addHistory(true, bet, win, bonusName);
+    } else {
+      r.className = "result lose";
+      r.textContent = `💨 Не повезло. −${bet} ⭐. Ещё попытку?`;
+      addHistory(false, bet, 0, "");
+    }
+  }, 4100);
+}
+
+// ---------- история апгрейдов ----------
+function addHistory(win, bet, payout, bonus) {
+  let h = JSON.parse(localStorage.getItem(k("upHistory")) || "[]");
+  h.unshift({
+    mult: MULTIPLIERS[currentMultIndex].mult,
+    bet: bet, payout: payout, win: win, bonus: bonus,
+    time: new Date().toLocaleTimeString("ru-RU", {hour: "2-digit", minute: "2-digit"})
+  });
+  h = h.slice(0, 20);
+  localStorage.setItem(k("upHistory"), JSON.stringify(h));
+  renderHistory();
+}
+
+function renderHistory() {
+  const h = JSON.parse(localStorage.getItem(k("upHistory")) || "[]");
+  const box = document.getElementById("upHistory");
+  if (!h.length) { box.textContent = "Пока пусто — сделай первую крутку!"; return; }
+  box.innerHTML = h.map(x => `
+    <div>
+      <span>${x.time} · x${x.mult} · ставка ${x.bet} ⭐${x.bonus ? " · " + x.bonus : ""}</span>
+      <span class="${x.win ? (x.bonus ? "hbon" : "hwin") : "hlose"}">${x.win ? "+" + x.payout + " ⭐" : "−" + x.bet + " ⭐"}</span>
+    </div>`).join("");
+}
+
+// ---------- запуск ----------
+const savedUser = localStorage.getItem("zd_current");
+if (savedUser) {
+  try { login(JSON.parse(savedUser)); } catch (e) {}
+}
+const ph = document.getElementById("authPhone");
+ph.addEventListener("input", () => formatPhone(ph));
+</script>
+
+</body>
+</html>
