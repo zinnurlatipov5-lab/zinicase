@@ -61,12 +61,7 @@
     margin-left: auto; background: var(--panel2); border: 1px solid var(--line);
     border-radius: 10px; padding: 8px 14px; font-weight: bold;
   }
-  .top-balance span { color: var(--accent); }
-  .top-stars {
-    background: var(--panel2); border: 1px solid var(--line);
-    border-radius: 10px; padding: 8px 14px; font-weight: bold;
-  }
-  .top-stars span { color: var(--star); }
+  .top-balance span { color: var(--star); }
   .deposit-btn {
     background: linear-gradient(180deg, var(--accent2), var(--accent));
     color: #1a1206; font-weight: bold; border: none; border-radius: 10px;
@@ -222,7 +217,6 @@
     border: none; border-radius: 8px; padding: 11px 18px; font-size: 14px; font-weight: bold; cursor: pointer;
     text-decoration: none; display: inline-block; text-align: center;
   }
-  .btn.secondary { background: var(--panel2); color: var(--text); }
   .withdraw-box { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 12px; font-size: 14px; display: none; max-width: 560px; margin-top: 10px; }
   .withdraw-box textarea { width: 100%; background: #0a0c11; color: var(--text); border: none; border-radius: 6px; padding: 8px; font-size: 13px; min-height: 90px; }
 
@@ -258,7 +252,7 @@
 <div class="container" id="authScreen">
   <div class="auth-box">
     <h2>ZINI<b>DROP</b></h2>
-    <p style="font-size:13px; color:#8b93a5; margin-bottom:15px">Открывай кейсы и выигрывай Telegram-звёзды, подарки и Premium!</p>
+    <p style="font-size:13px; color:#8b93a5; margin-bottom:15px">Открывай кейсы и выигрывай звёзды, подарки и Telegram Premium!</p>
     <input type="tel" id="authPhone" placeholder="+7 (___) ___-__-__" maxlength="18">
     <input type="text" id="authName" placeholder="Твоё имя" maxlength="25">
     <button class="btn" style="width:100%" onclick="authSubmit()">Войти по номеру</button>
@@ -271,8 +265,7 @@
 
   <div class="topbar">
     <div class="logo">ZINI<b>DROP</b></div>
-    <div class="top-balance">💰 <span id="balance">0</span></div>
-    <div class="top-stars">⭐ <span id="starsTop">0</span></div>
+    <div class="top-balance">⭐ <span id="balance">0</span></div>
     <button class="deposit-btn" onclick="goTo('deposit')">+ Пополнить</button>
   </div>
 
@@ -298,7 +291,7 @@
         <div class="big">⭐</div>
         <div>
           <h3>ZINI DROP — кейсы со звёздами, подарками и Premium</h3>
-          <p>Открывай кейсы за монеты, собирай Telegram-звёзды и подарки. От 50 звёзд — вывод!</p>
+          <p>15 кейсов от 11 ⭐. Выигрывай звёзды, подарки и Telegram Premium. От 50 ⭐ — вывод!</p>
         </div>
       </div>
 
@@ -308,17 +301,17 @@
 
     <!-- ПОПОЛНЕНИЕ -->
     <div class="page" id="page-deposit">
-      <div class="section-title">➕ Пополнить баланс</div>
+      <div class="section-title">➕ Пополнить звёзды</div>
       <div class="panel-card">
-        <div class="price-note">Минимальный депозит — <b>25 ₽</b></div>
-        <p style="margin:12px 0">Оплата через ЮKassa (реквизиты самозанятого): перейди на страницу оплаты, переведи сумму и получи депозит-код от админа.</p>
+        <div class="price-note">Минимальный депозит — <b>25 ₽</b> · курс 1 ₽ = 1 ⭐</div>
+        <p style="margin:12px 0">Перейди на страницу оплаты, переведи сумму и получи депозит-код от админа.</p>
         <a class="btn" href="pay.html">💳 Перейти к оплате</a>
         <div class="section-title" style="margin-top:18px">Ввести депозит-код</div>
         <div class="promo-area">
           <input type="text" id="depInput" placeholder="Депозит-код (например ZINI25)">
           <button class="btn" onclick="useDeposit()">Пополнить</button>
         </div>
-        <div class="auth-note">Пополнения с 25 ₽ зачисляются кодом после оплаты. Все пополнения видны в разделе «⭐ Вывод».</div>
+        <div class="auth-note">Все пополнения видны в разделе «⭐ Вывод».</div>
       </div>
     </div>
 
@@ -326,7 +319,7 @@
     <div class="page" id="page-bonus">
       <div class="section-title">🎁 Ежедневный бонус</div>
       <div class="panel-card">
-        <p style="margin-bottom:12px">Раз в 20 часов — от 50 до 150 монет на открытие кейсов!</p>
+        <p style="margin-bottom:12px">Раз в 20 часов — от 25 до 100 ⭐ на открытие кейсов!</p>
         <button class="btn" onclick="claimBonus()">Забрать бонус</button>
       </div>
     </div>
@@ -335,7 +328,7 @@
     <div class="page" id="page-promo">
       <div class="section-title">🎟 Промокоды</div>
       <div class="panel-card">
-        <p style="margin-bottom:10px">Вводи код — получай монеты.</p>
+        <p style="margin-bottom:10px">Вводи код — получай звёзды.</p>
         <div class="promo-area">
           <input type="text" id="promoInput" placeholder="Промокод">
           <button class="btn" onclick="usePromo()">OK</button>
@@ -350,7 +343,7 @@
         <div class="stats">
           <div class="stat-box"><div class="num" id="tdOpened">0</div><div class="lbl">кейсов сегодня</div></div>
           <div class="stat-box"><div class="num" id="tdWins">0</div><div class="lbl">выигрышей</div></div>
-          <div class="stat-box"><div class="num star-num" id="tdStars">0</div><div class="lbl">⭐ звёзд</div></div>
+          <div class="stat-box"><div class="num star-num" id="tdStars">0</div><div class="lbl">⭐ выиграно</div></div>
           <div class="stat-box"><div class="num" id="tdGifts">0</div><div class="lbl">🎁 подарков</div></div>
           <div class="stat-box"><div class="num" id="tdPrem">0</div><div class="lbl">💎 Premium</div></div>
         </div>
@@ -368,14 +361,14 @@
 
     <!-- ВЫВОД -->
     <div class="page" id="page-withdraw">
-      <div class="section-title">⭐ Вывод звёзд и операции</div>
+      <div class="section-title">⭐ Вывод и операции</div>
       <div class="panel-card">
         <div class="stats" style="margin-top:0">
           <div class="stat-box"><div class="num star-num" id="wdStarsNow">0</div><div class="lbl">⭐ звёзд на балансе</div></div>
           <div class="stat-box"><div class="num" id="wdGiftsNow">0</div><div class="lbl">🎁 подарков</div></div>
           <div class="stat-box"><div class="num" id="wdPremNow">0</div><div class="lbl">💎 Premium, мес</div></div>
         </div>
-        <p style="margin:12px 0">Минимальный вывод — <b style="color:#ffd54a">50 звёзд</b>. Админ отправит звёзды и подарки в Telegram через бота.</p>
+        <p style="margin:12px 0">Минимальный вывод — <b style="color:#ffd54a">50 ⭐</b>. Админ отправит звёзды и подарки в Telegram через бота.</p>
         <button class="btn" onclick="showWithdraw()">Вывести звёзды</button>
         <div class="withdraw-box" id="withdrawBox"></div>
 
@@ -395,7 +388,7 @@
         <div class="stats">
           <div class="stat-box"><div class="num" id="stCases">0</div><div class="lbl">кейсов всего</div></div>
           <div class="stat-box"><div class="num" id="stWins">0</div><div class="lbl">выигрышей всего</div></div>
-          <div class="stat-box"><div class="num star-num" id="stStars">0</div><div class="lbl">⭐ звёзд</div></div>
+          <div class="stat-box"><div class="num star-num" id="stStars">0</div><div class="lbl">⭐ выиграно</div></div>
           <div class="stat-box"><div class="num" id="stGifts">0</div><div class="lbl">🎁 подарков</div></div>
           <div class="stat-box"><div class="num" id="stPrem">0</div><div class="lbl">💎 Premium, мес</div></div>
         </div>
@@ -431,9 +424,8 @@
 
 <script>
 // ================== НАСТРОЙКИ ==================
-const START_BALANCE = 200;
+const START_BALANCE = 200;          // стартовые звёзды
 const WITHDRAW_MIN_STARS = 50;      // минимальный вывод — 50 звёзд
-const MIN_DEPOSIT_RUB = 25;         // минимальный депозит — 25 ₽
 const BONUS_COOLDOWN = 20 * 60 * 60 * 1000;
 const LEVEL_STEP = 5;
 
@@ -444,9 +436,10 @@ const PROMO_CODES = {
   "BIGBONUS": 2000
 };
 
-// депозит-коды: выдаёшь игроку после оплаты (минимум 25 ₽)
+// депозит-коды: выдаёшь игроку после оплаты (минимум 25 ₽, курс 1 ₽ = 1 ⭐)
 const DEP_CODES = {
   "ZINI25": 25,
+  "ZINI50": 50,
   "ZINI100": 100,
   "ZINI500": 500,
   "ZINI1000": 1000,
@@ -456,65 +449,181 @@ const DEP_CODES = {
 // призы: stars — звёзды, gift — подарки, premium — Telegram Premium (value = месяцы)
 const CASES = [
   {
-    id: "common", name: "Обычный кейс", emoji: "📦", price: 100, opens: 12540,
+    id: "common", name: "Обычный кейс", emoji: "📦", price: 11, opens: 48210,
     prizes: [
-      { name: "Пусто",        emoji: "💨", value: 0,  type: "none",   weight: 35 },
-      { name: "1 звезда",     emoji: "⭐", value: 1,  type: "stars",  weight: 30 },
-      { name: "2 звезды",     emoji: "⭐", value: 2,  type: "stars",  weight: 20 },
-      { name: "5 звёзд",      emoji: "⭐", value: 5,  type: "stars",  weight: 10 },
-      { name: "Стикерпак",    emoji: "🎁", value: 1,  type: "gift",   weight: 5 }
+      { name: "Пусто",     emoji: "💨", value: 0,  type: "none",   weight: 38 },
+      { name: "1 звезда",  emoji: "⭐", value: 1,  type: "stars",  weight: 30 },
+      { name: "2 звезды",  emoji: "⭐", value: 2,  type: "stars",  weight: 15 },
+      { name: "5 звёзд",   emoji: "⭐", value: 5,  type: "stars",  weight: 10 },
+      { name: "Стикерпак", emoji: "🎁", value: 1,  type: "gift",   weight: 5 },
+      { name: "25 звёзд",  emoji: "⭐", value: 25, type: "stars",  weight: 2 }
     ]
   },
   {
-    id: "golden", name: "Золотой кейс", emoji: "🎁", price: 500, opens: 8320,
+    id: "bronze", name: "Бронзовый кейс", emoji: "🥉", price: 29, opens: 31250,
     prizes: [
-      { name: "Пусто",        emoji: "💨", value: 0,  type: "none",   weight: 25 },
-      { name: "3 звезды",     emoji: "⭐", value: 3,  type: "stars",  weight: 30 },
-      { name: "5 звёзд",      emoji: "⭐", value: 5,  type: "stars",  weight: 20 },
-      { name: "10 звёзд",     emoji: "⭐", value: 10, type: "stars",  weight: 15 },
-      { name: "Подарок 🎁",   emoji: "🎁", value: 1,  type: "gift",   weight: 8 },
-      { name: "Premium 1 мес",emoji: "💎", value: 1,  type: "premium",weight: 2 }
+      { name: "Пусто",     emoji: "💨", value: 0,  type: "none",   weight: 35 },
+      { name: "2 звезды",  emoji: "⭐", value: 2,  type: "stars",  weight: 30 },
+      { name: "5 звёзд",   emoji: "⭐", value: 5,  type: "stars",  weight: 18 },
+      { name: "10 звёзд",  emoji: "⭐", value: 10, type: "stars",  weight: 10 },
+      { name: "Стикерпак", emoji: "🎁", value: 1,  type: "gift",   weight: 5 },
+      { name: "50 звёзд",  emoji: "⭐", value: 50, type: "stars",  weight: 2 }
     ]
   },
   {
-    id: "epic", name: "Эпический кейс", emoji: "🔮", price: 1000, opens: 5110,
+    id: "silver", name: "Серебряный кейс", emoji: "🥈", price: 49, opens: 24180,
     prizes: [
-      { name: "Пусто",        emoji: "💨", value: 0,  type: "none",   weight: 20 },
-      { name: "10 звёзд",     emoji: "⭐", value: 10, type: "stars",  weight: 30 },
-      { name: "25 звёзд",     emoji: "⭐", value: 25, type: "stars",  weight: 20 },
-      { name: "50 звёзд",     emoji: "⭐", value: 50, type: "stars",  weight: 15 },
-      { name: "Премиум-подарок", emoji: "🧸", value: 1, type: "gift", weight: 10 },
-      { name: "Premium 1 мес",emoji: "💎", value: 1,  type: "premium",weight: 4 },
-      { name: "Premium 3 мес",emoji: "💎", value: 3,  type: "premium",weight: 1 }
+      { name: "Пусто",      emoji: "💨", value: 0,  type: "none",   weight: 32 },
+      { name: "5 звёзд",    emoji: "⭐", value: 5,  type: "stars",  weight: 30 },
+      { name: "10 звёзд",   emoji: "⭐", value: 10, type: "stars",  weight: 20 },
+      { name: "25 звёзд",   emoji: "⭐", value: 25, type: "stars",  weight: 10 },
+      { name: "Подарок 🎁", emoji: "🎁", value: 1,  type: "gift",   weight: 6 },
+      { name: "75 звёзд",   emoji: "⭐", value: 75, type: "stars",  weight: 2 }
     ]
   },
   {
-    id: "star", name: "Звёздный кейс", emoji: "🌟", price: 2000, opens: 2740,
+    id: "steel", name: "Стальной кейс", emoji: "🛡️", price: 69, opens: 18340,
     prizes: [
-      { name: "Пусто",        emoji: "💨", value: 0,  type: "none",   weight: 15 },
-      { name: "25 звёзд",     emoji: "⭐", value: 25, type: "stars",  weight: 30 },
-      { name: "50 звёзд",     emoji: "⭐", value: 50, type: "stars",  weight: 25 },
-      { name: "100 звёзд",    emoji: "⭐", value: 100,type: "stars",  weight: 15 },
-      { name: "Редкий подарок", emoji: "🎩", value: 1, type: "gift",  weight: 10 },
-      { name: "Premium 3 мес",emoji: "💎", value: 3,  type: "premium",weight: 5 }
+      { name: "Пусто",      emoji: "💨", value: 0,   type: "none",   weight: 30 },
+      { name: "10 звёзд",   emoji: "⭐", value: 10,  type: "stars",  weight: 30 },
+      { name: "25 звёзд",   emoji: "⭐", value: 25,  type: "stars",  weight: 20 },
+      { name: "50 звёзд",   emoji: "⭐", value: 50,  type: "stars",  weight: 12 },
+      { name: "Подарок 🎁", emoji: "🎁", value: 1,   type: "gift",   weight: 6 },
+      { name: "100 звёзд",  emoji: "⭐", value: 100, type: "stars",  weight: 2 }
     ]
   },
   {
-    id: "myth", name: "Мифический кейс", emoji: "🐉", price: 5000, opens: 980,
+    id: "golden", name: "Золотой кейс", emoji: "👑", price: 99, opens: 15220,
     prizes: [
-      { name: "Пусто",        emoji: "💨", value: 0,  type: "none",   weight: 20 },
-      { name: "100 звёзд",    emoji: "⭐", value: 100,type: "stars",  weight: 35 },
-      { name: "200 звёзд",    emoji: "⭐", value: 200,type: "stars",  weight: 20 },
-      { name: "Легендарный подарок", emoji: "🏆", value: 1, type: "gift", weight: 15 },
-      { name: "Premium 6 мес",emoji: "💎", value: 6,  type: "premium",weight: 7 },
-      { name: "Premium 12 мес",emoji: "💎", value: 12,type: "premium",weight: 3 }
+      { name: "Пусто",         emoji: "💨", value: 0,   type: "none",    weight: 28 },
+      { name: "10 звёзд",      emoji: "⭐", value: 10,  type: "stars",   weight: 28 },
+      { name: "25 звёзд",      emoji: "⭐", value: 25,  type: "stars",   weight: 22 },
+      { name: "50 звёзд",      emoji: "⭐", value: 50,  type: "stars",   weight: 14 },
+      { name: "Подарок 🎁",    emoji: "🎁", value: 1,   type: "gift",    weight: 6 },
+      { name: "Premium 1 мес", emoji: "💎", value: 1,   type: "premium", weight: 2 }
+    ]
+  },
+  {
+    id: "platinum", name: "Платиновый кейс", emoji: "🥇", price: 149, opens: 11460,
+    prizes: [
+      { name: "Пусто",         emoji: "💨", value: 0,   type: "none",    weight: 25 },
+      { name: "25 звёзд",      emoji: "⭐", value: 25,  type: "stars",   weight: 30 },
+      { name: "50 звёзд",      emoji: "⭐", value: 50,  type: "stars",   weight: 20 },
+      { name: "100 звёзд",     emoji: "⭐", value: 100, type: "stars",   weight: 15 },
+      { name: "Подарок 🎁",    emoji: "🎁", value: 1,   type: "gift",    weight: 7 },
+      { name: "Premium 1 мес", emoji: "💎", value: 1,   type: "premium", weight: 3 }
+    ]
+  },
+  {
+    id: "ruby", name: "Рубиновый кейс", emoji: "❤️‍🔥", price: 199, opens: 9030,
+    prizes: [
+      { name: "Пусто",           emoji: "💨", value: 0,   type: "none",    weight: 22 },
+      { name: "25 звёзд",        emoji: "⭐", value: 25,  type: "stars",   weight: 28 },
+      { name: "50 звёзд",        emoji: "⭐", value: 50,  type: "stars",   weight: 25 },
+      { name: "100 звёзд",       emoji: "⭐", value: 100, type: "stars",   weight: 17 },
+      { name: "Премиум-подарок", emoji: "🧸", value: 1,   type: "gift",    weight: 6 },
+      { name: "Premium 1 мес",   emoji: "💎", value: 1,   type: "premium", weight: 2 }
+    ]
+  },
+  {
+    id: "sapphire", name: "Сапфировый кейс", emoji: "💠", price: 259, opens: 7210,
+    prizes: [
+      { name: "Пусто",          emoji: "💨", value: 0,   type: "none",    weight: 20 },
+      { name: "50 звёзд",       emoji: "⭐", value: 50,  type: "stars",   weight: 30 },
+      { name: "100 звёзд",      emoji: "⭐", value: 100, type: "stars",   weight: 22 },
+      { name: "200 звёзд",      emoji: "⭐", value: 200, type: "stars",   weight: 15 },
+      { name: "Редкий подарок", emoji: "🎩", value: 1,   type: "gift",    weight: 9 },
+      { name: "Premium 3 мес",  emoji: "💎", value: 3,   type: "premium", weight: 4 }
+    ]
+  },
+  {
+    id: "emerald", name: "Изумрудный кейс", emoji: "🍀", price: 349, opens: 5640,
+    prizes: [
+      { name: "Пусто",          emoji: "💨", value: 0,   type: "none",    weight: 18 },
+      { name: "50 звёзд",       emoji: "⭐", value: 50,  type: "stars",   weight: 28 },
+      { name: "100 звёзд",      emoji: "⭐", value: 100, type: "stars",   weight: 25 },
+      { name: "250 звёзд",      emoji: "⭐", value: 250, type: "stars",   weight: 15 },
+      { name: "Редкий подарок", emoji: "🎩", value: 1,   type: "gift",    weight: 9 },
+      { name: "Premium 3 мес",  emoji: "💎", value: 3,   type: "premium", weight: 5 }
+    ]
+  },
+  {
+    id: "amethyst", name: "Аметистовый кейс", emoji: "🔮", price: 449, opens: 4380,
+    prizes: [
+      { name: "Пусто",          emoji: "💨", value: 0,   type: "none",    weight: 16 },
+      { name: "100 звёзд",      emoji: "⭐", value: 100, type: "stars",   weight: 30 },
+      { name: "200 звёзд",      emoji: "⭐", value: 200, type: "stars",   weight: 22 },
+      { name: "350 звёзд",      emoji: "⭐", value: 350, type: "stars",   weight: 15 },
+      { name: "Редкий подарок", emoji: "🎩", value: 1,   type: "gift",    weight: 9 },
+      { name: "Premium 3 мес",  emoji: "💎", value: 3,   type: "premium", weight: 6 },
+      { name: "Premium 6 мес",  emoji: "💎", value: 6,   type: "premium", weight: 2 }
+    ]
+  },
+  {
+    id: "fire", name: "Огненный кейс", emoji: "🔥", price: 599, opens: 3390,
+    prizes: [
+      { name: "Пусто",               emoji: "💨", value: 0,   type: "none",    weight: 15 },
+      { name: "100 звёзд",           emoji: "⭐", value: 100, type: "stars",   weight: 28 },
+      { name: "250 звёзд",           emoji: "⭐", value: 250, type: "stars",   weight: 22 },
+      { name: "500 звёзд",           emoji: "⭐", value: 500, type: "stars",   weight: 16 },
+      { name: "Легендарный подарок", emoji: "🏆", value: 1,   type: "gift",    weight: 9 },
+      { name: "Premium 3 мес",       emoji: "💎", value: 3,   type: "premium", weight: 7 },
+      { name: "Premium 6 мес",       emoji: "💎", value: 6,   type: "premium", weight: 3 }
+    ]
+  },
+  {
+    id: "ice", name: "Ледяной кейс", emoji: "❄️", price: 799, opens: 2510,
+    prizes: [
+      { name: "Пусто",               emoji: "💨", value: 0,   type: "none",    weight: 14 },
+      { name: "200 звёзд",           emoji: "⭐", value: 200, type: "stars",   weight: 28 },
+      { name: "350 звёзд",           emoji: "⭐", value: 350, type: "stars",   weight: 22 },
+      { name: "700 звёзд",           emoji: "⭐", value: 700, type: "stars",   weight: 16 },
+      { name: "Легендарный подарок", emoji: "🏆", value: 1,   type: "gift",    weight: 9 },
+      { name: "Premium 6 мес",       emoji: "💎", value: 6,   type: "premium", weight: 8 },
+      { name: "Premium 12 мес",      emoji: "💎", value: 12,  type: "premium", weight: 3 }
+    ]
+  },
+  {
+    id: "cosmic", name: "Космический кейс", emoji: "🌌", price: 1099, opens: 1820,
+    prizes: [
+      { name: "Пусто",               emoji: "💨", value: 0,    type: "none",    weight: 13 },
+      { name: "250 звёзд",           emoji: "⭐", value: 250,  type: "stars",   weight: 28 },
+      { name: "500 звёзд",           emoji: "⭐", value: 500,  type: "stars",   weight: 22 },
+      { name: "1000 звёзд",          emoji: "⭐", value: 1000, type: "stars",   weight: 15 },
+      { name: "Легендарный подарок", emoji: "🏆", value: 1,    type: "gift",    weight: 9 },
+      { name: "Premium 6 мес",       emoji: "💎", value: 6,    type: "premium", weight: 9 },
+      { name: "Premium 12 мес",      emoji: "💎", value: 12,   type: "premium", weight: 4 }
+    ]
+  },
+  {
+    id: "legend", name: "Легендарный кейс", emoji: "🏅", price: 1499, opens: 1240,
+    prizes: [
+      { name: "Пусто",               emoji: "💨", value: 0,    type: "none",    weight: 12 },
+      { name: "350 звёзд",           emoji: "⭐", value: 350,  type: "stars",   weight: 28 },
+      { name: "700 звёзд",           emoji: "⭐", value: 700,  type: "stars",   weight: 22 },
+      { name: "1500 звёзд",          emoji: "⭐", value: 1500, type: "stars",   weight: 16 },
+      { name: "Легендарный подарок", emoji: "🏆", value: 1,    type: "gift",    weight: 8 },
+      { name: "Premium 6 мес",       emoji: "💎", value: 6,    type: "premium", weight: 9 },
+      { name: "Premium 12 мес",      emoji: "💎", value: 12,   type: "premium", weight: 5 }
+    ]
+  },
+  {
+    id: "myth", name: "Мифический кейс", emoji: "🐉", price: 2499, opens: 760,
+    prizes: [
+      { name: "Пусто",               emoji: "💨", value: 0,    type: "none",    weight: 10 },
+      { name: "500 звёзд",           emoji: "⭐", value: 500,  type: "stars",   weight: 30 },
+      { name: "1000 звёзд",          emoji: "⭐", value: 1000, type: "stars",   weight: 20 },
+      { name: "2500 звёзд",          emoji: "⭐", value: 2500, type: "stars",   weight: 14 },
+      { name: "Легендарный подарок", emoji: "🏆", value: 1,    type: "gift",    weight: 10 },
+      { name: "Premium 6 мес",       emoji: "💎", value: 6,    type: "premium", weight: 10 },
+      { name: "Premium 12 мес",      emoji: "💎", value: 12,   type: "premium", weight: 6 }
     ]
   }
 ];
 // ================================================
 
 let user = null;
-let balance = 0, opened = 0, wins = 0, stars = 0, gifts = 0, premium = 0;
+let balance = 0, opened = 0, wins = 0, starsWon = 0, gifts = 0, premium = 0;
 let bestPrize = null;
 let spinning = false;
 let currentCase = null;
@@ -526,11 +635,21 @@ const scoreOf = (p) => p.type === "stars" ? p.value : p.type === "gift" ? 60 : p
 
 // ---------- обложки кейсов ----------
 const COVER_COLORS = {
-  common: { base: "#4a5a8a", dark: "#2b3554", light: "#8fa3d9", glow: "rgba(74,90,138,0.55)" },
-  golden: { base: "#f5b942", dark: "#9c6c14", light: "#ffe08a", glow: "rgba(245,185,66,0.55)" },
-  epic:   { base: "#a64ce6", dark: "#5c2a80", light: "#d9a6ff", glow: "rgba(166,76,230,0.55)" },
-  star:   { base: "#42c5f5", dark: "#1f6c96", light: "#9fe4ff", glow: "rgba(66,197,245,0.55)" },
-  myth:   { base: "#ff4c6e", dark: "#8c1f38", light: "#ffa3b8", glow: "rgba(255,76,110,0.55)" }
+  common:   { base: "#4a5a8a", dark: "#2b3554", light: "#8fa3d9", glow: "rgba(74,90,138,0.55)" },
+  bronze:   { base: "#b0763a", dark: "#6e451e", light: "#e0aa70", glow: "rgba(176,118,58,0.55)" },
+  silver:   { base: "#aab6c2", dark: "#5d6a76", light: "#e4ecf3", glow: "rgba(170,182,194,0.55)" },
+  steel:    { base: "#4f8a96", dark: "#29505a", light: "#8fd0da", glow: "rgba(79,138,150,0.55)" },
+  golden:   { base: "#f5b942", dark: "#9c6c14", light: "#ffe08a", glow: "rgba(245,185,66,0.55)" },
+  platinum: { base: "#d4dcea", dark: "#7d8894", light: "#f2f7fb", glow: "rgba(212,220,234,0.55)" },
+  ruby:     { base: "#e0405c", dark: "#7c1a2e", light: "#ff9db0", glow: "rgba(224,64,92,0.55)" },
+  sapphire: { base: "#3a6ee0", dark: "#1c3a80", light: "#9db9ff", glow: "rgba(58,110,224,0.55)" },
+  emerald:  { base: "#2ecc71", dark: "#156036", light: "#9ff0c2", glow: "rgba(46,204,113,0.55)" },
+  amethyst: { base: "#a64ce6", dark: "#5c2a80", light: "#d9a6ff", glow: "rgba(166,76,230,0.55)" },
+  fire:     { base: "#ff7a2f", dark: "#8a3a0e", light: "#ffb98a", glow: "rgba(255,122,47,0.55)" },
+  ice:      { base: "#42c5f5", dark: "#1f6c96", light: "#9fe4ff", glow: "rgba(66,197,245,0.55)" },
+  cosmic:   { base: "#6a4cff", dark: "#322699", light: "#b3a6ff", glow: "rgba(106,76,255,0.55)" },
+  legend:   { base: "#ffcc33", dark: "#996f00", light: "#fff0b3", glow: "rgba(255,204,51,0.55)" },
+  myth:     { base: "#ff4c6e", dark: "#8c1f38", light: "#ffa3b8", glow: "rgba(255,76,110,0.55)" }
 };
 
 function caseCoverSVG(c) {
@@ -633,7 +752,7 @@ function loadState() {
   balance = parseInt(localStorage.getItem(k("balance"))) || START_BALANCE;
   opened  = parseInt(localStorage.getItem(k("opened")))  || 0;
   wins    = parseInt(localStorage.getItem(k("wins")))    || 0;
-  stars   = parseInt(localStorage.getItem(k("stars")))   || 0;
+  starsWon = parseInt(localStorage.getItem(k("starsWon"))) || 0;
   gifts   = parseInt(localStorage.getItem(k("gifts")))   || 0;
   premium = parseInt(localStorage.getItem(k("premium"))) || 0;
   try { bestPrize = JSON.parse(localStorage.getItem(k("bestPrize"))); } catch (e) { bestPrize = null; }
@@ -642,7 +761,7 @@ function saveState() {
   localStorage.setItem(k("balance"), balance);
   localStorage.setItem(k("opened"), opened);
   localStorage.setItem(k("wins"), wins);
-  localStorage.setItem(k("stars"), stars);
+  localStorage.setItem(k("starsWon"), starsWon);
   localStorage.setItem(k("gifts"), gifts);
   localStorage.setItem(k("premium"), premium);
   if (bestPrize) localStorage.setItem(k("bestPrize"), JSON.stringify(bestPrize));
@@ -682,17 +801,16 @@ function goTo(page) {
 
 function renderAll() {
   document.getElementById("balance").textContent = balance;
-  document.getElementById("starsTop").textContent = stars;
   document.getElementById("pName").textContent = user.name;
   document.getElementById("pId").textContent = "📞 " + formatPhoneDisplay(user.phone);
   document.getElementById("stCases").textContent = opened;
   document.getElementById("stWins").textContent = wins;
-  document.getElementById("stStars").textContent = stars;
+  document.getElementById("stStars").textContent = starsWon;
   document.getElementById("stGifts").textContent = gifts;
   document.getElementById("stPrem").textContent = premium;
   document.getElementById("stBest").textContent = bestPrize
     ? bestPrize.emoji + " " + bestPrize.name : "—";
-  document.getElementById("wdStarsNow").textContent = stars;
+  document.getElementById("wdStarsNow").textContent = balance;
   document.getElementById("wdGiftsNow").textContent = gifts;
   document.getElementById("wdPremNow").textContent = premium;
   const lvl = Math.floor(opened / LEVEL_STEP) + 1;
@@ -722,7 +840,7 @@ function renderCases() {
       <div class="case-meta">
         <div class="case-name">${c.name}</div>
         <div class="case-open-count">${c.opens.toLocaleString("ru-RU")} открыто</div>
-        <button class="case-buy">💰 ${c.price}</button>
+        <button class="case-buy">⭐ ${c.price}</button>
       </div>`;
     d.onclick = () => openCasePage(i);
     box.appendChild(d);
@@ -752,7 +870,7 @@ function openCasePage(index) {
   const c = CASES[index];
   document.getElementById("mEmoji").innerHTML = caseCoverSVG(c);
   document.getElementById("mName").textContent = c.name;
-  document.getElementById("mPrice").textContent = "💰 " + c.price + " за открытие · " + c.opens.toLocaleString("ru-RU") + " открыто";
+  document.getElementById("mPrice").textContent = "⭐ " + c.price + " за открытие · " + c.opens.toLocaleString("ru-RU") + " открыто";
   const total = c.prizes.reduce((s, p) => s + p.weight, 0);
   document.getElementById("prizeList").innerHTML = c.prizes.map(p => {
     const chance = (p.weight / total * 100).toFixed(1);
@@ -762,8 +880,8 @@ function openCasePage(index) {
   const btn = document.getElementById("openBtn");
   btn.disabled = balance < c.price;
   btn.textContent = balance < c.price
-    ? "Не хватает монет (нужно 💰 " + c.price + ")"
-    : "🔓 Открыть за 💰 " + c.price;
+    ? "Не хватает звёзд (нужно ⭐ " + c.price + ")"
+    : "🔓 Открыть за ⭐ " + c.price;
   document.getElementById("result").textContent = "";
   document.getElementById("result").className = "result";
   document.getElementById("roulette").classList.remove("active");
@@ -790,6 +908,7 @@ function openSelectedCase() {
   const c = CASES[currentCase];
   if (balance < c.price) return;
   balance -= c.price; saveState();
+  document.getElementById("balance").textContent = balance;
 
   const prize = pickPrize(c);
   spinning = true;
@@ -823,7 +942,7 @@ function openSelectedCase() {
     const dayUpd = { opened: 1 };
     if (prize.type !== "none") {
       wins++;
-      if (prize.type === "stars") { stars += prize.value; dayUpd.stars += prize.value; }
+      if (prize.type === "stars") { balance += prize.value; starsWon += prize.value; dayUpd.stars += prize.value; }
       if (prize.type === "gift")  { gifts += 1; dayUpd.gifts += 1; }
       if (prize.type === "premium") { premium += prize.value; dayUpd.premium += prize.value; }
       if (!bestPrize || scoreOf(prize) > scoreOf(bestPrize)) bestPrize = { name: prize.name, emoji: prize.emoji };
@@ -836,8 +955,8 @@ function openSelectedCase() {
     const btn = document.getElementById("openBtn");
     btn.disabled = balance < c.price;
     btn.textContent = balance < c.price
-      ? "Не хватает монет (нужно 💰 " + c.price + ")"
-      : "🔓 Открыть за 💰 " + c.price;
+      ? "Не хватает звёзд (нужно ⭐ " + c.price + ")"
+      : "🔓 Открыть за ⭐ " + c.price;
     addHistory(c, prize);
   }, 4100);
 }
@@ -897,10 +1016,10 @@ function renderOps() {
   const box = document.getElementById("opsList");
   if (!ops.length) { box.innerHTML = `<div class="empty">Операций пока нет. Пополнения, бонусы и выводы появятся здесь.</div>`; return; }
   const meta = {
-    deposit:  { ic: "➕", name: "Пополнение",   cls: "op-plus",  sign: "+" },
-    withdraw: { ic: "⭐", name: "Вывод звёзд",  cls: "op-minus", sign: "−" },
-    bonus:    { ic: "🎁", name: "Бонус дня",    cls: "op-plus",  sign: "+" },
-    promo:    { ic: "🎟", name: "Промокод",     cls: "op-plus",  sign: "+" }
+    deposit:  { ic: "➕", name: "Пополнение",  cls: "op-plus",  sign: "+" },
+    withdraw: { ic: "⭐", name: "Вывод звёзд", cls: "op-minus", sign: "−" },
+    bonus:    { ic: "🎁", name: "Бонус дня",   cls: "op-plus",  sign: "+" },
+    promo:    { ic: "🎟", name: "Промокод",    cls: "op-plus",  sign: "+" }
   };
   box.innerHTML = ops.map(o => {
     const m = meta[o.type] || { ic: "•", name: "Операция", cls: "op-plus", sign: "+" };
@@ -924,11 +1043,11 @@ function claimBonus() {
     alert("Бонус будет доступен через " + left + " ч.");
     return;
   }
-  const amount = 50 + Math.floor(Math.random() * 101);
+  const amount = 25 + Math.floor(Math.random() * 76);
   balance += amount;
   localStorage.setItem(k("lastBonus"), now); saveState(); renderAll();
-  addOp("bonus", amount + " 💰", "");
-  alert("🎁 Бонус дня: +" + amount + " монет на открытие кейсов!");
+  addOp("bonus", amount + " ⭐", "");
+  alert("🎁 Бонус дня: +" + amount + " ⭐!");
 }
 
 // ---------- промокоды ----------
@@ -941,8 +1060,8 @@ function usePromo() {
       balance += PROMO_CODES[code];
       localStorage.setItem(k("promo_" + code), "1");
       saveState(); renderAll();
-      addOp("promo", PROMO_CODES[code] + " 💰", code);
-      alert("Промокод принят: +" + PROMO_CODES[code] + " монет!");
+      addOp("promo", PROMO_CODES[code] + " ⭐", code);
+      alert("Промокод принят: +" + PROMO_CODES[code] + " ⭐!");
       input.value = "";
     }
   } else alert("Такого промокода нет.");
@@ -958,8 +1077,8 @@ function useDeposit() {
       balance += DEP_CODES[code];
       localStorage.setItem(k("dep_" + code), "1");
       saveState(); renderAll();
-      addOp("deposit", DEP_CODES[code] + " 💰", code);
-      alert("Баланс пополнен на " + DEP_CODES[code] + " монет!");
+      addOp("deposit", DEP_CODES[code] + " ⭐", code);
+      alert("Баланс пополнен на " + DEP_CODES[code] + " ⭐!");
       input.value = "";
     }
   } else alert("Такого депозит-кода нет. Попроси его у админа после оплаты.");
@@ -968,13 +1087,13 @@ function useDeposit() {
 // ---------- вывод звёзд ----------
 function showWithdraw() {
   const box = document.getElementById("withdrawBox");
-  if (stars < WITHDRAW_MIN_STARS) {
+  if (balance < WITHDRAW_MIN_STARS) {
     box.style.display = "block";
-    box.innerHTML = `Для вывода нужно минимум ${WITHDRAW_MIN_STARS} звёзд. У тебя: <b style="color:#ffd54a">${stars} ⭐</b>.`;
+    box.innerHTML = `Для вывода нужно минимум ${WITHDRAW_MIN_STARS} ⭐. У тебя: <b style="color:#ffd54a">${balance} ⭐</b>.`;
     return;
   }
   const reqId = "WD-" + Date.now().toString().slice(-6);
-  const text = `ЗАЯВКА ${reqId}\nИгрок: ${user.name} (📞 +${user.phone})\n⭐ Звёзд к выводу: ${stars}\n🎁 Подарков: ${gifts}\n💎 Premium: ${premium} мес.\nДата: ${new Date().toLocaleString("ru-RU")}`;
+  const text = `ЗАЯВКА ${reqId}\nИгрок: ${user.name} (📞 +${user.phone})\n⭐ Звёзд к выводу: ${balance}\n🎁 Подарков: ${gifts}\n💎 Premium: ${premium} мес.\nДата: ${new Date().toLocaleString("ru-RU")}`;
   box.style.display = "block";
   box.innerHTML = `<p>Скопируй заявку и отправь админу — звёзды и подарки придут в Telegram через бота.</p>
     <textarea id="wdText">${text}</textarea>
@@ -984,10 +1103,10 @@ function showWithdraw() {
 function copyWithdraw(reqId) {
   const text = document.getElementById("wdText").value;
   if (navigator.clipboard) navigator.clipboard.writeText(text);
-  addOp("withdraw", stars + " ⭐", reqId);
+  addOp("withdraw", balance + " ⭐", reqId);
   if (gifts > 0) addOp("withdraw", gifts + " 🎁", "из той же заявки");
   if (premium > 0) addOp("withdraw", premium + " 💎", "из той же заявки");
-  stars = 0; gifts = 0; premium = 0;
+  balance = 0; gifts = 0; premium = 0;
   saveState(); renderAll();
   document.getElementById("withdrawBox").style.display = "none";
   alert("Заявка " + reqId + " отправлена. Ожидай подтверждения админа.");
