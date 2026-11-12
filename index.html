@@ -178,5 +178,30 @@
 
   render();
 </script>
+<style>
+  .promo-block {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2481cc;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 50px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    z-index: 999;
+  }
+  .promo-block a {
+    color: inherit;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+  }
+</style>
+<div class="promo-block">
+  <p style="margin:0 0 8px 0; font-size:14px;">Демо-режим. Баланс не сохраняется.</p>
+  <a href="https://t.me/zinicase" target="_blank">Играть по-настоящему в боте →</a>
+</div>
 </body>
 </html>
