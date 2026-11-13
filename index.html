@@ -11,7 +11,6 @@
   html, body { height:100%; overscroll-behavior:none; }
   body { font-family:-apple-system,Arial,sans-serif; color:#fff; overflow-x:hidden; background:#060a14; }
 
-  /* ===== ЗИМНИЙ ФОН ===== */
   .bg { position:fixed; inset:0; z-index:-3; background:#060a14; }
   .bg::before { content:''; position:fixed; inset:-40%; z-index:-2;
     background:
@@ -27,7 +26,6 @@
     text-shadow:0 0 8px rgba(200,235,255,.7); animation:fall linear infinite; }
   @keyframes fall { to { transform:translateY(112vh) translateX(5vw) rotate(200deg); } }
 
-  /* ===== ЛОГОТИП ===== */
   .logo { text-align:center; padding:16px 0 4px; cursor:pointer; }
   .logo-big { font-size:30px; font-weight:900; letter-spacing:6px;
     background:linear-gradient(92deg,#f4faff,#a8d8ff 40%,#eaf6ff 70%,#8fc2ff);
@@ -36,7 +34,6 @@
   @keyframes shine { to { background-position:200% 0; } }
   .logo-sub { font-size:10px; letter-spacing:7px; color:#7f9cc0; font-weight:700; text-transform:uppercase; margin-top:3px; }
 
-  /* ===== КАРТОЧКИ ===== */
   .page { display:none; max-width:480px; margin:0 auto; padding:10px 16px 100px; min-height:100vh; }
   .page.active { display:block; }
   h2 { font-size:22px; font-weight:800; margin:16px 0 4px; background:linear-gradient(90deg,#f4faff,#9fc8ef); -webkit-background-clip:text; background-clip:text; color:transparent; }
@@ -56,7 +53,6 @@
   .progress { height:7px; background:rgba(255,255,255,.08); border-radius:4px; overflow:hidden; margin-top:10px; }
   .progress i { display:block; height:100%; background:linear-gradient(90deg,#bfe4ff,#7fc0ff); border-radius:4px; transition:width .5s; box-shadow:0 0 10px rgba(150,210,255,.6); }
 
-  /* ===== ТИЗЕР ===== */
   .teaser { background:linear-gradient(135deg,rgba(18,42,74,.88),rgba(14,22,42,.88));
     border:1px solid rgba(160,210,255,.55); border-radius:20px; padding:16px; margin-bottom:12px; text-align:center;
     position:relative; overflow:hidden;
@@ -70,7 +66,6 @@
   .teaser .soon { display:inline-block; margin-top:8px; padding:4px 14px; border-radius:12px;
     background:rgba(150,205,255,.14); border:1px solid rgba(160,210,255,.5); font-size:11px; font-weight:800; color:#bfe4ff; letter-spacing:1px; }
 
-  /* ===== ТОПБАР ===== */
   .topbar { position:sticky; top:0; z-index:10; padding:6px 16px 8px; }
   .topbar-inner { display:flex; justify-content:space-between; align-items:center;
     background:rgba(10,16,32,.85); border:1px solid rgba(140,180,255,.16); border-radius:18px; padding:10px 18px;
@@ -79,7 +74,6 @@
   .coins small { font-size:11px; color:#7f9cc0; font-weight:500; }
   .rate { font-size:12px; color:#7fe0a0; text-align:right; font-weight:700; text-shadow:0 0 8px rgba(120,220,160,.3); }
 
-  /* ===== МАЙНЕР ===== */
   #page-farm.active { display:block; text-align:center; }
   .miner-zone { position:relative; margin-top:8px; }
   .miner-stage { position:relative; width:min(80vw,310px); height:min(80vw,310px); margin:4vh auto 0; cursor:pointer; }
@@ -116,14 +110,12 @@
     background:rgba(16,24,44,.8); border:1px solid rgba(140,180,255,.22); border-radius:22px; font-size:12px; color:#7f9cc0; }
   .miner-badge b { color:#fff; }
 
-  /* ===== МЕТЕОРИТ ===== */
   .asteroid { position:fixed; z-index:50; font-size:44px; cursor:pointer;
     filter:drop-shadow(0 0 14px rgba(200,235,255,.85)); transition:transform 7s linear;
     animation:wob 1.4s ease-in-out infinite alternate; }
   @keyframes wob { from { translate:0 -6px; } to { translate:0 6px; } }
   .asteroid:active { transform:scale(1.25) !important; }
 
-  /* ===== НАВИГАЦИЯ ===== */
   nav { position:fixed; bottom:0; left:0; right:0; z-index:20;
     background:rgba(8,12,24,.9); border-top:1px solid rgba(140,180,255,.16);
     backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); padding-bottom:env(safe-area-inset-bottom); }
@@ -135,7 +127,6 @@
   nav button.active .ico { filter:none; transform:translateY(-2px) scale(1.12); }
   nav button.active::before { content:''; width:32px; height:3.5px; border-radius:2px; background:#9fd4ff; margin-bottom:2px; box-shadow:0 0 10px #9fd4ff; }
 
-  /* ===== МАГАЗИН ===== */
   .shop-card { display:flex; align-items:center; gap:12px; }
   .shop-ico { width:56px; height:56px; flex-shrink:0; border-radius:16px; display:flex; align-items:center; justify-content:center;
     border:1px solid rgba(255,255,255,.12); font-size:26px; box-shadow:inset 0 0 18px rgba(0,0,0,.35); }
@@ -150,7 +141,6 @@
   .mini-btn.upg { background:linear-gradient(135deg,#5a9ce8,#2a5fb0); color:#fff; box-shadow:0 4px 14px rgba(60,120,220,.3); }
   .mini-btn:disabled { opacity:.35; box-shadow:none; }
 
-  /* ===== РЕЙТИНГ ===== */
   .lb-row { display:flex; align-items:center; gap:10px; padding:11px 6px; border-bottom:1px solid rgba(255,255,255,.05); cursor:pointer; }
   .lb-row:last-child { border-bottom:none; }
   .lb-rank { width:32px; text-align:center; font-weight:900; font-size:16px; flex-shrink:0; }
@@ -164,17 +154,14 @@
   .crown { margin-left:4px; }
   .gap-line { padding:12px 6px; text-align:center; color:#9fd4ff; font-weight:700; font-size:13px; }
 
-  /* ===== КОЛЕСО ===== */
   .wheel-wrap { position:relative; width:min(80vw,290px); margin:14px auto; filter:drop-shadow(0 10px 30px rgba(80,140,255,.3)); }
   #wheel { width:100%; display:block; transition:transform 4s cubic-bezier(.17,.67,.12,.99); }
   .wheel-pointer { position:absolute; top:-12px; left:50%; transform:translateX(-50%); font-size:30px; z-index:2; filter:drop-shadow(0 0 8px rgba(190,230,255,.8)); }
 
-  /* ===== СТАТИСТИКА ===== */
   .stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
   .stat-grid .card { margin:0; text-align:center; }
   .stat-grid b { font-size:19px; color:#ffd84d; display:block; margin-bottom:2px; text-shadow:0 0 10px rgba(255,216,77,.25); }
 
-  /* ===== ОВЕРЛЕИ ===== */
   #acc-overlay, #pl-overlay, #admin-overlay, #ref-overlay { position:fixed; inset:0; z-index:200;
     background:rgba(5,8,16,.94); display:none; align-items:center; justify-content:center; padding:20px;
     backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); }
@@ -224,8 +211,8 @@
 <!-- ===== ФЕРМА ===== -->
 <div class="page active" id="page-farm">
   <div class="teaser">
-    <div class="t-title">❄️ ЖДИТЕ ЛИСТИНГА!</div>
-    <p>Токен ZINI скоро будет выведен на биржу. Топ-3 игрока недели получат бонусный запас монет в день листинга — начните копить прямо сейчас!</p>
+    <div class="t-title">❄️ НОВАЯ ЭРА ZINI!</div>
+    <p>Сезон перезапущен — у всех чистый лист. Топ-3 игрока недели получат бонусный запас монет в день листинга!</p>
     <span class="soon">СКОРО ❄️</span>
   </div>
 
@@ -418,11 +405,12 @@
 <div id="admin-overlay">
   <div class="acc-box">
     <h3>🛡 Админ-панель</h3>
-    <p>Поиск игроков, бан, обнуление и заявки на звёзды.</p>
+    <p>Поиск игроков, бан, обнуление, заявки на звёзды и общий сброс сезона.</p>
     <input class="acc-input" id="adm-code" placeholder="Секретный код админа" style="margin-top:0">
     <input class="acc-input" id="adm-search" placeholder="Имя игрока (можно пусто)">
     <button class="acc-btn new" onclick="adminSearch()">🔍 Найти</button>
     <div id="adm-results" style="text-align:left;margin-top:6px"></div>
+    <button class="acc-btn" style="background:#6b1a2c;color:#fff" onclick="globalReset()">🌍 Обнулить ВСЕХ игроков (новый сезон)</button>
     <button class="acc-btn" onclick="document.getElementById('admin-overlay').classList.remove('show')">Закрыть</button>
   </div>
 </div>
@@ -548,7 +536,8 @@ function freshState() {
     refWeek: getWeekKey(), refCredited: 0,
     stars: 0, starsSent: 0,
     promoCodes: [], usedPromos: {},
-    lastFarmAd: 0, crownUntil: 0
+    lastFarmAd: 0, crownUntil: 0,
+    lastReset: 0
   };
 }
 function loadStateFor(accId) {
@@ -562,6 +551,7 @@ function loadStateFor(accId) {
   if (!Array.isArray(s.promoCodes)) s.promoCodes = [];
   if (!s.usedPromos) s.usedPromos = {};
   s.promoCodes = s.promoCodes.map(x => typeof x === 'string' ? { c: x, exp: 0 } : x);
+  if (s.lastReset === undefined) s.lastReset = 0;
   return s;
 }
 function save() {
@@ -574,9 +564,21 @@ let popupTimer;
 function popup(text) {
   const p = document.getElementById('popup');
   p.textContent = text; p.classList.add('show');
-  clearTimeout(popupTimer); popupTimer = setTimeout(() => p.classList.remove('show'), 2200);
+  clearTimeout(popupTimer); popupTimer = setTimeout(() => p.classList.remove('show'), 2600);
 }
 function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
+function applyGlobalReset(resetTs) {
+  state = freshState();
+  state.lastReset = resetTs;
+  save();
+  currentRigId = null;
+  applyRigLook();
+  render(); renderShop(); renderMarket(); renderUpg(); renderProf();
+  updateAdUi(); renderBoost(); renderStars(); renderPromos(); renderFarmAd();
+  buildLB(); updateLB();
+  popup('❄️ Новый сезон! Все балансы обнулены — стартуй заново!');
+}
 
 // ================= ДОХОД И БУСТЫ =================
 function boostActive() { return state && Date.now() < (state.boostUntil || 0); }
@@ -814,11 +816,17 @@ async function sendToWorker() {
         player_id: ACCOUNT_ID, name: ACCOUNT_NAME, week_key: getWeekKey(),
         mined: Math.floor(state.weekMined), coins: Math.floor(state.coins),
         total_mined: Math.floor(state.totalMined), rig: bestMiner().name, title: rankTitle(state.totalMined),
-        taps: state.taps || 0, miners: JSON.stringify(state.miners || {})
+        taps: state.taps || 0, miners: JSON.stringify(state.miners || {}),
+        last_reset: state.lastReset || 0
       })
     });
     const d = await res.json().catch(() => ({}));
-    if (d.hidden) { state.weekMined = 0; popup('Результаты недели сброшены админом'); }
+    if (d.reset) { applyGlobalReset(d.reset_ts || Date.now()); return; }
+    if (d.hidden) {
+      state.weekMined = 0;
+      if (d.resetCmd) { state.coins = 0; popup('Баланс обнулён админом'); }
+      save();
+    }
   } catch (e) { console.error('sync:', e); }
 }
 function syncSoon() {
@@ -980,11 +988,11 @@ function spawnAsteroid() {
   });
 }
 
-// ================= РЕКЛАМА =================
+// ================= РЕКЛАМА (реальная, без тестового режима) =================
 let adController = null;
 function initAds() {
   if (!window.Adsgram) return;
-  try { adController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID, debug: true }); } catch (e) {}
+  try { adController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID }); } catch (e) {}
 }
 function todayStamp() { return new Date().setHours(0,0,0,0); }
 function adsLeft() { if (!state) return 0; if (state.adsDay !== todayStamp()) return ADS_PER_DAY; return ADS_PER_DAY - (state.adsCount || 0); }
@@ -1266,6 +1274,18 @@ async function adminAct(id, action) {
     } else popup('Ошибка: неверный код');
   } catch (e) { popup('Ошибка связи'); }
 }
+async function globalReset() {
+  if (!confirm('Точно обнулить ВСЕХ игроков и начать новый сезон?')) return;
+  const c = localStorage.getItem('zini_admin_code') || '';
+  try {
+    const res = await fetch(SYNC_WORKER_URL + '/admin', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: c, action: 'globalreset' })
+    });
+    if (res.ok) popup('🌍 Новый сезон запущен! Все игроки обнулятся при входе');
+    else popup('Ошибка: неверный код');
+  } catch (e) { popup('Ошибка связи'); }
+}
 
 // ================= НАВИГАЦИЯ =================
 let currentPage = 'farm';
@@ -1301,7 +1321,7 @@ function render() {
   renderStars();
 }
 
-// ================= ЗИМНИЙ ФОН: СНЕГ И ЗВЁЗДЫ =================
+// ================= ЗИМНИЙ ФОН =================
 const FLAKES = ['❄','❅','❆','❄'];
 for (let i = 0; i < 12; i++) {
   const f = document.createElement('div');
@@ -1344,6 +1364,7 @@ function startGame(accId, accName) {
   updateAdUi(); renderBoost(); renderStars(); renderPromos(); renderFarmAd();
   buildLB(); updateLB();
   fetchLeaderboard(); fetchWeeklyTop(); refStats();
+  sendToWorker();
   setTimeout(showRefPrompt, 2000);
 
   if (!intervalsStarted) {
