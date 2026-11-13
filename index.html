@@ -154,13 +154,11 @@
   }
   .drum.idle { border-color: var(--line); box-shadow: inset 0 0 40px rgba(0,0,0,0.7); }
   .drum.ticking { border-color: var(--accent); }
-  /* затемнение краёв барабана */
   .drum::before, .drum::after {
     content: ""; position: absolute; top: 0; bottom: 0; width: 70px; z-index: 3; pointer-events: none;
   }
   .drum::before { left: 0; background: linear-gradient(90deg, #0a0c11 10%, transparent); }
   .drum::after { right: 0; background: linear-gradient(270deg, #0a0c11 10%, transparent); }
-  /* вертикальные штрихи — вид барабана */
   .drum-lines {
     position: absolute; inset: 0; z-index: 1; opacity: 0.5; pointer-events: none;
     background: repeating-linear-gradient(90deg, transparent 0 34px, rgba(255,255,255,0.05) 34px 36px);
@@ -198,30 +196,11 @@
   .history .hlose { color: var(--red); font-weight: bold; }
   .history .hbon { color: var(--violet); font-weight: bold; }
 
-  /* вспышка на весь экран при победе */
-  .flash {
-    position: fixed; inset: 0; z-index: 400; pointer-events: none; opacity: 0;
-  }
+  .flash { position: fixed; inset: 0; z-index: 400; pointer-events: none; opacity: 0; }
   .flash.win { background: radial-gradient(circle, rgba(61,220,132,0.35), transparent 70%); animation: flashout 0.9s ease-out; }
   .flash.lose { background: radial-gradient(circle, rgba(255,92,110,0.25), transparent 70%); animation: flashout 0.7s ease-out; }
   .flash.bonus { background: radial-gradient(circle, rgba(160,107,255,0.4), transparent 70%); animation: flashout 1.1s ease-out; }
   @keyframes flashout { 0% { opacity: 1; } 100% { opacity: 0; } }
-
-  .auth-box {
-    max-width: 400px; margin: 60px auto; background: var(--panel);
-    border: 1px solid var(--line); border-radius: 16px; padding: 25px; text-align: center;
-    position: relative; z-index: 1; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  }
-  .auth-box h2 { color: var(--accent); margin-bottom: 8px; }
-  .auth-box input {
-    width: 100%; background: var(--panel2); border: 1px solid var(--line);
-    border-radius: 9px; color: var(--text); padding: 12px; font-size: 15px; margin-bottom: 10px; text-align: center;
-  }
-  .auth-note { font-size: 12px; color: var(--muted); margin-top: 10px; }
-  .btn {
-    background: linear-gradient(180deg, var(--accent2), var(--accent)); color: #1a1206;
-    border: none; border-radius: 9px; padding: 12px 18px; font-size: 14px; font-weight: bold; cursor: pointer;
-  }
 
   @media (max-width: 640px) {
     .mult-grid { grid-template-columns: repeat(3, 1fr); }
@@ -243,18 +222,7 @@
   <a class="home-link" href="index.html">← На сайт</a>
 </div>
 
-<div id="authScreen">
-  <div class="auth-box">
-    <h2>Апгрейдер ZINI<b>DROP</b></h2>
-    <p style="font-size:13px; color:#8b93a5; margin-bottom:15px">Ставь звёзды или подарки — крути барабан и удваивай!</p>
-    <input type="tel" id="authPhone" placeholder="+7 (___) ___-__-__" maxlength="18">
-    <input type="text" id="authName" placeholder="Твоё имя" maxlength="25">
-    <button class="btn" style="width:100%" onclick="authSubmit()">Войти по номеру</button>
-    <div class="auth-note">Тот же аккаунт, что и на основном сайте. Баланс и инвентарь общие.</div>
-  </div>
-</div>
-
-<div id="mainScreen" style="display:none">
+<div id="mainScreen">
 <div class="container">
   <div class="page-title">🎲 Апгрейдер</div>
   <div class="page-sub">Ставь звёзды или подарок из инвентаря → выбирай множитель → крути барабан. Чем выше множитель — тем меньше шанс и больше выигрыш.</div>
@@ -321,6 +289,20 @@
 </div>
 
 <script>
+// ================== ПРОВЕРКА ВХОДА ==================
+// Регистрация и вход — только на странице кейсах (index.html).
+// Если игрок не вошёл — отправляем его туда.
+const savedUser = localStorage.getItem("zd_current");
+if (!savedUser) {
+  location.replace("index.html");
+}
+let user = null;
+try { user = JSON.parse(savedUser); } catch (e) {}
+if (!user || !user.id) {
+  location.replace("index.html");
+}
+// =====================================================
+
 // ================== НАСТРОЙКИ ==================
 const MULTIPLIERS = [
   { mult: 1.5, chance: 62, bonus: null },
@@ -340,7 +322,6 @@ const GIFTS = {
 };
 // ================================================
 
-let user = null;
 let balance = 0, giftItems = [], premium = 0;
 let mode = "stars";
 let selectedGift = null;
@@ -348,46 +329,6 @@ let currentMultIndex = 0;
 let spinning = false;
 
 const k = (name) => "zd_" + (user ? user.id : "x") + "_" + name;
-
-function formatPhone(input) {
-  let digits = input.value.replace(/\D/g, "");
-  if (digits.startsWith("8")) digits = "7" + digits.slice(1);
-  if (!digits.startsWith("7")) digits = "7" + digits;
-  digits = digits.slice(0, 11);
-  let out = "+7";
-  if (digits.length > 1) out += " (" + digits.slice(1, 4);
-  if (digits.length >= 4) out += ")";
-  if (digits.length > 4) out += " " + digits.slice(4, 7);
-  if (digits.length > 7) out += "-" + digits.slice(7, 9);
-  if (digits.length > 9) out += "-" + digits.slice(9, 11);
-  input.value = out;
-}
-
-function authSubmit() {
-  const phoneEl = document.getElementById("authPhone");
-  formatPhone(phoneEl);
-  const phone = phoneEl.value.replace(/\D/g, "");
-  const name = document.getElementById("authName").value.trim();
-  if (phone.length !== 11) { alert("Введи номер полностью: +7 (XXX) XXX-XX-XX"); return; }
-  if (name.length < 2) { alert("Введи имя (минимум 2 символа)"); return; }
-  const accKey = "zd_acc_" + phone;
-  const saved = localStorage.getItem(accKey);
-  if (saved) {
-    const acc = JSON.parse(saved);
-    login({ phone: phone, name: acc.name, id: phone });
-  } else {
-    localStorage.setItem(accKey, JSON.stringify({ name: name, created: new Date().toLocaleDateString("ru-RU") }));
-    login({ phone: phone, name: name, id: phone });
-  }
-}
-
-function login(u) {
-  user = u;
-  localStorage.setItem("zd_current", JSON.stringify(user));
-  document.getElementById("authScreen").style.display = "none";
-  document.getElementById("mainScreen").style.display = "block";
-  loadState(); renderGame();
-}
 
 function loadState() {
   balance = parseInt(localStorage.getItem(k("balance"))) || 0;
@@ -473,9 +414,9 @@ function pickMult(i) {
 
 function updateChanceLine() {
   const m = MULTIPLIERS[currentMultIndex];
-  let txt = `Шанс победы: <b>${m.chance}%</b> · при победе: `;
+  let txt;
   if (mode === "stars") {
-    txt += `ставка × ${m.mult}`;
+    txt = `Шанс победы: <b>${m.chance}%</b> · при победе: ставка × ${m.mult}`;
   } else {
     txt = `Шанс победы: <b>${m.chance}%</b> · подарок превращается в его ценность × ${m.mult}`;
   }
@@ -498,10 +439,8 @@ function itemHTML(p) {
   return `<div class="strip-item${rare}">${emoji}<div class="val">${val}</div></div>`;
 }
 
-// нейтральная полоса до первой крутки
 function renderIdleStrip() {
   if (spinning) return;
-  const c = MULTIPLIERS[0];
   const base = [{ name: "Пусто", emoji: "💨", value: 0, type: "none" },
                 { name: "⭐", emoji: "⭐", value: 25, type: "stars" },
                 { name: "🎁", gift: "sticker", type: "gift" }];
@@ -546,15 +485,15 @@ function spin() {
   spinning = true;
   const isWin = Math.random() * 100 < m.chance;
 
-  // имитируем призы: пусто = проигрыш, ценные = победа
   const drumPrizes = [];
   for (let i = 0; i < 48; i++) {
     drumPrizes.push(isWin
       ? { name: "⭐", emoji: "⭐", value: 100, type: "stars" }
       : { name: "Пусто", emoji: "💨", value: 0, type: "none" });
   }
-  if (isWin) drumPrizes[40] = { name: "⭐", emoji: "⭐", value: Math.floor(getBet() * m.mult), type: "stars" };
-  else drumPrizes[40] = { name: "Пусто", emoji: "💨", value: 0, type: "none" };
+  drumPrizes[40] = isWin
+    ? { name: "⭐", emoji: "⭐", value: Math.floor(getBet() * m.mult), type: "stars" }
+    : { name: "Пусто", emoji: "💨", value: 0, type: "none" };
 
   const strip = document.getElementById("strip");
   strip.innerHTML = drumPrizes.map(itemHTML).join("");
@@ -633,9 +572,9 @@ function finishSpin(m, isWin) {
       flash(bonusType ? "bonus" : "win");
       addHistory(true, bet, win, bonusName);
     } else {
+      const giftValue = GIFTS[selectedGift].value;
       const idx = giftItems.indexOf(selectedGift);
       if (idx !== -1) giftItems.splice(idx, 1);
-      const giftValue = GIFTS[selectedGift].value;
       const win = Math.floor(giftValue * m.mult);
       balance += win;
       selectedGift = null;
@@ -652,16 +591,19 @@ function finishSpin(m, isWin) {
     if (mode === "gift") {
       const idx = giftItems.indexOf(selectedGift);
       if (idx !== -1) giftItems.splice(idx, 1);
+      const lostValue = GIFTS[selectedGift] ? GIFTS[selectedGift].value : 0;
       selectedGift = null;
       saveState();
       renderGiftSelect();
+      addHistory(false, lostValue, 0, "");
+    } else {
+      addHistory(false, getBet(), 0, "");
     }
     r.className = "result lose";
     r.textContent = "💨 Не повезло. Ещё попытку?";
     dr.className = "result lose";
     dr.textContent = "💨";
     flash("lose");
-    addHistory(false, mode === "gift" ? GIFTS[selectedGift || "sticker"]?.value || 0 : getBet(), 0, "");
   }
   renderGame();
 }
@@ -690,12 +632,8 @@ function renderHistory() {
 }
 
 // ---------- запуск ----------
-const savedUser = localStorage.getItem("zd_current");
-if (savedUser) {
-  try { login(JSON.parse(savedUser)); } catch (e) {}
-}
-const ph = document.getElementById("authPhone");
-ph.addEventListener("input", () => formatPhone(ph));
+loadState();
+renderGame();
 </script>
 
 </body>
