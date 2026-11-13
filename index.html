@@ -38,7 +38,6 @@
   .progress { height:6px; background:rgba(255,255,255,.08); border-radius:3px; overflow:hidden; margin-top:8px; }
   .progress i { display:block; height:100%; background:#ffd84d; border-radius:3px; transition:width .5s; }
 
-  /* Тизер реальных выплат */
   .teaser { background:linear-gradient(135deg,#2a1e05,#1a1e30); border:1px solid rgba(255,216,77,.55);
     border-radius:18px; padding:14px; margin-bottom:10px; text-align:center;
     box-shadow:0 0 24px rgba(255,216,77,.12); }
@@ -176,9 +175,9 @@
 <div class="page active" id="page-farm">
 
   <div class="teaser">
-    <div class="t-title">💰 СКОРО: РЕАЛЬНЫЕ ДЕНЬГИ НА КАРТУ!</div>
-    <p>В скором времени топ-3 игрока недели начнут получать реальные выплаты на карту. Боритесь за топ уже сейчас — победители первых недель войдут в историю!</p>
-    <span class="soon">СКОРОО 👀</span>
+    <div class="t-title">🚀 ЖДИТЕ ЛИСТИНГА!</div>
+    <p>Токен ZINI скоро будет выведен на биржу. Топ-3 игрока недели получат бонусный запас монет в день листинга — начните копить прямо сейчас, итоги каждой недели фиксируются!</p>
+    <span class="soon">СКОРО 🚀</span>
   </div>
 
   <div class="miner-zone">
@@ -198,7 +197,7 @@
 
   <div class="card" style="margin-top:16px;text-align:left">
     <div class="row"><b>🏆 Топ недели</b><span class="muted">итоги в воскресенье</span></div>
-    <p class="muted" style="margin:4px 0 8px">Топ-3 получают корону 👑. А скоро — реальные деньги на карту!</p>
+    <p class="muted" style="margin:4px 0 8px">Топ-3 получают корону 👑. А в день листинга — крупные бонусы!</p>
     <div id="farm-week-top" class="muted" style="text-align:center;padding:6px">Загрузка…</div>
   </div>
 </div>
@@ -223,8 +222,8 @@
   <p class="sub" id="lb-status"><span class="live-dot"></span>Обновляется в реальном времени.</p>
 
   <div class="teaser">
-    <div class="t-title">💰 Скоро здесь будут деньги</div>
-    <p>Топ-3 недели начнут получать реальные выплаты на карту. Займи место в тройке заранее — победителей первых недель ждёт слава и призы!</p>
+    <div class="t-title">🚀 Листинг на подходе</div>
+    <p>Топ-3 каждой недели войдут в «Золотой список» и получат крупные бонусы, когда ZINI будет выведен на биржу. Чем выше место — тем жирнее бонус. Занимай позицию заранее!</p>
   </div>
 
   <div class="card" style="padding:6px 12px" id="lb-list"></div>
@@ -241,13 +240,14 @@
   <p class="sub">Реклама с бустами ×2 и ×3, колесо фортуны и битва за топ.</p>
 
   <div class="teaser">
-    <div class="t-title">💰 СКОРО: ДЕНЬГИ НА КАРТУ ТОП-3</div>
-    <p>Мы запускаем реальные выплаты победителям недели! Как только система будет готова — топ-3 станут первыми, кто получит деньги на карту. Играйте активно сейчас: статистика уже копится!</p>
+    <div class="t-title">🚀 ЛИСТИНГ СКОРО — УСПЕЙ В ТОП!</div>
+    <p>В день листинга ZINI топ-3 недельного рейтинга получат бонусы ×5, ×3 и ×2 от баланса недели. Все твои результаты уже копятся — не упусти своё место!</p>
     <span class="soon">АНОНС 📣</span>
   </div>
 
   <div class="card" style="text-align:center">
-    <b>🎬 Смотрите рекламу — ×2 доход на 30 минут!</b>
+    <b>🎬 Реклама — твой главный буст!</b>
+    <p class="muted" style="margin-top:4px">Монеты за просмотр растут с каждым просмотром в день. Топ-игроки смотрят все 10 реклам в день!</p>
     <div class="muted" id="ad-left" style="margin-top:4px"></div>
     <div class="progress"><i id="ad-quest-bar" style="width:0%"></i></div>
     <div class="muted" id="ad-quest-text" style="margin-top:4px"></div>
@@ -266,7 +266,7 @@
 
   <div class="card">
     <div class="row"><b>🏆 Топ недели</b><span class="muted">итоги в воскресенье</span></div>
-    <p class="muted" style="margin:6px 0 10px">Топ-3 получают корону 👑 в рейтинге на всю следующую неделю! А скоро — реальные деньги на карту.</p>
+    <p class="muted" style="margin:6px 0 10px">Топ-3 получают корону 👑 в рейтинге на всю следующую неделю! А в день листинга — крупные бонусы топ-3.</p>
     <div id="week-top" class="muted" style="text-align:center;padding:8px">Загрузка…</div>
   </div>
 
@@ -278,7 +278,11 @@
     </div>
     <div class="star-item">
       <div class="star-ico">⚡</div>
-      <div><b>Супер-буст ×3</b><p>Посмотрите 3 рекламы в течение 30 минут — и весь доход станет тройным на полчаса!</p></div>
+      <div><b>Супер-буст ×3</b><p>Посмотрите 3 рекламы за 30 минут — весь доход станет тройным на полчаса!</p></div>
+    </div>
+    <div class="star-item">
+      <div class="star-ico">💰</div>
+      <div><b>Каждый просмотр жирнее</b><p>Первый просмотр дня даёт базовые монеты, десятый — уже ×2. Досматривайте все 10!</p></div>
     </div>
     <div class="star-item">
       <div class="star-ico">☄️</div>
@@ -290,7 +294,7 @@
     </div>
     <div class="star-item">
       <div class="star-ico">👑</div>
-      <div><b>Корона и титулы</b><p>Топ-3 недели носят корону 👑. А за общий прогресс даются титулы — от Новичка до Космического владыки.</p></div>
+      <div><b>Корона и титулы</b><p>Топ-3 недели носят корону 👑. За общий прогресс даются титулы — от Новичка до Космического владыки.</p></div>
     </div>
   </div>
 </div>
@@ -346,8 +350,8 @@
 // ============================================================
 const SUPABASE_URL    = 'https://clxewmkuntmgtbovrgqk.supabase.co';
 const SUPABASE_KEY    = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX';
-const SYNC_WORKER_URL = 'ВСТАВЬ_СЮДА_URL_WORKER';
-const ADSGRAM_BLOCK_ID = '56241';
+const SYNC_WORKER_URL = 'https://zini-sync.zinnurlatipov5.workers.dev';
+const ADSGRAM_BLOCK_ID = '59627';
 const API_HEADERS = {
   'apikey': SUPABASE_KEY,
   'Authorization': 'Bearer ' + SUPABASE_KEY
@@ -738,7 +742,7 @@ function updateLB() {
   else st.innerHTML = '<span class="live-dot"></span>Загрузка…';
 
   document.getElementById('lb-note').style.display =
-    (SYNC_WORKER_URL.startsWith('http') && lbRows.length === 0) ? '' : 'none';
+    (SYNC_WORKER_URL.startsWith('http') && lbRows.length === 0) ? 'none' : (lbRows.length === 0 ? '' : 'none');
 }
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -905,8 +909,9 @@ async function watchAd() {
     await adController.show();
     const now = Date.now();
 
-    // Бонус монетами
-    const bonus = Math.max(800, Math.floor(Math.max(tapIncome(), totalRate()) * 60));
+    // Бонус монетами: растёт с каждым просмотром в течение дня (+10% за каждый, максимум ×2)
+    const dayMultiplier = 1 + (state.adsCount || 0) * 0.1;
+    const bonus = Math.max(800, Math.floor(Math.max(tapIncome(), totalRate()) * 60 * Math.min(dayMultiplier, 2)));
     addMined(bonus);
 
     // Запоминаем время просмотра, чистим старые (>30 мин)
@@ -926,7 +931,7 @@ async function watchAd() {
       state.boostLevel = 3;
       state.boostUntil = now + BOOST_MINUTES * 60000;
       state.adsTimes = state.adsTimes.slice(-3); // окно обнуляется, чтобы ×3 нужно было заработать заново
-      popup('⚡⚡ СУПЕР-БУСТ ×3 на 30 минут! +' + fmt(bonus) + ' монет!');
+      popup('⚡⚡ СУПЕР-БУСТ ×3! Задание дня почти выполнено — впереди бонус! +' + fmt(bonus));
     } else {
       state.boostLevel = 2;
       state.boostUntil = now + BOOST_MINUTES * 60000;
