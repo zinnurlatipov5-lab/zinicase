@@ -9,125 +9,204 @@
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; user-select:none; }
   html, body { height:100%; overscroll-behavior:none; }
-  body { font-family:-apple-system,Arial,sans-serif; color:#fff; overflow-x:hidden; background:#070810; }
+  body { font-family:-apple-system,Arial,sans-serif; color:#fff; overflow-x:hidden; background:#05060f; }
 
-  .bg { position:fixed; inset:0; z-index:-2; background:
-    radial-gradient(ellipse 80% 50% at 20% 0%, rgba(120,80,255,.22), transparent 60%),
-    radial-gradient(ellipse 70% 50% at 90% 10%, rgba(0,200,255,.15), transparent 60%),
-    radial-gradient(ellipse 90% 60% at 50% 100%, rgba(255,180,60,.10), transparent 60%),
-    #070810; }
-  .particle { position:fixed; width:3px; height:3px; border-radius:50%; background:rgba(255,255,255,.2); z-index:-1; animation:rise linear infinite; }
+  /* ===== ФОН: туманности + мерцающие звёзды ===== */
+  .bg { position:fixed; inset:0; z-index:-3; background:#05060f; }
+  .bg::before, .bg::after { content:''; position:fixed; inset:-40%; z-index:-2;
+    background:
+      radial-gradient(circle at 25% 20%, rgba(123,77,255,.20), transparent 42%),
+      radial-gradient(circle at 80% 15%, rgba(0,190,255,.16), transparent 40%),
+      radial-gradient(circle at 55% 85%, rgba(255,120,60,.13), transparent 45%),
+      radial-gradient(circle at 15% 70%, rgba(255,80,180,.10), transparent 40%);
+    animation:drift 26s ease-in-out infinite alternate; }
+  .bg::after { animation-duration:38s; animation-direction:alternate-reverse; filter:hue-rotate(35deg); opacity:.7; }
+  @keyframes drift { from { transform:translate(-6%,-4%) scale(1.05) rotate(-3deg); } to { transform:translate(6%,5%) scale(1.15) rotate(4deg); } }
+  .star { position:fixed; border-radius:50%; background:#fff; z-index:-1; animation:twinkle linear infinite; }
+  @keyframes twinkle { 0%,100% { opacity:.15; transform:scale(1); } 50% { opacity:.95; transform:scale(1.6); } }
+  .particle { position:fixed; width:3px; height:3px; border-radius:50%; background:rgba(255,215,120,.55); z-index:-1; box-shadow:0 0 8px rgba(255,215,120,.8); animation:rise linear infinite; }
   @keyframes rise { from { transform:translateY(100vh); opacity:0; } 10% { opacity:1; } to { transform:translateY(-10vh); opacity:0; } }
 
-  .logo { text-align:center; padding:14px 0 4px; cursor:pointer; }
-  .logo-big { font-size:29px; font-weight:900; letter-spacing:5px; color:#ffd84d; text-shadow:0 0 16px rgba(255,216,77,.4); }
-  .logo-sub { font-size:10px; letter-spacing:6px; color:#8a90a8; font-weight:600; text-transform:uppercase; margin-top:2px; }
+  /* ===== ЛОГОТИП ===== */
+  .logo { text-align:center; padding:16px 0 4px; cursor:pointer; }
+  .logo-big { font-size:30px; font-weight:900; letter-spacing:6px;
+    background:linear-gradient(92deg,#ffe98a,#ffd84d 35%,#ff9f4d 70%,#ffd84d);
+    background-size:200% 100%; -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:shine 5s linear infinite; filter:drop-shadow(0 0 14px rgba(255,216,77,.35)); }
+  @keyframes shine { to { background-position:200% 0; } }
+  .logo-sub { font-size:10px; letter-spacing:7px; color:#8a90a8; font-weight:700; text-transform:uppercase; margin-top:3px; }
 
+  /* ===== КАРТОЧКИ-СТЕКЛО ===== */
   .page { display:none; max-width:480px; margin:0 auto; padding:10px 16px 100px; min-height:100vh; }
   .page.active { display:block; }
-  h2 { font-size:21px; font-weight:800; margin:14px 0 4px; }
+  h2 { font-size:22px; font-weight:800; margin:16px 0 4px; background:linear-gradient(90deg,#fff,#b9c2ff); -webkit-background-clip:text; background-clip:text; color:transparent; }
   .sub { color:#8a90a8; font-size:13px; margin-bottom:16px; }
-  .card { background:#1a1e30; border:1px solid rgba(255,255,255,.07); border-radius:18px; padding:14px; margin-bottom:10px; }
-  .row { display:flex; justify-content:space-between; align-items:center; }
+  .card { background:linear-gradient(160deg,rgba(38,44,72,.72),rgba(18,22,40,.72));
+    border:1px solid rgba(140,160,255,.14); border-radius:20px; padding:16px; margin-bottom:12px;
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    box-shadow:0 8px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06); }
+  .row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
   .muted { color:#8a90a8; font-size:12px; }
-  .btn { width:100%; padding:13px; border:none; border-radius:14px; background:#ffd84d; color:#14162a; font-weight:800; font-size:14px; margin-top:10px; cursor:pointer; }
-  .btn:disabled { opacity:.35; }
-  .progress { height:6px; background:rgba(255,255,255,.08); border-radius:3px; overflow:hidden; margin-top:8px; }
-  .progress i { display:block; height:100%; background:#ffd84d; border-radius:3px; transition:width .5s; }
+  .btn { width:100%; padding:14px; border:none; border-radius:16px;
+    background:linear-gradient(135deg,#ffe98a,#ffd84d 55%,#ffb84d);
+    color:#14162a; font-weight:800; font-size:14px; margin-top:12px; cursor:pointer;
+    box-shadow:0 6px 20px rgba(255,216,77,.28); transition:transform .12s, box-shadow .2s; }
+  .btn:active { transform:scale(.97); }
+  .btn:disabled { opacity:.35; box-shadow:none; }
+  .btn-purple { background:linear-gradient(135deg,#a06cff,#7b4dff 60%,#5b2fd8); color:#fff; box-shadow:0 6px 20px rgba(123,77,255,.3); }
+  .progress { height:7px; background:rgba(255,255,255,.08); border-radius:4px; overflow:hidden; margin-top:10px; }
+  .progress i { display:block; height:100%; background:linear-gradient(90deg,#ffd84d,#ff9f4d); border-radius:4px; transition:width .5s; box-shadow:0 0 10px rgba(255,216,77,.6); }
 
-  .teaser { background:linear-gradient(135deg,#2a1e05,#1a1e30); border:1px solid rgba(255,216,77,.55); border-radius:18px; padding:14px; margin-bottom:10px; text-align:center; box-shadow:0 0 24px rgba(255,216,77,.12); }
-  .teaser .t-title { font-size:16px; font-weight:900; color:#ffd84d; }
+  /* ===== ТИЗЕР ===== */
+  .teaser { background:linear-gradient(135deg,rgba(80,55,10,.85),rgba(26,30,48,.85));
+    border:1px solid rgba(255,216,77,.5); border-radius:20px; padding:16px; margin-bottom:12px; text-align:center;
+    backdrop-filter:blur(10px); position:relative; overflow:hidden;
+    box-shadow:0 0 30px rgba(255,216,77,.12), inset 0 1px 0 rgba(255,255,255,.08); }
+  .teaser::before { content:''; position:absolute; top:0; left:-70%; width:50%; height:100%;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.09),transparent);
+    animation:sweep 4.5s ease-in-out infinite; }
+  @keyframes sweep { 0% { left:-70%; } 60%,100% { left:130%; } }
+  .teaser .t-title { font-size:17px; font-weight:900; color:#ffd84d; text-shadow:0 0 14px rgba(255,216,77,.4); }
   .teaser p { font-size:12px; color:#e8d9a8; margin-top:6px; }
-  .teaser .soon { display:inline-block; margin-top:8px; padding:4px 12px; border-radius:12px; background:rgba(255,216,77,.15); border:1px solid rgba(255,216,77,.4); font-size:11px; font-weight:800; color:#ffd84d; letter-spacing:1px; }
+  .teaser .soon { display:inline-block; margin-top:8px; padding:4px 14px; border-radius:12px;
+    background:rgba(255,216,77,.15); border:1px solid rgba(255,216,77,.45); font-size:11px; font-weight:800; color:#ffd84d; letter-spacing:1px; }
 
+  /* ===== ТОПБАР ===== */
   .topbar { position:sticky; top:0; z-index:10; padding:6px 16px 8px; }
-  .topbar-inner { display:flex; justify-content:space-between; align-items:center; background:#141828; border:1px solid rgba(255,255,255,.08); border-radius:16px; padding:10px 16px; max-width:448px; margin:0 auto; }
-  .coins { font-size:20px; font-weight:800; color:#ffd84d; }
+  .topbar-inner { display:flex; justify-content:space-between; align-items:center;
+    background:rgba(16,20,38,.82); border:1px solid rgba(140,160,255,.14); border-radius:18px; padding:10px 18px;
+    backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); box-shadow:0 8px 24px rgba(0,0,0,.4); }
+  .coins { font-size:21px; font-weight:800; color:#ffd84d; text-shadow:0 0 12px rgba(255,216,77,.35); }
   .coins small { font-size:11px; color:#8a90a8; font-weight:500; }
-  .rate { font-size:12px; color:#4dd964; text-align:right; font-weight:600; }
+  .rate { font-size:12px; color:#4dd964; text-align:right; font-weight:700; text-shadow:0 0 8px rgba(77,217,100,.3); }
 
+  /* ===== МАЙНЕР ===== */
   #page-farm.active { display:block; text-align:center; }
   .miner-zone { position:relative; margin-top:8px; }
-  .miner-stage { position:relative; width:min(78vw,300px); height:min(78vw,300px); margin:4vh auto 0; cursor:pointer; }
-  .halo { position:absolute; inset:-4%; border-radius:50%; background:rgba(123,77,255,.10); animation:pulse 2.6s ease-in-out infinite; }
-  @keyframes pulse { 0%,100% { transform:scale(1); opacity:.7; } 50% { transform:scale(1.06); opacity:1; } }
-  .orbit { position:absolute; inset:-18px; border-radius:50%; border:1.5px dashed rgba(123,77,255,.35); animation:spin2 16s linear infinite; }
+  .miner-stage { position:relative; width:min(80vw,310px); height:min(80vw,310px); margin:4vh auto 0; cursor:pointer; }
+  .halo { position:absolute; inset:-6%; border-radius:50%;
+    background:radial-gradient(circle, rgba(123,77,255,.16), transparent 65%); animation:pulse 2.8s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform:scale(1); opacity:.75; } 50% { transform:scale(1.07); opacity:1; } }
+  .orbit { position:absolute; inset:-20px; border-radius:50%; border:1.5px dashed rgba(123,77,255,.4); animation:spin2 16s linear infinite; }
+  .orbit2 { position:absolute; inset:-42px; border-radius:50%; border:1px solid rgba(255,216,77,.25); animation:spin2 26s linear infinite reverse; }
+  .orbit2::before, .orbit2::after { content:''; position:absolute; width:9px; height:9px; border-radius:50%;
+    background:#ffd84d; box-shadow:0 0 12px #ffd84d; }
+  .orbit2::before { top:-5px; left:calc(50% - 4px); }
+  .orbit2::after { bottom:-5px; left:calc(50% - 4px); background:#7b4dff; box-shadow:0 0 12px #7b4dff; }
   @keyframes spin2 { to { transform:rotate(360deg); } }
-  .rig { position:absolute; inset:0; border-radius:50%; background:#1c2138; border:2px solid #7b4dff; box-shadow:0 0 30px rgba(123,77,255,.25); display:flex; align-items:center; justify-content:center; transition:transform .12s; }
+  .rig { position:absolute; inset:0; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #2a3055, #171b30 70%);
+    border:2px solid #7b4dff; box-shadow:0 0 40px rgba(123,77,255,.3), inset 0 0 30px rgba(123,77,255,.15);
+    display:flex; align-items:center; justify-content:center; transition:transform .12s; overflow:hidden; }
+  .rig::before { content:''; position:absolute; inset:8px; border-radius:50%;
+    background:conic-gradient(from 0deg, transparent 0 70%, rgba(255,216,77,.35) 82%, transparent 94%);
+    animation:spin2 3.2s linear infinite; }
+  .rig::after { content:''; position:absolute; inset:18px; border-radius:50%;
+    background:conic-gradient(from 180deg, transparent 0 78%, rgba(0,224,255,.4) 90%, transparent 100%);
+    animation:spin2 2.1s linear infinite reverse; }
   .rig:active { transform:scale(.94); }
-  .rig svg { width:62%; height:62%; }
-  .flycoin { position:absolute; font-size:19px; font-weight:900; color:#ffd84d; pointer-events:none; text-shadow:0 2px 4px rgba(0,0,0,.7); animation:fly 1s ease-out forwards; z-index:5; }
-  @keyframes fly { to { transform:translateY(-120px) scale(1.4); opacity:0; } }
-  .tap-hint { color:#8a90a8; font-size:13px; margin-top:24px; }
-  .combo-line { min-height:20px; font-size:15px; font-weight:800; color:#ff9f4d; margin-top:6px; text-shadow:0 0 12px rgba(255,159,77,.5); transition:transform .1s; }
-  .boost-line { min-height:18px; font-size:13px; font-weight:800; color:#4dd964; }
-  .income-strip { display:flex; gap:10px; margin-top:16px; }
-  .income-strip div { flex:1; background:#1a1e30; border:1px solid rgba(255,255,255,.07); border-radius:16px; padding:12px; }
-  .income-strip b { display:block; color:#ffd84d; font-size:16px; margin-bottom:2px; }
-  .miner-badge { display:inline-flex; align-items:center; gap:6px; margin-top:14px; padding:6px 14px; background:#1a1e30; border:1px solid rgba(255,255,255,.1); border-radius:20px; font-size:12px; color:#8a90a8; }
+  .rig svg { width:58%; height:58%; position:relative; z-index:2; filter:drop-shadow(0 0 10px rgba(255,255,255,.25)); }
+  .flycoin { position:absolute; font-size:19px; font-weight:900; color:#ffd84d; pointer-events:none;
+    text-shadow:0 0 10px rgba(255,216,77,.9), 0 2px 4px rgba(0,0,0,.7); animation:fly 1s ease-out forwards; z-index:5; }
+  @keyframes fly { to { transform:translateY(-130px) scale(1.5); opacity:0; } }
+  .tap-hint { color:#8a90a8; font-size:13px; margin-top:26px; }
+  .combo-line { min-height:22px; font-size:16px; font-weight:800; color:#ff9f4d; margin-top:6px; text-shadow:0 0 14px rgba(255,159,77,.6); transition:transform .1s; }
+  .boost-line { min-height:18px; font-size:13px; font-weight:800; color:#4dd964; text-shadow:0 0 10px rgba(77,217,100,.4); }
+  .income-strip { display:flex; gap:10px; margin-top:18px; }
+  .income-strip div { flex:1; background:linear-gradient(160deg,rgba(38,44,72,.72),rgba(18,22,40,.72));
+    border:1px solid rgba(140,160,255,.14); border-radius:18px; padding:13px; backdrop-filter:blur(10px); }
+  .income-strip b { display:block; color:#ffd84d; font-size:17px; margin-bottom:2px; }
+  .miner-badge { display:inline-flex; align-items:center; gap:6px; margin-top:16px; padding:7px 16px;
+    background:rgba(26,30,48,.8); border:1px solid rgba(140,160,255,.2); border-radius:22px; font-size:12px; color:#8a90a8; backdrop-filter:blur(8px); }
   .miner-badge b { color:#fff; }
 
-  .asteroid { position:fixed; z-index:50; font-size:40px; cursor:pointer; filter:drop-shadow(0 0 10px rgba(255,216,77,.8)); transition:transform 7s linear; }
-  .asteroid:active { transform:scale(1.2); }
+  /* ===== МЕТЕОРИТ ===== */
+  .asteroid { position:fixed; z-index:50; font-size:44px; cursor:pointer;
+    filter:drop-shadow(0 0 14px rgba(255,216,77,.85)); transition:transform 7s linear;
+    animation:wob 1.4s ease-in-out infinite alternate; }
+  @keyframes wob { from { translate:0 -6px; } to { translate:0 6px; } }
+  .asteroid:active { transform:scale(1.25) !important; }
 
-  nav { position:fixed; bottom:0; left:0; right:0; z-index:20; background:#0f1220; border-top:1px solid rgba(255,255,255,.08); padding-bottom:env(safe-area-inset-bottom); }
+  /* ===== НАВИГАЦИЯ ===== */
+  nav { position:fixed; bottom:0; left:0; right:0; z-index:20;
+    background:rgba(13,16,30,.88); border-top:1px solid rgba(140,160,255,.14);
+    backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px); padding-bottom:env(safe-area-inset-bottom); }
   nav .nav-inner { max-width:480px; margin:0 auto; display:flex; }
-  nav button { flex:1; background:none; border:none; color:#6a7090; font-size:11px; font-weight:800; padding:12px 0 14px; display:flex; flex-direction:column; align-items:center; gap:5px; letter-spacing:.2px; cursor:pointer; }
-  nav button .ico { font-size:24px; line-height:1; filter:grayscale(1) opacity(.55); transition:filter .2s, transform .2s; }
+  nav button { flex:1; background:none; border:none; color:#6a7090; font-size:10px; font-weight:800;
+    padding:12px 0 14px; display:flex; flex-direction:column; align-items:center; gap:5px; letter-spacing:.2px; cursor:pointer; }
+  nav button .ico { font-size:24px; line-height:1; filter:grayscale(1) opacity(.5); transition:filter .2s, transform .2s; }
   nav button.active { color:#ffd84d; }
-  nav button.active .ico { filter:none; transform:translateY(-2px) scale(1.1); }
-  nav button.active::before { content:''; width:30px; height:3.5px; border-radius:2px; background:#ffd84d; margin-bottom:2px; }
+  nav button.active .ico { filter:none; transform:translateY(-2px) scale(1.12); }
+  nav button.active::before { content:''; width:32px; height:3.5px; border-radius:2px; background:#ffd84d; margin-bottom:2px; box-shadow:0 0 10px #ffd84d; }
 
+  /* ===== МАГАЗИН ===== */
   .shop-card { display:flex; align-items:center; gap:12px; }
-  .shop-ico { width:54px; height:54px; flex-shrink:0; border-radius:14px; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,.12); font-size:26px; }
-  .shop-ico svg { width:38px; height:38px; }
+  .shop-ico { width:56px; height:56px; flex-shrink:0; border-radius:16px; display:flex; align-items:center; justify-content:center;
+    border:1px solid rgba(255,255,255,.12); font-size:26px; box-shadow:inset 0 0 18px rgba(0,0,0,.35); }
+  .shop-ico svg { width:40px; height:40px; }
   .shop-info { flex:1; min-width:0; }
   .shop-name { font-weight:800; font-size:15px; }
   .shop-meta { font-size:12px; color:#8a90a8; margin-top:2px; }
   .shop-meta b { color:#4dd964; }
-  .mini-btn { padding:10px 13px; border:none; border-radius:12px; font-weight:800; font-size:12px; white-space:nowrap; cursor:pointer; }
-  .mini-btn.buy { background:#ffd84d; color:#14162a; }
-  .mini-btn.upg { background:#7b4dff; color:#fff; }
-  .mini-btn:disabled { opacity:.35; }
+  .mini-btn { padding:11px 14px; border:none; border-radius:12px; font-weight:800; font-size:12px; white-space:nowrap; cursor:pointer; transition:transform .1s; }
+  .mini-btn:active { transform:scale(.94); }
+  .mini-btn.buy { background:linear-gradient(135deg,#ffe98a,#ffb84d); color:#14162a; box-shadow:0 4px 14px rgba(255,216,77,.25); }
+  .mini-btn.upg { background:linear-gradient(135deg,#a06cff,#6b32e8); color:#fff; box-shadow:0 4px 14px rgba(123,77,255,.3); }
+  .mini-btn:disabled { opacity:.35; box-shadow:none; }
 
-  .lb-row { display:flex; align-items:center; gap:10px; padding:10px 6px; border-bottom:1px solid rgba(255,255,255,.05); cursor:pointer; }
+  /* ===== РЕЙТИНГ ===== */
+  .lb-row { display:flex; align-items:center; gap:10px; padding:11px 6px; border-bottom:1px solid rgba(255,255,255,.05); cursor:pointer; }
   .lb-row:last-child { border-bottom:none; }
-  .lb-rank { width:30px; text-align:center; font-weight:900; font-size:15px; flex-shrink:0; }
+  .lb-rank { width:32px; text-align:center; font-weight:900; font-size:16px; flex-shrink:0; }
   .lb-name { flex:1; min-width:0; font-weight:700; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .lb-name.me { color:#ffd84d; }
   .lb-val { text-align:right; flex-shrink:0; }
   .lb-val b { display:block; font-size:14px; color:#fff; }
   .lb-val .muted { font-size:10px; }
-  .lb-me { background:rgba(255,216,77,.07); border:1px solid rgba(255,216,77,.25); border-radius:12px; }
-  .live-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#4dd964; margin-right:6px; }
+  .lb-me { background:rgba(255,216,77,.08); border:1px solid rgba(255,216,77,.3); border-radius:14px; }
+  .live-dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#4dd964; margin-right:6px; box-shadow:0 0 8px #4dd964; animation:twinkle 2s linear infinite; }
   .crown { margin-left:4px; }
-  .gap-line { padding:10px 6px; text-align:center; color:#ff9f4d; font-weight:700; font-size:13px; }
+  .gap-line { padding:12px 6px; text-align:center; color:#ff9f4d; font-weight:700; font-size:13px; }
 
-  .wheel-wrap { position:relative; width:min(80vw,290px); margin:12px auto; }
+  /* ===== КОЛЕСО ===== */
+  .wheel-wrap { position:relative; width:min(80vw,290px); margin:14px auto; filter:drop-shadow(0 10px 30px rgba(123,77,255,.35)); }
   #wheel { width:100%; display:block; transition:transform 4s cubic-bezier(.17,.67,.12,.99); }
-  .wheel-pointer { position:absolute; top:-10px; left:50%; transform:translateX(-50%); font-size:28px; z-index:2; }
+  .wheel-pointer { position:absolute; top:-12px; left:50%; transform:translateX(-50%); font-size:30px; z-index:2; filter:drop-shadow(0 0 8px rgba(255,216,77,.8)); }
 
+  /* ===== СТАТИСТИКА ===== */
   .stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
   .stat-grid .card { margin:0; text-align:center; }
-  .stat-grid b { font-size:18px; color:#ffd84d; display:block; margin-bottom:2px; }
+  .stat-grid b { font-size:19px; color:#ffd84d; display:block; margin-bottom:2px; text-shadow:0 0 10px rgba(255,216,77,.3); }
 
-  #acc-overlay, #pl-overlay, #admin-overlay, #ref-overlay { position:fixed; inset:0; z-index:200; background:rgba(7,8,16,.97); display:none; align-items:center; justify-content:center; padding:20px; }
+  /* ===== ОВЕРЛЕИ ===== */
+  #acc-overlay, #pl-overlay, #admin-overlay, #ref-overlay { position:fixed; inset:0; z-index:200;
+    background:rgba(5,6,15,.94); display:none; align-items:center; justify-content:center; padding:20px;
+    backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); }
   #acc-overlay.show, #pl-overlay.show, #admin-overlay.show, #ref-overlay.show { display:flex; }
-  .acc-box { width:100%; max-width:340px; background:#1a1e30; border:1px solid rgba(255,216,77,.3); border-radius:20px; padding:22px; text-align:center; max-height:85vh; overflow-y:auto; }
-  .acc-box h3 { font-size:18px; margin-bottom:4px; }
+  .acc-box { width:100%; max-width:340px; background:linear-gradient(160deg,rgba(40,46,80,.96),rgba(18,22,40,.96));
+    border:1px solid rgba(255,216,77,.35); border-radius:24px; padding:24px; text-align:center; max-height:85vh; overflow-y:auto;
+    box-shadow:0 0 50px rgba(123,77,255,.25); }
+  .acc-box h3 { font-size:19px; margin-bottom:4px; }
   .acc-box p { color:#8a90a8; font-size:12px; margin-bottom:14px; }
-  .acc-btn { width:100%; padding:12px; margin-top:8px; border:none; border-radius:12px; background:#2a3050; color:#fff; font-weight:800; font-size:14px; cursor:pointer; }
-  .acc-btn.new { background:#ffd84d; color:#14162a; }
-  .acc-input { width:100%; padding:12px; margin-top:12px; border-radius:12px; border:1px solid rgba(255,255,255,.15); background:#141828; color:#fff; font-size:14px; outline:none; }
-  .adm-row { display:flex; align-items:center; justify-content:space-between; gap:6px; background:#141828; border-radius:12px; padding:8px 10px; margin-top:6px; }
+  .acc-btn { width:100%; padding:13px; margin-top:8px; border:none; border-radius:14px; background:#2a3050; color:#fff; font-weight:800; font-size:14px; cursor:pointer; transition:transform .1s; }
+  .acc-btn:active { transform:scale(.97); }
+  .acc-btn.new { background:linear-gradient(135deg,#ffe98a,#ffb84d); color:#14162a; }
+  .acc-input { width:100%; padding:13px; margin-top:12px; border-radius:14px; border:1px solid rgba(140,160,255,.25); background:#141828; color:#fff; font-size:14px; outline:none; }
+  .acc-input:focus { border-color:#ffd84d; }
+  .adm-row { display:flex; align-items:center; justify-content:space-between; gap:6px; background:#141828; border-radius:14px; padding:9px 11px; margin-top:6px; border:1px solid rgba(140,160,255,.1); }
   .adm-row .n { font-size:13px; font-weight:700; }
   .adm-row .b { font-size:11px; color:#8a90a8; }
-  .adm-btn { padding:7px 9px; border:none; border-radius:9px; font-weight:800; font-size:11px; cursor:pointer; }
-  .cups { display:flex; gap:14px; justify-content:center; margin-top:10px; font-size:36px; }
-  .cups div { cursor:pointer; transition:transform .15s; }
-  .cups div:active { transform:scale(1.15); }
+  .adm-btn { padding:7px 10px; border:none; border-radius:10px; font-weight:800; font-size:11px; cursor:pointer; transition:transform .1s; }
+  .adm-btn:active { transform:scale(.92); }
+  .cups { display:flex; gap:16px; justify-content:center; margin-top:12px; font-size:42px; }
+  .cups div { cursor:pointer; transition:transform .15s; filter:drop-shadow(0 4px 8px rgba(0,0,0,.5)); }
+  .cups div:active { transform:scale(1.18) rotate(-4deg); }
 
-  #popup { position:fixed; left:50%; bottom:110px; transform:translateX(-50%); background:#141828; border:1px solid rgba(255,216,77,.4); color:#ffd84d; padding:12px 20px; border-radius:14px; font-weight:700; font-size:14px; opacity:0; transition:opacity .3s; pointer-events:none; z-index:99; white-space:nowrap; max-width:92vw; }
+  #popup { position:fixed; left:50%; bottom:112px; transform:translateX(-50%);
+    background:rgba(20,24,40,.95); border:1px solid rgba(255,216,77,.5); color:#ffd84d;
+    padding:12px 22px; border-radius:16px; font-weight:700; font-size:14px; opacity:0; transition:opacity .3s;
+    pointer-events:none; z-index:99; white-space:nowrap; max-width:92vw; backdrop-filter:blur(10px);
+    box-shadow:0 0 24px rgba(255,216,77,.2); }
   #popup.show { opacity:1; }
 </style>
 </head>
@@ -156,7 +235,9 @@
 
   <div class="miner-zone">
     <div class="miner-stage" id="miner">
-      <div class="orbit"></div><div class="halo" id="halo"></div>
+      <div class="orbit2"></div>
+      <div class="orbit"></div>
+      <div class="halo" id="halo"></div>
       <div class="rig" id="rig"><div id="rig-icon"></div></div>
     </div>
     <div class="miner-badge">Ваш майнер: <b id="rig-name">—</b></div>
@@ -169,7 +250,7 @@
     </div>
   </div>
 
-  <div class="card" style="margin-top:16px">
+  <div class="card" style="margin-top:18px">
     <div class="row"><b>🎬 Рекламный бонус</b><span class="muted" id="farm-ad-cd"></span></div>
     <button class="btn" id="farm-ad-btn" onclick="farmAd()">Получить бонус монет</button>
   </div>
@@ -222,7 +303,7 @@
 
   <div class="card" style="text-align:center">
     <b>🎟 Промокоды из рекламы</b>
-    <p class="muted" style="margin-top:4px">Иногда за просмотр рекламы выпадает промокод. Вводи его здесь — приз случайный: монеты, звёзды ⭐, бусты и билеты!</p>
+    <p class="muted" style="margin-top:4px">Иногда за просмотр рекламы выпадает промокод. Вводи его здесь — приз случайный: монеты, звёзды ⭐, бусты и билеты! У кода есть 24 часа.</p>
     <div class="muted" id="my-promos" style="margin:8px 0"></div>
     <input class="acc-input" id="promo-input" placeholder="ZINI-XXXX" style="margin-top:0;text-align:center">
     <button class="btn" onclick="usePromo()">Активировать промокод</button>
@@ -240,7 +321,7 @@
     <div class="cups">
       <div onclick="pickCup(0)">🧰</div><div onclick="pickCup(1)">🧰</div><div onclick="pickCup(2)">🧰</div>
     </div>
-    <button class="btn" id="cup-ad-btn" style="display:none;background:#7b4dff;color:#fff" onclick="cupAdRevive()">🎬 Вернуть ставку за рекламу</button>
+    <button class="btn btn-purple" id="cup-ad-btn" style="display:none" onclick="cupAdRevive()">🎬 Вернуть ставку за рекламу</button>
   </div>
 
   <div class="card" style="text-align:center">
@@ -251,7 +332,7 @@
       <svg id="wheel" viewBox="0 0 200 200"><g id="wheel-g"></g></svg>
     </div>
     <button class="btn" id="spin-btn" onclick="spinWheel()">Крутить!</button>
-    <button class="btn" id="spin-ad-btn" style="display:none;background:#7b4dff;color:#fff" onclick="spinForAd()">🎬 Ещё попытка за рекламу</button>
+    <button class="btn btn-purple" id="spin-ad-btn" style="display:none" onclick="spinForAd()">🎬 Ещё попытка за рекламу</button>
   </div>
 
   <div class="card">
@@ -267,18 +348,27 @@
   <div class="card">
     <div class="row"><b id="acc-name">👤 Игрок</b><span class="muted" id="acc-type"></span></div>
     <div class="muted" style="margin-top:6px">Титул: <b id="acc-title" style="color:#ffd84d"></b></div>
-    <button class="btn" style="background:#2a3050;color:#fff;margin-top:8px" onclick="switchAccount()">🔄 Сменить аккаунт</button>
+    <button class="btn btn-purple" style="margin-top:8px" onclick="switchAccount()">🔄 Сменить аккаунт</button>
   </div>
   <div class="card">
-    <div class="row"><b>⭐ Звёзды</b><span class="muted" id="stars-cnt"></span></div>
+    <div class="row">
+      <b>⭐ Звёзды</b>
+      <b id="stars-cnt" style="color:#ffd84d;font-size:17px">0</b>
+    </div>
+    <div class="muted" id="stars-detail" style="margin-top:4px">есть: 0 ⭐ • выведено: 0 ⭐</div>
     <p class="muted" style="margin-top:4px">Выпадают из промокодов. Накопи 50 ⭐ и обменяй на подарок в Telegram!</p>
     <button class="btn" id="stars-btn" onclick="withdrawStars()">Вывести звёзды</button>
+  </div>
+  <div class="card">
+    <div class="row"><b>🎟 Промокоды</b><span class="muted">живут 24 часа</span></div>
+    <div class="muted" id="prof-promos" style="margin-top:4px"></div>
   </div>
   <div class="card">
     <div class="row"><b>🤝 Друзья-рефералы</b><span class="muted" id="ref-pct"></span></div>
     <p class="muted" style="margin-top:4px">Твой код — отправь другу:</p>
     <div class="acc-input" id="my-ref-code" style="margin-top:6px;font-weight:800;color:#ffd84d;user-select:text;cursor:text"></div>
-    <button class="btn" style="background:#7b4dff;color:#fff" onclick="shareRef()">📤 Поделиться кодом</button>
+    <button class="btn btn-purple" onclick="shareRef()">📤 Поделиться кодом</button>
+    <button class="btn" style="background:#2a3050;color:#fff;margin-top:6px" onclick="enterRefCode()">🎟 Ввести код друга</button>
     <div class="muted" id="ref-stats" style="margin-top:8px"></div>
   </div>
   <div class="card">
@@ -332,9 +422,9 @@
 <div id="admin-overlay">
   <div class="acc-box">
     <h3>🛡 Админ-панель</h3>
-    <p>Поиск игроков, бан и обнуление недели.</p>
+    <p>Поиск игроков, бан, обнуление и заявки на звёзды.</p>
     <input class="acc-input" id="adm-code" placeholder="Секретный код админа" style="margin-top:0">
-    <input class="acc-input" id="adm-search" placeholder="Имя игрока">
+    <input class="acc-input" id="adm-search" placeholder="Имя игрока (можно пусто)">
     <button class="acc-btn new" onclick="adminSearch()">🔍 Найти</button>
     <div id="adm-results" style="text-align:left;margin-top:6px"></div>
     <button class="acc-btn" onclick="document.getElementById('admin-overlay').classList.remove('show')">Закрыть</button>
@@ -362,7 +452,7 @@ function iconRack(c){return `<svg viewBox="0 0 100 100" fill="none"><rect x="22"
 function iconCluster(c){return `<svg viewBox="0 0 100 100" fill="none"><rect x="14" y="52" width="30" height="30" rx="4" stroke="${c}" stroke-width="4"/><rect x="35" y="30" width="30" height="30" rx="4" stroke="${c}" stroke-width="4" fill="${c}12"/><rect x="56" y="10" width="30" height="30" rx="4" stroke="${c}" stroke-width="4" fill="${c}1a"/></svg>`;}
 function iconQuantum(c){return `<svg viewBox="0 0 100 100" fill="none"><rect x="34" y="34" width="32" height="32" rx="4" stroke="${c}" stroke-width="4" fill="${c}14"/><rect x="44" y="44" width="12" height="12" rx="2" fill="${c}"/><ellipse cx="50" cy="50" rx="40" ry="12" stroke="${c}" stroke-width="3" opacity=".7"/><ellipse cx="50" cy="50" rx="40" ry="12" stroke="${c}" stroke-width="3" opacity=".7" transform="rotate(60 50 50)"/><ellipse cx="50" cy="50" rx="40" ry="12" stroke="${c}" stroke-width="3" opacity=".4" transform="rotate(120 50 50)"/></svg>`;}
 function iconGalaxy(c){return `<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="14" stroke="${c}" stroke-width="4" fill="${c}14"/><circle cx="50" cy="50" r="6" fill="${c}"/><ellipse cx="50" cy="50" rx="44" ry="14" stroke="${c}" stroke-width="3" transform="rotate(-25 50 50)"/><ellipse cx="50" cy="50" rx="44" ry="14" stroke="${c}" stroke-width="3" opacity=".5" transform="rotate(35 50 50)"/></svg>`;}
-function iconSingularity(c){return `<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="30" stroke="${c}" stroke-width="5"/><circle cx="50" cy="50" r="16" fill="${c}"/><circle cx="50" cy="50" r="6" fill="#070810"/><g stroke="${c}" stroke-width="3"><line x1="50" y1="8" x2="50" y2="18"/><line x1="50" y1="82" x2="50" y2="92"/><line x1="8" y1="50" x2="18" y2="50"/><line x1="82" y1="50" x2="92" y2="50"/></g></svg>`;}
+function iconSingularity(c){return `<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="30" stroke="${c}" stroke-width="5"/><circle cx="50" cy="50" r="16" fill="${c}"/><circle cx="50" cy="50" r="6" fill="#05060f"/><g stroke="${c}" stroke-width="3"><line x1="50" y1="8" x2="50" y2="18"/><line x1="50" y1="82" x2="50" y2="92"/><line x1="8" y1="50" x2="18" y2="50"/><line x1="82" y1="50" x2="92" y2="50"/></g></svg>`;}
 function iconWormhole(c){return `<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="34" stroke="${c}" stroke-width="4"/><circle cx="50" cy="50" r="20" stroke="${c}" stroke-width="3" stroke-dasharray="6 5"/><circle cx="50" cy="50" r="8" fill="${c}"/><path d="M50 4 L58 16 L42 16 Z" fill="${c}"/><path d="M50 96 L58 84 L42 84 Z" fill="${c}"/><path d="M4 50 L16 42 L16 58 Z" fill="${c}"/><path d="M96 50 L84 42 L84 58 Z" fill="${c}"/></svg>`;}
 function iconRift(c){return `<svg viewBox="0 0 100 100" fill="none"><path d="M30 8 L55 38 L45 50 L70 78 L60 92 L38 62 L48 48 L22 22 Z" stroke="${c}" stroke-width="4" stroke-linejoin="round" fill="${c}18"/><circle cx="70" cy="20" r="4" fill="${c}"/><circle cx="25" cy="82" r="4" fill="${c}"/></svg>`;}
 function iconCouncil(c){return `<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="12" stroke="${c}" stroke-width="4"/><circle cx="20" cy="30" r="9" stroke="${c}" stroke-width="3.5"/><circle cx="80" cy="30" r="9" stroke="${c}" stroke-width="3.5"/><circle cx="50" cy="88" r="9" stroke="${c}" stroke-width="3.5"/><line x1="27" y1="37" x2="41" y2="44" stroke="${c}" stroke-width="3"/><line x1="73" y1="37" x2="59" y2="44" stroke="${c}" stroke-width="3"/></svg>`;}
@@ -475,6 +565,7 @@ function loadStateFor(accId) {
   if (!s.boostLevel) s.boostLevel = 2;
   if (!Array.isArray(s.promoCodes)) s.promoCodes = [];
   if (!s.usedPromos) s.usedPromos = {};
+  s.promoCodes = s.promoCodes.map(x => typeof x === 'string' ? { c: x, exp: 0 } : x);
   return s;
 }
 function save() {
@@ -521,7 +612,7 @@ function applyRigLook() {
   currentRigId = m.id;
   const rig = document.getElementById('rig');
   rig.style.borderColor = m.color;
-  rig.style.boxShadow = `0 0 30px ${m.color}40`;
+  rig.style.boxShadow = `0 0 40px ${m.color}45, inset 0 0 30px ${m.color}22`;
   document.getElementById('rig-icon').innerHTML = m.icon(m.color);
   document.getElementById('rig-name').textContent = m.name;
 }
@@ -685,7 +776,7 @@ function updateLB() {
   if (!lbBuilt || !state) return;
   const mineRemote = lbRows.find(r => r.player_id === ACCOUNT_ID);
   const rows = [{ player_id: ACCOUNT_ID, name: ACCOUNT_NAME, mined: mineRemote ? mineRemote.mined : Math.floor(state.weekMined), coins: state.coins, total_mined: state.totalMined, rig: bestMiner().name, title: rankTitle(state.totalMined), me: true }];
-  for (const r of lbRows) { if (r.player_id === ACCOUNT_ID) continue; rows.push({ ...r, me: false }); }
+  for (const r of lbRows) { if (r.player_id === ACCOUNT_ID || !(r.mined > 0)) continue; rows.push({ ...r, me: false }); }
   rows.sort((a, b) => b.mined - a.mined);
 
   const listEl = document.getElementById('lb-list');
@@ -709,7 +800,7 @@ function updateLB() {
   }
   const gapEl = document.getElementById('lb-gap');
   if (gapEl) {
-    if (myIndex === 0) gapEl.textContent = '👑 Вы лидер! Не дайте себя обогнать!';
+    if (myIndex === 0) gapEl.textContent = rows.length > 1 ? '👑 Вы лидер! Не дайте себя обогнать!' : '';
     else gapEl.textContent = `⚔️ До места выше осталось ${fmt(rows[myIndex - 1].mined - rows[myIndex].mined + 1)} монет`;
   }
   const st = document.getElementById('lb-status');
@@ -721,14 +812,17 @@ function updateLB() {
 async function sendToWorker() {
   if (!SYNC_WORKER_URL.startsWith('http') || !state) return;
   try {
-    await fetch(SYNC_WORKER_URL + '/sync', {
+    const res = await fetch(SYNC_WORKER_URL + '/sync', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         player_id: ACCOUNT_ID, name: ACCOUNT_NAME, week_key: getWeekKey(),
         mined: Math.floor(state.weekMined), coins: Math.floor(state.coins),
-        total_mined: Math.floor(state.totalMined), rig: bestMiner().name, title: rankTitle(state.totalMined)
+        total_mined: Math.floor(state.totalMined), rig: bestMiner().name, title: rankTitle(state.totalMined),
+        taps: state.taps || 0, miners: JSON.stringify(state.miners || {})
       })
     });
+    const d = await res.json().catch(() => ({}));
+    if (d.hidden) { state.weekMined = 0; popup('Результаты недели сброшены админом'); }
   } catch (e) { console.error('sync:', e); }
 }
 function syncSoon() {
@@ -739,7 +833,7 @@ function syncSoon() {
 async function fetchLeaderboard() {
   try {
     const res = await fetch(
-      SUPABASE_URL + '/rest/v1/weekly_top?week_key=eq.' + getWeekKey() + '&select=player_id,name,mined,coins,total_mined,rig,title&order=mined.desc&limit=50',
+      SUPABASE_URL + '/rest/v1/weekly_top?week_key=eq.' + getWeekKey() + '&select=player_id,name,mined,coins,total_mined,rig,title,taps,miners&order=mined.desc&limit=50',
       { headers: API_HEADERS });
     if (!res.ok) throw new Error('http ' + res.status);
     lbRows = await res.json();
@@ -749,6 +843,7 @@ async function fetchLeaderboard() {
 }
 
 function renderWeekTopHTML(data) {
+  data = data.filter(p => p.mined > 0);
   if (!data.length) return 'Пока никто не участвует — потапайте и станьте первым!';
   const medals = ['🥇','🥈','🥉'];
   return data.map((p, i) => {
@@ -790,11 +885,16 @@ function showRefPrompt() {
   if (!state || state.refSent || state.refOf || !SYNC_WORKER_URL.startsWith('http')) return;
   document.getElementById('ref-overlay').classList.add('show');
 }
+function enterRefCode() {
+  if (!state) return;
+  if (state.refOf) { popup('Код друга уже введён'); return; }
+  document.getElementById('ref-overlay').classList.add('show');
+}
 async function submitRef() {
   const code = document.getElementById('ref-input').value.trim();
   document.getElementById('ref-overlay').classList.remove('show');
   if (!code) return;
-  state.refSent = true; save();
+  state.refSent = true; state.refOf = code; save();
   try {
     await fetch(SYNC_WORKER_URL + '/ref', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -838,12 +938,16 @@ function shareRef() {
 
 // ================= ЗВЁЗДЫ =================
 function renderStars() {
+  if (!state) return;
   const cnt = document.getElementById('stars-cnt');
-  if (!cnt || !state) return;
-  cnt.textContent = `есть: ${state.stars} ⭐ • выведено: ${state.starsSent || 0} ⭐`;
+  const det = document.getElementById('stars-detail');
+  if (cnt) cnt.textContent = String(state.stars || 0);
+  if (det) det.textContent = `есть: ${state.stars || 0} ⭐ • выведено: ${state.starsSent || 0} ⭐`;
   const btn = document.getElementById('stars-btn');
-  btn.disabled = state.stars < STARS_MIN_WITHDRAW;
-  btn.textContent = state.stars >= STARS_MIN_WITHDRAW ? `Вывести ${state.stars} ⭐` : `Нужно минимум ${STARS_MIN_WITHDRAW} ⭐`;
+  if (btn) {
+    btn.disabled = (state.stars || 0) < STARS_MIN_WITHDRAW;
+    btn.textContent = (state.stars || 0) >= STARS_MIN_WITHDRAW ? `Вывести ${state.stars} ⭐` : `Нужно минимум ${STARS_MIN_WITHDRAW} ⭐`;
+  }
 }
 async function withdrawStars() {
   if (!state.stars || state.stars < STARS_MIN_WITHDRAW) return;
@@ -914,8 +1018,8 @@ function grantAdReward() {
   }
   if (Math.random() < 0.35 && state.promoCodes.length < 5) {
     const code = 'ZINI-' + Math.random().toString(36).slice(2, 6).toUpperCase();
-    state.promoCodes.push(code);
-    setTimeout(() => popup('🎟 Выпал промокод: ' + code), 2400);
+    state.promoCodes.push({ c: code, exp: Date.now() + 24 * 3600000 });
+    setTimeout(() => popup('🎟 Промокод ' + code + ' — используй за 24 часа!'), 2400);
   }
   render(); updateAdUi(); renderBoost(); renderStars(); renderPromos(); save(); syncSoon();
 }
@@ -959,18 +1063,24 @@ async function farmAd() {
   } catch (e) { popup('Реклама не показалась'); }
 }
 
-// ================= ПРОМОКОДЫ =================
+// ================= ПРОМОКОДЫ (живут 24 часа) =================
+function fmtLeft(ms) { const h = Math.floor(ms / 3600000), m = Math.floor(ms % 3600000 / 60000); return h ? h + ' ч ' + m + ' мин' : m + ' мин'; }
 function renderPromos() {
-  const el = document.getElementById('my-promos');
-  if (!el || !state) return;
-  const avail = (state.promoCodes || []).filter(c => !state.usedPromos[c]);
-  el.textContent = avail.length ? 'Твои коды: ' + avail.join(', ') : 'Пока нет кодов — смотри рекламу!';
+  if (!state) return;
+  const now = Date.now();
+  state.promoCodes = (state.promoCodes || []).filter(x => x && x.c && x.exp > now && !state.usedPromos[x.c]);
+  const txt = state.promoCodes.length
+    ? '🎟 Твои коды: ' + state.promoCodes.map(x => `${x.c} — осталось ${fmtLeft(x.exp - now)}`).join(' • ')
+    : 'Пока нет кодов — смотри рекламу!';
+  const a = document.getElementById('my-promos'); if (a) a.textContent = txt;
+  const b = document.getElementById('prof-promos'); if (b) b.textContent = txt;
 }
 function usePromo() {
   const inp = document.getElementById('promo-input');
   const code = (inp.value || '').trim().toUpperCase();
   if (!code) return;
-  if (!(state.promoCodes || []).includes(code)) { popup('Такого кода у тебя нет!'); return; }
+  const entry = (state.promoCodes || []).find(x => x.c === code);
+  if (!entry) { popup('Такого кода нет или срок истёк!'); return; }
   if (state.usedPromos[code]) { popup('Код уже использован!'); return; }
   state.usedPromos[code] = true;
   const r = Math.random();
@@ -1031,7 +1141,7 @@ function buildWheel() {
     const x1 = 100+90*Math.sin(a1), y1 = 100-90*Math.cos(a1);
     const x2 = 100+90*Math.sin(a2), y2 = 100-90*Math.cos(a2);
     const mx = 100+55*Math.sin((a1+a2)/2), my = 100-55*Math.cos((a1+a2)/2);
-    html += `<path d="M100,100 L${x1.toFixed(1)},${y1.toFixed(1)} A90,90 0 0,1 ${x2.toFixed(1)},${y2.toFixed(1)} Z" fill="${SEG_COLORS[i]}" stroke="#070810" stroke-width="2"/>
+    html += `<path d="M100,100 L${x1.toFixed(1)},${y1.toFixed(1)} A90,90 0 0,1 ${x2.toFixed(1)},${y2.toFixed(1)} Z" fill="${SEG_COLORS[i]}" stroke="#05060f" stroke-width="2"/>
     <text x="${mx.toFixed(1)}" y="${my.toFixed(1)}" fill="${i===7?'#fff':'#14162a'}" font-size="11" font-weight="bold" text-anchor="middle" dominant-baseline="middle" transform="rotate(${i*seg+seg/2},${mx.toFixed(1)},${my.toFixed(1)})">${WHEEL_PRIZES[i].label}</text>`;
   }
   g.innerHTML = html;
@@ -1095,6 +1205,14 @@ function openAdmin() {
   setTimeout(() => adminTap = 0, 3000);
   if (adminTap >= 5) { adminTap = 0; document.getElementById('admin-overlay').classList.add('show'); }
 }
+function minersBrief(jsonStr) {
+  try {
+    const m = JSON.parse(jsonStr || '{}');
+    const list = Object.entries(m).filter(([, v]) => v > 0)
+      .map(([k, v]) => (MINERS.find(x => x.id === k) || { name: k }).name + ' ×' + v);
+    return list.length ? list.join(', ') : 'нет майнеров';
+  } catch (e) { return 'нет майнеров'; }
+}
 async function adminSearch() {
   const codeInput = document.getElementById('adm-code');
   const code = (codeInput.value || '').trim();
@@ -1107,15 +1225,35 @@ async function adminSearch() {
     const res = await fetch(SYNC_WORKER_URL + '/admin?code=' + encodeURIComponent(saved) + '&q=' + encodeURIComponent(q));
     const d = await res.json();
     if (!d.ok) { box.innerHTML = '<div class="muted">Неверный код админа</div>'; return; }
-    if (!d.rows.length) { box.innerHTML = '<div class="muted">Никого не найдено</div>'; return; }
-    box.innerHTML = d.rows.map(r => `
-      <div class="adm-row">
-        <div><div class="n">${escapeHtml(r.name)}</div><div class="b">нед: ${fmt(r.mined)} • бал: ${fmt(r.coins||0)}</div></div>
-        <div>
-          <button class="adm-btn" style="background:#ff5c7a;color:#fff" onclick="adminAct('${r.player_id}','reset')">обнул</button>
-          <button class="adm-btn" style="background:${r.blocked ? '#4dd964' : '#2a3050'};color:#fff" onclick="adminAct('${r.player_id}','${r.blocked ? 'unban' : 'ban'}')">${r.blocked ? 'разбан' : 'бан'}</button>
+    let html = '';
+    if (!d.rows.length) html += '<div class="muted">Никого не найдено</div>';
+    html += d.rows.map(r => `
+      <div class="adm-row" style="flex-direction:column;align-items:stretch">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+          <div style="min-width:0">
+            <div class="n">${escapeHtml(r.name)}${r.blocked ? ' 🚫бан' : ''}${r.hidden ? ' 👻скрыт' : ''}</div>
+            <div class="b">нед: ${fmt(r.mined)} • баланс: ${fmt(r.coins || 0)} • всего: ${fmt(r.total_mined || 0)}</div>
+            <div class="b">тапов: ${fmt(r.taps || 0)} • титул: ${escapeHtml(r.title || '—')}</div>
+            <div class="b">майнеры: ${escapeHtml(minersBrief(r.miners))}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">
+            <button class="adm-btn" style="background:#ff5c7a;color:#fff" onclick="adminAct('${r.player_id}','reset')">обнул</button>
+            ${r.hidden ? `<button class="adm-btn" style="background:#4dd964;color:#fff" onclick="adminAct('${r.player_id}','unhide')">вернуть</button>` : ''}
+            <button class="adm-btn" style="background:${r.blocked ? '#4dd964' : '#2a3050'};color:#fff" onclick="adminAct('${r.player_id}','${r.blocked ? 'unban' : 'ban'}')">${r.blocked ? 'разбан' : 'бан'}</button>
+          </div>
         </div>
       </div>`).join('');
+    if (d.stars && d.stars.length) {
+      html += '<div class="n" style="margin-top:10px">⭐ Заявки на вывод звёзд:</div>';
+      html += d.stars.map(s => `
+        <div class="adm-row">
+          <div><div class="n">${escapeHtml(s.name || 'Игрок')}</div><div class="b">${s.stars} ⭐ • ${new Date(s.created_at).toLocaleString()}</div></div>
+          <button class="adm-btn" style="background:#4dd964;color:#fff" onclick="adminAct('${s.id}','paystar')">оплачено</button>
+        </div>`).join('');
+    } else if (d.rows.length) {
+      html += '<div class="muted" style="margin-top:10px">Новых заявок на звёзды нет</div>';
+    }
+    box.innerHTML = html;
   } catch (e) { box.innerHTML = '<div class="muted">Ошибка связи</div>'; }
 }
 async function adminAct(id, action) {
@@ -1125,8 +1263,11 @@ async function adminAct(id, action) {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ code: c, action, target_id: id })
     });
-    if (res.ok) { popup(action === 'reset' ? 'Баланс недели обнулён' : action === 'ban' ? 'Игрок забанен' : 'Игрок разбанен'); adminSearch(); }
-    else popup('Ошибка: неверный код');
+    if (res.ok) {
+      const msgs = { reset: 'Обнулён и скрыт из топа', unhide: 'Снова виден в топе', ban: 'Игрок забанен', unban: 'Игрок разбанен', paystar: 'Заявка отмечена оплаченной' };
+      popup(msgs[action] || 'Готово');
+      adminSearch();
+    } else popup('Ошибка: неверный код');
   } catch (e) { popup('Ошибка связи'); }
 }
 
@@ -1140,7 +1281,7 @@ function go(page) {
   document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active', b.dataset.page === page));
   if (page === 'shop') { renderMarket(); renderShop(); }
   if (page === 'upg') renderUpg();
-  if (page === 'prof') { renderProf(); renderStars(); renderRef(); }
+  if (page === 'prof') { renderProf(); renderStars(); renderRef(); renderPromos(); }
   if (page === 'rank') { buildLB(); updateLB(); }
   if (page === 'contest') { fetchWeeklyTop(); updateAdUi(); renderPromos(); }
   window.scrollTo(0, 0);
@@ -1160,15 +1301,27 @@ function render() {
   if (r !== lastRateText) { elRate.textContent = r; lastRateText = r; }
   elTap.textContent = '+' + fmt(tapIncome());
   elSec.textContent = fmt(totalRate()) + '/с';
+  renderStars();
 }
 
-// ================= ЧАСТИЦЫ ФОНА =================
-for (let i = 0; i < 6; i++) {
+// ================= ФОН: ЗВЁЗДЫ И ЧАСТИЦЫ =================
+for (let i = 0; i < 40; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const sz = 1 + Math.random() * 2.2;
+  s.style.width = sz + 'px'; s.style.height = sz + 'px';
+  s.style.left = Math.random() * 100 + 'vw';
+  s.style.top = Math.random() * 100 + 'vh';
+  s.style.animationDuration = (2 + Math.random() * 5) + 's';
+  s.style.animationDelay = Math.random() * 5 + 's';
+  document.body.appendChild(s);
+}
+for (let i = 0; i < 7; i++) {
   const p = document.createElement('div');
   p.className = 'particle';
-  p.style.left = Math.random()*100 + 'vw';
-  p.style.animationDuration = (8 + Math.random()*10) + 's';
-  p.style.animationDelay = Math.random()*10 + 's';
+  p.style.left = Math.random() * 100 + 'vw';
+  p.style.animationDuration = (8 + Math.random() * 10) + 's';
+  p.style.animationDelay = Math.random() * 10 + 's';
   document.body.appendChild(p);
 }
 
@@ -1206,6 +1359,7 @@ function startGame(accId, accName) {
       if (currentPage === 'shop') { renderShop(); renderMarket(); }
       if (currentPage === 'upg') renderUpg();
       if (currentPage === 'rank') updateLB();
+      if (currentPage === 'contest') renderPromos();
     }, 1000);
     setInterval(save, 10000);
     setInterval(sendToWorker, 60000);
