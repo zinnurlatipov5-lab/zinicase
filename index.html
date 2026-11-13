@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZINI DROP — Апгрейдер</title>
+<title>ZINI DROP — кейсы со звёздами</title>
 <style>
   :root {
     --bg: #0d0f14; --panel: #161a22; --panel2: #1e2430; --line: #2a3242;
     --accent: #ff8a00; --accent2: #ffb040; --text: #e8ebf2; --muted: #8b93a5;
-    --green: #3ddc84; --red: #ff5c6e; --star: #ffd54a; --violet: #a06bff;
+    --green: #3ddc84; --red: #ff5c6e; --star: #ffd54a;
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
@@ -16,23 +16,25 @@
   .bg-fx {
     position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background:
-      radial-gradient(700px 450px at 15% 8%, rgba(255,138,0,0.12), transparent 60%),
-      radial-gradient(800px 550px at 85% 30%, rgba(160,107,255,0.12), transparent 60%),
-      radial-gradient(600px 450px at 50% 95%, rgba(255,213,74,0.08), transparent 60%);
+      radial-gradient(600px 400px at 15% 10%, rgba(255,138,0,0.10), transparent 60%),
+      radial-gradient(700px 500px at 85% 25%, rgba(140,60,255,0.10), transparent 60%),
+      radial-gradient(500px 400px at 50% 90%, rgba(255,215,74,0.07), transparent 60%);
   }
   .bg-fx::before, .bg-fx::after {
-    content: ""; position: absolute; border-radius: 50%; filter: blur(100px);
+    content: ""; position: absolute; border-radius: 50%; filter: blur(90px);
   }
-  .bg-fx::before { width: 460px; height: 460px; left: -140px; top: 15%;
-    background: rgba(255,138,0,0.16); animation: drift1 15s ease-in-out infinite alternate; }
-  .bg-fx::after { width: 520px; height: 520px; right: -170px; top: 45%;
-    background: rgba(160,107,255,0.15); animation: drift2 19s ease-in-out infinite alternate; }
+  .bg-fx::before { width: 420px; height: 420px; left: -120px; top: 20%;
+    background: rgba(255,138,0,0.14); animation: drift1 14s ease-in-out infinite alternate; }
+  .bg-fx::after { width: 500px; height: 500px; right: -160px; top: 40%;
+    background: rgba(140,60,255,0.13); animation: drift2 18s ease-in-out infinite alternate; }
   @keyframes drift1 { from { transform: translateY(0) scale(1); } to { transform: translateY(-90px) scale(1.15); } }
   @keyframes drift2 { from { transform: translateY(0) scale(1.1); } to { transform: translateY(70px) scale(0.95); } }
 
+  .topbar, .nav-strip, .container, .auth-box { position: relative; z-index: 1; }
+
   .topbar {
     position: sticky; top: 0; z-index: 100;
-    background: rgba(22,26,34,0.93); backdrop-filter: blur(6px);
+    background: rgba(22,26,34,0.92); backdrop-filter: blur(6px);
     border-bottom: 1px solid var(--line);
     padding: 10px 16px; display: flex; align-items: center; gap: 14px;
   }
@@ -40,277 +42,504 @@
   .logo b { color: var(--accent); }
   .top-balance {
     margin-left: auto; background: var(--panel2); border: 1px solid var(--line);
-    border-radius: 10px; padding: 8px 14px; font-weight: bold;
+    border-radius: 10px; padding: 8px 14px; font-weight: bold; cursor: pointer;
+    user-select: none; transition: border-color 0.2s;
   }
+  .top-balance:hover { border-color: var(--accent); }
   .top-balance span { color: var(--star); }
-  .home-link {
-    color: var(--muted); text-decoration: none; font-size: 14px;
-    background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 14px;
+  .balance-menu {
+    position: fixed; top: 58px; right: 16px; z-index: 300;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+    padding: 8px; min-width: 210px; display: none;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
   }
-  .home-link:hover { color: var(--accent); }
+  .balance-menu.open { display: block; }
+  .balance-menu .bm-title {
+    font-size: 12px; color: var(--muted); padding: 4px 10px 8px;
+    border-bottom: 1px solid var(--line); margin-bottom: 6px;
+  }
+  .bm-btn {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    background: var(--panel2); border: 1px solid var(--line); border-radius: 9px;
+    color: var(--text); padding: 11px 12px; font-size: 14px; font-weight: bold;
+    cursor: pointer; margin-bottom: 6px;
+  }
+  .bm-btn:last-child { margin-bottom: 0; }
+  .bm-btn:hover { border-color: var(--accent); }
+  .bm-btn .ic { font-size: 18px; }
+  .bm-btn.gold { background: linear-gradient(180deg, var(--accent2), var(--accent)); color: #1a1206; border-color: transparent; }
 
-  .container { position: relative; z-index: 1; max-width: 940px; margin: 0 auto; padding: 18px 16px 60px; }
-  .page-title { font-size: 22px; font-weight: bold; margin-bottom: 4px;
-    background: linear-gradient(90deg, var(--accent), var(--violet));
-    -webkit-background-clip: text; background-clip: text; color: transparent; display: inline-block; }
-  .page-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+  .nav-strip {
+    display: flex; gap: 6px; padding: 10px 16px; overflow-x: auto;
+    background: rgba(22,26,34,0.9); border-bottom: 1px solid var(--line);
+  }
+  .nav-btn {
+    flex-shrink: 0; background: var(--panel2); color: var(--muted);
+    border: 1px solid var(--line); border-radius: 8px;
+    padding: 8px 16px; font-size: 14px; cursor: pointer;
+  }
+  .nav-btn.active { background: var(--accent); color: #1a1206; border-color: var(--accent); font-weight: bold; }
 
-  .game-wrap { display: flex; gap: 18px; flex-wrap: wrap; }
-  .game-col { flex: 1; min-width: 290px; }
-  .card {
+  .container { max-width: 1050px; margin: 0 auto; padding: 16px; padding-bottom: 60px; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .drops-feed { overflow: hidden; margin: 14px 0; }
+  .drops-track { display: flex; gap: 8px; animation: slide 30s linear infinite; width: max-content; }
+  .drops-feed:hover .drops-track { animation-play-state: paused; }
+  @keyframes slide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .drop-card {
+    background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 8px 12px; min-width: 150px; font-size: 12px; text-align: center;
+  }
+  .drop-card .who { color: var(--muted); font-size: 11px; }
+  .drop-card .what { font-weight: bold; margin-top: 3px; }
+  .drop-card .val { color: var(--accent); font-weight: bold; }
+
+  .hero {
+    background: linear-gradient(120deg, rgba(255,138,0,0.12), var(--panel) 60%);
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 22px; margin-bottom: 18px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .hero .big { font-size: 44px; }
+  .hero h3 { color: var(--accent); margin-bottom: 4px; }
+  .hero p { font-size: 13px; color: var(--muted); }
+
+  .section-title { font-size: 17px; font-weight: bold; margin: 18px 0 10px; }
+
+  .cases-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; }
+  .case-card {
+    position: relative; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 14px; padding: 0; overflow: hidden; text-align: center;
+    cursor: pointer; transition: transform 0.2s, border-color 0.2s;
+  }
+  .case-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+  .cover { width: 100%; display: block; }
+  .cover-hover { transition: transform 0.3s; }
+  .case-card:hover .cover-hover { transform: translateY(-3px) scale(1.05); }
+  .case-meta { padding: 10px 12px 12px; }
+  .case-name { font-weight: bold; margin-bottom: 2px; }
+  .case-open-count { font-size: 11px; color: var(--muted); }
+  .case-buy {
+    margin-top: 10px; border-radius: 9px; padding: 10px; font-weight: bold;
+    font-size: 14px; border: none; cursor: pointer; color: #1a1206; width: 100%;
+    background: linear-gradient(180deg, var(--accent2), var(--accent));
+  }
+
+  .overlay {
+    position: fixed; inset: 0; background: rgba(5,6,10,0.88); z-index: 200;
+    display: none; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 16px;
+  }
+  .overlay.active { display: flex; }
+  .case-modal {
     background: var(--panel); border: 1px solid var(--line); border-radius: 16px;
-    padding: 18px; margin-bottom: 16px;
-    box-shadow: 0 8px 26px rgba(0,0,0,0.35);
+    max-width: 700px; width: 100%; padding: 20px; margin-top: 20px;
   }
-  .card h3 { font-size: 15px; margin-bottom: 12px; color: var(--text); }
-  .card h3 .dot { color: var(--accent); }
-
-  .mode-tabs { display: flex; gap: 8px; margin-bottom: 12px; }
-  .mode-tab {
-    flex: 1; background: var(--panel2); border: 1px solid var(--line); border-radius: 10px;
-    color: var(--muted); padding: 11px; font-size: 14px; font-weight: bold; cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
-  }
-  .mode-tab.active { border-color: var(--accent); color: var(--accent);
-    background: rgba(255,138,0,0.08); }
-
-  .bet-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
-  .bet-input {
-    flex: 1; background: #0a0c11; border: 1px solid var(--line);
-    border-radius: 10px; color: var(--star); padding: 12px; font-size: 17px; font-weight: bold; text-align: center;
-    outline: none; transition: border-color 0.2s;
-  }
-  .bet-input:focus { border-color: var(--accent); }
-  .qbtn {
-    background: var(--panel2); border: 1px solid var(--line); color: var(--muted);
-    border-radius: 9px; padding: 12px 12px; font-size: 13px; cursor: pointer; font-weight: bold;
-    transition: border-color 0.2s, color 0.2s;
-  }
-  .qbtn:hover { color: var(--accent); border-color: var(--accent); }
-
-  .mult-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 10px; }
-  .mult-btn {
-    background: var(--panel2); border: 1px solid var(--line); border-radius: 10px;
-    color: var(--text); padding: 10px 4px; cursor: pointer; text-align: center;
-    transition: border-color 0.2s, transform 0.15s;
-  }
-  .mult-btn:hover { transform: translateY(-2px); }
-  .mult-btn .mx { font-size: 15px; font-weight: bold; }
-  .mult-btn .ch { font-size: 10px; color: var(--muted); margin-top: 2px; }
-  .mult-btn.active { border-color: var(--accent); background: rgba(255,138,0,0.12);
-    box-shadow: 0 0 14px rgba(255,138,0,0.25); }
-  .mult-btn.active .mx { color: var(--accent); }
-
-  .gift-select { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; margin-bottom: 10px; }
-  .gift-opt {
-    background: var(--panel2); border: 1px solid var(--line); border-radius: 10px;
-    padding: 8px 4px; text-align: center; cursor: pointer;
-    transition: border-color 0.2s, transform 0.15s;
-  }
-  .gift-opt:hover { transform: translateY(-2px); }
-  .gift-opt .ge { font-size: 26px; }
-  .gift-opt .gv { font-size: 11px; color: var(--star); font-weight: bold; margin-top: 3px; }
-  .gift-opt.active { border-color: var(--violet); background: rgba(160,107,255,0.12);
-    box-shadow: 0 0 14px rgba(160,107,255,0.3); }
-
-  .chance-line { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
-  .chance-line b { color: var(--green); }
-  .spin-btn {
-    width: 100%; background: linear-gradient(180deg, var(--accent2), var(--accent));
-    color: #1a1206; border: none; border-radius: 12px; padding: 16px;
-    font-size: 18px; font-weight: bold; cursor: pointer;
-    box-shadow: 0 6px 20px rgba(255,138,0,0.35);
-    transition: transform 0.15s, box-shadow 0.2s;
-  }
-  .spin-btn:hover:not(:disabled) { transform: translateY(-2px);
-    box-shadow: 0 8px 26px rgba(255,138,0,0.45); }
-  .spin-btn:disabled { background: #333; color: #777; cursor: not-allowed; box-shadow: none; }
-
-  .bonus-note {
-    background: rgba(160,107,255,0.10); border: 1px solid rgba(160,107,255,0.35);
-    border-radius: 10px; padding: 10px 12px; font-size: 12px; margin-top: 12px; color: #c9baff;
-  }
-  .gift-note {
-    background: rgba(255,215,74,0.08); border: 1px solid rgba(255,215,74,0.3);
-    border-radius: 10px; padding: 10px 12px; font-size: 12px; margin-top: 10px;
+  .modal-head { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+  .modal-head .ce { width: 130px; flex-shrink: 0; }
+  .modal-head .ce svg { width: 100%; display: block; border-radius: 10px; }
+  .modal-head h3 { font-size: 20px; }
+  .close-x {
+    margin-left: auto; background: var(--panel2); border: 1px solid var(--line);
+    color: var(--muted); font-size: 18px; border-radius: 8px; padding: 6px 12px; cursor: pointer;
   }
 
-  /* ===== БАРАБАН С УКАЗАТЕЛЕМ ===== */
-  .drum-wrap { position: relative; margin: 4px 0 0; }
-  .drum-arrow {
-    position: absolute; left: 50%; top: -16px; transform: translateX(-50%);
-    z-index: 5; width: 0; height: 0;
-    border-left: 16px solid transparent; border-right: 16px solid transparent;
-    border-top: 22px solid var(--accent);
-    filter: drop-shadow(0 0 8px rgba(255,138,0,0.8));
-    animation: arrowbob 1.4s ease-in-out infinite;
+  .prize-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; margin: 12px 0; }
+  .prize-card {
+    background: var(--panel2); border: 1px solid var(--line); border-radius: 12px;
+    padding: 10px 6px; text-align: center;
   }
-  @keyframes arrowbob { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(4px); } }
+  .prize-card .pe { font-size: 30px; }
+  .prize-card .pn { font-size: 11px; color: var(--text); margin-top: 5px; font-weight: bold; }
+  .prize-card .pv { font-size: 11px; color: var(--star); margin-top: 2px; font-weight: bold; }
+  .prize-card.premium { border-color: #7c5cff; background: rgba(124,92,255,0.12); }
+  .prize-card.premium .pv { color: #b9a4ff; }
 
-  .drum {
-    background: #0a0c11; border: 3px solid var(--accent); border-radius: 18px;
-    height: 190px; overflow: hidden; position: relative;
-    box-shadow: 0 0 34px rgba(255,138,0,0.3), inset 0 0 40px rgba(0,0,0,0.7);
+  .roulette {
+    background: #0a0c11; border: 3px solid var(--accent); border-radius: 14px;
+    height: 170px; overflow: hidden; position: relative; margin: 16px 0; display: none;
+    box-shadow: 0 0 30px rgba(255,138,0,0.25);
   }
-  .drum.idle { border-color: var(--line); box-shadow: inset 0 0 40px rgba(0,0,0,0.7); }
-  .drum.ticking { border-color: var(--accent); }
-  .drum::before, .drum::after {
-    content: ""; position: absolute; top: 0; bottom: 0; width: 70px; z-index: 3; pointer-events: none;
+  .roulette.active { display: block; }
+  .roulette::before, .roulette::after {
+    content: ""; position: absolute; left: 50%; width: 3px; height: 100%;
+    background: var(--accent); z-index: 2; box-shadow: 0 0 12px var(--accent);
   }
-  .drum::before { left: 0; background: linear-gradient(90deg, #0a0c11 10%, transparent); }
-  .drum::after { right: 0; background: linear-gradient(270deg, #0a0c11 10%, transparent); }
-  .drum-lines {
-    position: absolute; inset: 0; z-index: 1; opacity: 0.5; pointer-events: none;
-    background: repeating-linear-gradient(90deg, transparent 0 34px, rgba(255,255,255,0.05) 34px 36px);
-  }
+  .roulette::before { margin-left: -36px; }
+  .roulette::after { margin-left: 33px; }
   .strip { display: flex; align-items: center; height: 100%; will-change: transform; }
   .strip-item {
-    flex: 0 0 130px; height: 160px; margin: 0 6px;
-    background: linear-gradient(180deg, #1e2430, #161a22);
+    flex: 0 0 130px; height: 148px; margin: 0 5px; background: var(--panel);
     border-radius: 14px; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; font-size: 54px;
-    border: 2px solid var(--line);
-    transition: border-color 0.2s;
+    align-items: center; justify-content: center; font-size: 52px;
+    border: 1px solid var(--line);
   }
-  .strip-item .val { font-size: 14px; color: var(--muted); margin-top: 6px; font-weight: bold; }
-  .strip-item.r-gift { border-color: rgba(160,107,255,0.7); box-shadow: 0 0 14px rgba(160,107,255,0.25); }
-  .strip-item.r-premium { border-color: rgba(255,213,74,0.8); box-shadow: 0 0 16px rgba(255,213,74,0.3); }
+  .strip-item .val { font-size: 15px; color: var(--star); margin-top: 6px; font-weight: bold; }
   .strip-item.hit {
-    border-color: var(--green);
-    box-shadow: 0 0 30px rgba(61,220,132,0.6);
-    animation: hitpulse 0.65s ease-in-out 4;
+    border-color: var(--green); box-shadow: 0 0 22px rgba(61,220,132,0.55);
+    animation: hitpulse 0.7s ease-in-out 3;
   }
-  .strip-item.hit.lose-hit { border-color: var(--red); box-shadow: 0 0 26px rgba(255,92,110,0.55); }
-  @keyframes hitpulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
-
-  .result { text-align: center; font-size: 21px; font-weight: bold; margin: 12px 0 4px; min-height: 28px; }
-  .result.win { color: var(--green); text-shadow: 0 0 16px rgba(61,220,132,0.5); }
-  .result.lose { color: var(--red); }
-  .result.bonus { color: var(--violet); text-shadow: 0 0 16px rgba(160,107,255,0.6); }
-
-  .history div {
-    padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 13px;
-    display: flex; justify-content: space-between; gap: 8px;
+  @keyframes hitpulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.09); } }
+  .result { text-align: center; font-size: 21px; margin: 10px 0; min-height: 28px; font-weight: bold; }
+  .win { color: var(--green); }
+  .lose { color: var(--red); }
+  .open-big {
+    width: 100%; background: linear-gradient(180deg, var(--accent2), var(--accent));
+    color: #1a1206; border: none; border-radius: 12px; padding: 16px;
+    font-size: 17px; font-weight: bold; cursor: pointer;
   }
-  .history .hwin { color: var(--green); font-weight: bold; }
-  .history .hlose { color: var(--red); font-weight: bold; }
-  .history .hbon { color: var(--violet); font-weight: bold; }
+  .open-big:disabled { background: #333; color: #777; cursor: not-allowed; }
 
-  .flash { position: fixed; inset: 0; z-index: 400; pointer-events: none; opacity: 0; }
-  .flash.win { background: radial-gradient(circle, rgba(61,220,132,0.35), transparent 70%); animation: flashout 0.9s ease-out; }
-  .flash.lose { background: radial-gradient(circle, rgba(255,92,110,0.25), transparent 70%); animation: flashout 0.7s ease-out; }
-  .flash.bonus { background: radial-gradient(circle, rgba(160,107,255,0.4), transparent 70%); animation: flashout 1.1s ease-out; }
-  @keyframes flashout { 0% { opacity: 1; } 100% { opacity: 0; } }
+  .panel-card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 20px; max-width: 560px; }
+  .stats { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  .stat-box { background: var(--panel2); border-radius: 10px; padding: 10px 14px; flex: 1; min-width: 100px; text-align: center; }
+  .stat-box .num { font-size: 18px; font-weight: bold; color: var(--accent); }
+  .stat-box .lbl { font-size: 12px; color: var(--muted); }
+  .stat-box .num.star-num { color: var(--star); }
+  .lvl-bar { background: #0a0c11; border-radius: 10px; height: 12px; margin: 8px 0; overflow: hidden; }
+  .lvl-fill { height: 100%; background: linear-gradient(90deg, var(--accent2), var(--accent)); }
+
+  .day-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+  .day-table th, .day-table td { padding: 7px 6px; border-bottom: 1px solid var(--line); text-align: center; }
+  .day-table th { color: var(--muted); font-weight: normal; }
+  .day-table td:first-child { text-align: left; }
+  .today-row td { color: var(--accent); font-weight: bold; }
+
+  .ops-list { margin-top: 14px; }
+  .op-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 10px; border-bottom: 1px solid var(--line); font-size: 13px;
+  }
+  .op-row .ic { font-size: 18px; }
+  .op-row .grow { flex: 1; }
+  .op-row .sub { color: var(--muted); font-size: 12px; }
+  .op-plus { color: var(--green); font-weight: bold; }
+  .op-minus { color: var(--red); font-weight: bold; }
+  .empty { color: var(--muted); font-size: 13px; padding: 8px 0; }
+
+  .history { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 12px; font-size: 14px; max-width: 560px; }
+  .history div { padding: 5px 0; border-bottom: 1px solid var(--line); }
+  .promo-area { display: flex; gap: 8px; max-width: 420px; margin-top: 10px; }
+  .promo-area input {
+    flex: 1; background: var(--panel2); border: 1px solid var(--line);
+    border-radius: 8px; color: var(--text); padding: 10px; font-size: 14px;
+  }
+  .btn {
+    background: linear-gradient(180deg, var(--accent2), var(--accent)); color: #1a1206;
+    border: none; border-radius: 8px; padding: 11px 18px; font-size: 14px; font-weight: bold; cursor: pointer;
+    text-decoration: none; display: inline-block; text-align: center;
+  }
+  .btn.small { padding: 6px 10px; font-size: 12px; }
+  .withdraw-box { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 12px; font-size: 14px; display: none; max-width: 560px; margin-top: 10px; }
+  .withdraw-box textarea { width: 100%; background: #0a0c11; color: var(--text); border: none; border-radius: 6px; padding: 8px; font-size: 13px; min-height: 110px; }
+
+  .inv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 12px; }
+  .inv-card {
+    background: var(--panel2); border: 1px solid var(--line); border-radius: 14px;
+    overflow: hidden; text-align: center; padding-bottom: 10px;
+  }
+  .inv-card .gift-cover { height: 84px; font-size: 40px; }
+  .inv-card .gname { font-size: 12px; font-weight: bold; margin-top: 8px; }
+  .inv-card .gval { font-size: 12px; color: var(--star); font-weight: bold; margin-top: 2px; }
+  .inv-card .gcnt { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .inv-card .btns { display: flex; gap: 6px; padding: 8px 8px 0; }
+  .inv-card .btns .btn { flex: 1; padding: 8px 4px; font-size: 11px; }
+
+  .gift-section-title { font-size: 14px; font-weight: bold; color: var(--muted); margin-top: 16px; }
+  .gift-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; margin-top: 10px; }
+  .gift-card {
+    border-radius: 14px; overflow: hidden; text-align: center; padding-bottom: 8px;
+    border: 1px solid var(--line); transition: transform 0.2s;
+  }
+  .gift-card:hover { transform: translateY(-3px); }
+  .gift-cover {
+    height: 92px; display: flex; align-items: center; justify-content: center;
+    font-size: 44px; position: relative; overflow: hidden;
+  }
+  .gift-cover::before {
+    content: ""; position: absolute; top: -40%; left: -30%; width: 60%; height: 160%;
+    background: rgba(255,255,255,0.18); transform: rotate(25deg); border-radius: 30px;
+  }
+  .gift-card .gname { font-size: 12px; font-weight: bold; margin-top: 7px; padding: 0 4px; }
+  .gift-card .gval { font-size: 12px; color: var(--star); font-weight: bold; margin-top: 2px; }
+
+  .auth-box {
+    max-width: 400px; margin: 60px auto; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 14px; padding: 25px; text-align: center;
+  }
+  .auth-box h2 { color: var(--accent); margin-bottom: 8px; }
+  .auth-box input {
+    width: 100%; background: var(--panel2); border: 1px solid var(--line);
+    border-radius: 8px; color: var(--text); padding: 12px; font-size: 15px; margin-bottom: 10px; text-align: center;
+  }
+  .auth-note { font-size: 12px; color: var(--muted); margin-top: 10px; }
+
+  .price-note {
+    background: rgba(255,215,74,0.08); border: 1px solid rgba(255,215,74,0.3);
+    border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-top: 12px;
+  }
+  .dep-bonus-note {
+    background: rgba(61,220,132,0.10); border: 1px solid rgba(61,220,132,0.4);
+    border-radius: 10px; padding: 10px 14px; font-size: 13px; margin-top: 10px; color: #b8f2cf;
+  }
 
   @media (max-width: 640px) {
-    .mult-grid { grid-template-columns: repeat(3, 1fr); }
-    .drum { height: 160px; }
-    .strip-item { flex: 0 0 112px; height: 134px; font-size: 44px; }
-    .strip-item .val { font-size: 12px; }
-    .drum::before, .drum::after { width: 45px; }
-    .drum-arrow { border-left-width: 13px; border-right-width: 13px; border-top-width: 18px; }
+    .topbar { padding: 10px; gap: 8px; flex-wrap: wrap; }
+    .logo { font-size: 16px; }
+    .balance-menu { right: 8px; top: 54px; }
+    .roulette { height: 140px; }
+    .strip-item { flex: 0 0 118px; height: 118px; font-size: 44px; }
+    .strip-item .val { font-size: 13px; }
+    .roulette::before { margin-left: -31px; }
+    .roulette::after { margin-left: 28px; }
+    .case-modal { padding: 14px; }
+    .modal-head .ce { width: 90px; }
   }
 </style>
 </head>
 <body>
+
 <div class="bg-fx"></div>
-<div class="flash" id="flash"></div>
 
-<div class="topbar">
-  <div class="logo">ZINI<b>DROP</b></div>
-  <div class="top-balance">⭐ <span id="balance">0</span></div>
-  <a class="home-link" href="index.html">← На сайт</a>
-</div>
-
-<div id="mainScreen">
-<div class="container">
-  <div class="page-title">🎲 Апгрейдер</div>
-  <div class="page-sub">Ставь звёзды или подарок из инвентаря → выбирай множитель → крути барабан. Чем выше множитель — тем меньше шанс и больше выигрыш.</div>
-
-  <div class="game-wrap">
-    <div class="game-col">
-      <div class="card">
-        <h3><span class="dot">●</span> Твоя ставка</h3>
-        <div class="mode-tabs">
-          <button class="mode-tab active" id="tabStars" onclick="setMode('stars')">⭐ Звёзды</button>
-          <button class="mode-tab" id="tabGift" onclick="setMode('gift')">🎁 Подарок из инвентаря</button>
-        </div>
-        <div id="starsBetBlock">
-          <div class="bet-row">
-            <button class="qbtn" onclick="betAdd(-10)">−10</button>
-            <input type="number" id="betInput" value="25" min="1" class="bet-input">
-            <button class="qbtn" onclick="betAdd(10)">+10</button>
-          </div>
-          <div class="bet-row">
-            <button class="qbtn" onclick="betSet(25)">25</button>
-            <button class="qbtn" onclick="betSet(50)">50</button>
-            <button class="qbtn" onclick="betSet(100)">100</button>
-            <button class="qbtn" onclick="betSet(balance)">ВСЁ</button>
-          </div>
-        </div>
-        <div id="giftBetBlock" style="display:none">
-          <div class="gift-select" id="giftSelect"></div>
-          <div style="font-size:12px; color:#8b93a5">Подарок на кону. Победа: звёзды = ценность × множитель. Проигрыш: подарок уходит.</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3><span class="dot">●</span> Множитель</h3>
-        <div class="mult-grid" id="multGrid"></div>
-        <div class="chance-line" id="chanceLine"></div>
-        <button class="spin-btn" id="spinBtn" onclick="spin()">🎲 Крутить барабан</button>
-        <div class="bonus-note">🎁 На ×3, ×5 и ×10 к выигрышу может добавить подарок. На ×10 — Корона или 💎 Premium!</div>
-        <div class="gift-note">💡 Подарок можно поставить, только если он есть в инвентаре на сайте.</div>
-      </div>
-
-      <div class="result" id="result"></div>
-    </div>
-
-    <div class="game-col">
-      <div class="card">
-        <h3><span class="dot">●</span> Барабан</h3>
-        <div class="drum-wrap">
-          <div class="drum-arrow"></div>
-          <div class="drum idle" id="drum">
-            <div class="drum-lines"></div>
-            <div class="strip" id="strip"></div>
-          </div>
-        </div>
-        <div class="result" id="drumResult"></div>
-      </div>
-
-      <div class="card">
-        <h3><span class="dot">●</span> Последние апгрейды</h3>
-        <div class="history" id="upHistory">Пока пусто — сделай первую крутку!</div>
-      </div>
-    </div>
+<!-- ===== Вход ===== -->
+<div class="container" id="authScreen">
+  <div class="auth-box">
+    <h2>ZINI<b>DROP</b></h2>
+    <p style="font-size:13px; color:#8b93a5; margin-bottom:15px">Открывай кейсы и выигрывай звёзды, подарки и Telegram Premium!</p>
+    <input type="tel" id="authPhone" placeholder="+7 (___) ___-__-__" maxlength="18">
+    <input type="text" id="authName" placeholder="Твоё имя" maxlength="25">
+    <input type="text" id="authTg" placeholder="Юз в Telegram (например @zini)" maxlength="32">
+    <button class="btn" style="width:100%" onclick="authSubmit()">Войти по номеру</button>
+    <div class="auth-note">Нет аккаунта с таким номером? Создадим автоматически. Юз ТГ нужен, чтобы админ мог отправить тебе призы.</div>
   </div>
 </div>
+
+<!-- ===== Сайт ===== -->
+<div id="mainScreen" style="display:none">
+
+  <div class="topbar">
+    <div class="logo">ZINI<b>DROP</b></div>
+    <div class="top-balance" onclick="toggleBalanceMenu(event)">⭐ <span id="balance">0</span> ▾</div>
+  </div>
+
+  <div class="balance-menu" id="balanceMenu">
+    <div class="bm-title">Мой баланс</div>
+    <button class="bm-btn gold" onclick="hideBalanceMenu(); goTo('deposit')"><span class="ic">➕</span> Пополнить звёзды</button>
+    <button class="bm-btn" onclick="hideBalanceMenu(); goTo('withdraw')"><span class="ic">⭐</span> Вывести звёзды</button>
+    <button class="bm-btn" onclick="hideBalanceMenu(); goTo('inv')"><span class="ic">🎒</span> Инвентарь</button>
+    <button class="bm-btn" onclick="hideBalanceMenu(); location.href='upgrade.html'"><span class="ic">🎲</span> Апгрейдер</button>
+  </div>
+
+  <div class="nav-strip">
+    <button class="nav-btn active" data-page="cases" onclick="goTo('cases')">🔥 Кейсы</button>
+    <button class="nav-btn" data-page="inv" onclick="goTo('inv')">🎒 Инвентарь</button>
+    <button class="nav-btn" onclick="location.href='upgrade.html'">🎲 Апгрейдер</button>
+    <button class="nav-btn" data-page="bonus" onclick="goTo('bonus')">🎁 Бонус</button>
+    <button class="nav-btn" data-page="promo" onclick="goTo('promo')">🎟 Промокоды</button>
+    <button class="nav-btn" data-page="stats" onclick="goTo('stats')">📊 Статистика</button>
+    <button class="nav-btn" data-page="drops" onclick="goTo('drops')">📋 Мои дропы</button>
+    <button class="nav-btn" data-page="profile" onclick="goTo('profile')">👤 Профиль</button>
+    <button class="nav-btn" data-page="admin" id="adminNav" onclick="goTo('admin')" style="display:none">🛠 Админ</button>
+    <button class="nav-btn" onclick="logout()">🚪 Выйти</button>
+  </div>
+
+  <div class="container">
+
+    <!-- КЕЙСЫ -->
+    <div class="page active" id="page-cases">
+      <div class="drops-feed"><div class="drops-track" id="dropsTrack"></div></div>
+
+      <div class="hero">
+        <div class="big">⭐</div>
+        <div>
+          <h3>ZINI DROP — кейсы со звёздами, подарками и Premium</h3>
+          <p>15 кейсов от 11 ⭐. Побеждай в 7 из 10 открытий! Подарки — в инвентарь, звёзды — на баланс.</p>
+        </div>
+      </div>
+
+      <div class="section-title">Все кейсы</div>
+      <div class="cases-grid" id="cases"></div>
+    </div>
+
+    <!-- ИНВЕНТАРЬ -->
+    <div class="page" id="page-inv">
+      <div class="section-title">🎒 Мой инвентарь</div>
+      <div class="panel-card" style="max-width:720px">
+        <p style="font-size:13px; color:#8b93a5">Здесь хранятся выигранные подарки. Продай за звёзды или поставь на кон в «Апгрейдере» — удвой ценность или потеряй.</p>
+        <div class="inv-grid" id="invGrid"></div>
+        <div class="empty" id="invEmpty" style="display:none">Инвентарь пуст. Открывай кейсы — подарки выпадают часто!</div>
+      </div>
+    </div>
+
+    <!-- ПОПОЛНЕНИЕ -->
+    <div class="page" id="page-deposit">
+      <div class="section-title">➕ Пополнить звёзды</div>
+      <div class="panel-card">
+        <div class="price-note">Минимальный депозит — <b>25 ₽</b> · курс 1 ₽ = 1 ⭐</div>
+        <div class="dep-bonus-note">🔥 <b>Бонус на первое пополнение: +75%!</b> Пополнишь 100 ₽ — получишь 175 ⭐.</div>
+        <p style="margin:12px 0">Перейди на страницу оплаты, переведи сумму и получи депозит-код от админа.</p>
+        <a class="btn" href="pay.html">💳 Перейти к оплате</a>
+        <div class="section-title" style="margin-top:18px">Ввести депозит-код</div>
+        <div class="promo-area">
+          <input type="text" id="depInput" placeholder="Депозит-код (например ZINI25)">
+          <button class="btn" onclick="useDeposit()">Пополнить</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- БОНУС -->
+    <div class="page" id="page-bonus">
+      <div class="section-title">🎁 Ежедневный бонус</div>
+      <div class="panel-card">
+        <p style="margin-bottom:12px">Раз в 20 часов — 25 ⭐ на открытие кейсов!</p>
+        <button class="btn" onclick="claimBonus()">Забрать бонус</button>
+      </div>
+    </div>
+
+    <!-- ПРОМОКОДЫ -->
+    <div class="page" id="page-promo">
+      <div class="section-title">🎟 Промокоды</div>
+      <div class="panel-card">
+        <p style="margin-bottom:10px">Вводи код — получай звёзды. Новые коды выходят регулярно!</p>
+        <div class="promo-area">
+          <input type="text" id="promoInput" placeholder="Промокод">
+          <button class="btn" onclick="usePromo()">OK</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- СТАТИСТИКА -->
+    <div class="page" id="page-stats">
+      <div class="section-title">📊 Статистика</div>
+      <div class="panel-card">
+        <div class="stats">
+          <div class="stat-box"><div class="num" id="tdOpened">0</div><div class="lbl">кейсов сегодня</div></div>
+          <div class="stat-box"><div class="num" id="tdWins">0</div><div class="lbl">выигрышей</div></div>
+          <div class="stat-box"><div class="num star-num" id="tdStars">0</div><div class="lbl">⭐ выиграно</div></div>
+          <div class="stat-box"><div class="num" id="tdGifts">0</div><div class="lbl">🎁 подарков</div></div>
+          <div class="stat-box"><div class="num" id="tdPrem">0</div><div class="lbl">💎 Premium</div></div>
+        </div>
+        <table class="day-table" id="dayTable">
+          <tr><th>Дата</th><th>Кейсов</th><th>Выигрышей</th><th>⭐</th><th>🎁</th><th>💎</th></tr>
+        </table>
+        <p style="font-size:12px; color:#8b93a5; margin-top:14px">💡 Общая статистика всех игроков и топ по открытиям появятся после подключения сервера.</p>
+      </div>
+    </div>
+
+    <!-- ДРОПЫ -->
+    <div class="page" id="page-drops">
+      <div class="section-title">📋 Мои дропы</div>
+      <div class="history" id="history">Пока пусто — открой первый кейс!</div>
+    </div>
+
+    <!-- ВЫВОД -->
+    <div class="page" id="page-withdraw">
+      <div class="section-title">⭐ Вывод и операции</div>
+      <div class="panel-card">
+        <div class="stats" style="margin-top:0">
+          <div class="stat-box"><div class="num star-num" id="wdStarsNow">0</div><div class="lbl">⭐ звёзд на балансе</div></div>
+          <div class="stat-box"><div class="num" id="wdGiftsNow">0</div><div class="lbl">🎁 подарков</div></div>
+          <div class="stat-box"><div class="num" id="wdPremNow">0</div><div class="lbl">💎 Premium, мес</div></div>
+        </div>
+        <p style="margin:12px 0">Минимальный вывод — <b style="color:#ffd54a">50 ⭐</b>. Заявка уходит админу в Telegram.</p>
+        <button class="btn" onclick="showWithdraw()">Вывести звёзды</button>
+        <div class="withdraw-box" id="withdrawBox"></div>
+
+        <div class="section-title" style="margin-top:20px">История операций</div>
+        <div class="ops-list" id="opsList"></div>
+      </div>
+    </div>
+
+    <!-- ПРОФИЛЬ -->
+    <div class="page" id="page-profile">
+      <div class="section-title">👤 Профиль</div>
+      <div class="panel-card">
+        <div style="font-size:19px; font-weight:bold" id="pName">—</div>
+        <div style="font-size:13px; color:#8b93a5" id="pId">—</div>
+        <div style="font-size:13px; color:#8b93a5; margin-top:6px">Уровень <b id="pLvlNum" style="color:#ff8a00">1</b> — открыто <span id="pLvlProg">0</span>/<span id="pLvlNeed">5</span> кейсов</div>
+        <div class="lvl-bar"><div class="lvl-fill" id="lvlFill" style="width:0%"></div></div>
+        <div class="stats">
+          <div class="stat-box"><div class="num" id="stCases">0</div><div class="lbl">кейсов всего</div></div>
+          <div class="stat-box"><div class="num" id="stWins">0</div><div class="lbl">выигрышей всего</div></div>
+          <div class="stat-box"><div class="num star-num" id="stStars">0</div><div class="lbl">⭐ выиграно</div></div>
+          <div class="stat-box"><div class="num" id="stGifts">0</div><div class="lbl">🎁 подарков</div></div>
+          <div class="stat-box"><div class="num" id="stPrem">0</div><div class="lbl">💎 Premium, мес</div></div>
+        </div>
+        <div class="stats">
+          <div class="stat-box" style="flex-basis:100%">
+            <div class="num" id="stBest">—</div>
+            <div class="lbl">лучший дроп за всё время</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- АДМИН-ПАНЕЛЬ -->
+    <div class="page" id="page-admin">
+      <div class="section-title">🛠 Админ-панель</div>
+      <div class="panel-card" style="max-width:640px">
+        <h4 style="margin-bottom:6px">➕ Депозит-код</h4>
+        <div class="promo-area">
+          <input type="number" id="adDepAmount" placeholder="Сумма в ⭐ (например 100)">
+          <button class="btn" onclick="adminMakeDep()">Создать</button>
+        </div>
+        <h4 style="margin:16px 0 6px">🎟 Промокод</h4>
+        <div class="promo-area">
+          <input type="number" id="adPromoAmount" placeholder="Сумма в ⭐ (например 50)">
+          <button class="btn" onclick="adminMakePromo()">Создать</button>
+        </div>
+        <h4 style="margin:16px 0 6px">📋 Активные коды</h4>
+        <div id="adminCodes" class="empty">Кодов пока нет.</div>
+        <button class="btn" style="margin-top:12px" onclick="adminCopyPublish()">📋 Скопировать блок для публикации</button>
+        <p class="auth-note">Коды сохраняются в этом браузере и сразу работают на нём. Чтобы код заработал у всех игроков: нажми «Скопировать блок», открой index.html на GitHub (Редактировать), найди секцию НАСТРОЙКИ и вставь строки в DEP_CODES или PROMO_CODES, затем Commit.</p>
+        <h4 style="margin:16px 0 6px">👥 Аккаунты на этом устройстве</h4>
+        <div id="adminAccounts" class="empty">—</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== Модальное окно кейса ===== -->
+<div class="overlay" id="caseOverlay" onclick="if(event.target===this) closeCase()">
+  <div class="case-modal">
+    <div class="modal-head">
+      <div class="ce" id="mEmoji"></div>
+      <div>
+        <h3 id="mName">—</h3>
+        <div style="font-size:13px; color:#8b93a5" id="mPrice">—</div>
+      </div>
+      <button class="close-x" onclick="closeCase()">✕</button>
+    </div>
+    <div class="prize-grid" id="prizeList"></div>
+    <button class="open-big" id="openBtn" onclick="openSelectedCase()">🔓 Открыть</button>
+    <div class="roulette" id="roulette"><div class="strip" id="strip"></div></div>
+    <div class="result" id="result"></div>
+    <div class="gift-section-title" id="giftSectionTitle" style="display:none">🎁 Подарки, которые могут выпасть</div>
+    <div class="gift-grid" id="giftGrid"></div>
+  </div>
 </div>
 
 <script>
-// ================== ПРОВЕРКА ВХОДА ==================
-// Регистрация и вход — только на странице кейсах (index.html).
-// Если игрок не вошёл — отправляем его туда.
-const savedUser = localStorage.getItem("zd_current");
-if (!savedUser) {
-  location.replace("index.html");
-}
-let user = null;
-try { user = JSON.parse(savedUser); } catch (e) {}
-if (!user || !user.id) {
-  location.replace("index.html");
-}
-// =====================================================
-
 // ================== НАСТРОЙКИ ==================
-const MULTIPLIERS = [
-  { mult: 1.5, chance: 62, bonus: null },
-  { mult: 2.0, chance: 45, bonus: null },
-  { mult: 3.0, chance: 30, bonus: { chance: 8,  gifts: ["sticker", "teddy"] } },
-  { mult: 5.0, chance: 18, bonus: { chance: 10, gifts: ["bouquet", "rocket", "hamster"] } },
-  { mult: 10.0, chance: 8,  bonus: { chance: 15, gifts: ["crown"], premium: 1 } }
-];
+const ADMIN_TELEGRAM = "zini_admin";   // ← замени на свой ник в Telegram (без @)
+const ADMIN_PHONE = "80000000000";     // номер админа — без +7, только цифры
+const FIRST_DEP_BONUS = 1.75;          // первое пополнение: +75%
+const WITHDRAW_MIN_STARS = 50;
+const BONUS_COOLDOWN = 20 * 60 * 60 * 1000;
+const LEVEL_STEP = 5;
+
+const PROMO_CODES = {
+  "START": 100, "FRIEND": 150, "GOLD2026": 500, "BIGBONUS": 2000,
+  "WELCOME": 50, "STAR25": 25, "STAR50": 50, "DROP100": 100,
+  "ZINIFAMILY": 75, "LUCKY2026": 300
+};
+
+const DEP_CODES = {
+  "ZINI25": 25, "ZINI50": 50, "ZINI100": 100,
+  "ZINI500": 500, "ZINI1000": 1000, "ZINI5000": 5000
+};
 
 const GIFTS = {
   sticker: { name: "Стикерпак",          emoji: "🎨", value: 50,  c1: "#4f8cff", c2: "#2242a8" },
@@ -320,320 +549,858 @@ const GIFTS = {
   hamster: { name: "Золотой хомяк",      emoji: "🐹", value: 250, c1: "#ffb040", c2: "#8a5a00" },
   crown:   { name: "Корона",             emoji: "👑", value: 300, c1: "#ffd54a", c2: "#8a6a00" }
 };
+
+const CASES = [
+  { id: "common", name: "Обычный кейс", emoji: "📦", price: 11, opens: 48210,
+    prizes: [
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 30 },
+      { name: "5 звёзд", emoji: "⭐", value: 5, type: "stars", weight: 26 },
+      { name: "10 звёзд", emoji: "⭐", value: 10, type: "stars", weight: 18 },
+      { name: "25 звёзд", emoji: "⭐", value: 25, type: "stars", weight: 14 },
+      { name: "Стикерпак", gift: "sticker", type: "gift", weight: 8 },
+      { name: "50 звёзд", emoji: "⭐", value: 50, type: "stars", weight: 4 }
+    ]
+  },
+  { id: "bronze", name: "Бронзовый кейс", emoji: "🥉", price: 29, opens: 31250,
+    prizes: [
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 24 },
+      { name: "10 звёзд", emoji: "⭐", value: 10, type: "stars", weight: 26 },
+      { name: "25 звёзд", emoji: "⭐", value: 25, type: "stars", weight: 20 },
+      { name: "50 звёзд", emoji: "⭐", value: 50, type: "stars", weight: 16 },
+      { name: "Стикерпак", gift: "sticker", type: "gift", weight: 8 },
+      { name: "100 звёзд", emoji: "⭐", value: 100, type: "stars", weight: 3 },
+      { name: "Плюшевый мишка", gift: "teddy", type: "gift", weight: 3 }
+    ]
+  },
+  { id: "silver", name: "Серебряный кейс", emoji: "🥈", price: 49, opens: 24180,
+    prizes: [
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 29 },
+      { name: "25 звёзд", emoji: "⭐", value: 25, type: "stars", weight: 24 },
+      { name: "50 звёзд", emoji: "⭐", value: 50, type: "stars", weight: 20 },
+      { name: "100 звёзд", emoji: "⭐", value: 100, type: "stars", weight: 14 },
+      { name: "Плюшевый мишка", gift: "teddy", type: "gift", weight: 8 },
+      { name: "150 звёзд", emoji: "⭐", value: 150, type: "stars", weight: 2 },
+      { name: "Букет роз", gift: "bouquet", type: "gift", weight: 3 }
+    ]
+  },
+  { id: "steel", name: "Стальной кейс", emoji: "🛡️", price: 69, opens: 18340,
+    prizes: [
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 42 },
+      { name: "50 звёзд", emoji: "⭐", value: 50, type: "stars", weight: 20 },
+      { name: "100 звёзд", emoji: "⭐", value: 100, type: "stars", weight: 16 },
+      { name: "150 звёзд", emoji: "⭐", value: 150, type: "stars", weight: 8 },
+      { name: "Букет роз", gift: "bouquet", type: "gift", weight: 6 },
+      { name: "200 звёзд", emoji: "⭐", value: 200, type: "stars", weight: 4 },
+      { name: "Космическая ракета", gift: "rocket", type: "gift", weight: 2 },
+      { name: "250 звёзд", emoji: "⭐", value: 250, type: "stars", weight: 2 }
+    ]
+  },
+  { id: "golden", name: "Золотой кейс", emoji: "👑", price: 99, opens: 15220,
+    prizes: [
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 28 },
+      { name: "50 звёзд", emoji: "⭐", value: 50, type: "stars", weight: 22 },
+      { name: "100 звёзд", emoji: "⭐", value: 100, type: "stars", weight: 18 },
+      { name: "150 звёзд", emoji: "⭐", value: 150, type: "stars", weight: 14 },
+      { name: "Космическая ракета", gift: "rocket", type: "gift", weight: 8 },
+      { name: "250 звёзд", emoji: "⭐", value: 250, type: "stars", weight: 4 },
+      { name: "300 звёзд", emoji: "⭐", value: 300, type: "stars", weight: 2 },
+      { name: "Premium 1 мес", emoji: "💎", value: 1, type: "premium", weight: 4 }
+    ]
+  },
+  { id: "platinum", name: "Платиновый кейс", emoji: "🥇", price: 149, opens: 11460,
+    prizes: [
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 30 },
+      { name: "100 звёзд", emoji: "⭐", value: 100, type: "stars", weight: 24 },
+      { name: "150 звёзд", emoji: "⭐", value: 150, type: "stars", weight: 18 },
+      { name: "250 звёзд", emoji: "⭐", value: 250, type: "stars", weight: 14 },
+      { name: "Космическая ракета", gift: "rocket", type: "gift", weight: 8 },
+      { name: "300 звёзд", emoji: "⭐", value: 300, type: "stars", weight: 4 },
+      { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 4 },
+      { name: "Premium 1 мес", emoji: "💎", value: 1, type: "premium", weight: 2 }
+    ]
+  },
+  { id: "ruby", name: "Рубиновый кейс", emoji: "❤️‍🔥", price: 199, opens: 9030,
+    prizes: [
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 28 },
+      { name: "150 звёзд", emoji: "⭐", value: 150, type: "stars", weight: 24 },
+      { name: "250 звёзд", emoji: "⭐", value: 250, type: "stars", weight: 20 },
+      { name: "300 звёзд", emoji: "⭐", value: 300, type: "stars", weight: 12 },
+      { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 8 },
+      { name: "Корона", gift: "crown", type: "gift", weight: 4 },
+      { name: "400 звёзд", emoji: "⭐", value: 400, type: "stars", weight: 2 },
+      { name: "Premium 1 мес", emoji: "💎", value: 1, type: "premium", weight: 2 }
+    ]
+  },
+  { id: "sapphire", name: "Сапфировый кейс", emoji: "💠", price: 259, opens: 7210,
+    prizes: [
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 24 },
+      { name: "200 звёзд", emoji: "⭐", value: 200, type: "stars", weight: 24 },
+      { name: "300 звёзд", emoji: "⭐", value: 300, type: "stars", weight: 18 },
+      { name: "400 звёзд", emoji: "⭐", value: 400, type: "stars", weight: 12 },
+      { name: "500 звёзд", emoji: "⭐", value: 500, type: "stars", weight: 4 },
+      { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 8 },
+      { name: "Корона", gift: "crown", type: "gift", weight: 6 },
+      { name: "Premium 1 мес", emoji: "💎", value: 1, type: "premium", weight: 2 },
+      { name: "Premium 3 мес", emoji: "💎", value: 3, type: "premium", weight: 2 }
+    ]
+  },
+  { id: "emerald", name: "Изумрудный кейс", emoji: "🍀", price: 349, opens: 5640,
+    prizes: [
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 28 },
+      { name: "300 звёзд", emoji: "⭐", value: 300, type: "stars", weight: 26 },
+      { name: "500 звёзд", emoji: "⭐", value: 500, type: "stars", weight: 20 },
+      { name: "700 звёзд", emoji: "⭐", value: 700, type: "stars", weight: 12 },
+      { name: "800 звёзд", emoji: "⭐", value: 800, type: "stars", weight: 4 },
+      { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 6 },
+      { name: "Корона", gift: "crown", type: "gift", weight: 2 },
+      { name: "Premium 3 мес", emoji: "💎", value: 3, type: "premium", weight: 2 }
+    ]
+  },
+  { id: "amethyst", name: "Аметистовый кейс", emoji: "🔮", price: 449, opens: 4380,
+    prizes: [
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 30 },
+      { name: "400 звёзд", emoji: "⭐", value: 400, type: "stars", weight: 26 },
+      { name: "600 звёзд", emoji: "⭐", value: 600, type: "stars", weight: 18 },
+      { name: "800 звёзд", emoji: "⭐", value: 800, type: "stars", weight: 10 },
+      { name: "1000 звёзд", emoji: "⭐", value: 1000, type: "stars", weight: 4 },
+      { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 6 },
+      { name: "Корона", gift: "crown", type: "gift", weight: 4 },
+      { name: "Premium 3 мес", emoji: "💎", value: 3, type: "premium", weight: 2 }
+    ]
+  },
+  { id: "fire", name: "Огненный кейс", emoji: "🔥", price: 599, opens: 3390,
+    prizes: [
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 28 },
+      { name: "500 звёзд", emoji: "⭐", value: 500, type: "stars", weight: 26 },
+      { name: "750 звёзд", emoji: "⭐", value: 750, type: "stars", weight: 18 },
+      { name: "1000 звёзд", emoji: "⭐", value: 1000, type: "stars", weight: 10 },
+      { name: "1250 звёзд", emoji: "⭐", value: 1250, type: "stars", weight: 4 },
+      { name: "1500 звёзд", emoji: "⭐", value: 1500, type: "stars", weight: 2 },
+      { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 4 },
+      { name: "Корона", gift: "crown", type: "gift", weight: 6 },
+      { name: "Premium 3 мес", emoji: "💎", value: 3, type: "premium", weight: 2 }
+    ]
+  },
+  { id: "ice", name: "Ледяной кейс", emoji: "❄️", price: 799, opens: 2510,
+    prizes: [
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 30 },
+      { name: "750 звёзд", emoji: "⭐", value: 750, type: "stars", weight: 26 },
+      { name: "1100 звёзд", emoji: "⭐", value: 1100, type: "stars", weight: 18 },
+      { name: "1500 звёзд", emoji: "⭐", value: 1500, type: "stars", weight: 10 },
+      { name: "2000 звёзд", emoji: "⭐", value: 2000, type: "stars", weight: 4 },
+      { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 4 },
+      { name: "Корона", gift: "crown", type: "gift", weight: 6 },
+      { name: "Premium 3 мес", emoji: "💎", value: 3, type: "premium", weight: 2 }
+    ]
+  },
+  { id: "cosmic", name: "Космический кейс", emoji: "🌌", price: 1099, opens: 1820,
+    prizes: [
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 30 },
+      { name: "1000 звёзд", emoji: "⭐", value: 1000, type: "stars", weight: 26 },
+      { name: "1500 звёзд", emoji: "⭐", value: 1500, type: "stars", weight: 18 },
+      { name: "2200 звёзд", emoji: "⭐", value: 2200, type: "stars", weight: 10 },
+      { name: "3000 звёзд", emoji: "⭐", value: 3000, type: "stars", weight: 4 },
+      { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 4 },
+      { name: "Корона", gift: "crown", type: "gift", weight: 6 },
+      { name: "Premium 6 мес", emoji: "💎", value: 6, type: "premium", weight: 2 }
+    ]
+  },
+  { id: "legend", name: "Легендарный кейс", emoji: "🏅", price: 1499, opens: 1240,
+    prizes: [
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 30 },
+      { name: "1500 звёзд", emoji: "⭐", value: 1500, type: "stars", weight: 26 },
+      { name: "2300 звёзд", emoji: "⭐", value: 2300, type: "stars", weight: 18 },
+      { name: "3200 звёзд", emoji: "⭐", value: 3200, type: "stars", weight: 10 },
+      { name: "4500 звёзд", emoji: "⭐", value: 4500, type: "stars", weight: 4 },
+      { name: "Корона", gift: "crown", type: "gift", weight: 6 },
+      { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 4 },
+      { name: "Premium 6 мес", emoji: "💎", value: 6, type: "premium", weight: 2 }
+    ]
+  },
+  { id: "myth", name: "Мифический кейс", emoji: "🐉", price: 2499, opens: 760,
+    prizes: [
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 26 },
+      { name: "2000 звёзд", emoji: "⭐", value: 2000, type: "stars", weight: 26 },
+      { name: "3500 звёзд", emoji: "⭐", value: 3500, type: "stars", weight: 18 },
+      { name: "5000 звёзд", emoji: "⭐", value: 5000, type: "stars", weight: 12 },
+      { name: "7000 звёзд", emoji: "⭐", value: 7000, type: "stars", weight: 4 },
+      { name: "10000 звёзд", emoji: "⭐", value: 10000, type: "stars", weight: 2 },
+      { name: "Корона", gift: "crown", type: "gift", weight: 6 },
+      { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 4 },
+      { name: "Premium 6 мес", emoji: "💎", value: 6, type: "premium", weight: 2 }
+    ]
+  }
+];
 // ================================================
 
-let balance = 0, giftItems = [], premium = 0;
-let mode = "stars";
-let selectedGift = null;
-let currentMultIndex = 0;
+let user = null;
+let balance = 0, opened = 0, wins = 0, starsWon = 0, gifts = 0, premium = 0;
+let giftItems = [];
+let bestPrize = null;
 let spinning = false;
+let currentCase = null;
 
 const k = (name) => "zd_" + (user ? user.id : "x") + "_" + name;
+const typeUnit = (t) => t === "stars" ? "звёзд" : t === "gift" ? "подарок" : t === "premium" ? "мес. Premium" : "";
+const scoreOf = (p) => p.type === "stars" ? p.value : p.type === "gift" ? GIFTS[p.gift].value + 50 : p.type === "premium" ? 500 * p.value : 0;
 
+// ---------- админ-коды ----------
+let customCodes = { dep: {}, promo: {} };
+try { customCodes = JSON.parse(localStorage.getItem("zd_custom_codes")) || customCodes; } catch (e) {}
+function saveCustomCodes() { localStorage.setItem("zd_custom_codes", JSON.stringify(customCodes)); }
+function isAdmin() { return user && user.phone === ADMIN_PHONE; }
+function allDepCodes() { return Object.assign({}, DEP_CODES, customCodes.dep); }
+function allPromoCodes() { return Object.assign({}, PROMO_CODES, customCodes.promo); }
+
+// ---------- обложки ----------
+const COVER_COLORS = {
+  common:   { base: "#4a5a8a", dark: "#2b3554", light: "#8fa3d9", glow: "rgba(74,90,138,0.55)" },
+  bronze:   { base: "#b0763a", dark: "#6e451e", light: "#e0aa70", glow: "rgba(176,118,58,0.55)" },
+  silver:   { base: "#aab6c2", dark: "#5d6a76", light: "#e4ecf3", glow: "rgba(170,182,194,0.55)" },
+  steel:    { base: "#4f8a96", dark: "#29505a", light: "#8fd0da", glow: "rgba(79,138,150,0.55)" },
+  golden:   { base: "#f5b942", dark: "#9c6c14", light: "#ffe08a", glow: "rgba(245,185,66,0.55)" },
+  platinum: { base: "#d4dcea", dark: "#7d8894", light: "#f2f7fb", glow: "rgba(212,220,234,0.55)" },
+  ruby:     { base: "#e0405c", dark: "#7c1a2e", light: "#ff9db0", glow: "rgba(224,64,92,0.55)" },
+  sapphire: { base: "#3a6ee0", dark: "#1c3a80", light: "#9db9ff", glow: "rgba(58,110,224,0.55)" },
+  emerald:  { base: "#2ecc71", dark: "#156036", light: "#9ff0c2", glow: "rgba(46,204,113,0.55)" },
+  amethyst: { base: "#a64ce6", dark: "#5c2a80", light: "#d9a6ff", glow: "rgba(166,76,230,0.55)" },
+  fire:     { base: "#ff7a2f", dark: "#8a3a0e", light: "#ffb98a", glow: "rgba(255,122,47,0.55)" },
+  ice:      { base: "#42c5f5", dark: "#1f6c96", light: "#9fe4ff", glow: "rgba(66,197,245,0.55)" },
+  cosmic:   { base: "#6a4cff", dark: "#322699", light: "#b3a6ff", glow: "rgba(106,76,255,0.55)" },
+  legend:   { base: "#ffcc33", dark: "#996f00", light: "#fff0b3", glow: "rgba(255,204,51,0.55)" },
+  myth:     { base: "#ff4c6e", dark: "#8c1f38", light: "#ffa3b8", glow: "rgba(255,76,110,0.55)" }
+};
+
+function caseCoverSVG(c) {
+  const col = COVER_COLORS[c.id] || COVER_COLORS.common;
+  const rays = [0, 30, 60, 120, 150, 210, 240, 300, 330].map(a => {
+    const rad = a * Math.PI / 180;
+    const x = 100 + Math.cos(rad) * 160, y = 105 + Math.sin(rad) * 160;
+    return `<polygon points="100,105 ${x - 14},${y - 14} ${x + 14},${y + 14}" fill="${col.glow}" opacity="0.5"/>`;
+  }).join("");
+  const sparkStars = [[30,30,3],[165,22,2],[45,90,2],[160,95,3],[100,18,2]].map(([x,y,r]) =>
+    `<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" opacity="0.8"><animate attributeName="opacity" values="0.2;0.9;0.2" dur="${1.5 + r * 0.6}s" repeatCount="indefinite"/></circle>`
+  ).join("");
+  return `
+  <svg class="cover cover-hover" viewBox="0 0 200 145" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="bg${c.id}" cx="50%" cy="55%" r="70%">
+        <stop offset="0%" stop-color="${col.dark}"/><stop offset="100%" stop-color="#10131c"/>
+      </radialGradient>
+      <linearGradient id="lid${c.id}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${col.light}"/><stop offset="100%" stop-color="${col.base}"/>
+      </linearGradient>
+      <linearGradient id="body${c.id}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${col.base}"/><stop offset="100%" stop-color="${col.dark}"/>
+      </linearGradient>
+    </defs>
+    <rect width="200" height="145" fill="url(#bg${c.id})"/>
+    ${rays}
+    <ellipse cx="100" cy="120" rx="70" ry="14" fill="${col.glow}" opacity="0.6"/>
+    <ellipse cx="100" cy="78" rx="55" ry="16" fill="${col.glow}"/>
+    <rect x="42" y="66" width="116" height="48" rx="7" fill="url(#body${c.id})" stroke="#10131c" stroke-width="2"/>
+    <path d="M42 70 Q42 46 60 44 L140 44 Q158 46 158 70 L158 74 Q100 86 42 74 Z"
+          fill="url(#lid${c.id})" stroke="#10131c" stroke-width="2"/>
+    <rect x="92" y="72" width="16" height="20" rx="3" fill="#10131c"/>
+    <circle cx="100" cy="80" r="4" fill="#ffe08a"/>
+    <rect x="52" y="80" width="10" height="22" rx="3" fill="${col.light}" opacity="0.85"/>
+    <rect x="138" y="80" width="10" height="22" rx="3" fill="${col.light}" opacity="0.85"/>
+    ${sparkStars}
+    <polygon points="100,10 104,20 114,22 106,29 108,39 100,34 92,39 94,29 86,22 96,20"
+             fill="#ffe08a" opacity="0.95" transform="translate(0,2)">
+      <animateTransform attributeName="transform" type="scale" values="1;1.25;1" dur="2s" repeatCount="indefinite" additive="sum"/>
+    </polygon>
+  </svg>`;
+}
+
+function giftCoverSVG(g) {
+  return `
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="gc${g}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="${GIFTS[g].c1}"/><stop offset="100%" stop-color="${GIFTS[g].c2}"/>
+      </linearGradient>
+    </defs>
+    <rect width="100" height="100" fill="url(#gc${g})"/>
+    <circle cx="80" cy="18" r="22" fill="#ffffff" opacity="0.12"/>
+    <circle cx="18" cy="82" r="16" fill="#ffffff" opacity="0.10"/>
+    <text x="50" y="62" font-size="42" text-anchor="middle">${GIFTS[g].emoji}</text>
+  </svg>`;
+}
+
+// ---------- авторизация ----------
+function formatPhone(input) {
+  let digits = input.value.replace(/\D/g, "");
+  if (digits.startsWith("8")) digits = "7" + digits.slice(1);
+  if (!digits.startsWith("7")) digits = "7" + digits;
+  digits = digits.slice(0, 11);
+  let out = "+7";
+  if (digits.length > 1) out += " (" + digits.slice(1, 4);
+  if (digits.length >= 4) out += ")";
+  if (digits.length > 4) out += " " + digits.slice(4, 7);
+  if (digits.length > 7) out += "-" + digits.slice(7, 9);
+  if (digits.length > 9) out += "-" + digits.slice(9, 11);
+  input.value = out;
+}
+
+function authSubmit() {
+  const phoneEl = document.getElementById("authPhone");
+  formatPhone(phoneEl);
+  const phone = phoneEl.value.replace(/\D/g, "");
+  const name = document.getElementById("authName").value.trim();
+  let tg = document.getElementById("authTg").value.trim();
+  if (phone.length !== 11) { alert("Введи номер полностью: +7 (XXX) XXX-XX-XX"); return; }
+  if (name.length < 2) { alert("Введи имя (минимум 2 символа)"); return; }
+  if (tg && !tg.startsWith("@")) tg = "@" + tg;
+  if (tg && tg.length < 6) { alert("Юз в Telegram слишком короткий (минимум 5 символов после @)"); return; }
+  const accKey = "zd_acc_" + phone;
+  const saved = localStorage.getItem(accKey);
+  if (saved) {
+    const acc = JSON.parse(saved);
+    if (acc.name !== name && !confirm("Номер уже зарегистрирован на имя «" + acc.name + "». Войти в этот аккаунт?")) return;
+    if (tg) acc.tg = tg;
+    localStorage.setItem(accKey, JSON.stringify(acc));
+    login({ phone: phone, name: acc.name, tg: acc.tg || tg, id: phone });
+  } else {
+    localStorage.setItem(accKey, JSON.stringify({ name: name, tg: tg, created: new Date().toLocaleDateString("ru-RU") }));
+    login({ phone: phone, name: name, tg: tg, id: phone });
+  }
+}
+
+function login(u) {
+  user = u;
+  localStorage.setItem("zd_current", JSON.stringify(user));
+  document.getElementById("authScreen").style.display = "none";
+  document.getElementById("mainScreen").style.display = "block";
+  document.getElementById("adminNav").style.display = isAdmin() ? "" : "none";
+  loadState(); renderAll(); goTo("cases");
+}
+
+function logout() {
+  if (!confirm("Выйти из аккаунта?")) return;
+  localStorage.removeItem("zd_current");
+  location.reload();
+}
+
+// ---------- меню баланса ----------
+function toggleBalanceMenu(e) {
+  e.stopPropagation();
+  document.getElementById("balanceMenu").classList.toggle("open");
+}
+function hideBalanceMenu() {
+  document.getElementById("balanceMenu").classList.remove("open");
+}
+document.addEventListener("click", (e) => {
+  const menu = document.getElementById("balanceMenu");
+  if (menu && !menu.contains(e.target)) hideBalanceMenu();
+});
+
+// ---------- состояние ----------
 function loadState() {
   balance = parseInt(localStorage.getItem(k("balance"))) || 0;
+  opened  = parseInt(localStorage.getItem(k("opened")))  || 0;
+  wins    = parseInt(localStorage.getItem(k("wins")))    || 0;
+  starsWon = parseInt(localStorage.getItem(k("starsWon"))) || 0;
+  gifts   = parseInt(localStorage.getItem(k("gifts")))   || 0;
   premium = parseInt(localStorage.getItem(k("premium"))) || 0;
   try { giftItems = JSON.parse(localStorage.getItem(k("giftItems"))) || []; } catch (e) { giftItems = []; }
+  try { bestPrize = JSON.parse(localStorage.getItem(k("bestPrize"))); } catch (e) { bestPrize = null; }
 }
 function saveState() {
   localStorage.setItem(k("balance"), balance);
+  localStorage.setItem(k("opened"), opened);
+  localStorage.setItem(k("wins"), wins);
+  localStorage.setItem(k("starsWon"), starsWon);
+  localStorage.setItem(k("gifts"), gifts);
   localStorage.setItem(k("premium"), premium);
   localStorage.setItem(k("giftItems"), JSON.stringify(giftItems));
+  if (bestPrize) localStorage.setItem(k("bestPrize"), JSON.stringify(bestPrize));
 }
 
-function renderGame() {
+function bumpDaily(fields) {
+  const day = new Date().toISOString().slice(0, 10);
+  let daily = JSON.parse(localStorage.getItem(k("daily")) || "{}");
+  if (!daily[day]) daily[day] = { opened: 0, wins: 0, stars: 0, gifts: 0, premium: 0 };
+  for (const f in fields) daily[day][f] += fields[f];
+  localStorage.setItem(k("daily"), JSON.stringify(daily));
+}
+
+function addOp(type, amount, note) {
+  let ops = JSON.parse(localStorage.getItem(k("ops")) || "[]");
+  ops.unshift({
+    type: type, amount: amount, note: note || "",
+    date: new Date().toLocaleString("ru-RU", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })
+  });
+  ops = ops.slice(0, 50);
+  localStorage.setItem(k("ops"), JSON.stringify(ops));
+  renderOps();
+}
+
+function goTo(page) {
+  hideBalanceMenu();
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById("page-" + page).classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(b =>
+    b.classList.toggle("active", b.dataset.page === page));
+  window.scrollTo(0, 0);
+}
+
+function renderAll() {
   document.getElementById("balance").textContent = balance;
-  renderMultButtons();
-  updateChanceLine();
-  renderHistory();
-  renderGiftSelect();
-  renderIdleStrip();
+  document.getElementById("pName").textContent = user.name;
+  document.getElementById("pId").textContent = "📞 " + formatPhoneDisplay(user.phone) + (user.tg ? " · ✈️ " + user.tg : "");
+  document.getElementById("stCases").textContent = opened;
+  document.getElementById("stWins").textContent = wins;
+  document.getElementById("stStars").textContent = starsWon;
+  document.getElementById("stGifts").textContent = gifts;
+  document.getElementById("stPrem").textContent = premium;
+  document.getElementById("stBest").textContent = bestPrize ? bestPrize.emoji + " " + bestPrize.name : "—";
+  document.getElementById("wdStarsNow").textContent = balance;
+  document.getElementById("wdGiftsNow").textContent = gifts;
+  document.getElementById("wdPremNow").textContent = premium;
+  const lvl = Math.floor(opened / LEVEL_STEP) + 1;
+  const prog = opened % LEVEL_STEP;
+  document.getElementById("pLvlNum").textContent = lvl;
+  document.getElementById("pLvlProg").textContent = prog;
+  document.getElementById("pLvlNeed").textContent = LEVEL_STEP;
+  document.getElementById("lvlFill").style.width = (prog / LEVEL_STEP * 100) + "%";
+  renderCases(); renderInv(); renderHistory(); renderDaily(); renderOps();
+  if (isAdmin()) renderAdmin();
 }
 
-function betAdd(d) {
-  const el = document.getElementById("betInput");
-  let v = Math.max(1, (parseInt(el.value) || 0) + d);
-  if (v > balance) v = balance;
-  el.value = v;
-}
-function betSet(v) {
-  const el = document.getElementById("betInput");
-  el.value = Math.max(1, Math.min(v, balance));
+function formatPhoneDisplay(phone) {
+  return "+7 (" + phone.slice(1,4) + ") " + phone.slice(4,7) + "-" + phone.slice(7,9) + "-" + phone.slice(9,11);
 }
 
-function setMode(m) {
-  if (spinning) return;
-  mode = m;
-  document.getElementById("tabStars").classList.toggle("active", m === "stars");
-  document.getElementById("tabGift").classList.toggle("active", m === "gift");
-  document.getElementById("starsBetBlock").style.display = m === "stars" ? "block" : "none";
-  document.getElementById("giftBetBlock").style.display = m === "gift" ? "block" : "none";
-  renderGiftSelect();
-  updateChanceLine();
+function renderCases() {
+  const box = document.getElementById("cases");
+  box.innerHTML = "";
+  CASES.forEach((c, i) => {
+    const d = document.createElement("div");
+    d.className = "case-card";
+    d.innerHTML = caseCoverSVG(c) + `
+      <div class="case-meta">
+        <div class="case-name">${c.name}</div>
+        <div class="case-open-count">${c.opens.toLocaleString("ru-RU")} открыто</div>
+        <button class="case-buy">⭐ ${c.price}</button>
+      </div>`;
+    d.onclick = () => openCasePage(i);
+    box.appendChild(d);
+  });
 }
 
-function renderGiftSelect() {
-  const grid = document.getElementById("giftSelect");
-  if (!grid) return;
-  const unique = [...new Set(giftItems)];
-  if (!unique.length) {
-    grid.innerHTML = `<div style="font-size:12px; color:#8b93a5; grid-column:1/-1">Инвентарь пуст — открой кейсы на сайте и подарки появятся здесь.</div>`;
-    return;
-  }
+const FAKE_NAMES = ["Артём", "Лиза", "Марат", "Ксюша", "Данил", "Софья", "Ранис", "Айгуль", "Тимур", "Влад"];
+function randomDrop() {
+  const c = CASES[Math.floor(Math.random() * CASES.length)];
+  const p = c.prizes[Math.floor(Math.random() * c.prizes.length)];
+  const name = p.type === "gift" ? GIFTS[p.gift].name : p.name;
+  const emoji = p.type === "gift" ? GIFTS[p.gift].emoji : p.emoji;
+  return `<div class="drop-card"><div class="who">${FAKE_NAMES[Math.floor(Math.random() * FAKE_NAMES.length)]}</div><div class="what">${emoji} ${name}</div><div class="val">${c.name}</div></div>`;
+}
+function renderDropsFeed() {
+  let html = "";
+  for (let i = 0; i < 20; i++) html += randomDrop();
+  document.getElementById("dropsTrack").innerHTML = html + html;
+}
+
+// ---------- инвентарь ----------
+function renderInv() {
+  const grid = document.getElementById("invGrid");
+  const empty = document.getElementById("invEmpty");
   const counts = {};
   giftItems.forEach(g => counts[g] = (counts[g] || 0) + 1);
-  grid.innerHTML = unique.map(g => `
-    <div class="gift-opt${selectedGift === g ? " active" : ""}" onclick="pickGift('${g}')">
-      <div class="ge">${GIFTS[g].emoji}</div>
-      <div class="gv">⭐ ${GIFTS[g].value}</div>
-      <div class="gv" style="color:#8b93a5">×${counts[g]}</div>
+  const keys = Object.keys(counts);
+  if (!keys.length) { grid.innerHTML = ""; empty.style.display = "block"; return; }
+  empty.style.display = "none";
+  grid.innerHTML = keys.map(g => `
+    <div class="inv-card">
+      <div class="gift-cover">${giftCoverSVG(g)}</div>
+      <div class="gname">${GIFTS[g].name}</div>
+      <div class="gval">⭐ ${GIFTS[g].value}</div>
+      <div class="gcnt">×${counts[g]} шт.</div>
+      <div class="btns">
+        <button class="btn small" onclick="sellGift('${g}')">💰 Продать ${GIFTS[g].value} ⭐</button>
+      </div>
     </div>`).join("");
 }
 
-function pickGift(g) {
+function sellGift(g) {
+  const idx = giftItems.indexOf(g);
+  if (idx === -1) return;
+  giftItems.splice(idx, 1);
+  gifts = Math.max(0, gifts - 1);
+  balance += GIFTS[g].value;
+  saveState(); renderAll();
+  addOp("sell", "+" + GIFTS[g].value + " ⭐", GIFTS[g].name);
+  alert("💰 Продано: " + GIFTS[g].name + " за " + GIFTS[g].value + " ⭐!");
+}
+
+// ---------- модальное окно кейса ----------
+function openCasePage(index) {
+  currentCase = index;
+  const c = CASES[index];
+  document.getElementById("mEmoji").innerHTML = caseCoverSVG(c);
+  document.getElementById("mName").textContent = c.name;
+  document.getElementById("mPrice").textContent = "⭐ " + c.price + " за открытие · " + c.opens.toLocaleString("ru-RU") + " открыто";
+
+  document.getElementById("prizeList").innerHTML = c.prizes.map(p => {
+    const isPrem = p.type === "premium";
+    let emoji = p.emoji, name = p.name, val;
+    if (p.type === "gift") { emoji = GIFTS[p.gift].emoji; name = GIFTS[p.gift].name; val = "в инвентарь · ⭐ " + GIFTS[p.gift].value; }
+    else if (p.type === "stars") val = p.value + " ⭐";
+    else if (p.type === "premium") val = p.value + " мес.";
+    else val = "";
+    return `<div class="prize-card${isPrem ? " premium" : ""}"><div class="pe">${emoji}</div><div class="pn">${name}</div><div class="pv">${val}</div></div>`;
+  }).join("");
+
+  const giftIds = [...new Set(c.prizes.filter(p => p.type === "gift").map(p => p.gift))];
+  const gTitle = document.getElementById("giftSectionTitle");
+  const gGrid = document.getElementById("giftGrid");
+  if (giftIds.length) {
+    gTitle.style.display = "block"; gGrid.style.display = "grid";
+    gGrid.innerHTML = giftIds.map(g => `
+      <div class="gift-card"><div class="gift-cover">${giftCoverSVG(g)}</div>
+      <div class="gname">${GIFTS[g].name}</div><div class="gval">⭐ ${GIFTS[g].value}</div></div>`).join("");
+  } else { gTitle.style.display = "none"; gGrid.style.display = "none"; gGrid.innerHTML = ""; }
+
+  const btn = document.getElementById("openBtn");
+  btn.disabled = balance < c.price;
+  btn.textContent = balance < c.price
+    ? "Не хватает звёзд (нужно ⭐ " + c.price + ")"
+    : "🔓 Открыть за ⭐ " + c.price;
+  document.getElementById("result").textContent = "";
+  document.getElementById("result").className = "result";
+  document.getElementById("roulette").classList.remove("active");
+  document.getElementById("caseOverlay").classList.add("active");
+  document.body.style.overflow = "hidden";
+}
+
+function closeCase() {
   if (spinning) return;
-  selectedGift = g;
-  renderGiftSelect();
+  document.getElementById("caseOverlay").classList.remove("active");
+  document.body.style.overflow = "";
 }
 
-function renderMultButtons() {
-  const grid = document.getElementById("multGrid");
-  grid.innerHTML = MULTIPLIERS.map((m, i) => `
-    <button class="mult-btn${i === currentMultIndex ? " active" : ""}" onclick="pickMult(${i})">
-      <div class="mx">x${m.mult}</div>
-      <div class="ch">${m.chance}%</div>
-    </button>`).join("");
+function pickPrize(caseData) {
+  const total = caseData.prizes.reduce((s, p) => s + p.weight, 0);
+  let r = Math.random() * total;
+  for (const p of caseData.prizes) { r -= p.weight; if (r <= 0) return p; }
+  return caseData.prizes[0];
 }
 
-function pickMult(i) {
-  if (spinning) return;
-  currentMultIndex = i;
-  renderMultButtons();
-  updateChanceLine();
-}
+function openSelectedCase() {
+  if (spinning || currentCase === null) return;
+  const c = CASES[currentCase];
+  if (balance < c.price) return;
+  balance -= c.price; saveState();
+  document.getElementById("balance").textContent = balance;
 
-function updateChanceLine() {
-  const m = MULTIPLIERS[currentMultIndex];
-  let txt;
-  if (mode === "stars") {
-    txt = `Шанс победы: <b>${m.chance}%</b> · при победе: ставка × ${m.mult}`;
-  } else {
-    txt = `Шанс победы: <b>${m.chance}%</b> · подарок превращается в его ценность × ${m.mult}`;
-  }
-  if (m.bonus) {
-    const parts = [];
-    if (m.bonus.gifts) parts.push(`🎁 (${m.bonus.chance}%)`);
-    if (m.bonus.premium) parts.push(`💎 Premium ${m.bonus.premium} мес.`);
-    txt += ` · бонус: ${parts.join(" ")}`;
-  }
-  document.getElementById("chanceLine").innerHTML = txt;
-}
-
-// ---------- барабан ----------
-function itemHTML(p) {
-  const emoji = p.type === "gift" ? GIFTS[p.gift].emoji : p.emoji;
-  const val = p.type === "none" ? "—" :
-    p.type === "gift" ? "🎁" :
-    p.type === "premium" ? p.value + " мес." : p.value + " ⭐";
-  const rare = p.type === "gift" ? " r-gift" : p.type === "premium" ? " r-premium" : "";
-  return `<div class="strip-item${rare}">${emoji}<div class="val">${val}</div></div>`;
-}
-
-function renderIdleStrip() {
-  if (spinning) return;
-  const base = [{ name: "Пусто", emoji: "💨", value: 0, type: "none" },
-                { name: "⭐", emoji: "⭐", value: 25, type: "stars" },
-                { name: "🎁", gift: "sticker", type: "gift" }];
-  let html = "";
-  for (let i = 0; i < 30; i++) html += itemHTML(base[Math.floor(Math.random() * base.length)]);
-  const strip = document.getElementById("strip");
-  strip.style.transition = "none";
-  strip.style.transform = "translateX(0)";
-  strip.innerHTML = html;
-  document.getElementById("drum").classList.add("idle");
-}
-
-function getBet() {
-  if (mode === "gift") return selectedGift ? GIFTS[selectedGift].value : 0;
-  const v = parseInt(document.getElementById("betInput").value);
-  return isNaN(v) ? 0 : Math.max(1, Math.min(v, balance));
-}
-
-function flash(type) {
-  const f = document.getElementById("flash");
-  f.className = "flash " + type;
-  setTimeout(() => { f.className = "flash"; }, 1100);
-}
-
-function spin() {
-  if (spinning) return;
-  const m = MULTIPLIERS[currentMultIndex];
-
-  if (mode === "stars") {
-    const bet = getBet();
-    if (bet < 1) { alert("Введи ставку от 1 ⭐"); return; }
-    if (balance < bet) { alert("Не хватает звёзд на балансе!"); return; }
-    balance -= bet;
-    saveState();
-    document.getElementById("balance").textContent = balance;
-  } else {
-    if (!selectedGift) { alert("Выбери подарок из инвентаря!"); return; }
-    const idx = giftItems.indexOf(selectedGift);
-    if (idx === -1) { alert("Подарка больше нет в инвентаре."); selectedGift = null; renderGiftSelect(); return; }
-  }
-
+  const prize = pickPrize(c);
   spinning = true;
-  const isWin = Math.random() * 100 < m.chance;
-
-  const drumPrizes = [];
-  for (let i = 0; i < 48; i++) {
-    drumPrizes.push(isWin
-      ? { name: "⭐", emoji: "⭐", value: 100, type: "stars" }
-      : { name: "Пусто", emoji: "💨", value: 0, type: "none" });
-  }
-  drumPrizes[40] = isWin
-    ? { name: "⭐", emoji: "⭐", value: Math.floor(getBet() * m.mult), type: "stars" }
-    : { name: "Пусто", emoji: "💨", value: 0, type: "none" };
+  const r = document.getElementById("result");
+  r.textContent = "Крутим..."; r.className = "result";
 
   const strip = document.getElementById("strip");
-  strip.innerHTML = drumPrizes.map(itemHTML).join("");
+  const items = [];
+  for (let i = 0; i < 55; i++) items.push(c.prizes[Math.floor(Math.random() * c.prizes.length)]);
+  items[48] = prize;
+  strip.innerHTML = items.map(p => {
+    const emoji = p.type === "gift" ? GIFTS[p.gift].emoji : p.emoji;
+    const val = p.type === "none" ? "—" :
+      p.type === "gift" ? "🎁" :
+      p.type === "premium" ? p.value + " мес." : p.value + " ⭐";
+    return `<div class="strip-item">${emoji}<div class="val">${val}</div></div>`;
+  }).join("");
 
-  const drum = document.getElementById("drum");
-  drum.classList.remove("idle");
-  drum.classList.add("ticking");
-
+  const rou = document.getElementById("roulette");
+  rou.classList.add("active");
   strip.style.transition = "none";
   strip.style.transform = "translateX(0)";
   void strip.offsetWidth;
 
   const firstItem = strip.querySelector(".strip-item");
-  const itemWidth = firstItem ? firstItem.offsetWidth + 12 : 142;
-  const jitter = itemWidth * 0.3;
-  const offset = itemWidth * 40 - (drum.clientWidth / 2 - itemWidth / 2) - (Math.random() * jitter - jitter / 2);
-
+  const itemWidth = firstItem ? firstItem.offsetWidth + 10 : 150;
+  const offset = itemWidth * 48 - (rou.clientWidth / 2 - itemWidth / 2) - (itemWidth * 0.3);
   requestAnimationFrame(() => {
     strip.style.transition = "transform 4.6s cubic-bezier(0.1, 0.85, 0.15, 1)";
     strip.style.transform = `translateX(-${offset}px)`;
   });
 
-  const r = document.getElementById("result");
-  const dr = document.getElementById("drumResult");
-  r.textContent = "Крутим..."; r.className = "result";
-  dr.textContent = ""; dr.className = "result";
-  document.getElementById("spinBtn").disabled = true;
-
   setTimeout(() => {
-    const items = strip.querySelectorAll(".strip-item");
-    const hitEl = items[40];
-    if (hitEl) {
-      hitEl.classList.add("hit");
-      if (!isWin) hitEl.classList.add("lose-hit");
-    }
-    document.getElementById("spinBtn").disabled = false;
-
-    setTimeout(() => finishSpin(m, isWin), 900);
-  }, 4700);
-}
-
-function finishSpin(m, isWin) {
-  spinning = false;
-  document.getElementById("drum").classList.remove("ticking");
-  const r = document.getElementById("result");
-  const dr = document.getElementById("drumResult");
-
-  if (isWin) {
-    let extra = "", bonusName = "", bonusType = null;
-
-    if (m.bonus && Math.random() * 100 < m.bonus.chance) {
-      if (m.bonus.gifts && (!m.bonus.premium || Math.random() < 0.5)) {
-        const g = m.bonus.gifts[Math.floor(Math.random() * m.bonus.gifts.length)];
-        giftItems.push(g);
-        bonusType = "gift";
-        bonusName = GIFTS[g].emoji + " " + GIFTS[g].name;
-        extra = ` + ${bonusName}!`;
-      } else if (m.bonus.premium) {
-        premium += m.bonus.premium;
-        bonusType = "premium";
-        bonusName = `💎 Premium ${m.bonus.premium} мес.`;
-        extra = ` + ${bonusName}!`;
+    spinning = false;
+    opened++;
+    const dayUpd = { opened: 1 };
+    if (prize.type !== "none") {
+      wins++;
+      if (prize.type === "stars") { balance += prize.value; starsWon += prize.value; dayUpd.stars += prize.value; }
+      if (prize.type === "gift") {
+        gifts += 1;
+        giftItems.push(prize.gift);
+        dayUpd.gifts += 1;
       }
-    }
-
-    if (mode === "stars") {
-      const bet = getBet();
-      const win = Math.floor(bet * m.mult);
-      balance += win;
-      saveState();
-      document.getElementById("balance").textContent = balance;
-      r.className = "result win" + (bonusType ? " bonus" : "");
-      r.textContent = `🎉 Победа! +${win} ⭐${extra}`;
-      dr.className = r.className;
-      dr.textContent = extra ? `🏆 ${bonusName}` : "🏆 ×" + m.mult;
-      flash(bonusType ? "bonus" : "win");
-      addHistory(true, bet, win, bonusName);
+      if (prize.type === "premium") { premium += prize.value; dayUpd.premium += prize.value; }
+      if (!bestPrize || scoreOf(prize) > scoreOf(bestPrize)) {
+        bestPrize = { name: prize.type === "gift" ? GIFTS[prize.gift].name : prize.name,
+                      emoji: prize.type === "gift" ? GIFTS[prize.gift].emoji : prize.emoji };
+      }
+      r.textContent = `🎉 Выигрыш: ${prize.type === "gift" ? GIFTS[prize.gift].name + " → 🎒 инвентарь" : prize.name}!`;
+      r.className = "result win";
     } else {
-      const giftValue = GIFTS[selectedGift].value;
-      const idx = giftItems.indexOf(selectedGift);
-      if (idx !== -1) giftItems.splice(idx, 1);
-      const win = Math.floor(giftValue * m.mult);
-      balance += win;
-      selectedGift = null;
-      saveState();
-      document.getElementById("balance").textContent = balance;
-      r.className = "result win" + (bonusType ? " bonus" : "");
-      r.textContent = `🎉 Подарок апгрейден: +${win} ⭐${extra}`;
-      dr.className = r.className;
-      dr.textContent = `⭐ ${giftValue} → ${win}`;
-      flash(bonusType ? "bonus" : "win");
-      addHistory(true, giftValue, win, bonusName);
+      r.textContent = "💨 Пусто. Попробуй ещё!"; r.className = "result lose";
     }
-  } else {
-    if (mode === "gift") {
-      const idx = giftItems.indexOf(selectedGift);
-      if (idx !== -1) giftItems.splice(idx, 1);
-      const lostValue = GIFTS[selectedGift] ? GIFTS[selectedGift].value : 0;
-      selectedGift = null;
-      saveState();
-      renderGiftSelect();
-      addHistory(false, lostValue, 0, "");
-    } else {
-      addHistory(false, getBet(), 0, "");
-    }
-    r.className = "result lose";
-    r.textContent = "💨 Не повезло. Ещё попытку?";
-    dr.className = "result lose";
-    dr.textContent = "💨";
-    flash("lose");
-  }
-  renderGame();
+    bumpDaily(dayUpd);
+    saveState(); renderAll();
+    const btn = document.getElementById("openBtn");
+    btn.disabled = balance < c.price;
+    btn.textContent = balance < c.price
+      ? "Не хватает звёзд (нужно ⭐ " + c.price + ")"
+      : "🔓 Открыть за ⭐ " + c.price;
+    addHistory(c, prize);
+  }, 4800);
 }
 
-function addHistory(win, bet, payout, bonus) {
-  let h = JSON.parse(localStorage.getItem(k("upHistory")) || "[]");
+function addHistory(caseData, prize) {
+  let h = JSON.parse(localStorage.getItem(k("history")) || "[]");
   h.unshift({
-    mult: MULTIPLIERS[currentMultIndex].mult,
-    bet: bet, payout: payout, win: win, bonus: bonus,
+    case: caseData.name,
+    prize: prize.type === "gift" ? GIFTS[prize.gift].name : prize.name,
+    type: prize.type,
+    value: prize.type === "gift" ? GIFTS[prize.gift].value : prize.value,
     time: new Date().toLocaleTimeString("ru-RU", {hour: "2-digit", minute: "2-digit"})
   });
-  h = h.slice(0, 20);
-  localStorage.setItem(k("upHistory"), JSON.stringify(h));
+  h = h.slice(0, 30);
+  localStorage.setItem(k("history"), JSON.stringify(h));
   renderHistory();
 }
 
 function renderHistory() {
-  const h = JSON.parse(localStorage.getItem(k("upHistory")) || "[]");
-  const box = document.getElementById("upHistory");
-  if (!h.length) { box.textContent = "Пока пусто — сделай первую крутку!"; return; }
-  box.innerHTML = h.map(x => `
-    <div>
-      <span>${x.time} · x${x.mult} · ставка ${x.bet} ⭐${x.bonus ? " · " + x.bonus : ""}</span>
-      <span class="${x.win ? (x.bonus ? "hbon" : "hwin") : "hlose"}">${x.win ? "+" + x.payout + " ⭐" : "−" + x.bet + " ⭐"}</span>
-    </div>`).join("");
+  const h = JSON.parse(localStorage.getItem(k("history")) || "[]");
+  const box = document.getElementById("history");
+  if (!h.length) { box.textContent = "Пока пусто — открой первый кейс!"; return; }
+  box.innerHTML = h.map(x =>
+    `<div>${x.time} — ${x.case}: ${x.prize}${x.type !== "none" ? " · " + (x.type === "gift" ? "в инвентарь" : x.value + " " + typeUnit(x.type)) : ""}</div>`
+  ).join("");
+}
+
+function renderDaily() {
+  const daily = JSON.parse(localStorage.getItem(k("daily")) || "{}");
+  const today = new Date().toISOString().slice(0, 10);
+  const t = daily[today] || { opened: 0, wins: 0, stars: 0, gifts: 0, premium: 0 };
+  document.getElementById("tdOpened").textContent = t.opened;
+  document.getElementById("tdWins").textContent = t.wins;
+  document.getElementById("tdStars").textContent = t.stars;
+  document.getElementById("tdGifts").textContent = t.gifts;
+  document.getElementById("tdPrem").textContent = t.premium;
+
+  const days = Object.keys(daily).sort().reverse().slice(0, 30);
+  const table = document.getElementById("dayTable");
+  table.querySelectorAll("tr:not(:first-child)").forEach(r => r.remove());
+  if (!days.length) {
+    const row = table.insertRow(-1);
+    row.innerHTML = `<td colspan="6" style="color:#8b93a5">Пока нет данных — открой первый кейс!</td>`;
+    return;
+  }
+  days.forEach(d => {
+    const s = daily[d];
+    const row = table.insertRow(-1);
+    if (d === today) row.className = "today-row";
+    const label = d === today ? "Сегодня" : d.split("-").reverse().join(".");
+    row.innerHTML = `<td>${label}</td><td>${s.opened}</td><td>${s.wins}</td><td>${s.stars}</td><td>${s.gifts}</td><td>${s.premium}</td>`;
+  });
+}
+
+function renderOps() {
+  const ops = JSON.parse(localStorage.getItem(k("ops")) || "[]");
+  const box = document.getElementById("opsList");
+  if (!ops.length) { box.innerHTML = `<div class="empty">Операций пока нет.</div>`; return; }
+  const meta = {
+    deposit:  { ic: "➕", name: "Пополнение",  cls: "op-plus",  sign: "" },
+    withdraw: { ic: "⭐", name: "Вывод звёзд", cls: "op-minus", sign: "−" },
+    bonus:    { ic: "🎁", name: "Бонус дня",   cls: "op-plus",  sign: "+" },
+    promo:    { ic: "🎟", name: "Промокод",    cls: "op-plus",  sign: "+" },
+    sell:     { ic: "💰", name: "Продажа",     cls: "op-plus",  sign: "+" }
+  };
+  box.innerHTML = ops.map(o => {
+    const m = meta[o.type] || { ic: "•", name: "Операция", cls: "op-plus", sign: "+" };
+    return `<div class="op-row">
+      <div class="ic">${m.ic}</div>
+      <div class="grow"><div>${m.name}${o.note ? " · " + o.note : ""}</div><div class="sub">${o.date}</div></div>
+      <div class="${m.cls}">${m.sign}${o.amount}</div>
+    </div>`;
+  }).join("");
+}
+
+// ---------- бонус 25 ⭐ ----------
+function claimBonus() {
+  const last = parseInt(localStorage.getItem(k("lastBonus"))) || 0;
+  const now = Date.now();
+  if (now - last < BONUS_COOLDOWN) {
+    const left = Math.ceil((BONUS_COOLDOWN - (now - last)) / 3600000);
+    alert("Бонус будет доступен через " + left + " ч.");
+    return;
+  }
+  balance += 25;
+  localStorage.setItem(k("lastBonus"), now); saveState(); renderAll();
+  addOp("bonus", "+25 ⭐", "");
+  alert("🎁 Бонус дня: +25 ⭐!");
+}
+
+// ---------- промокоды ----------
+function usePromo() {
+  const input = document.getElementById("promoInput");
+  const code = input.value.trim().toUpperCase();
+  const codes = allPromoCodes();
+  if (codes[code]) {
+    if (localStorage.getItem(k("promo_" + code))) alert("Этот промокод уже использован.");
+    else {
+      balance += codes[code];
+      localStorage.setItem(k("promo_" + code), "1");
+      saveState(); renderAll();
+      addOp("promo", "+" + codes[code] + " ⭐", code);
+      alert("Промокод принят: +" + codes[code] + " ⭐!");
+      input.value = "";
+    }
+  } else alert("Такого промокода нет.");
+}
+
+// ---------- депозит +75% на первое пополнение ----------
+function useDeposit() {
+  const input = document.getElementById("depInput");
+  const code = input.value.trim().toUpperCase();
+  const codes = allDepCodes();
+  if (codes[code]) {
+    if (localStorage.getItem(k("dep_" + code))) alert("Этот депозит-код уже использован.");
+    else {
+      let amount = codes[code];
+      const isFirst = !localStorage.getItem(k("firstDep"));
+      let credited = amount;
+      if (isFirst) {
+        credited = Math.floor(amount * FIRST_DEP_BONUS);
+        localStorage.setItem(k("firstDep"), "1");
+      }
+      balance += credited;
+      localStorage.setItem(k("dep_" + code), "1");
+      saveState(); renderAll();
+      addOp("deposit", "+" + credited + " ⭐", code + (isFirst ? " (первое пополнение, +75%)" : ""));
+      alert(isFirst
+        ? `🔥 Первое пополнение с бонусом +75%: ${amount} ⭐ превращаются в ${credited} ⭐!`
+        : `Баланс пополнен на ${credited} ⭐!`);
+      input.value = "";
+    }
+  } else alert("Такого депозит-кода нет. Попроси его у админа после оплаты.");
+}
+
+// ---------- вывод ----------
+function showWithdraw() {
+  const box = document.getElementById("withdrawBox");
+  if (balance < WITHDRAW_MIN_STARS) {
+    box.style.display = "block";
+    box.innerHTML = `Для вывода нужно минимум ${WITHDRAW_MIN_STARS} ⭐. У тебя: <b style="color:#ffd54a">${balance} ⭐</b>.`;
+    return;
+  }
+  const counts = {};
+  giftItems.forEach(g => counts[g] = (counts[g] || 0) + 1);
+  const giftList = Object.keys(counts).map(g => `${GIFTS[g].emoji} ${GIFTS[g].name} ×${counts[g]}`).join(", ") || "нет";
+  const reqId = "WD-" + Date.now().toString().slice(-6);
+  const text = `ЗАЯВКА ${reqId}\nИгрок: ${user.name} (📞 +${user.phone}${user.tg ? " · ✈️ " + user.tg : ""})\n⭐ Звёзд к выводу: ${balance}\n🎁 Подарки: ${giftList}\n💎 Premium: ${premium} мес.\nДата: ${new Date().toLocaleString("ru-RU")}`;
+  box.style.display = "block";
+  box.innerHTML = `<p>Заявка скопируется автоматически — тебе останется отправить её админу в Telegram.</p>
+    <textarea id="wdText">${text}</textarea>
+    <button class="btn" style="margin-top:8px" onclick="sendWithdraw('${reqId}')">✈️ Отправить админу в Telegram</button>`;
+}
+
+function sendWithdraw(reqId) {
+  const text = document.getElementById("wdText").value;
+  if (navigator.clipboard) navigator.clipboard.writeText(text);
+  addOp("withdraw", "−" + balance + " ⭐", reqId);
+  if (gifts > 0) addOp("withdraw", "−" + gifts + " 🎁", "из той же заявки");
+  if (premium > 0) addOp("withdraw", "−" + premium + " 💎", "из той же заявки");
+  balance = 0; gifts = 0; premium = 0; giftItems = [];
+  saveState(); renderAll();
+  document.getElementById("withdrawBox").style.display = "none";
+  window.open("https://t.me/" + ADMIN_TELEGRAM, "_blank");
+  alert("Заявка " + reqId + " скопирована. Вставь её в чат админа и отправь.");
+}
+
+// ---------- админ-панель ----------
+function adminMakeCode(prefix) {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let code = prefix;
+  for (let i = 0; i < 5; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
+}
+
+function adminMakeDep() {
+  const amount = parseInt(document.getElementById("adDepAmount").value);
+  if (!amount || amount < 1) { alert("Введи сумму в звёздах"); return; }
+  const code = adminMakeCode("ZINI");
+  customCodes.dep[code] = amount;
+  saveCustomCodes(); renderAdmin();
+  alert("Депозит-код создан: " + code + " на " + amount + " ⭐");
+}
+
+function adminMakePromo() {
+  const amount = parseInt(document.getElementById("adPromoAmount").value);
+  if (!amount || amount < 1) { alert("Введи сумму в звёздах"); return; }
+  const code = adminMakeCode("PROMO");
+  customCodes.promo[code] = amount;
+  saveCustomCodes(); renderAdmin();
+  alert("Промокод создан: " + code + " на " + amount + " ⭐");
+}
+
+function adminDeleteCode(kind, code) {
+  if (!confirm("Удалить код " + code + "?")) return;
+  delete customCodes[kind][code];
+  saveCustomCodes(); renderAdmin();
+}
+
+function renderAdmin() {
+  const box = document.getElementById("adminCodes");
+  if (!box) return;
+  const lines = [];
+  for (const c in customCodes.dep) lines.push(`<div>➕ ${c} — ${customCodes.dep[c]} ⭐ (депозит) <button class="btn small" onclick="adminDeleteCode('dep','${c}')">✕</button></div>`);
+  for (const c in customCodes.promo) lines.push(`<div>🎟 ${c} — ${customCodes.promo[c]} ⭐ <button class="btn small" onclick="adminDeleteCode('promo','${c}')">✕</button></div>`);
+  box.innerHTML = lines.length ? lines.join("") : "Кодов пока нет.";
+
+  const accBox = document.getElementById("adminAccounts");
+  if (accBox) {
+    const accs = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith("zd_acc_")) {
+        try {
+          const acc = JSON.parse(localStorage.getItem(key));
+          accs.push("<div>📞 +" + key.slice(7) + " — " + acc.name + (acc.tg ? " · " + acc.tg : "") + " (с " + acc.created + ")</div>");
+        } catch (e) {}
+      }
+    }
+    accBox.innerHTML = accs.length ? accs.join("") : "На этом устройстве пока нет зарегистрированных номеров.";
+  }
+}
+
+function adminCopyPublish() {
+  const depLines = Object.keys(customCodes.dep).map(c => `  "${c}": ${customCodes.dep[c]}`).join(",\n");
+  const promoLines = Object.keys(customCodes.promo).map(c => `  "${c}": ${customCodes.promo[c]}`).join(",\n");
+  const text =
+`// ==== ВСТАВИТЬ В index.html ====
+// В DEP_CODES после существующих строк:
+${depLines || "  // (нет депозит-кодов)"}
+//
+// В PROMO_CODES после существующих строк:
+${promoLines || "  // (нет промокодов)"}`;
+  if (navigator.clipboard) navigator.clipboard.writeText(text);
+  alert("Блок скопирован. Открой index.html на GitHub, вставь строки в DEP_CODES и PROMO_CODES и сделай Commit.");
 }
 
 // ---------- запуск ----------
-loadState();
-renderGame();
+const savedUser = localStorage.getItem("zd_current");
+if (savedUser) {
+  try { login(JSON.parse(savedUser)); } catch (e) {}
+}
+const ph = document.getElementById("authPhone");
+ph.addEventListener("input", () => formatPhone(ph));
+renderDropsFeed();
+setInterval(renderDropsFeed, 15000);
 </script>
 
 </body>
