@@ -354,7 +354,7 @@
         <div class="big">⭐</div>
         <div>
           <h3>ZINI DROP — кейсы со звёздами, подарками и Premium</h3>
-          <p>15 кейсов от 11 ⭐. Побеждай в 7 из 10 открытий! Подарки — в инвентарь, звёзды — на баланс.</p>
+          <p>15 кейсов от 11 ⭐. Высокие шансы победы! Подарки — в инвентарь, звёзды — на баланс.</p>
         </div>
       </div>
 
@@ -550,23 +550,24 @@ const GIFTS = {
   crown:   { name: "Корона",             emoji: "👑", value: 300, c1: "#ffd54a", c2: "#8a6a00" }
 };
 
+// Шансы повышены: «Пусто» реже, ценные призы и подарки чаще
 const CASES = [
   { id: "common", name: "Обычный кейс", emoji: "📦", price: 11, opens: 48210,
     prizes: [
-      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 30 },
-      { name: "5 звёзд", emoji: "⭐", value: 5, type: "stars", weight: 26 },
-      { name: "10 звёзд", emoji: "⭐", value: 10, type: "stars", weight: 18 },
-      { name: "25 звёзд", emoji: "⭐", value: 25, type: "stars", weight: 14 },
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 26 },
+      { name: "5 звёзд", emoji: "⭐", value: 5, type: "stars", weight: 28 },
+      { name: "10 звёзд", emoji: "⭐", value: 10, type: "stars", weight: 20 },
+      { name: "25 звёзд", emoji: "⭐", value: 25, type: "stars", weight: 16 },
       { name: "Стикерпак", gift: "sticker", type: "gift", weight: 8 },
       { name: "50 звёзд", emoji: "⭐", value: 50, type: "stars", weight: 4 }
     ]
   },
   { id: "bronze", name: "Бронзовый кейс", emoji: "🥉", price: 29, opens: 31250,
     prizes: [
-      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 24 },
-      { name: "10 звёзд", emoji: "⭐", value: 10, type: "stars", weight: 26 },
-      { name: "25 звёзд", emoji: "⭐", value: 25, type: "stars", weight: 20 },
-      { name: "50 звёзд", emoji: "⭐", value: 50, type: "stars", weight: 16 },
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 20 },
+      { name: "10 звёзд", emoji: "⭐", value: 10, type: "stars", weight: 28 },
+      { name: "25 звёзд", emoji: "⭐", value: 25, type: "stars", weight: 22 },
+      { name: "50 звёзд", emoji: "⭐", value: 50, type: "stars", weight: 18 },
       { name: "Стикерпак", gift: "sticker", type: "gift", weight: 8 },
       { name: "100 звёзд", emoji: "⭐", value: 100, type: "stars", weight: 3 },
       { name: "Плюшевый мишка", gift: "teddy", type: "gift", weight: 3 }
@@ -574,10 +575,10 @@ const CASES = [
   },
   { id: "silver", name: "Серебряный кейс", emoji: "🥈", price: 49, opens: 24180,
     prizes: [
-      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 29 },
-      { name: "25 звёзд", emoji: "⭐", value: 25, type: "stars", weight: 24 },
-      { name: "50 звёзд", emoji: "⭐", value: 50, type: "stars", weight: 20 },
-      { name: "100 звёзд", emoji: "⭐", value: 100, type: "stars", weight: 14 },
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 24 },
+      { name: "25 звёзд", emoji: "⭐", value: 25, type: "stars", weight: 26 },
+      { name: "50 звёзд", emoji: "⭐", value: 50, type: "stars", weight: 22 },
+      { name: "100 звёзд", emoji: "⭐", value: 100, type: "stars", weight: 15 },
       { name: "Плюшевый мишка", gift: "teddy", type: "gift", weight: 8 },
       { name: "150 звёзд", emoji: "⭐", value: 150, type: "stars", weight: 2 },
       { name: "Букет роз", gift: "bouquet", type: "gift", weight: 3 }
@@ -585,22 +586,22 @@ const CASES = [
   },
   { id: "steel", name: "Стальной кейс", emoji: "🛡️", price: 69, opens: 18340,
     prizes: [
-      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 42 },
-      { name: "50 звёзд", emoji: "⭐", value: 50, type: "stars", weight: 20 },
-      { name: "100 звёзд", emoji: "⭐", value: 100, type: "stars", weight: 16 },
-      { name: "150 звёзд", emoji: "⭐", value: 150, type: "stars", weight: 8 },
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 36 },
+      { name: "50 звёзд", emoji: "⭐", value: 50, type: "stars", weight: 22 },
+      { name: "100 звёзд", emoji: "⭐", value: 100, type: "stars", weight: 18 },
+      { name: "150 звёзд", emoji: "⭐", value: 150, type: "stars", weight: 9 },
       { name: "Букет роз", gift: "bouquet", type: "gift", weight: 6 },
-      { name: "200 звёзд", emoji: "⭐", value: 200, type: "stars", weight: 4 },
+      { name: "200 звёзд", emoji: "⭐", value: 200, type: "stars", weight: 5 },
       { name: "Космическая ракета", gift: "rocket", type: "gift", weight: 2 },
       { name: "250 звёзд", emoji: "⭐", value: 250, type: "stars", weight: 2 }
     ]
   },
   { id: "golden", name: "Золотой кейс", emoji: "👑", price: 99, opens: 15220,
     prizes: [
-      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 28 },
-      { name: "50 звёзд", emoji: "⭐", value: 50, type: "stars", weight: 22 },
-      { name: "100 звёзд", emoji: "⭐", value: 100, type: "stars", weight: 18 },
-      { name: "150 звёзд", emoji: "⭐", value: 150, type: "stars", weight: 14 },
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 24 },
+      { name: "50 звёзд", emoji: "⭐", value: 50, type: "stars", weight: 24 },
+      { name: "100 звёзд", emoji: "⭐", value: 100, type: "stars", weight: 20 },
+      { name: "150 звёзд", emoji: "⭐", value: 150, type: "stars", weight: 15 },
       { name: "Космическая ракета", gift: "rocket", type: "gift", weight: 8 },
       { name: "250 звёзд", emoji: "⭐", value: 250, type: "stars", weight: 4 },
       { name: "300 звёзд", emoji: "⭐", value: 300, type: "stars", weight: 2 },
@@ -609,10 +610,10 @@ const CASES = [
   },
   { id: "platinum", name: "Платиновый кейс", emoji: "🥇", price: 149, opens: 11460,
     prizes: [
-      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 30 },
-      { name: "100 звёзд", emoji: "⭐", value: 100, type: "stars", weight: 24 },
-      { name: "150 звёзд", emoji: "⭐", value: 150, type: "stars", weight: 18 },
-      { name: "250 звёзд", emoji: "⭐", value: 250, type: "stars", weight: 14 },
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 26 },
+      { name: "100 звёзд", emoji: "⭐", value: 100, type: "stars", weight: 25 },
+      { name: "150 звёзд", emoji: "⭐", value: 150, type: "stars", weight: 19 },
+      { name: "250 звёзд", emoji: "⭐", value: 250, type: "stars", weight: 15 },
       { name: "Космическая ракета", gift: "rocket", type: "gift", weight: 8 },
       { name: "300 звёзд", emoji: "⭐", value: 300, type: "stars", weight: 4 },
       { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 4 },
@@ -621,10 +622,10 @@ const CASES = [
   },
   { id: "ruby", name: "Рубиновый кейс", emoji: "❤️‍🔥", price: 199, opens: 9030,
     prizes: [
-      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 28 },
-      { name: "150 звёзд", emoji: "⭐", value: 150, type: "stars", weight: 24 },
-      { name: "250 звёзд", emoji: "⭐", value: 250, type: "stars", weight: 20 },
-      { name: "300 звёзд", emoji: "⭐", value: 300, type: "stars", weight: 12 },
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 24 },
+      { name: "150 звёзд", emoji: "⭐", value: 150, type: "stars", weight: 25 },
+      { name: "250 звёзд", emoji: "⭐", value: 250, type: "stars", weight: 21 },
+      { name: "300 звёзд", emoji: "⭐", value: 300, type: "stars", weight: 13 },
       { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 8 },
       { name: "Корона", gift: "crown", type: "gift", weight: 4 },
       { name: "400 звёзд", emoji: "⭐", value: 400, type: "stars", weight: 2 },
@@ -633,10 +634,10 @@ const CASES = [
   },
   { id: "sapphire", name: "Сапфировый кейс", emoji: "💠", price: 259, opens: 7210,
     prizes: [
-      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 24 },
-      { name: "200 звёзд", emoji: "⭐", value: 200, type: "stars", weight: 24 },
-      { name: "300 звёзд", emoji: "⭐", value: 300, type: "stars", weight: 18 },
-      { name: "400 звёзд", emoji: "⭐", value: 400, type: "stars", weight: 12 },
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 20 },
+      { name: "200 звёзд", emoji: "⭐", value: 200, type: "stars", weight: 26 },
+      { name: "300 звёзд", emoji: "⭐", value: 300, type: "stars", weight: 19 },
+      { name: "400 звёзд", emoji: "⭐", value: 400, type: "stars", weight: 13 },
       { name: "500 звёзд", emoji: "⭐", value: 500, type: "stars", weight: 4 },
       { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 8 },
       { name: "Корона", gift: "crown", type: "gift", weight: 6 },
@@ -646,10 +647,10 @@ const CASES = [
   },
   { id: "emerald", name: "Изумрудный кейс", emoji: "🍀", price: 349, opens: 5640,
     prizes: [
-      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 28 },
-      { name: "300 звёзд", emoji: "⭐", value: 300, type: "stars", weight: 26 },
-      { name: "500 звёзд", emoji: "⭐", value: 500, type: "stars", weight: 20 },
-      { name: "700 звёзд", emoji: "⭐", value: 700, type: "stars", weight: 12 },
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 24 },
+      { name: "300 звёзд", emoji: "⭐", value: 300, type: "stars", weight: 27 },
+      { name: "500 звёзд", emoji: "⭐", value: 500, type: "stars", weight: 21 },
+      { name: "700 звёзд", emoji: "⭐", value: 700, type: "stars", weight: 13 },
       { name: "800 звёзд", emoji: "⭐", value: 800, type: "stars", weight: 4 },
       { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 6 },
       { name: "Корона", gift: "crown", type: "gift", weight: 2 },
@@ -658,10 +659,10 @@ const CASES = [
   },
   { id: "amethyst", name: "Аметистовый кейс", emoji: "🔮", price: 449, opens: 4380,
     prizes: [
-      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 30 },
-      { name: "400 звёзд", emoji: "⭐", value: 400, type: "stars", weight: 26 },
-      { name: "600 звёзд", emoji: "⭐", value: 600, type: "stars", weight: 18 },
-      { name: "800 звёзд", emoji: "⭐", value: 800, type: "stars", weight: 10 },
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 26 },
+      { name: "400 звёзд", emoji: "⭐", value: 400, type: "stars", weight: 27 },
+      { name: "600 звёзд", emoji: "⭐", value: 600, type: "stars", weight: 19 },
+      { name: "800 звёзд", emoji: "⭐", value: 800, type: "stars", weight: 11 },
       { name: "1000 звёзд", emoji: "⭐", value: 1000, type: "stars", weight: 4 },
       { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 6 },
       { name: "Корона", gift: "crown", type: "gift", weight: 4 },
@@ -670,10 +671,10 @@ const CASES = [
   },
   { id: "fire", name: "Огненный кейс", emoji: "🔥", price: 599, opens: 3390,
     prizes: [
-      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 28 },
-      { name: "500 звёзд", emoji: "⭐", value: 500, type: "stars", weight: 26 },
-      { name: "750 звёзд", emoji: "⭐", value: 750, type: "stars", weight: 18 },
-      { name: "1000 звёзд", emoji: "⭐", value: 1000, type: "stars", weight: 10 },
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 24 },
+      { name: "500 звёзд", emoji: "⭐", value: 500, type: "stars", weight: 27 },
+      { name: "750 звёзд", emoji: "⭐", value: 750, type: "stars", weight: 19 },
+      { name: "1000 звёзд", emoji: "⭐", value: 1000, type: "stars", weight: 11 },
       { name: "1250 звёзд", emoji: "⭐", value: 1250, type: "stars", weight: 4 },
       { name: "1500 звёзд", emoji: "⭐", value: 1500, type: "stars", weight: 2 },
       { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 4 },
@@ -683,10 +684,10 @@ const CASES = [
   },
   { id: "ice", name: "Ледяной кейс", emoji: "❄️", price: 799, opens: 2510,
     prizes: [
-      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 30 },
-      { name: "750 звёзд", emoji: "⭐", value: 750, type: "stars", weight: 26 },
-      { name: "1100 звёзд", emoji: "⭐", value: 1100, type: "stars", weight: 18 },
-      { name: "1500 звёзд", emoji: "⭐", value: 1500, type: "stars", weight: 10 },
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 26 },
+      { name: "750 звёзд", emoji: "⭐", value: 750, type: "stars", weight: 27 },
+      { name: "1100 звёзд", emoji: "⭐", value: 1100, type: "stars", weight: 19 },
+      { name: "1500 звёзд", emoji: "⭐", value: 1500, type: "stars", weight: 11 },
       { name: "2000 звёзд", emoji: "⭐", value: 2000, type: "stars", weight: 4 },
       { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 4 },
       { name: "Корона", gift: "crown", type: "gift", weight: 6 },
@@ -695,10 +696,10 @@ const CASES = [
   },
   { id: "cosmic", name: "Космический кейс", emoji: "🌌", price: 1099, opens: 1820,
     prizes: [
-      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 30 },
-      { name: "1000 звёзд", emoji: "⭐", value: 1000, type: "stars", weight: 26 },
-      { name: "1500 звёзд", emoji: "⭐", value: 1500, type: "stars", weight: 18 },
-      { name: "2200 звёзд", emoji: "⭐", value: 2200, type: "stars", weight: 10 },
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 26 },
+      { name: "1000 звёзд", emoji: "⭐", value: 1000, type: "stars", weight: 27 },
+      { name: "1500 звёзд", emoji: "⭐", value: 1500, type: "stars", weight: 19 },
+      { name: "2200 звёзд", emoji: "⭐", value: 2200, type: "stars", weight: 11 },
       { name: "3000 звёзд", emoji: "⭐", value: 3000, type: "stars", weight: 4 },
       { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 4 },
       { name: "Корона", gift: "crown", type: "gift", weight: 6 },
@@ -707,10 +708,10 @@ const CASES = [
   },
   { id: "legend", name: "Легендарный кейс", emoji: "🏅", price: 1499, opens: 1240,
     prizes: [
-      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 30 },
-      { name: "1500 звёзд", emoji: "⭐", value: 1500, type: "stars", weight: 26 },
-      { name: "2300 звёзд", emoji: "⭐", value: 2300, type: "stars", weight: 18 },
-      { name: "3200 звёзд", emoji: "⭐", value: 3200, type: "stars", weight: 10 },
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 26 },
+      { name: "1500 звёзд", emoji: "⭐", value: 1500, type: "stars", weight: 27 },
+      { name: "2300 звёзд", emoji: "⭐", value: 2300, type: "stars", weight: 19 },
+      { name: "3200 звёзд", emoji: "⭐", value: 3200, type: "stars", weight: 11 },
       { name: "4500 звёзд", emoji: "⭐", value: 4500, type: "stars", weight: 4 },
       { name: "Корона", gift: "crown", type: "gift", weight: 6 },
       { name: "Золотой хомяк", gift: "hamster", type: "gift", weight: 4 },
@@ -719,10 +720,10 @@ const CASES = [
   },
   { id: "myth", name: "Мифический кейс", emoji: "🐉", price: 2499, opens: 760,
     prizes: [
-      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 26 },
-      { name: "2000 звёзд", emoji: "⭐", value: 2000, type: "stars", weight: 26 },
-      { name: "3500 звёзд", emoji: "⭐", value: 3500, type: "stars", weight: 18 },
-      { name: "5000 звёзд", emoji: "⭐", value: 5000, type: "stars", weight: 12 },
+      { name: "Пусто", emoji: "💨", value: 0, type: "none", weight: 22 },
+      { name: "2000 звёзд", emoji: "⭐", value: 2000, type: "stars", weight: 27 },
+      { name: "3500 звёзд", emoji: "⭐", value: 3500, type: "stars", weight: 19 },
+      { name: "5000 звёзд", emoji: "⭐", value: 5000, type: "stars", weight: 13 },
       { name: "7000 звёзд", emoji: "⭐", value: 7000, type: "stars", weight: 4 },
       { name: "10000 звёзд", emoji: "⭐", value: 10000, type: "stars", weight: 2 },
       { name: "Корона", gift: "crown", type: "gift", weight: 6 },
@@ -1119,8 +1120,11 @@ function openSelectedCase() {
   void strip.offsetWidth;
 
   const firstItem = strip.querySelector(".strip-item");
-  const itemWidth = firstItem ? firstItem.offsetWidth + 10 : 150;
-  const offset = itemWidth * 48 - (rou.clientWidth / 2 - itemWidth / 2) - (itemWidth * 0.3);
+  const spacing = firstItem ? firstItem.offsetWidth + 10 : 150; // карточка + отступы
+  const cardW = firstItem ? firstItem.offsetWidth : 140;
+  // центр карточки №48 ровно под стрелкой, сдвиг не больше ±10px
+  const jitter = (Math.random() * 20 - 10);
+  const offset = spacing * 48 + cardW / 2 - rou.clientWidth / 2 + jitter;
   requestAnimationFrame(() => {
     strip.style.transition = "transform 4.6s cubic-bezier(0.1, 0.85, 0.15, 1)";
     strip.style.transform = `translateX(-${offset}px)`;
@@ -1214,7 +1218,7 @@ function renderOps() {
   const box = document.getElementById("opsList");
   if (!ops.length) { box.innerHTML = `<div class="empty">Операций пока нет.</div>`; return; }
   const meta = {
-    deposit:  { ic: "➕", name: "Пополнение",  cls: "op-plus",  sign: "" },
+    deposit:  { ic: "➕", name: "Пополнение",  cls: "op-plus",  sign: "+" },
     withdraw: { ic: "⭐", name: "Вывод звёзд", cls: "op-minus", sign: "−" },
     bonus:    { ic: "🎁", name: "Бонус дня",   cls: "op-plus",  sign: "+" },
     promo:    { ic: "🎟", name: "Промокод",    cls: "op-plus",  sign: "+" },
