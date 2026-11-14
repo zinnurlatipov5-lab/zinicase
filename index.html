@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>ZINI DROP — Майнинг</title>
+<title>ZINI DROP — Тапалка</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 <style>
@@ -15,6 +15,7 @@
   .bg::before { content:''; position:fixed; inset:-40%; z-index:-2;
     background:
       radial-gradient(circle at 25% 15%, rgba(110,170,255,.20), transparent 42%),
+      radial-gradient(circle at 25% 85%, rgba(110,170,255,.16), transparent 42%),
       radial-gradient(circle at 82% 10%, rgba(180,225,255,.14), transparent 40%),
       radial-gradient(circle at 55% 90%, rgba(140,190,255,.12), transparent 45%),
       radial-gradient(circle at 10% 65%, rgba(200,235,255,.08), transparent 40%);
@@ -73,6 +74,7 @@
   .coins { font-size:21px; font-weight:800; color:#ffd84d; text-shadow:0 0 12px rgba(255,216,77,.3); }
   .coins small { font-size:11px; color:#7f9cc0; font-weight:500; }
   .rate { font-size:12px; color:#7fe0a0; text-align:right; font-weight:700; text-shadow:0 0 8px rgba(120,220,160,.3); }
+  .energy-tag { font-size:12px; color:#bfe4ff; text-align:right; font-weight:700; }
 
   #page-farm.active { display:block; text-align:center; }
   .miner-zone { position:relative; margin-top:8px; }
@@ -101,7 +103,6 @@
   @keyframes fly { to { transform:translateY(-130px) scale(1.5); opacity:0; } }
   .tap-hint { color:#7f9cc0; font-size:13px; margin-top:26px; }
   .combo-line { min-height:22px; font-size:16px; font-weight:800; color:#9fd4ff; margin-top:6px; text-shadow:0 0 14px rgba(140,200,255,.55); transition:transform .1s; }
-  .boost-line { min-height:18px; font-size:13px; font-weight:800; color:#7fe0a0; text-shadow:0 0 10px rgba(120,220,160,.4); }
   .income-strip { display:flex; gap:10px; margin-top:18px; }
   .income-strip div { flex:1; background:linear-gradient(160deg,rgba(34,48,78,.75),rgba(14,22,42,.78));
     border:1px solid rgba(140,180,255,.16); border-radius:18px; padding:13px; }
@@ -154,10 +155,6 @@
   .crown { margin-left:4px; }
   .gap-line { padding:12px 6px; text-align:center; color:#9fd4ff; font-weight:700; font-size:13px; }
 
-  .wheel-wrap { position:relative; width:min(80vw,290px); margin:14px auto; filter:drop-shadow(0 10px 30px rgba(80,140,255,.3)); }
-  #wheel { width:100%; display:block; transition:transform 4s cubic-bezier(.17,.67,.12,.99); }
-  .wheel-pointer { position:absolute; top:-12px; left:50%; transform:translateX(-50%); font-size:30px; z-index:2; filter:drop-shadow(0 0 8px rgba(190,230,255,.8)); }
-
   .stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
   .stat-grid .card { margin:0; text-align:center; }
   .stat-grid b { font-size:19px; color:#ffd84d; display:block; margin-bottom:2px; text-shadow:0 0 10px rgba(255,216,77,.25); }
@@ -181,9 +178,6 @@
   .adm-row .b { font-size:11px; color:#7f9cc0; }
   .adm-btn { padding:7px 10px; border:none; border-radius:10px; font-weight:800; font-size:11px; cursor:pointer; transition:transform .1s; }
   .adm-btn:active { transform:scale(.92); }
-  .cups { display:flex; gap:16px; justify-content:center; margin-top:12px; font-size:42px; }
-  .cups div { cursor:pointer; transition:transform .15s; filter:drop-shadow(0 4px 8px rgba(0,0,0,.5)); }
-  .cups div:active { transform:scale(1.18) rotate(-4deg); }
 
   #popup { position:fixed; left:50%; bottom:112px; transform:translateX(-50%);
     background:rgba(14,20,36,.95); border:1px solid rgba(160,210,255,.5); color:#bfe4ff;
@@ -199,12 +193,15 @@
 
 <div class="logo" onclick="openAdmin()">
   <div class="logo-big">ZINI DROP</div>
-  <div class="logo-sub">Mining Empire · Winter</div>
+  <div class="logo-sub">Tap Empire · Winter</div>
 </div>
 <div class="topbar">
   <div class="topbar-inner">
-    <div class="coins"><span id="coins">0</span> <small>монет</small></div>
-    <div class="rate">+<span id="rate">0</span>/с</div>
+    <div class="coins"><span id="coins">0</span> <small>зт</small></div>
+    <div class="rate">
+      <div class="energy-tag">⚡ <span id="energy">500</span>/500</div>
+      <div>+<span id="rate">0</span> зт/сут</div>
+    </div>
   </div>
 </div>
 
@@ -212,7 +209,7 @@
 <div class="page active" id="page-farm">
   <div class="teaser">
     <div class="t-title">❄️ НОВАЯ ЭРА ZINI!</div>
-    <p>Сезон перезапущен — у всех чистый лист. Топ-3 игрока недели получат бонусный запас монет в день листинга!</p>
+    <p>Сезон перезапущен — у всех нулевой баланс. Топ-3 недели получат бонус в день листинга!</p>
     <span class="soon">СКОРО ❄️</span>
   </div>
 
@@ -224,13 +221,17 @@
       <div class="rig" id="rig"><div id="rig-icon"></div></div>
     </div>
     <div class="miner-badge">Ваш майнер: <b id="rig-name">—</b></div>
-    <div class="tap-hint">👆 Тапайте по майнеру — получайте монеты!</div>
+    <div class="tap-hint">👆 Тапайте по майнеру — тратите энергию!</div>
     <div class="combo-line" id="combo-line"></div>
-    <div class="boost-line" id="boost-line"></div>
     <div class="income-strip">
-      <div><b id="tap-income">+1</b><span class="muted">за тап</span></div>
-      <div><b id="sec-income">0/с</b><span class="muted">авто-доход</span></div>
+      <div><b id="tap-income">+1</b><span class="muted">зт за тап</span></div>
+      <div><b id="sec-income">0</b><span class="muted">зт/сутки от майнеров</span></div>
     </div>
+  </div>
+
+  <div class="card" style="margin-top:18px">
+    <div class="row"><b>🎬 Энергия за рекламу</b><span class="muted" id="ad-left">реклам: 3/3</span></div>
+    <button class="btn" id="ad-btn" onclick="watchAd()">⚡ +50 энергии за рекламу</button>
   </div>
 
   <div class="card" style="text-align:left">
@@ -239,13 +240,10 @@
   </div>
 </div>
 
-<!-- ===== МАГАЗИН + РЫНОК ===== -->
+<!-- ===== МАГАЗИН ===== -->
 <div class="page" id="page-shop">
-  <h2>🔄 Рынок</h2>
-  <p class="sub">Обменяй монеты на бонусы, билеты и короны.</p>
-  <div id="market-list"></div>
   <h2>🛒 Магазин майнеров</h2>
-  <p class="sub">14 уровней железа — от старой видеокарты до сингулярности богов.</p>
+  <p class="sub">Новый майнер можно купить раз в час. Улучшения — без ограничений.</p>
   <div id="shop-list"></div>
 </div>
 
@@ -265,83 +263,17 @@
   <div class="gap-line" id="lb-gap"></div>
 </div>
 
-<!-- ===== ПРИКОЛЫ ===== -->
-<div class="page" id="page-contest">
-  <h2>🎁 Приколы и конкурсы</h2>
-  <p class="sub">Реклама с бустами, колесо фортуны, мини-игры и промокоды.</p>
-
-  <div class="card" style="text-align:center">
-    <b>🎬 Реклама — главный буст!</b>
-    <p class="muted" style="margin-top:4px">За просмотр: монеты + ×2 доход на 30 минут. Каждая следующая в день — жирнее!</p>
-    <div class="muted" id="ad-left" style="margin-top:4px"></div>
-    <div class="progress"><i id="ad-quest-bar" style="width:0%"></i></div>
-    <div class="muted" id="ad-quest-text" style="margin-top:4px"></div>
-    <button class="btn" id="ad-btn" onclick="watchAd()">Смотреть рекламу</button>
-  </div>
-
-  <div class="card" style="text-align:center">
-    <b>🎟 Промокоды из рекламы</b>
-    <p class="muted" style="margin-top:4px">Иногда за просмотр рекламы выпадает промокод. Вводи его здесь — приз случайный: монеты, звёзды ⭐, бусты и билеты! У кода есть 24 часа.</p>
-    <div class="muted" id="my-promos" style="margin:8px 0"></div>
-    <input class="acc-input" id="promo-input" placeholder="ZINI-XXXX" style="margin-top:0;text-align:center">
-    <button class="btn" onclick="usePromo()">Активировать промокод</button>
-  </div>
-
-  <div class="card" style="text-align:center">
-    <b>🎰 Три сундука</b>
-    <p class="muted" style="margin-top:4px">Один из сундуков — с золотом. Угадай и получи ×2.5 от ставки!</p>
-    <div class="muted" id="cup-status">Выбери ставку и открой сундук</div>
-    <div style="display:flex;gap:8px;justify-content:center;margin-top:8px">
-      <button class="mini-btn buy" onclick="setBet(100)">100</button>
-      <button class="mini-btn buy" onclick="setBet(1000)">1K</button>
-      <button class="mini-btn buy" onclick="setBet(10000)">10K</button>
-    </div>
-    <div class="cups">
-      <div onclick="pickCup(0)">🧰</div><div onclick="pickCup(1)">🧰</div><div onclick="pickCup(2)">🧰</div>
-    </div>
-  </div>
-
-  <div class="card" style="text-align:center">
-    <b>Колесо фортуны</b>
-    <div class="muted" style="margin-top:4px">1 бесплатное вращение в день</div>
-    <div class="wheel-wrap">
-      <div class="wheel-pointer">🔻</div>
-      <svg id="wheel" viewBox="0 0 200 200"><g id="wheel-g"></g></svg>
-    </div>
-    <button class="btn" id="spin-btn" onclick="spinWheel()">Крутить!</button>
-    <button class="btn btn-purple" id="spin-ad-btn" style="display:none" onclick="spinForAd()">🎬 Ещё попытка за рекламу</button>
-  </div>
-
-  <div class="card">
-    <div class="row"><b>🏆 Топ недели</b><span class="muted">итоги в воскресенье</span></div>
-    <div id="week-top" class="muted" style="text-align:center;padding:8px">Загрузка…</div>
-  </div>
-</div>
-
 <!-- ===== ПРОФИЛЬ ===== -->
 <div class="page" id="page-prof">
   <h2>👤 Профиль</h2>
-  <p class="sub">Ваша статистика, звёзды и рефералы.</p>
+  <p class="sub">Ваша статистика и рефералы.</p>
   <div class="card">
     <div class="row"><b id="acc-name">👤 Игрок</b><span class="muted" id="acc-type"></span></div>
     <div class="muted" style="margin-top:6px">Титул: <b id="acc-title" style="color:#bfe4ff"></b></div>
     <button class="btn btn-purple" style="margin-top:8px" onclick="switchAccount()">🔄 Сменить аккаунт</button>
   </div>
   <div class="card">
-    <div class="row">
-      <b>⭐ Звёзды</b>
-      <b id="stars-cnt" style="color:#ffd84d;font-size:17px">0</b>
-    </div>
-    <div class="muted" id="stars-detail" style="margin-top:4px">есть: 0 ⭐ • выведено: 0 ⭐</div>
-    <p class="muted" style="margin-top:4px">Выпадают из промокодов. Накопи 50 ⭐ и обменяй на подарок в Telegram!</p>
-    <button class="btn" id="stars-btn" onclick="withdrawStars()">Вывести звёзды</button>
-  </div>
-  <div class="card">
-    <div class="row"><b>🎟 Промокоды</b><span class="muted">живут 24 часа</span></div>
-    <div class="muted" id="prof-promos" style="margin-top:4px"></div>
-  </div>
-  <div class="card">
-    <div class="row"><b>🤝 Друзья-рефералы</b><span class="muted" id="ref-pct"></span></div>
+    <div class="row"><b>🤝 Друзья-рефералка</b><span class="muted" id="ref-pct"></span></div>
     <p class="muted" style="margin-top:4px">Твой код — отправь другу:</p>
     <div class="acc-input" id="my-ref-code" style="margin-top:6px;font-weight:800;color:#bfe4ff;user-select:text;cursor:text"></div>
     <button class="btn btn-purple" onclick="shareRef()">📤 Поделиться кодом</button>
@@ -354,7 +286,7 @@
     <button class="btn" id="daily-btn" onclick="claimDaily()">Забрать бонус</button>
   </div>
   <div class="stat-grid">
-    <div class="card"><b id="st-total-mined">0</b><span class="muted">всего добыто</span></div>
+    <div class="card"><b id="st-total-mined">0</b><span class="muted">всего добыто зт</span></div>
     <div class="card"><b id="st-taps">0</b><span class="muted">всего тапов</span></div>
     <div class="card"><b id="st-miners">0</b><span class="muted">майнеров</span></div>
     <div class="card"><b id="st-rank">—</b><span class="muted">место в рейтинге</span></div>
@@ -367,7 +299,6 @@
     <button data-page="shop" onclick="go('shop')"><span class="ico">🛒</span>МАГАЗИН</button>
     <button data-page="upg" onclick="go('upg')"><span class="ico">⚡</span>УЛУЧШ.</button>
     <button data-page="rank" onclick="go('rank')"><span class="ico">🏆</span>РЕЙТИНГ</button>
-    <button data-page="contest" onclick="go('contest')"><span class="ico">🎁</span>ПРИКОЛЫ</button>
     <button data-page="prof" onclick="go('prof')"><span class="ico">👤</span>ПРОФИЛЬ</button>
   </div>
 </nav>
@@ -399,7 +330,7 @@
 <div id="admin-overlay">
   <div class="acc-box">
     <h3>🛡 Админ-панель</h3>
-    <p>Поиск игроков, бан, обнуление, заявки на звёзды и общий сброс сезона.</p>
+    <p>Поиск игроков, бан, обнуление и общий сброс сезона.</p>
     <input class="acc-input" id="adm-code" placeholder="Секретный код админа" style="margin-top:0">
     <input class="acc-input" id="adm-search" placeholder="Имя игрока (можно пусто)">
     <button class="acc-btn new" onclick="adminSearch()">🔍 Найти</button>
@@ -421,977 +352,93 @@ const SYNC_WORKER_URL = 'https://zini-sync.zinnurlatipov5.workers.dev';
 const ADSGRAM_BLOCK_ID = '59627';
 const API_HEADERS = { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer ' + SUPABASE_KEY };
 
-function iconGPU(c){return `<svg viewBox="0 0 100 100" fill="none"><rect x="12" y="30" width="76" height="40" rx="6" stroke="${c}" stroke-width="4" fill="${c}14"/><circle cx="38" cy="50" r="11" stroke="${c}" stroke-width="3.5"/><circle cx="38" cy="50" r="4" fill="${c}"/><line x1="38" y1="39" x2="38" y2="43" stroke="${c}" stroke-width="3"/><line x1="38" y1="57" x2="38" y2="61" stroke="${c}" stroke-width="3"/><line x1="27" y1="50" x2="31" y2="50" stroke="${c}" stroke-width="3"/><line x1="45" y1="50" x2="49" y2="50" stroke="${c}" stroke-width="3"/><rect x="60" y="38" width="18" height="6" rx="2" fill="${c}" opacity=".7"/><rect x="60" y="48" width="18" height="4" rx="2" fill="${c}" opacity=".4"/><rect x="60" y="56" width="18" height="4" rx="2" fill="${c}" opacity=".4"/></svg>`;}
-function iconRig(c){return `<svg viewBox="0 0 100 100" fill="none"><rect x="10" y="24" width="80" height="10" rx="3" stroke="${c}" stroke-width="4"/><rect x="10" y="66" width="80" height="10" rx="3" stroke="${c}" stroke-width="4"/><line x1="22" y1="34" x2="22" y2="66" stroke="${c}" stroke-width="3"/><line x1="78" y1="34" x2="78" y2="66" stroke="${c}" stroke-width="3"/>${[36,50,64].map(x=>`<circle cx="${x}" cy="50" r="8" stroke="${c}" stroke-width="3.5"/>`).join('')}</svg>`;}
-function iconASIC(c){return `<svg viewBox="0 0 100 100" fill="none"><rect x="10" y="26" width="80" height="48" rx="8" stroke="${c}" stroke-width="4" fill="${c}12"/><circle cx="32" cy="50" r="13" stroke="${c}" stroke-width="4"/><circle cx="68" cy="50" r="13" stroke="${c}" stroke-width="4"/><rect x="44" y="79" width="12" height="5" rx="2" fill="${c}"/></svg>`;}
-function iconCPU(c){return `<svg viewBox="0 0 100 100" fill="none"><rect x="28" y="28" width="44" height="44" rx="6" stroke="${c}" stroke-width="4" fill="${c}14"/><rect x="40" y="40" width="20" height="20" rx="3" fill="${c}"/><g stroke="${c}" stroke-width="3.5" stroke-linecap="round">${[36,46,56,66].map(x=>`<line x1="${x}" y1="20" x2="${x}" y2="26"/><line x1="${x}" y1="74" x2="${x}" y2="80"/>`).join('')}${[36,46,56,66].map(y=>`<line x1="20" y1="${y}" x2="26" y2="${y}"/><line x1="74" y1="${y}" x2="80" y2="${y}"/>`).join('')}</g></svg>`;}
-function iconWater(c){return `<svg viewBox="0 0 100 100" fill="none"><rect x="10" y="36" width="80" height="34" rx="6" stroke="${c}" stroke-width="4" fill="${c}12"/><circle cx="50" cy="53" r="10" stroke="${c}" stroke-width="4"/><path d="M20 36 Q50 8 80 36" stroke="${c}" stroke-width="4" fill="none"/><circle cx="50" cy="14" r="5" fill="${c}"/></svg>`;}
-function iconRack(c){return `<svg viewBox="0 0 100 100" fill="none"><rect x="22" y="10" width="56" height="80" rx="6" stroke="${c}" stroke-width="4" fill="${c}0d"/>${[24,40,56,72].map(y=>`<rect x="30" y="${y}" width="40" height="8" rx="2" stroke="${c}" stroke-width="3"/>`).join('')}</svg>`;}
-function iconCluster(c){return `<svg viewBox="0 0 100 100" fill="none"><rect x="14" y="52" width="30" height="30" rx="4" stroke="${c}" stroke-width="4"/><rect x="35" y="30" width="30" height="30" rx="4" stroke="${c}" stroke-width="4" fill="${c}12"/><rect x="56" y="10" width="30" height="30" rx="4" stroke="${c}" stroke-width="4" fill="${c}1a"/></svg>`;}
-function iconQuantum(c){return `<svg viewBox="0 0 100 100" fill="none"><rect x="34" y="34" width="32" height="32" rx="4" stroke="${c}" stroke-width="4" fill="${c}14"/><rect x="44" y="44" width="12" height="12" rx="2" fill="${c}"/><ellipse cx="50" cy="50" rx="40" ry="12" stroke="${c}" stroke-width="3" opacity=".7"/><ellipse cx="50" cy="50" rx="40" ry="12" stroke="${c}" stroke-width="3" opacity=".7" transform="rotate(60 50 50)"/><ellipse cx="50" cy="50" rx="40" ry="12" stroke="${c}" stroke-width="3" opacity=".4" transform="rotate(120 50 50)"/></svg>`;}
-function iconGalaxy(c){return `<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="14" stroke="${c}" stroke-width="4" fill="${c}14"/><circle cx="50" cy="50" r="6" fill="${c}"/><ellipse cx="50" cy="50" rx="44" ry="14" stroke="${c}" stroke-width="3" transform="rotate(-25 50 50)"/><ellipse cx="50" cy="50" rx="44" ry="14" stroke="${c}" stroke-width="3" opacity=".5" transform="rotate(35 50 50)"/></svg>`;}
-function iconSingularity(c){return `<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="30" stroke="${c}" stroke-width="5"/><circle cx="50" cy="50" r="16" fill="${c}"/><circle cx="50" cy="50" r="6" fill="#060a14"/><g stroke="${c}" stroke-width="3"><line x1="50" y1="8" x2="50" y2="18"/><line x1="50" y1="82" x2="50" y2="92"/><line x1="8" y1="50" x2="18" y2="50"/><line x1="82" y1="50" x2="92" y2="50"/></g></svg>`;}
-function iconWormhole(c){return `<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="34" stroke="${c}" stroke-width="4"/><circle cx="50" cy="50" r="20" stroke="${c}" stroke-width="3" stroke-dasharray="6 5"/><circle cx="50" cy="50" r="8" fill="${c}"/><path d="M50 4 L58 16 L42 16 Z" fill="${c}"/><path d="M50 96 L58 84 L42 84 Z" fill="${c}"/><path d="M4 50 L16 42 L16 58 Z" fill="${c}"/><path d="M96 50 L84 42 L84 58 Z" fill="${c}"/></svg>`;}
-function iconRift(c){return `<svg viewBox="0 0 100 100" fill="none"><path d="M30 8 L55 38 L45 50 L70 78 L60 92 L38 62 L48 48 L22 22 Z" stroke="${c}" stroke-width="4" stroke-linejoin="round" fill="${c}18"/><circle cx="70" cy="20" r="4" fill="${c}"/><circle cx="25" cy="82" r="4" fill="${c}"/></svg>`;}
-function iconCouncil(c){return `<svg viewBox="0 0 100 100" fill="none"><circle cx="50" cy="50" r="12" stroke="${c}" stroke-width="4"/><circle cx="20" cy="30" r="9" stroke="${c}" stroke-width="3.5"/><circle cx="80" cy="30" r="9" stroke="${c}" stroke-width="3.5"/><circle cx="50" cy="88" r="9" stroke="${c}" stroke-width="3.5"/><line x1="27" y1="37" x2="41" y2="44" stroke="${c}" stroke-width="3"/><line x1="73" y1="37" x2="59" y2="44" stroke="${c}" stroke-width="3"/></svg>`;}
+// Человечки ZINI: чем лучше майнер, тем круче человечек
+function personIcon(c, t) {
+  const skin = '#f0dcc8', dark = '#0c1a2e';
+  let aura = '';
+  if (t >= 10) aura += `<circle cx="50" cy="52" r="42" stroke="${c}" stroke-width="1.5" opacity=".55" fill="none" stroke-dasharray="5 7"/>`;
+  if (t >= 12) aura += `<circle cx="50" cy="52" r="47" stroke="${c}" stroke-width="1" opacity=".4" fill="none"/>`;
+  let back = '';
+  if (t === 6 || t === 8) back = `<path d="M30 44 Q22 70 30 86 Q50 78 70 86 Q78 70 70 44 Z" fill="${c}" opacity=".35"/>`;
+  if (t === 8) back += `<circle cx="30" cy="52" r="1.6" fill="#fff" opacity=".9"/><circle cx="70" cy="48" r="1.6" fill="#fff" opacity=".9"/><circle cx="66" cy="80" r="1.4" fill="#fff" opacity=".8"/>`;
+  if (t === 10) back = `<ellipse cx="50" cy="56" rx="34" ry="30" stroke="${c}" stroke-width="2" fill="none" opacity=".6" stroke-dasharray="7 5"/>`;
+  if (t === 11) back = `<path d="M18 30 L34 50 L26 52 L40 74" stroke="${c}" stroke-width="2.5" fill="none" opacity=".7"/><path d="M82 30 L66 50 L74 52 L60 74" stroke="${c}" stroke-width="2.5" fill="none" opacity=".7"/>`;
+  if (t === 13) back = `<path d="M30 46 Q10 56 14 78 Q26 66 34 62 Z" fill="${c}" opacity=".55"/><path d="M70 46 Q90 56 86 78 Q74 66 66 62 Z" fill="${c}" opacity=".55"/>`;
+  let head = `<circle cx="50" cy="26" r="10" fill="${skin}" stroke="${dark}" stroke-width="2"/><path d="M42 24 Q50 16 58 24" stroke="${dark}" stroke-width="3" fill="none"/>`;
+  if (t === 7) head = `<circle cx="50" cy="26" r="15" fill="${c}35" stroke="${c}" stroke-width="3"/><circle cx="50" cy="26" r="9.5" fill="${skin}" stroke="${dark}" stroke-width="2"/><path d="M43 27 Q50 33 57 27" stroke="${dark}" stroke-width="1.5" fill="none"/>`;
+  let hat = '';
+  if (t === 1) hat = `<path d="M40 20 Q50 12 60 20 L60 23 Q50 19 40 23 Z" fill="${c}" stroke="${dark}" stroke-width="1.5"/>`;
+  if (t === 2) hat = `<circle cx="38" cy="28" r="5" fill="${c}" stroke="${dark}" stroke-width="1.5"/><circle cx="62" cy="28" r="5" fill="${c}" stroke="${dark}" stroke-width="1.5"/><path d="M43 27 Q50 20 57 27" stroke="${dark}" stroke-width="2" fill="none"/>`;
+  if (t === 9 || t === 13) hat = `<path d="M40 17 L42 10 L46 15 L50 8 L54 15 L58 10 L60 17 Z" fill="${t === 13 ? '#ffd84d' : c}" stroke="${dark}" stroke-width="1.5"/>`;
+  if (t === 12) hat = `<circle cx="50" cy="12" r="7" stroke="${c}" stroke-width="2" fill="none" opacity=".9" stroke-dasharray="2 3"/><circle cx="38" cy="17" r="2" fill="${c}"/><circle cx="62" cy="17" r="2" fill="${c}"/><circle cx="44" cy="6" r="2" fill="${c}"/><circle cx="56" cy="6" r="2" fill="${c}"/>`;
+  let eyes = `<circle cx="46" cy="26" r="1.4" fill="${dark}"/><circle cx="54" cy="26" r="1.4" fill="${dark}"/>`;
+  if (t >= 5 && t !== 7) eyes = `<rect x="42" y="24" width="6" height="4" rx="1.5" fill="${dark}"/><rect x="52" y="24" width="6" height="4" rx="1.5" fill="${dark}"/>`;
+  if (t === 3) eyes = `<circle cx="46" cy="26" r="3" stroke="${dark}" stroke-width="1.5" fill="none"/><circle cx="54" cy="26" r="3" stroke="${dark}" stroke-width="1.5" fill="none"/><line x1="49" y1="26" x2="51" y2="26" stroke="${dark}" stroke-width="1.5"/>`;
+  let body = `<rect x="33" y="38" width="34" height="32" rx="9" fill="${c}" stroke="${dark}" stroke-width="2"/><text x="50" y="57" font-size="8.5" font-weight="900" text-anchor="middle" fill="${dark}">ZINI</text>`;
+  if (t === 2) body += `<path d="M46 60 L51 60 L48 66 L53 66 L46 74 L48 67 L44 67 Z" fill="#ffd84d"/>`;
+  if (t === 3) body += `<path d="M50 38 L47 44 L50 50 L53 44 Z" fill="#c0392b"/><path d="M50 50 L52 58 L50 62 L48 58 Z" fill="#e74c3c"/>`;
+  if (t === 4) body += `<path d="M36 42 L31 35 M64 42 L69 35 M40 72 L35 80 M60 72 L65 80" stroke="${c}" stroke-width="2" opacity=".8"/>`;
+  if (t === 5) body += `<rect x="29" y="38" width="9" height="9" rx="2" fill="${dark}"/><rect x="62" y="38" width="9" height="9" rx="2" fill="${dark}"/>`;
+  if (t >= 8) body += `<rect x="40" y="61" width="20" height="2.5" rx="1" fill="#ffd84d"/>`;
+  const arms = t >= 4
+    ? `<path d="M33 44 Q24 52 26 62" stroke="${skin}" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M67 44 Q76 52 74 62" stroke="${skin}" stroke-width="5" fill="none" stroke-linecap="round"/>`
+    : `<line x1="33" y1="44" x2="28" y2="58" stroke="${skin}" stroke-width="5" stroke-linecap="round"/><line x1="67" y1="44" x2="72" y2="58" stroke="${skin}" stroke-width="5" stroke-linecap="round"/>`;
+  const legs = `<line x1="43" y1="70" x2="43" y2="84" stroke="${dark}" stroke-width="6" stroke-linecap="round"/><line x1="57" y1="70" x2="57" y2="84" stroke="${dark}" stroke-width="6" stroke-linecap="round"/>`;
+  let sparks = '';
+  if (t >= 11) sparks = `<circle cx="16" cy="22" r="1.6" fill="${c}" opacity=".9"/><circle cx="84" cy="24" r="1.6" fill="${c}" opacity=".9"/><circle cx="20" cy="78" r="1.4" fill="${c}" opacity=".7"/><circle cx="80" cy="80" r="1.4" fill="${c}" opacity=".7"/>`;
+  return `<svg viewBox="0 0 100 100" fill="none">${aura}${back}${arms}${legs}${body}${head}${hat}${eyes}${sparks}</svg>`;
+}
+const iconGPU          = c => personIcon(c, 0);   // парень в футболке ZINI
+const iconRig          = c => personIcon(c, 1);   // кепка
+const iconASIC         = c => personIcon(c, 2);   // наушники + молния
+const iconCPU          = c => personIcon(c, 3);   // костюм с галстуком
+const iconWater        = c => personIcon(c, 4);   // энергия вокруг
+const iconRack         = c => personIcon(c, 5);   // наплечники + очки
+const iconCluster      = c => personIcon(c, 6);   // плащ
+const iconQuantum      = c => personIcon(c, 7);   // скафандр
+const iconGalaxy       = c => personIcon(c, 8);   // звёздный плащ
+const iconSingularity  = c => personIcon(c, 9);   // корона
+const iconWormhole     = c => personIcon(c, 10);  // портал за спиной
+const iconRift         = c => personIcon(c, 11);  // молнии-аура
+const iconCouncil      = c => personIcon(c, 12);  // нимб из звёзд
+const iconGodSing      = c => personIcon(c, 13);  // крылья + золотая корона
 
+// Майнеры: доход за сутки ×2 каждый уровень, цена = 3 суток дохода
 const MINERS = [
-  { id:'basic',       name:'Старая видеокарта',     cost:150,          rate:1,          color:'#9fd4ff', icon:iconGPU },
-  { id:'pro',         name:'Майнинг-рам',           cost:2500,         rate:5,          color:'#7fe0a0', icon:iconRig },
-  { id:'turbo',       name:'ASIC-майнер',           cost:20000,        rate:35,         color:'#ff9db4', icon:iconASIC },
-  { id:'quantum',     name:'Процессорная ферма',    cost:150000,       rate:250,        color:'#9fd4ff', icon:iconCPU },
-  { id:'plasma',      name:'Водоблок-экстрим',      cost:1200000,      rate:1800,       color:'#cfe8ff', icon:iconWater },
-  { id:'fusion',      name:'Серверная стойка',      cost:9000000,      rate:12000,      color:'#ffd84d', icon:iconRack },
-  { id:'blackhole',   name:'Суперкомпьютер',        cost:70000000,     rate:85000,      color:'#b4c8ff', icon:iconCluster },
-  { id:'singularity', name:'Квантовый суперкомп',   cost:500000000,    rate:600000,     color:'#ffffff', icon:iconQuantum },
-  { id:'nebula',      name:'Ядро туманности',       cost:4000000000,   rate:4200000,    color:'#a8d8ff', icon:iconGalaxy },
-  { id:'godrig',      name:'Движок Большого Взрыва',cost:35000000000,  rate:30000000,   color:'#ffb0c8', icon:iconSingularity },
-  { id:'wormhole',    name:'Горизонт событий',      cost:300000000000, rate:220000000,  color:'#8fe8d0', icon:iconWormhole },
-  { id:'rift',        name:'Разлом пространства',   cost:2800000000000,rate:1600000000, color:'#c8dcff', icon:iconRift },
-  { id:'council',     name:'Совет галактик',        cost:30000000000000,rate:12000000000,color:'#dcecff', icon:iconCouncil },
-  { id:'godsing',     name:'Сингулярность богов',   cost:400000000000000,rate:90000000000,color:'#e8bfff', icon:iconSingularity },
+  { id:'basic',       name:'Старая видеокарта',      daily:1000,    color:'#9fd4ff', icon:iconGPU },
+  { id:'pro',         name:'Майнинг-рам',            daily:2000,    color:'#7fe0a0', icon:iconRig },
+  { id:'turbo',       name:'ASIC-майнер',            daily:4000,    color:'#ff9db4', icon:iconASIC },
+  { id:'quantum',     name:'Процессорная ферma',     daily:8000,    color:'#9fd4ff', icon:iconCPU },
+  { id:'plasma',      name:'Водоблок-экстрим',       daily:16000,   color:'#cfe8ff', icon:iconWater },
+  { id:'fusion',      name:'Серверная стойка',       daily:32000,   color:'#ffd84d', icon:iconRack },
+  { id:'blackhole',   name:'Суперкомпьютер',         daily:64000,   color:'#b4c8ff', icon:iconCluster },
+  { id:'singularity', name:'Квантовый суперкомп',    daily:128000,  color:'#ffffff', icon:iconQuantum },
+  { id:'nebula',      name:'Ядро туманности',        daily:256000,  color:'#a8d8ff', icon:iconGalaxy },
+  { id:'godrig',      name:'Движок Большого Взрыва', daily:512000,  color:'#ffb0c8', icon:iconSingularity },
+  { id:'wormhole',    name:'Горизонт событий',       daily:1024000, color:'#8fe8d0', icon:iconWormhole },
+  { id:'rift',        name:'Разлом пространства',    daily:2048000, color:'#c8dcff', icon:iconRift },
+  { id:'council',     name:'Совет галактик',         daily:4096000, color:'#dcecff', icon:iconCouncil },
+  { id:'godsing',     name:'Сингулярность богов',    daily:8192000, color:'#e8bfff', icon:iconGodSing },
 ];
+MINERS.forEach(m => { m.rate = m.daily / 86400; m.cost = m.daily * 3; });
+
+const ENERGY_DAILY = 500;
+const ENERGY_PER_AD = 50;
+const ADS_PER_DAY = 3;
+const MINER_BUY_COOLDOWN = 60 * 60 * 1000; // новый майнер раз в час
 const OFFLINE_CAP_HOURS = 4;
-const TAP_UPG_COST = 600, TAP_UPG_MULT = 2.5;
-const DAILY_REWARD = 150;
-const ADS_PER_DAY = 10;
-const ADS_QUEST_GOAL = 3;
-const BOOST_MINUTES = 30, BOOST_WINDOW = 30;
-const STARS_MIN_WITHDRAW = 50;
+const TAP_UPG_COST = 300, TAP_UPG_MULT = 2.2;
+const DAILY_REWARD = 100;
 const TITLES = [
   { mined: 0, name:'Новичок' },
-  { mined: 50000, name:'Шахтёр' },
-  { mined: 1000000, name:'Магнат' },
-  { mined: 50000000, name:'Крипто-барон' },
-  { mined: 2000000000, name:'Легенда майнинга' },
-  { mined: 100000000000, name:'Повелитель риг' },
-  { mined: 5000000000000, name:'Космический владыка' },
-];
-const MARKET = [
-  { id:'boost',  name:'⚡ Буст ×3 на 2 часа',        icon:'⚡', cost:()=>5000,   desc:'Тройной доход сразу' },
-  { id:'ticket', name:'🎫 Лотерейный билет',          icon:'🎫', cost:()=>2500,   desc:'Случайный приз до 100K' },
-  { id:'prod',   name:'🧠 Ускоритель +10% навсегда',  icon:'🧠', cost:s=>20000*Math.pow(3,s.prodLvl||0), desc:'Ко всему доходу, до 10 ур.' },
-  { id:'crown',  name:'👑 Золотая корона 7 дней',     icon:'👑', cost:()=>50000,  desc:'Корона рядом с твоим именем' },
+  { mined: 20000, name:'Шахтёр' },
+  { mined: 200000, name:'Магнат' },
+  { mined: 2000000, name:'Крипто-барон' },
+  { mined: 20000000, name:'Легенда майнинга' },
+  { mined: 200000000, name:'Повелитель риг' },
+  { mined: 2000000000, name:'Космический владыка' },
 ];
 
 function getWeekKey(offsetWeeks) {
   const d = new Date();
-  const day = (d.getDay() + 6) % 7;
-  const monday = new Date(d.getFullYear(), d.getMonth(), d.getDate() - day - (offsetWeeks || 0) * 7);
-  const p = n => String(n).padStart(2, '0');
-  return monday.getFullYear() + '-' + p(monday.getMonth() + 1) + '-' + p(monday.getDate());
-}
-
-// ================= АККАУНТЫ =================
-const tgUser = (window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) || null;
-function listAccounts() { return JSON.parse(localStorage.getItem('zini_accounts') || '{}'); }
-function saveAccounts(a) { localStorage.setItem('zini_accounts', JSON.stringify(a)); }
-let ACCOUNT_ID = null, ACCOUNT_NAME = 'Игрок', isTgAccount = !!tgUser;
-
-function pickAccountScreen() {
-  const overlay = document.getElementById('acc-overlay');
-  const listEl = document.getElementById('acc-list');
-  const accs = listAccounts();
-  listEl.innerHTML = '';
-  Object.keys(accs).forEach(id => {
-    const b = document.createElement('button');
-    b.className = 'acc-btn';
-    b.textContent = '👤 ' + accs[id];
-    b.onclick = () => startGame(id, accs[id]);
-    listEl.appendChild(b);
-  });
-  if (!Object.keys(accs).length) listEl.innerHTML = '<div class="muted" style="margin-bottom:6px">Аккаунтов пока нет — придумайте имя.</div>';
-  overlay.classList.add('show');
-}
-function createAccount() {
-  const inp = document.getElementById('acc-new-name');
-  const name = (inp.value.trim() || 'Игрок').slice(0, 20);
-  const id = 'acc_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-  const accs = listAccounts();
-  accs[id] = name; saveAccounts(accs); inp.value = '';
-  startGame(id, name);
-}
-function switchAccount() {
-  if (isTgAccount) { popup('Вы в Telegram — аккаунт привязан автоматически'); return; }
-  if (state) save();
-  pickAccountScreen();
-}
-
-// ================= СОСТОЯНИЕ =================
-let state = null, saveKey = null;
-function freshState() {
-  return {
-    coins: 0, miners: {}, upgrades: {}, tapLvl: 0, prodLvl: 0,
-    totalMined: 0, taps: 0, streak: 0, lastDaily: 0, lastSpin: 0, lastSeen: Date.now(),
-    weekMined: 0, weekKey: getWeekKey(),
-    adsDay: 0, adsCount: 0, adsQuestDay: 0, adsQuestCount: 0,
-    adsTimes: [], boostUntil: 0, boostLevel: 1,
-    refOf: null, refSent: false,
-    refWeek: getWeekKey(), refCredited: 0,
-    stars: 0, starsSent: 0,
-    promoCodes: [], usedPromos: {},
-    crownUntil: 0,
-    lastReset: 0
-  };
-}
-function loadStateFor(accId) {
-  const raw = localStorage.getItem('zini_acc_' + accId);
-  let s = raw ? JSON.parse(raw) : null;
-  if (!s) s = freshState();
-  if (s.weekKey !== getWeekKey()) { s.weekMined = 0; s.weekKey = getWeekKey(); }
-  if (s.refWeek !== getWeekKey()) { s.refCredited = 0; s.refWeek = getWeekKey(); }
-  if (!Array.isArray(s.adsTimes)) s.adsTimes = [];
-  if (!s.boostLevel) s.boostLevel = 2;
-  if (!Array.isArray(s.promoCodes)) s.promoCodes = [];
-  if (!s.usedPromos) s.usedPromos = {};
-  s.promoCodes = s.promoCodes.map(x => typeof x === 'string' ? { c: x, exp: 0 } : x);
-  if (s.lastReset === undefined) s.lastReset = 0;
-  return s;
-}
-function save() {
-  if (!state) return;
-  state.lastSeen = Date.now();
-  localStorage.setItem(saveKey, JSON.stringify(state));
-}
-function fmt(n) { return n >= 1e12 ? (n/1e12).toFixed(2)+'T' : n >= 1e9 ? (n/1e9).toFixed(2)+'B' : n >= 1e6 ? (n/1e6).toFixed(1)+'M' : n >= 1e3 ? (n/1e3).toFixed(1)+'K' : Math.floor(n); }
-let popupTimer;
-function popup(text) {
-  const p = document.getElementById('popup');
-  p.textContent = text; p.classList.add('show');
-  clearTimeout(popupTimer); popupTimer = setTimeout(() => p.classList.remove('show'), 2600);
-}
-function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
-
-function applyGlobalReset(resetTs) {
-  state = freshState();
-  state.lastReset = resetTs;
-  save();
-  currentRigId = null;
-  applyRigLook();
-  render(); renderShop(); renderMarket(); renderUpg(); renderProf();
-  updateAdUi(); renderBoost(); renderStars(); renderPromos();
-  buildLB(); updateLB();
-  popup('❄️ Новый сезон! Все балансы обнулены — стартуй заново!');
-}
-
-// ================= ДОХОД И БУСТЫ =================
-function boostActive() { return state && Date.now() < (state.boostUntil || 0); }
-function boostMult() { return boostActive() ? (state.boostLevel || 2) : 1; }
-function prodMult() { return 1 + (state.prodLvl || 0) * 0.10; }
-function totalRate() {
-  return MINERS.reduce((s, m) => s + m.rate * (state.miners[m.id] || 0) * (1 + (state.upgrades[m.id] || 0) * 0.10), 0) * boostMult() * prodMult();
-}
-function tapIncome() { return (1 + state.tapLvl * 0.3) * boostMult() * prodMult(); }
-function upgradeCost(id) { const m = MINERS.find(x => x.id === id); return Math.floor(m.cost * 0.6 * Math.pow(1.8, state.upgrades[id] || 0)); }
-function addMined(amount) { state.coins += amount; state.totalMined += amount; state.weekMined += amount; }
-function renderBoost() {
-  const el = document.getElementById('boost-line');
-  if (!el) return;
-  if (boostActive()) {
-    const mins = Math.ceil((state.boostUntil - Date.now()) / 60000);
-    el.textContent = (state.boostLevel >= 3 ? '⚡⚡ СУПЕР-БУСТ ×3: ещё ' : '⚡ Буст ×2: ещё ') + mins + ' мин';
-  } else el.textContent = '';
-}
-function crownActive() { return state && Date.now() < (state.crownUntil || 0); }
-
-// ================= ТИТУЛЫ И ВИД МАЙНЕРА =================
-function rankTitle(mined) { let t = TITLES[0].name; for (const x of TITLES) if (mined >= x.mined) t = x.name; return t; }
-function bestMiner() { let best = null; for (const m of MINERS) if (state.miners[m.id] > 0) best = m; return best || MINERS[0]; }
-let currentRigId = null;
-function applyRigLook() {
-  const m = bestMiner();
-  if (m.id === currentRigId) return;
-  currentRigId = m.id;
-  const rig = document.getElementById('rig');
-  rig.style.borderColor = m.color;
-  rig.style.boxShadow = `0 0 40px ${m.color}45, inset 0 0 30px ${m.color}22`;
-  document.getElementById('rig-icon').innerHTML = m.icon(m.color);
-  document.getElementById('rig-name').textContent = m.name;
-}
-function collectOffline() {
-  const secs = Math.min((Date.now() - state.lastSeen) / 1000, OFFLINE_CAP_HOURS * 3600);
-  const earned = Math.floor(totalRate() * secs);
-  if (earned >= 1) {
-    addMined(earned);
-    if (secs > 60 && earned >= 10) popup(`Пока вас не было: +${fmt(earned)} монет!`);
-  }
-}
-
-// ================= ТАПЫ + КОМБО =================
-let combo = 0, lastTapTime = 0, comboTimer = null;
-function comboMult() { return 1 + Math.min(combo, 10) * 0.15; }
-function showCombo() {
-  const el = document.getElementById('combo-line');
-  if (combo >= 2) { el.textContent = '❄️ Комбо ×' + comboMult().toFixed(2).replace(/0$/, ''); el.style.transform = 'scale(1.15)'; setTimeout(() => el.style.transform = 'scale(1)', 100); }
-  else el.textContent = '';
-}
-const rigEl = document.getElementById('rig');
-rigEl.addEventListener('pointerdown', e => {
-  if (!state) return;
-  const now = Date.now();
-  combo = (now - lastTapTime < 700) ? Math.min(combo + 1, 10) : 0;
-  lastTapTime = now;
-  clearTimeout(comboTimer);
-  comboTimer = setTimeout(() => { combo = 0; showCombo(); }, 1400);
-  const gain = Math.ceil(tapIncome() * comboMult());
-  addMined(gain); state.taps++;
-  const r = rigEl.getBoundingClientRect();
-  const c = document.createElement('div');
-  c.className = 'flycoin'; c.textContent = '+' + fmt(gain);
-  c.style.left = (e.clientX - r.left - 12) + 'px';
-  c.style.top = (e.clientY - r.top - 10) + 'px';
-  rigEl.appendChild(c);
-  setTimeout(() => c.remove(), 1050);
-  showCombo(); syncSoon(); render();
-});
-
-// ================= МАГАЗИН =================
-function buyMiner(id) {
-  const m = MINERS.find(x => x.id === id);
-  if (state.coins < m.cost) { popup('Недостаточно монет!'); return; }
-  state.coins -= m.cost;
-  state.miners[id] = (state.miners[id] || 0) + 1;
-  save(); applyRigLook(); render(); renderShop();
-  popup(`${m.name} куплен! +${fmt(m.rate)}/с`);
-}
-function renderShop() {
-  document.getElementById('shop-list').innerHTML = MINERS.map(m => {
-    const owned = state.miners[m.id] || 0;
-    return `<div class="card shop-card">
-      <div class="shop-ico" style="background:${m.color}1a; border-color:${m.color}59">${m.icon(m.color)}</div>
-      <div class="shop-info"><div class="shop-name" style="color:${m.color}">${m.name}</div>
-      <div class="shop-meta">в наличии: ${owned} • даёт <b>${fmt(m.rate)}/с</b></div></div>
-      <button class="mini-btn buy" ${state.coins < m.cost ? 'disabled' : ''} onclick="buyMiner('${m.id}')">${fmt(m.cost)} 🪙</button>
-    </div>`;
-  }).join('');
-}
-
-// ================= РЫНОК =================
-function buyMarket(id) {
-  const g = MARKET.find(x => x.id === id);
-  const cost = g.cost(state);
-  if (state.coins < cost) { popup('Недостаточно монет!'); return; }
-  if (id === 'prod' && (state.prodLvl || 0) >= 10) { popup('Максимальный уровень!'); return; }
-  state.coins -= cost;
-  if (id === 'boost') { state.boostLevel = 3; state.boostUntil = Date.now() + 120 * 60000; popup('⚡ Буст ×3 на 2 часа активирован!'); }
-  if (id === 'ticket') {
-    const prizes = [1000, 3000, 8000, 20000, 50000, 100000];
-    const win = prizes[Math.floor(Math.random() * prizes.length)];
-    addMined(win); popup(`🎫 Билет выиграл: +${fmt(win)} монет!`);
-  }
-  if (id === 'prod') { state.prodLvl = (state.prodLvl || 0) + 1; popup(`🧠 Доход +10%! Теперь ур.${state.prodLvl}`); }
-  if (id === 'crown') { state.crownUntil = Date.now() + 7 * 86400000; popup('👑 Корона активна 7 дней!'); }
-  save(); render(); renderMarket();
-}
-function renderMarket() {
-  document.getElementById('market-list').innerHTML = MARKET.map(g => {
-    const cost = g.cost(state);
-    const maxed = g.id === 'prod' && (state.prodLvl || 0) >= 10;
-    return `<div class="card shop-card">
-      <div class="shop-ico" style="background:rgba(150,205,255,.08)">${g.icon}</div>
-      <div class="shop-info"><div class="shop-name">${g.name}</div><div class="shop-meta">${g.desc}${g.id==='prod' ? ` • ур.${state.prodLvl||0}/10` : ''}</div></div>
-      <button class="mini-btn buy" ${maxed || state.coins < cost ? 'disabled' : ''} onclick="buyMarket('${g.id}')">${maxed ? 'MAX' : fmt(cost) + ' 🪙'}</button>
-    </div>`;
-  }).join('');
-}
-
-// ================= УЛУЧШЕНИЯ =================
-function buyUpgrade(id) {
-  const cost = upgradeCost(id), m = MINERS.find(x => x.id === id);
-  if (!(state.miners[id] > 0)) { popup('Сначала купите майнер!'); return; }
-  if (state.coins < cost) { popup('Недостаточно монет для улучшения!'); return; }
-  state.coins -= cost; state.upgrades[id] = (state.upgrades[id] || 0) + 1;
-  save(); render(); renderUpg();
-  popup(`${m.name}: скорость +10%!`);
-}
-function buyTapUpg() {
-  const cost = Math.floor(TAP_UPG_COST * Math.pow(TAP_UPG_MULT, state.tapLvl));
-  if (state.coins < cost) { popup('Недостаточно монет!'); return; }
-  state.coins -= cost; state.tapLvl++;
-  save(); render(); renderUpg();
-  popup('👆 Сила тапа увеличена!');
-}
-function renderUpg() {
-  const tapCost = Math.floor(TAP_UPG_COST * Math.pow(TAP_UPG_MULT, state.tapLvl));
-  const miners = MINERS.map(m => {
-    const owned = state.miners[m.id] || 0, lvl = state.upgrades[m.id] || 0, cost = upgradeCost(m.id);
-    return `<div class="card shop-card">
-      <div class="shop-ico" style="background:${m.color}1a; border-color:${m.color}59">${m.icon(m.color)}</div>
-      <div class="shop-info"><div class="shop-name" style="color:${m.color}">${m.name} <span class="muted">ур.${lvl}</span></div>
-      <div class="shop-meta">+10% за уровень • сейчас <b>${fmt(m.rate*(1+lvl*0.10))}/с</b></div></div>
-      <button class="mini-btn upg" ${owned === 0 || state.coins < cost ? 'disabled' : ''} onclick="buyUpgrade('${m.id}')">${fmt(cost)} 🪙</button>
-    </div>`;
-  }).join('');
-  document.getElementById('upg-list').innerHTML = `
-    <div class="card shop-card">
-      <div class="shop-ico" style="background:rgba(150,205,255,.1)">👆</div>
-      <div class="shop-info"><div class="shop-name">Сила тапа <span class="muted">ур.${state.tapLvl}</span></div>
-      <div class="shop-meta">+30% за уровень • сейчас <b>${fmt(tapIncome())}/тап</b></div></div>
-      <button class="mini-btn upg" ${state.coins < tapCost ? 'disabled' : ''} onclick="buyTapUpg()">${fmt(tapCost)} 🪙</button>
-    </div>` + miners;
-}
-
-// ================= РЕЙТИНГ + КАРТОЧКИ ИГРОКОВ =================
-let lbBuilt = false, lbCache = [], lbRows = [], lbState = 'loading', crownIds = new Set(), syncTimer = null;
-
-function makeLbRow() { return `<div class="lb-row"><div class="lb-rank"></div><div class="lb-name"></div><div class="lb-val"><b></b><span class="muted"></span></div></div>`; }
-function cacheLbRows(listEl) {
-  return Array.from(listEl.children).map(row => {
-    row.addEventListener('click', () => {
-      const r = lbCache.find(x => x.row === row);
-      if (r && r.data) showPlayer(r.data);
-    });
-    return { row, rankEl: row.querySelector('.lb-rank'), nameEl: row.querySelector('.lb-name'), valEl: row.querySelector('.lb-val b'), rateEl: row.querySelector('.lb-val .muted'), data: null };
-  });
-}
-function buildLB() {
-  if (lbBuilt) return;
-  lbBuilt = true;
-  const listEl = document.getElementById('lb-list');
-  listEl.innerHTML = makeLbRow();
-  lbCache = cacheLbRows(listEl);
-}
-function showPlayer(p) {
-  document.getElementById('pl-box').innerHTML = `
-    <h3>${p.me ? '⭐ ' : ''}${escapeHtml(p.name)}</h3>
-    <p>${p.title ? escapeHtml(p.title) : 'Игрок'}${p.rig ? ' • ' + escapeHtml(p.rig) : ''}</p>
-    <div style="text-align:left">
-      <div class="adm-row"><div class="n">Добыто за неделю</div><div class="n" style="color:#ffd84d">${fmt(p.mined)}</div></div>
-      <div class="adm-row"><div class="n">Баланс</div><div class="n" style="color:#ffd84d">${fmt(p.coins || 0)}</div></div>
-      <div class="adm-row"><div class="n">Всего добыто</div><div class="n">${fmt(p.total_mined || 0)}</div></div>
-      <div class="adm-row"><div class="n">Лучший майнер</div><div class="b">${escapeHtml(p.rig || '—')}</div></div>
-    </div>
-    <button class="acc-btn" onclick="document.getElementById('pl-overlay').classList.remove('show')">Закрыть</button>`;
-  document.getElementById('pl-overlay').classList.add('show');
-}
-function updateLB() {
-  if (!lbBuilt || !state) return;
-  const mineRemote = lbRows.find(r => r.player_id === ACCOUNT_ID);
-  const rows = [{ player_id: ACCOUNT_ID, name: ACCOUNT_NAME, mined: mineRemote ? mineRemote.mined : Math.floor(state.weekMined), coins: state.coins, total_mined: state.totalMined, rig: bestMiner().name, title: rankTitle(state.totalMined), me: true }];
-  for (const r of lbRows) { if (r.player_id === ACCOUNT_ID || !(r.mined > 0)) continue; rows.push({ ...r, me: false }); }
-  rows.sort((a, b) => b.mined - a.mined);
-
-  const listEl = document.getElementById('lb-list');
-  if (listEl.children.length !== rows.length) { listEl.innerHTML = rows.map(makeLbRow).join(''); lbCache = cacheLbRows(listEl); }
-
-  const medals = ['🥇','🥈','🥉'];
-  let myIndex = 0;
-  for (let i = 0; i < rows.length; i++) {
-    const r = rows[i], el = lbCache[i];
-    el.data = r;
-    if (r.me) myIndex = i;
-    el.rankEl.textContent = medals[i] || (i + 1);
-    el.rankEl.style.color = i === 0 ? '#ffd84d' : i === 1 ? '#cfd6ff' : i === 2 ? '#ffb89a' : '';
-    const crown = (crownIds.has(r.player_id) || (r.me && crownActive())) ? '<span class="crown">👑</span>' : '';
-    el.nameEl.innerHTML = (r.me ? '⭐ ' : '') + escapeHtml(r.name) + (r.me ? ' (вы)' : '') + crown;
-    el.nameEl.className = 'lb-name' + (r.me ? ' me' : '');
-    el.valEl.textContent = fmt(r.mined);
-    el.rateEl.textContent = r.me ? '+' + fmt(totalRate()) + '/с' : (r.rig ? r.rig : '');
-    el.row.classList.toggle('lb-me', r.me);
-    if (r.me) document.getElementById('st-rank').textContent = '#' + (i + 1);
-  }
-  const gapEl = document.getElementById('lb-gap');
-  if (gapEl) {
-    if (myIndex === 0) gapEl.textContent = rows.length > 1 ? '👑 Вы лидер! Не дайте себя обогнать!' : '';
-    else gapEl.textContent = `❄️ До места выше осталось ${fmt(rows[myIndex - 1].mined - rows[myIndex].mined + 1)} монет`;
-  }
-  const st = document.getElementById('lb-status');
-  if (lbState === 'ok') st.innerHTML = '<span class="live-dot"></span>Обновляется в реальном времени';
-  else if (lbState === 'err') st.innerHTML = '<span class="live-dot" style="background:#ff9db4"></span>Не удалось загрузить рейтинг';
-  else st.innerHTML = '<span class="live-dot"></span>Загрузка…';
-}
-
-async function sendToWorker() {
-  if (!SYNC_WORKER_URL.startsWith('http') || !state) return;
-  try {
-    const res = await fetch(SYNC_WORKER_URL + '/sync', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        player_id: ACCOUNT_ID, name: ACCOUNT_NAME, week_key: getWeekKey(),
-        mined: Math.floor(state.weekMined), coins: Math.floor(state.coins),
-        total_mined: Math.floor(state.totalMined), rig: bestMiner().name, title: rankTitle(state.totalMined),
-        taps: state.taps || 0, miners: JSON.stringify(state.miners || {}),
-        last_reset: state.lastReset || 0
-      })
-    });
-    const d = await res.json().catch(() => ({}));
-    if (d.reset) { applyGlobalReset(d.reset_ts || Date.now()); return; }
-    if (d.hidden) {
-      state.weekMined = 0;
-      if (d.resetCmd) { state.coins = 0; popup('Баланс обнулён админом'); }
-      save();
-    }
-  } catch (e) { console.error('sync:', e); }
-}
-function syncSoon() {
-  if (syncTimer || !SYNC_WORKER_URL.startsWith('http') || !state) return;
-  syncTimer = setTimeout(() => { syncTimer = null; sendToWorker(); }, 10000);
-}
-
-async function fetchLeaderboard() {
-  try {
-    const res = await fetch(
-      SUPABASE_URL + '/rest/v1/weekly_top?week_key=eq.' + getWeekKey() + '&select=player_id,name,mined,coins,total_mined,rig,title,taps,miners&order=mined.desc&limit=50',
-      { headers: API_HEADERS });
-    if (!res.ok) throw new Error('http ' + res.status);
-    lbRows = await res.json();
-    lbState = 'ok';
-  } catch (e) { lbState = 'err'; }
-  if (currentPage === 'rank') updateLB();
-}
-
-function renderWeekTopHTML(data) {
-  data = data.filter(p => p.mined > 0);
-  if (!data.length) return 'Пока никто не участвует — потапайте и станьте первым!';
-  const medals = ['🥇','🥈','🥉'];
-  return data.map((p, i) => {
-    const me = p.player_id === ACCOUNT_ID;
-    return `<div class="lb-row ${me ? 'lb-me' : ''}">
-      <div class="lb-rank">${medals[i] || (i + 1)}</div>
-      <div class="lb-name ${me ? 'me' : ''}">${me ? '⭐ ' : ''}${escapeHtml(p.name || 'Игрок')}${me ? ' (вы)' : ''}${crownIds.has(p.player_id) ? '<span class="crown">👑</span>' : ''}</div>
-      <div class="lb-val"><b>${fmt(p.mined)}</b></div>
-    </div>`;
-  }).join('');
-}
-async function fetchWeeklyTop() {
-  try {
-    const res = await fetch(
-      SUPABASE_URL + '/rest/v1/weekly_top?week_key=eq.' + getWeekKey(1) + '&order=mined.desc&limit=3',
-      { headers: API_HEADERS });
-    if (res.ok) crownIds = new Set((await res.json()).map(p => p.player_id));
-  } catch (e) {}
-  if (currentPage === 'rank') updateLB();
-  try {
-    const res = await fetch(
-      SUPABASE_URL + '/rest/v1/weekly_top?week_key=eq.' + getWeekKey() + '&order=mined.desc&limit=10',
-      { headers: API_HEADERS });
-    if (!res.ok) throw new Error('http ' + res.status);
-    const html = renderWeekTopHTML(await res.json());
-    const f = document.getElementById('farm-week-top'), c = document.getElementById('week-top');
-    if (f) f.innerHTML = html;
-    if (c) c.innerHTML = html;
-  } catch (e) {
-    const f = document.getElementById('farm-week-top'), c = document.getElementById('week-top');
-    if (f) f.textContent = 'Не удалось загрузить топ';
-    if (c) c.textContent = 'Не удалось загрузить топ';
-  }
-}
-
-// ================= РЕФЕРАЛКА =================
-function refPct(n) { return n >= 30 ? '45%' : n >= 11 ? '10%' : n >= 1 ? '5%' : '—'; }
-function showRefPrompt() {
-  if (!state || state.refSent || state.refOf || !SYNC_WORKER_URL.startsWith('http')) return;
-  document.getElementById('ref-overlay').classList.add('show');
-}
-function enterRefCode() {
-  if (!state) return;
-  if (state.refOf) { popup('Код друга уже введён'); return; }
-  document.getElementById('ref-overlay').classList.add('show');
-}
-async function submitRef() {
-  const code = document.getElementById('ref-input').value.trim();
-  document.getElementById('ref-overlay').classList.remove('show');
-  if (!code) return;
-  state.refSent = true; state.refOf = code; save();
-  try {
-    await fetch(SYNC_WORKER_URL + '/ref', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ player_id: ACCOUNT_ID, ref_code: code })
-    });
-    popup('Код принят! Приглашён к ' + code);
-  } catch (e) {}
-}
-function skipRef() { state.refSent = true; save(); document.getElementById('ref-overlay').classList.remove('show'); }
-async function refStats() {
-  if (!SYNC_WORKER_URL.startsWith('http') || !state) return;
-  try {
-    const res = await fetch(SYNC_WORKER_URL + '/refstats?player_id=' + encodeURIComponent(ACCOUNT_ID) + '&week_key=' + getWeekKey());
-    if (!res.ok) return;
-    const d = await res.json();
-    if (d.bonus > (state.refCredited || 0)) {
-      const diff = d.bonus - (state.refCredited || 0);
-      state.coins += diff; state.totalMined += diff;
-      state.refCredited = d.bonus;
-      popup('🤝 Реферальный доход: +' + fmt(diff) + ' монет!');
-    }
-    state._refCount = d.count; state._refBonus = d.bonus;
-    if (currentPage === 'prof') renderRef();
-  } catch (e) {}
-}
-function renderRef() {
-  const el = document.getElementById('ref-stats');
-  if (!el || !state) return;
-  const n = state._refCount || 0;
-  el.innerHTML = `Друзей: <b style="color:#7fe0a0">${n}</b> • твой процент: <b style="color:#bfe4ff">${refPct(n)}</b> • заработано за неделю: <b style="color:#ffd84d">${fmt(state._refBonus || 0)}</b><br><span class="muted">1–10 друзей → 5% • 11–30 → 10% • 30+ → 45% от их дохода</span>`;
-  const pc = document.getElementById('ref-pct');
-  if (pc) pc.textContent = refPct(n);
-  const mc = document.getElementById('my-ref-code');
-  if (mc) mc.textContent = ACCOUNT_ID;
-}
-function shareRef() {
-  const text = `Заходи в ZINI DROP по моему коду: ${ACCOUNT_ID}\nhttps://t.me/zini_drop_bot/zinidrop`;
-  if (window.Telegram && Telegram.WebApp) { Telegram.WebApp.openTelegramLink('https://t.me/share/url?url=' + encodeURIComponent(text)); }
-  else { navigator.clipboard && navigator.clipboard.writeText(text); popup('Код скопирован!'); }
-}
-
-// ================= ЗВЁЗДЫ =================
-function renderStars() {
-  if (!state) return;
-  const cnt = document.getElementById('stars-cnt');
-  const det = document.getElementById('stars-detail');
-  if (cnt) cnt.textContent = String(state.stars || 0);
-  if (det) det.textContent = `есть: ${state.stars || 0} ⭐ • выведено: ${state.starsSent || 0} ⭐`;
-  const btn = document.getElementById('stars-btn');
-  if (btn) {
-    btn.disabled = (state.stars || 0) < STARS_MIN_WITHDRAW;
-    btn.textContent = (state.stars || 0) >= STARS_MIN_WITHDRAW ? `Вывести ${state.stars} ⭐` : `Нужно минимум ${STARS_MIN_WITHDRAW} ⭐`;
-  }
-}
-async function withdrawStars() {
-  if (!state.stars || state.stars < STARS_MIN_WITHDRAW) return;
-  try {
-    await fetch(SYNC_WORKER_URL + '/star', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ player_id: ACCOUNT_ID, name: ACCOUNT_NAME, stars: state.stars })
-    });
-    state.starsSent = (state.starsSent || 0) + state.stars;
-    state.stars = 0;
-    save(); renderStars();
-    popup('⭐ Заявка отправлена! Ждите подарок в Telegram');
-  } catch (e) { popup('Не получилось, попробуйте позже'); }
-}
-
-// ================= МЕТЕОРИТЫ =================
-function scheduleAsteroid() { setTimeout(spawnAsteroid, 45000 + Math.random() * 90000); }
-function spawnAsteroid() {
-  if (!state || currentPage !== 'farm') { scheduleAsteroid(); return; }
-  const a = document.createElement('div');
-  a.className = 'asteroid';
-  a.textContent = ['☄️','❄️','💰'][Math.floor(Math.random() * 3)];
-  const y = window.innerHeight * (0.15 + Math.random() * 0.5);
-  a.style.left = '-60px'; a.style.top = y + 'px';
-  document.body.appendChild(a);
-  requestAnimationFrame(() => { a.style.transform = `translateX(${window.innerWidth + 140}px) translateY(${(Math.random()-0.5)*120}px) rotate(360deg)`; });
-  const gone = setTimeout(() => { a.remove(); scheduleAsteroid(); }, 7200);
-  a.addEventListener('pointerdown', () => {
-    clearTimeout(gone);
-    const bonus = Math.max(200, Math.floor(Math.max(tapIncome(), totalRate()) * 15));
-    addMined(bonus);
-    popup('❄️ Ледяная призма поймана: +' + fmt(bonus) + ' монет!');
-    a.remove(); render(); save(); scheduleAsteroid();
-  });
-}
-
-// ================= РЕКЛАМА (реальная, без тестового режима) =================
-let adController = null;
-function initAds() {
-  if (!window.Adsgram) return;
-  try { adController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID }); } catch (e) {}
-}
-function todayStamp() { return new Date().setHours(0,0,0,0); }
-function adsLeft() { if (!state) return 0; if (state.adsDay !== todayStamp()) return ADS_PER_DAY; return ADS_PER_DAY - (state.adsCount || 0); }
-function adsInWindow() { const now = Date.now(); return (state.adsTimes || []).filter(t => now - t < BOOST_WINDOW * 60000).length; }
-function adsToX3() { return Math.max(0, 3 - adsInWindow()); }
-function grantAdReward() {
-  const now = Date.now();
-  const dayMultiplier = 1 + (state.adsCount || 0) * 0.1;
-  const bonus = Math.max(800, Math.floor(Math.max(tapIncome(), totalRate()) * 60 * Math.min(dayMultiplier, 2)));
-  addMined(bonus);
-  state.adsTimes = (state.adsTimes || []).filter(t => now - t < BOOST_WINDOW * 60000);
-  state.adsTimes.push(now);
-  state.adsDay = todayStamp();
-  state.adsCount = (state.adsCount || 0) + 1;
-  if (state.adsQuestDay !== todayStamp()) { state.adsQuestDay = todayStamp(); state.adsQuestCount = 0; }
-  state.adsQuestCount = (state.adsQuestCount || 0) + 1;
-
-  const inWin = state.adsTimes.length;
-  if (inWin >= 3) { state.boostLevel = 3; state.boostUntil = now + BOOST_MINUTES * 60000; state.adsTimes = state.adsTimes.slice(-3); popup('⚡⚡ СУПЕР-БУСТ ×3! +' + fmt(bonus)); }
-  else { state.boostLevel = 2; state.boostUntil = now + BOOST_MINUTES * 60000; popup('🎬 +' + fmt(bonus) + ' и ×2 доход! Ещё ' + (3 - inWin) + ' — и ×3!'); }
-
-  if (state.adsQuestCount === ADS_QUEST_GOAL) {
-    const r = Math.random();
-    if (r < 0.5) { const b = Math.max(3000, Math.floor(totalRate() * 120)); addMined(b); popup('🏆 Задание дня: +' + fmt(b) + ' монет!'); }
-    else if (r < 0.75) { state.boostLevel = 3; state.boostUntil = Date.now() + 60 * 60000; popup('🏆 Задание дня: буст ×3 на час!'); }
-    else { const st = 3 + Math.floor(Math.random() * 8); state.stars += st; popup(`🏆 Задание дня: +${st} ⭐ звёзд!`); }
-  }
-  if (Math.random() < 0.35 && state.promoCodes.length < 5) {
-    const code = 'ZINI-' + Math.random().toString(36).slice(2, 6).toUpperCase();
-    state.promoCodes.push({ c: code, exp: Date.now() + 24 * 3600000 });
-    setTimeout(() => popup('🎟 Промокод ' + code + ' — используй за 24 часа!'), 2400);
-  }
-  render(); updateAdUi(); renderBoost(); renderStars(); renderPromos(); save(); syncSoon();
-}
-async function watchAd() {
-  if (!adController) { popup('Реклама ещё не настроена'); return; }
-  if (adsLeft() <= 0) { popup('Лимит на сегодня исчерпан!'); return; }
-  try { await adController.show(); grantAdReward(); }
-  catch (e) { popup('Реклама не показалась, попробуйте позже'); }
-}
-function updateAdUi() {
-  const el = document.getElementById('ad-left'), btn = document.getElementById('ad-btn');
-  const bar = document.getElementById('ad-quest-bar'), txt = document.getElementById('ad-quest-text');
-  if (!el || !state) return;
-  const left = adsLeft();
-  el.textContent = adController ? `Осталось просмотров сегодня: ${left} из ${ADS_PER_DAY}` : 'Реклама появится после подключения AdsGram';
-  btn.disabled = left <= 0 || !adController;
-  btn.textContent = left > 0 ? (adsToX3() > 0 ? `Смотреть рекламу (ещё ${adsToX3()} до ×3!)` : 'Смотреть рекламу (×2 буст!)') : 'На сегодня всё!';
-  if (bar && txt) {
-    const cnt = (state.adsQuestDay === todayStamp()) ? (state.adsQuestCount || 0) : 0;
-    bar.style.width = Math.min(cnt / ADS_QUEST_GOAL * 100, 100) + '%';
-    txt.textContent = cnt >= ADS_QUEST_GOAL ? '✅ Задание дня выполнено!' : `📅 Задание дня: ещё ${ADS_QUEST_GOAL - cnt} реклам(ы) — случайный приз!`;
-  }
-}
-
-// ================= ПРОМОКОДЫ (живут 24 часа) =================
-function fmtLeft(ms) { const h = Math.floor(ms / 3600000), m = Math.floor(ms % 3600000 / 60000); return h ? h + ' ч ' + m + ' мин' : m + ' мин'; }
-function renderPromos() {
-  if (!state) return;
-  const now = Date.now();
-  state.promoCodes = (state.promoCodes || []).filter(x => x && x.c && x.exp > now && !state.usedPromos[x.c]);
-  const txt = state.promoCodes.length
-    ? '🎟 Твои коды: ' + state.promoCodes.map(x => `${x.c} — осталось ${fmtLeft(x.exp - now)}`).join(' • ')
-    : 'Пока нет кодов — смотри рекламу!';
-  const a = document.getElementById('my-promos'); if (a) a.textContent = txt;
-  const b = document.getElementById('prof-promos'); if (b) b.textContent = txt;
-}
-function usePromo() {
-  const inp = document.getElementById('promo-input');
-  const code = (inp.value || '').trim().toUpperCase();
-  if (!code) return;
-  const entry = (state.promoCodes || []).find(x => x.c === code);
-  if (!entry) { popup('Такого кода нет или срок истёк!'); return; }
-  if (state.usedPromos[code]) { popup('Код уже использован!'); return; }
-  state.usedPromos[code] = true;
-  const r = Math.random();
-  if (r < 0.5) { const b = Math.max(2000, Math.floor(Math.max(tapIncome(), totalRate()) * 80)); addMined(b); popup('🎟 Приз: +' + fmt(b) + ' монет!'); }
-  else if (r < 0.7) { state.boostLevel = 3; state.boostUntil = Date.now() + 60 * 60000; popup('🎟 Приз: буст ×3 на час!'); }
-  else if (r < 0.85) { state.stars += 3 + Math.floor(Math.random() * 10); popup('🎟 Приз: звёзды ⭐!'); }
-  else { addMined(2500); popup('🎟 Приз: лотерейный билет! Смотри рынок'); }
-  inp.value = '';
-  renderPromos(); renderStars(); save(); render();
-}
-
-// ================= ТРИ СУНДУКА =================
-let cupBet = 100;
-function setBet(v) { cupBet = v; document.getElementById('cup-status').textContent = 'Ставка: ' + fmt(v) + ' монет'; }
-function pickCup(i) {
-  if (!state) return;
-  if (state.coins < cupBet) { popup('Недостаточно монет для ставки!'); return; }
-  state.coins -= cupBet;
-  const cups = document.querySelectorAll('.cups div');
-  cups.forEach(c => c.textContent = '🧰');
-  const winIdx = Math.floor(Math.random() * 3);
-  if (i === winIdx) {
-    const win = Math.floor(cupBet * 2.5);
-    addMined(win);
-    cups[i].textContent = '💰';
-    document.getElementById('cup-status').textContent = `Выигрыш: +${fmt(win)} монет!`;
-  } else {
-    cups[winIdx].textContent = '💰';
-    document.getElementById('cup-status').textContent = 'Мимо! Золото было в другом сундуке';
-  }
-  render(); save();
-}
-
-// ================= КОЛЕСО =================
-const WHEEL_PRIZES = [
-  { label:'500', coins:500 },{ label:'1K', coins:1000 },{ label:'2.5K', coins:2500 },{ label:'6K', coins:6000 },
-  { label:'15K', coins:15000 },{ label:'40K', coins:40000 },{ label:'100K', coins:100000 },{ label:'JACKPOT', coins:300000 },
-];
-const SEG_COLORS = ['#9fd4ff','#22304e','#9fd4ff','#22304e','#5a9ce8','#9fd4ff','#22304e','#7fe0a0'];
-function buildWheel() {
-  const g = document.getElementById('wheel-g');
-  const n = WHEEL_PRIZES.length, seg = 360 / n;
-  let html = '';
-  for (let i = 0; i < n; i++) {
-    const a1 = i*seg*Math.PI/180, a2 = (i+1)*seg*Math.PI/180;
-    const x1 = 100+90*Math.sin(a1), y1 = 100-90*Math.cos(a1);
-    const x2 = 100+90*Math.sin(a2), y2 = 100-90*Math.cos(a2);
-    const mx = 100+55*Math.sin((a1+a2)/2), my = 100-55*Math.cos((a1+a2)/2);
-    html += `<path d="M100,100 L${x1.toFixed(1)},${y1.toFixed(1)} A90,90 0 0,1 ${x2.toFixed(1)},${y2.toFixed(1)} Z" fill="${SEG_COLORS[i]}" stroke="#060a14" stroke-width="2"/>
-    <text x="${mx.toFixed(1)}" y="${my.toFixed(1)}" fill="${i===7?'#0c1a2e':(SEG_COLORS[i]==='#22304e'?'#9fd4ff':'#0c1a2e')}" font-size="11" font-weight="bold" text-anchor="middle" dominant-baseline="middle" transform="rotate(${i*seg+seg/2},${mx.toFixed(1)},${my.toFixed(1)})">${WHEEL_PRIZES[i].label}</text>`;
-  }
-  g.innerHTML = html;
-}
-function doSpin(idx) {
-  const seg = 360 / WHEEL_PRIZES.length;
-  const target = 360 * 6 + (360 - idx * seg - seg / 2);
-  document.getElementById('wheel').style.transform = `rotate(${target}deg)`;
-  document.getElementById('spin-btn').disabled = true;
-  setTimeout(() => {
-    const p = WHEEL_PRIZES[idx];
-    addMined(p.coins);
-    popup(idx === 7 ? `ДЖЕКПОТ! +${fmt(p.coins)} монет!!!` : `Выигрыш: ${fmt(p.coins)} монет!`);
-    state.lastSpin = Date.now();
-    document.getElementById('spin-btn').disabled = false;
-    document.getElementById('spin-ad-btn').style.display = 'block';
-    save(); render();
-  }, 4100);
-}
-function spinWheel() {
-  if (Date.now() - state.lastSpin < 86400000) { popup('Уже крутили! Завтра или за рекламу 🎬'); return; }
-  doSpin(Math.floor(Math.random() * WHEEL_PRIZES.length));
-}
-async function spinForAd() {
-  if (!adController) { popup('Реклама ещё не настроена'); return; }
-  if (adsLeft() <= 0) { popup('Лимит на сегодня исчерпан!'); return; }
-  try {
-    await adController.show();
-    state.adsCount = (state.adsCount || 0) + 1;
-    state.adsDay = todayStamp();
-    doSpin(Math.floor(Math.random() * WHEEL_PRIZES.length));
-    updateAdUi();
-  }
-  catch (e) { popup('Реклама не показалась'); }
-}
-
-// ================= ЕЖЕДНЕВНЫЙ БОНУС =================
-function claimDaily() {
-  const today = todayStamp();
-  if (state.lastDaily === today) { popup('Бонус уже получен! Завтра 🔥'); return; }
-  state.streak = (state.lastDaily === today - 86400000) ? state.streak + 1 : 1;
-  const bonus = DAILY_REWARD * Math.min(state.streak, 7);
-  addMined(bonus); state.lastDaily = today;
-  save(); render(); renderProf();
-  popup(`🔥 Бонус +${bonus} монет (серия ${state.streak})!`);
-}
-function renderProf() {
-  document.getElementById('acc-name').textContent = '👤 ' + ACCOUNT_NAME;
-  document.getElementById('acc-type').textContent = isTgAccount ? 'аккаунт Telegram' : 'локальный аккаунт';
-  document.getElementById('acc-title').textContent = rankTitle(state.totalMined);
-  document.getElementById('st-total-mined').textContent = fmt(state.totalMined);
-  document.getElementById('st-taps').textContent = fmt(state.taps);
-  document.getElementById('st-miners').textContent = Object.values(state.miners).reduce((a,b)=>a+b,0);
-  const today = todayStamp();
-  const can = state.lastDaily !== today;
-  const streak = (state.lastDaily === today - 86400000) ? state.streak : (state.lastDaily === today ? state.streak : 0);
-  document.getElementById('daily-streak').textContent = 'серия: ' + streak + '/7';
-  document.getElementById('daily-bar').style.width = (streak/7*100) + '%';
-  const btn = document.getElementById('daily-btn');
-  btn.disabled = !can;
-  btn.textContent = can ? `Забрать ${DAILY_REWARD * Math.min(streak + 1, 7)} монет` : 'Уже получено ✓';
-}
-
-// ================= АДМИНКА (открытие: 5 тапов по логотипу) =================
-let adminTap = 0;
-function openAdmin() {
-  adminTap++;
-  setTimeout(() => adminTap = 0, 3000);
-  if (adminTap >= 5) { adminTap = 0; document.getElementById('admin-overlay').classList.add('show'); }
-}
-function minersBrief(jsonStr) {
-  try {
-    const m = JSON.parse(jsonStr || '{}');
-    const list = Object.entries(m).filter(([, v]) => v > 0)
-      .map(([k, v]) => (MINERS.find(x => x.id === k) || { name: k }).name + ' ×' + v);
-    return list.length ? list.join(', ') : 'нет майнеров';
-  } catch (e) { return 'нет майнеров'; }
-}
-async function adminSearch() {
-  const codeInput = document.getElementById('adm-code');
-  const code = (codeInput.value || '').trim();
-  if (code) localStorage.setItem('zini_admin_code', code);
-  const saved = code || localStorage.getItem('zini_admin_code') || '';
-  const q = document.getElementById('adm-search').value.trim();
-  const box = document.getElementById('adm-results');
-  box.innerHTML = '<div class="muted">Поиск…</div>';
-  try {
-    const res = await fetch(SYNC_WORKER_URL + '/admin?code=' + encodeURIComponent(saved) + '&q=' + encodeURIComponent(q));
-    const d = await res.json();
-    if (!d.ok) { box.innerHTML = '<div class="muted">Неверный код админа</div>'; return; }
-    let html = '';
-    if (!d.rows.length) html += '<div class="muted">Никого не найдено</div>';
-    html += d.rows.map(r => `
-      <div class="adm-row" style="flex-direction:column;align-items:stretch">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
-          <div style="min-width:0">
-            <div class="n">${escapeHtml(r.name)}${r.blocked ? ' 🚫бан' : ''}${r.hidden ? ' 👻скрыт' : ''}</div>
-            <div class="b">нед: ${fmt(r.mined)} • баланс: ${fmt(r.coins || 0)} • всего: ${fmt(r.total_mined || 0)}</div>
-            <div class="b">тапов: ${fmt(r.taps || 0)} • титул: ${escapeHtml(r.title || '—')}</div>
-            <div class="b">майнеры: ${escapeHtml(minersBrief(r.miners))}</div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">
-            <button class="adm-btn" style="background:#ff9db4;color:#3a0d18" onclick="adminAct('${r.player_id}','reset')">обнул</button>
-            ${r.hidden ? `<button class="adm-btn" style="background:#7fe0a0;color:#0c2a18" onclick="adminAct('${r.player_id}','unhide')">вернуть</button>` : ''}
-            <button class="adm-btn" style="background:${r.blocked ? '#7fe0a0' : '#22304e'};color:#fff" onclick="adminAct('${r.player_id}','${r.blocked ? 'unban' : 'ban'}')">${r.blocked ? 'разбан' : 'бан'}</button>
-          </div>
-        </div>
-      </div>`).join('');
-    if (d.stars && d.stars.length) {
-      html += '<div class="n" style="margin-top:10px">⭐ Заявки на вывод звёзд:</div>';
-      html += d.stars.map(s => `
-        <div class="adm-row">
-          <div><div class="n">${escapeHtml(s.name || 'Игрок')}</div><div class="b">${s.stars} ⭐ • ${new Date(s.created_at).toLocaleString()}</div></div>
-          <button class="adm-btn" style="background:#7fe0a0;color:#0c2a18" onclick="adminAct('${s.id}','paystar')">оплачено</button>
-        </div>`).join('');
-    } else if (d.rows.length) {
-      html += '<div class="muted" style="margin-top:10px">Новых заявок на звёзды нет</div>';
-    }
-    box.innerHTML = html;
-  } catch (e) { box.innerHTML = '<div class="muted">Ошибка связи</div>'; }
-}
-async function adminAct(id, action) {
-  const c = localStorage.getItem('zini_admin_code') || '';
-  try {
-    const res = await fetch(SYNC_WORKER_URL + '/admin', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: c, action, target_id: id })
-    });
-    if (res.ok) {
-      const msgs = { reset: 'Обнулён и скрыт из топа', unhide: 'Снова виден в топе', ban: 'Игрок забанен', unban: 'Игрок разбанен', paystar: 'Заявка отмечена оплаченной' };
-      popup(msgs[action] || 'Готово');
-      adminSearch();
-    } else popup('Ошибка: неверный код');
-  } catch (e) { popup('Ошибка связи'); }
-}
-async function globalReset() {
-  const inp = document.getElementById('adm-code');
-  const code = (inp.value || '').trim() || localStorage.getItem('zini_admin_code') || '';
-  if (!code) { popup('Сначала введи код админа в поле выше!'); return; }
-  localStorage.setItem('zini_admin_code', code);
-  if (!confirm('Точно обнулить ВСЕХ игроков и начать новый сезон?')) return;
-  try {
-    const res = await fetch(SYNC_WORKER_URL + '/admin', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: code, action: 'globalreset' })
-    });
-    if (res.ok) popup('🌍 Новый сезон запущен! Все игроки обнулятся при входе');
-    else popup('Ошибка: неверный код');
-  } catch (e) { popup('Ошибка связи'); }
-}
-
-// ================= НАВИГАЦИЯ =================
-let currentPage = 'farm';
-let tick = 0;
-function go(page) {
-  if (!state) return;
-  currentPage = page;
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active', b.dataset.page === page));
-  if (page === 'shop') { renderMarket(); renderShop(); }
-  if (page === 'upg') renderUpg();
-  if (page === 'prof') { renderProf(); renderStars(); renderRef(); renderPromos(); }
-  if (page === 'rank') { buildLB(); updateLB(); }
-  if (page === 'contest') { fetchWeeklyTop(); updateAdUi(); renderPromos(); }
-  window.scrollTo(0, 0);
-}
-
-// ================= ЛЁГКИЙ РЕНДЕР =================
-const elCoins = document.getElementById('coins');
-const elRate = document.getElementById('rate');
-const elTap = document.getElementById('tap-income');
-const elSec = document.getElementById('sec-income');
-let lastCoinsText = '', lastRateText = '';
-function render() {
-  if (!state) return;
-  const c = fmt(state.coins);
-  if (c !== lastCoinsText) { elCoins.textContent = c; lastCoinsText = c; }
-  const r = fmt(totalRate());
-  if (r !== lastRateText) { elRate.textContent = r; lastRateText = r; }
-  elTap.textContent = '+' + fmt(tapIncome());
-  elSec.textContent = fmt(totalRate()) + '/с';
-  renderStars();
-}
-
-// ================= ЗИМНИЙ ФОН =================
-const FLAKES = ['❄','❅','❆','❄'];
-for (let i = 0; i < 12; i++) {
-  const f = document.createElement('div');
-  f.className = 'snowflake';
-  f.textContent = FLAKES[Math.floor(Math.random() * FLAKES.length)];
-  f.style.left = Math.random() * 100 + 'vw';
-  f.style.fontSize = (10 + Math.random() * 10) + 'px';
-  f.style.opacity = (0.35 + Math.random() * 0.45).toFixed(2);
-  f.style.animationDuration = (8 + Math.random() * 10) + 's';
-  f.style.animationDelay = '-' + Math.random() * 18 + 's';
-  document.body.appendChild(f);
-}
-for (let i = 0; i < 14; i++) {
-  const s = document.createElement('div');
-  s.className = 'star';
-  const sz = 1 + Math.random() * 2;
-  s.style.width = sz + 'px'; s.style.height = sz + 'px';
-  s.style.left = Math.random() * 100 + 'vw';
-  s.style.top = Math.random() * 100 + 'vh';
-  s.style.animationDuration = (3 + Math.random() * 5) + 's';
-  s.style.animationDelay = Math.random() * 5 + 's';
-  document.body.appendChild(s);
-}
-
-// ================= ЗАПУСК ИГРЫ =================
-let intervalsStarted = false;
-
-function startGame(accId, accName) {
-  ACCOUNT_ID = accId;
-  ACCOUNT_NAME = accName;
-  saveKey = 'zini_acc_' + accId;
-  state = loadStateFor(accId);
-
-  document.getElementById('acc-overlay').classList.remove('show');
-
-  collectOffline();
-  currentRigId = null;
-  applyRigLook();
-  render(); renderShop(); renderMarket(); renderUpg(); renderProf();
-  updateAdUi(); renderBoost(); renderStars(); renderPromos();
-  buildLB(); updateLB();
-  fetchLeaderboard(); fetchWeeklyTop(); refStats();
-  sendToWorker();
-  setTimeout(showRefPrompt, 2000);
-
-  if (!intervalsStarted) {
-    intervalsStarted = true;
-    scheduleAsteroid();
-    setInterval(() => {
-      if (!state) return;
-      const inc = totalRate();
-      if (inc > 0) addMined(inc);
-      applyRigLook();
-      render();
-      renderBoost();
-      tick++;
-      if (tick % 5 === 0) {
-        if (currentPage === 'shop') { renderShop(); renderMarket(); }
-        if (currentPage === 'upg') renderUpg();
-      }
-      if (currentPage === 'rank') updateLB();
-      if (currentPage === 'contest') renderPromos();
-    }, 1000);
-    setInterval(save, 10000);
-    setInterval(sendToWorker, 60000);
-    setInterval(fetchLeaderboard, 15000);
-    setInterval(fetchWeeklyTop, 20000);
-    setInterval(refStats, 60000);
-  }
-}
-
-buildWheel();
-initAds();
-
-(function initAccounts() {
-  const accs = listAccounts();
-
-  if (tgUser) {
-    const id = 'tg_' + tgUser.id;
-    const name = (tgUser.first_name || 'Игрок').slice(0, 20);
-    if (!accs[id]) { accs[id] = name; saveAccounts(accs); }
-    startGame(id, accs[id]);
-    return;
-  }
-
-  if (!Object.keys(accs).length) {
-    const id = 'acc_' + Date.now().toString(36);
-    accs[id] = 'Мой аккаунт';
-    saveAccounts(accs);
-  }
-
-  pickAccountScreen();
-})();
-
-window.addEventListener('beforeunload', save);
-document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
-if (window.Telegram && Telegram.WebApp) { Telegram.WebApp.ready(); Telegram.WebApp.expand(); }
-</script>
-</body>
-</html>
+  const day = (d.getDay() + 6) %  hořák
