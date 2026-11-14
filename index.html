@@ -111,6 +111,11 @@
   }
   .topup-input:focus { border-color:var(--acc); }
   .pay-sum { font-size:24px; font-weight:900; color:var(--acc); margin-top:8px; }
+  .gift-hint {
+    margin-top:10px; padding:11px; border-radius:12px;
+    background:rgba(198,255,94,.08); border:1px solid rgba(198,255,94,.25);
+    font-size:13px; color:var(--txt);
+  }
 
   #toast {
     position:fixed; left:50%; bottom:32px; transform:translateX(-50%);
@@ -172,9 +177,10 @@
 <div class="screen" id="screen-miners">
   <div class="card">
     <b>⭐ Пополнить звёзды</b>
-    <p class="muted">Введи количество звёзд (от 15 до 2500) и оплати — звёзды можно купить прямо в окне оплаты картой. Зачисление автоматическое. Депозит за неделю открывает вывод монет.</p>
+    <p class="muted">Введи сумму — бот подберёт подарок Telegram нужной стоимости. Пошли подарок админу — после проверки звёзды зачислят на баланс. Депозит за неделю открывает вывод монет.</p>
     <input class="topup-input" id="topup-input" type="number" inputmode="numeric" min="15" placeholder="Например: 15" value="15">
     <div class="pay-sum" id="topup-sum">15 звёзд</div>
+    <div class="gift-hint" id="gift-hint">—</div>
     <button class="btn" id="btn-topup">⭐ Пополнить</button>
   </div>
 
@@ -214,7 +220,7 @@
   </div>
   <div class="card">
     <b>📌 Как проходит выплата</b>
-    <p class="muted">1. Жмёшь кнопку — данные заявки копируются автоматически.<br>2. Отправляешь скопированное в чат админу — чат откроется сам.<br>3. Администратор отправляет тебе звёзды в Telegram в течение 24 часов.</p>
+    <p class="muted">1. Жмёшь кнопку — заявка уходит админу автоматически.<br>2. Админ проверяет заявку и отправляет тебе звёзды в Telegram.<br>3. Выплата приходит в течение 24 часов.</p>
   </div>
 </div>
 
@@ -260,6 +266,37 @@ var TIERS = {
 };
 var DAILY_BY_TIER = { 0:6000, 1:60000, 2:260000, 3:480000, 4:2200000 };
 var BOOST_AD = { maxPerDay:3, intervalMs:10*60*1000, boostMinutes:60 };
+
+// Официальные обычные подарки Telegram (цены фиксированы Telegram)
+var GIFTS = [
+  { name:'Love Heart',        price:15,  emoji:'❤️' },
+  { name:'Teddy Bear',        price:15,  emoji:'🧸' },
+  { name:'Gift Box',          price:25,  emoji:'🎁' },
+  { name:'Red Rose',          price:25,  emoji:'🌹' },
+  { name:'Birthday Cake',     price:50,  emoji:'🎂' },
+  { name:'Bouquet of Flowers',price:50,  emoji:'💐' },
+  { name:'Rocket',            price:50,  emoji:'🚀' },
+  { name:'Champagne Bottle',  price:50,  emoji:'🍾' },
+  { name:'Trophy',            price:100, emoji:'🏆' },
+  { name:'Diamond Ring',      price:100, emoji:'💍' },
+  { name:'Gem',               price:100, emoji:'💎' }
+];
+
+function chooseGift(amount) {
+  if (amount <= 100) {
+    var best = null;
+    GIFTS.forEach(function(g) {
+      if (!best) { best = g; return; }
+      var dG = Math.abs(g.price - amount), dB = Math.abs(best.price - amount);
+      if (dG < dB || (dG === dB && g.price > best.price)) best = g;
+    });
+    return { gift: best, count: 1, total: best.price };
+  }
+  var g100 = null;
+  GIFTS.forEach(function(g) { if (g.price === 100 && !g100) g100 = g; });
+  var cnt = Math.max(1, Math.round(amount / g100.price));
+  return { gift: g100, count: cnt, total: g100.price * cnt };
+}
 
 var supabase = null;
 try { if (window.supabase) supabase = window.supabase.createClient(SB_URL, SB_KEY); } catch (e) { console.error(e); }
@@ -504,6 +541,18 @@ function renderMiners() {
   if (c) c.textContent = myMiners.length ? myMiners.length + ' активных' : '';
 }
 
+// ============ ПОДСКАЗКА ПОДАРКА ============
+function renderGiftHint() {
+  var hint = document.getElementById('gift-hint');
+  if (!hint) return;
+  var stars = parseInt(document.getElementById('topup-input').value, 10);
+  if (!stars || stars < MIN_TOPUP_STARS) { hint.textContent = '—'; return; }
+  var pick = chooseGift(stars);
+  var line = pick.gift.emoji + ' ' + pick.gift.name + ' (' + pick.gift.price + ' ⭐)';
+  if (pick.count > 1) line += ' × ' + pick.count;
+  hint.innerHTML = 'Ваш подарок: <b style="color:var(--acc)">' + line + '</b>';
+}
+
 // ============ ПОКУПКА МАЙНЕРА ============
 async function buyMinerWithStars(tier) {
   if (isGuest()) { toast('Открой игру из Telegram, чтобы покупать'); return; }
@@ -522,29 +571,7 @@ async function buyMinerWithStars(tier) {
   toast('⛏ ' + t.name + ' куплен и уже майнит!');
 }
 
-// ============ ФОНОВАЯ ПРОВЕРКА ОПЛАТЫ ============
-async function pollPayments() {
-  for (var i = 0; i < 20; i++) {
-    try {
-      var res = await fetch(FN_BASE + '/' + PAYMENT_FN, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SB_KEY },
-        body: JSON.stringify({ action: 'check_payment', player_id: state.user_id })
-      });
-      var d = await res.json();
-      if (d && d.ok && d.credits > 0) {
-        await loadRemote();
-        await loadWeekDeposit();
-        toast('✅ Зачислено ' + d.credits + ' ⭐');
-        return true;
-      }
-    } catch (e) {}
-    await new Promise(function(r){ setTimeout(r, 3000); });
-  }
-  return false;
-}
-
-// ============ ПОПОЛНЕНИЕ (инвойс Telegram Stars) ============
+// ============ ПОПОЛНЕНИЕ (подарок админу, ручное зачисление) ============
 function updateTopup() {
   var input = document.getElementById('topup-input');
   var sum = document.getElementById('topup-sum');
@@ -552,15 +579,18 @@ function updateTopup() {
   if (!stars || stars < MIN_TOPUP_STARS) {
     sum.textContent = 'Минимум ' + MIN_TOPUP_STARS + ' звёзд';
     sum.style.color = '#8b8b9a';
+    renderGiftHint();
     return null;
   }
   if (stars > MAX_TOPUP_STARS) {
     sum.textContent = 'Максимум ' + MAX_TOPUP_STARS + ' за раз';
     sum.style.color = '#8b8b9a';
+    renderGiftHint();
     return null;
   }
   sum.textContent = stars + ' звёзд';
   sum.style.color = 'var(--acc)';
+  renderGiftHint();
   return stars;
 }
 
@@ -568,44 +598,43 @@ async function topupSubmit() {
   if (isGuest()) { toast('Открой игру из Telegram, чтобы пополнять'); return; }
   var stars = updateTopup();
   if (!stars) { toast('Сумма: от ' + MIN_TOPUP_STARS + ' до ' + MAX_TOPUP_STARS + ' звёзд'); return; }
+  var pick = chooseGift(stars);
   var btn = document.getElementById('btn-topup');
   btn.disabled = true;
   try {
     var res = await fetch(FN_BASE + '/' + PAYMENT_FN, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SB_KEY },
-      body: JSON.stringify({ action: 'topup', stars: stars, player_id: state.user_id })
+      body: JSON.stringify({ action: 'manual_topup', stars: pick.total, player_id: state.user_id, name: state.name })
     });
     var data = await res.json();
-    if (!data.url) {
-      console.error('invoice error:', data);
-      toast('Ошибка: ' + (data.error || 'счёт не создан'));
+    if (!data.ok) {
+      console.error('topup error:', data);
+      toast('Ошибка: ' + (data.error || 'заявка не создана'));
       btn.disabled = false;
       return;
     }
-    if (!tg || !tg.openInvoice) { toast('Оплата доступна только внутри Telegram'); btn.disabled = false; return; }
-
-    var before = state.stars_balance || 0;
-    tg.openInvoice(data.url, function(status) {
-      if (status === 'failed') toast('Оплата не прошла');
-      // статусы paid и pending подхватит фоновая проверка
-    });
-
-    // сразу запускаем проверку: как только оплата пройдёт — зачислим
-    pollPayments().then(function(found) {
-      if (!found && (state.stars_balance || 0) > before) {
-        toast('✅ Зачислено ' + stars + ' ⭐');
-        loadWeekDeposit();
-      }
-    });
+    var giftLine = pick.gift.emoji + ' ' + pick.gift.name + ' (' + pick.gift.price + ' ⭐)' + (pick.count > 1 ? ' × ' + pick.count : '');
+    var text =
+      '💎 Заявка на пополнение #' + data.id + '\n' +
+      'Ник: ' + state.name + '\n' +
+      'Сумма: ' + pick.total + ' ⭐\n\n' +
+      'Как пополнить:\n' +
+      '1. Открой профиль @' + ADMIN_CHAT + ' в Telegram.\n' +
+      '2. Нажми «Подарить» → «Подарок».\n' +
+      '3. Выбери подарок ' + giftLine + ' и оплати.\n' +
+      '4. Админ проверит подарок и зачислит звёзды в течение часа.';
+    try { await navigator.clipboard.writeText(text); } catch (e) {}
+    toast('Заявка #' + data.id + ': пошлите ' + giftLine);
+    setTimeout(function(){ openAdminChat(); }, 800);
   } catch (e) {
     console.error(e);
-    toast('Не удалось создать счёт, попробуй позже');
+    toast('Не удалось создать заявку, попробуй позже');
   }
   btn.disabled = false;
 }
 
-// ============ ЗАЯВКА НА ВЫВОД (копирование в буфер) ============
+// ============ ЗАЯВКА НА ВЫВОД ============
 async function sellCoins() {
   if (isGuest()) { toast('Открой игру из Telegram, чтобы продавать'); return; }
   await loadWeekDeposit();
@@ -629,25 +658,28 @@ async function sellCoins() {
   state.coins -= stars * COINS_PER_STAR;
   saveLocal(); renderAll();
 
-  var text =
-    '🔔 Заявка на вывод #' + (ins.data ? ins.data.id : '?') + '\n' +
-    'Ник: ' + state.name + '\n' +
-    'Telegram ID: ' + state.user_id + '\n' +
-    'Сумма: ' + stars + ' ⭐\n' +
-    'Монет списано: ' + fmt(stars * COINS_PER_STAR) + '\n' +
-    'Дата: ' + new Date().toLocaleString('ru-RU');
-
-  try { await navigator.clipboard.writeText(text); }
-  catch (e) {
-    try {
-      var ta = document.createElement('textarea');
-      ta.value = text; document.body.appendChild(ta);
-      ta.select(); document.execCommand('copy'); ta.remove();
-    } catch (e2) { toast(text); }
+  try {
+    await fetch(FN_BASE + '/' + PAYMENT_FN, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SB_KEY },
+      body: JSON.stringify({
+        action: 'withdraw', stars: stars, coins: stars * COINS_PER_STAR,
+        player_id: state.user_id, name: state.name
+      })
+    });
+  } catch (e) {
+    console.error(e);
+    var text =
+      '🔔 Заявка на вывод #' + (ins.data ? ins.data.id : '?') + '\n' +
+      'Ник: ' + state.name + '\n' +
+      'Telegram ID: ' + state.user_id + '\n' +
+      'Сумма: ' + stars + ' ⭐\n' +
+      'Монет списано: ' + fmt(stars * COINS_PER_STAR) + '\n' +
+      'Дата: ' + new Date().toLocaleString('ru-RU');
+    try { await navigator.clipboard.writeText(text); } catch (e2) {}
   }
 
-  toast('Данные скопированы! Отправь их в чат админу');
-  openAdminChat();
+  toast('Заявка отправлена админу! Ждите зачисления звёзд 🎁');
   btn.disabled = false;
 }
 
