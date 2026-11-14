@@ -118,6 +118,13 @@
     color:var(--acc); font-size:15px; font-weight:800;
   }
   .quick-btn:active { transform:scale(.97); }
+  .gift-hint {
+    margin-top:10px; padding:12px; border-radius:12px;
+    background:rgba(198,255,94,.08); border:1px solid rgba(198,255,94,.25);
+    font-size:13px; color:var(--txt); line-height:1.6;
+  }
+  .gift-hint b { color:var(--acc); }
+  .gift-hint .adm { font-size:16px; font-weight:800; letter-spacing:.5px; }
 
   #toast {
     position:fixed; left:50%; bottom:32px; transform:translateX(-50%);
@@ -179,18 +186,19 @@
 <div class="screen" id="screen-miners">
   <div class="card">
     <b>⭐ Пополнить звёзды</b>
-    <p class="muted">Оплата звёздами Telegram в один тап: счёт появится в чате бота — нажми «Pay» и всё. Выбери сумму или введи свою.</p>
+    <p class="muted">Введи сумму — покажем подарок, который нужно отправить админу в Telegram. После проверки админом звёзды придут на баланс. Депозит за неделю открывает вывод монет.</p>
     <input class="topup-input" id="topup-input" type="number" inputmode="numeric" min="15" max="2500" placeholder="Например: 15" value="15">
     <div class="pay-sum" id="topup-sum">15 звёзд</div>
+    <div class="gift-hint" id="gift-hint">—</div>
     <div class="quick-grid">
       <button class="quick-btn" data-n="15">15 ⭐</button>
       <button class="quick-btn" data-n="30">30 ⭐</button>
       <button class="quick-btn" data-n="50">50 ⭐</button>
       <button class="quick-btn" data-n="100">100 ⭐</button>
     </div>
-    <button class="btn" id="btn-topup">⭐ Оплатить в Telegram</button>
+    <button class="btn" id="btn-topup">⭐ Подарить админу</button>
     <button class="btn ghost" id="btn-topup-rub">🇷🇺 Пополнить рублями</button>
-    <p class="muted" style="margin-top:8px">Звёзды: счёт в чате бота, оплата в один тап — без команд. Рублями: бот пришлёт реквизиты админа и инструкцию.</p>
+    <p class="muted" style="margin-top:8px">Рублями курс: 1 ⭐ = 1,30 ₽. Нажми кнопку — откроется чат админа с готовым сообщением: переведи рубли и жди зачисления.</p>
   </div>
 
   <div class="card">
@@ -253,7 +261,8 @@ var FN_BASE = 'https://clxewmkuntmgtbovrgqk.supabase.co/functions/v1';
 var PAYMENT_FN = 'telegram-webhook';
 var ADSGRAM_ID = '59627';
 var BOT_USERNAME = 'zini_drop_bot';
-var RUB_PER_STAR = 10;
+var ADMIN_CHAT = 'zinidropadmin';
+var RUB_PER_STAR = 1.3;
 
 // ============ ЭКОНОМИКА ============
 var TAP_REWARD = 100;
@@ -275,6 +284,37 @@ var TIERS = {
 };
 var DAILY_BY_TIER = { 0:6000, 1:60000, 2:260000, 3:480000, 4:2200000 };
 var BOOST_AD = { maxPerDay:3, intervalMs:10*60*1000, boostMinutes:60 };
+
+// Официальные обычные подарки Telegram (цены фиксированы Telegram)
+var GIFTS = [
+  { name:'Love Heart',        price:15,  emoji:'❤️' },
+  { name:'Teddy Bear',        price:15,  emoji:'🧸' },
+  { name:'Gift Box',          price:25,  emoji:'🎁' },
+  { name:'Red Rose',          price:25,  emoji:'🌹' },
+  { name:'Birthday Cake',     price:50,  emoji:'🎂' },
+  { name:'Bouquet of Flowers',price:50,  emoji:'💐' },
+  { name:'Rocket',            price:50,  emoji:'🚀' },
+  { name:'Champagne Bottle',  price:50,  emoji:'🍾' },
+  { name:'Trophy',            price:100, emoji:'🏆' },
+  { name:'Diamond Ring',      price:100, emoji:'💍' },
+  { name:'Gem',               price:100, emoji:'💎' }
+];
+
+function chooseGift(amount) {
+  if (amount <= 100) {
+    var best = null;
+    GIFTS.forEach(function(g) {
+      if (!best) { best = g; return; }
+      var dG = Math.abs(g.price - amount), dB = Math.abs(best.price - amount);
+      if (dG < dB || (dG === dB && g.price > best.price)) best = g;
+    });
+    return { gift: best, count: 1, total: best.price };
+  }
+  var g100 = null;
+  GIFTS.forEach(function(g) { if (g.price === 100 && !g100) g100 = g; });
+  var cnt = Math.max(1, Math.round(amount / g100.price));
+  return { gift: g100, count: cnt, total: g100.price * cnt };
+}
 
 var supabase = null;
 try { if (window.supabase) supabase = window.supabase.createClient(SB_URL, SB_KEY); } catch (e) { console.error(e); }
@@ -299,8 +339,8 @@ function markDirty() {
 
 function isGuest() { return !state || String(state.user_id).indexOf('guest_') === 0; }
 function fmt(n) { return Math.floor(n).toLocaleString('ru-RU'); }
-function openBot() {
-  var link = 'https://t.me/' + BOT_USERNAME;
+function openAdminChat() {
+  var link = 'https://t.me/' + ADMIN_CHAT;
   if (tg && tg.openTelegramLink) tg.openTelegramLink(link);
   else window.open(link, '_blank');
 }
@@ -537,6 +577,27 @@ function renderMiners() {
   if (c) c.textContent = myMiners.length ? myMiners.length + ' активных' : '';
 }
 
+// ============ ПОДСКАЗКА ПОДАРКА ============
+function renderGiftHint() {
+  var hint = document.getElementById('gift-hint');
+  if (!hint) return;
+  var stars = parseInt(document.getElementById('topup-input').value, 10);
+  if (!stars || stars < MIN_TOPUP_STARS) {
+    hint.textContent = 'Введи сумму от ' + MIN_TOPUP_STARS + ' звёзд';
+    return;
+  }
+  var pick = chooseGift(stars);
+  var line = pick.gift.emoji + ' ' + pick.gift.name + ' (' + pick.gift.price + ' ⭐)';
+  if (pick.count > 1) line += ' × ' + pick.count;
+  var rub = Math.round(stars * RUB_PER_STAR * 100) / 100;
+  hint.innerHTML =
+    'Подарок: <b>' + line + '</b>' +
+    (pick.total !== stars ? '<br><span class="muted">Ближайший доступный: ' + pick.total + ' ⭐ всего</span>' : '') +
+    '<br>Кому: <span class="adm">@' + ADMIN_CHAT + '</span>' +
+    '<br>Или рублями: <b>' + rub + ' ₽</b> за ' + stars + ' ⭐ (1 ⭐ = 1,30 ₽)' +
+    '<br>Твой ID для админа: <b>' + (isGuest() ? '—' : state.user_id) + '</b>';
+}
+
 // ============ ПОКУПКА МАЙНЕРА ============
 async function buyMinerWithStars(tier) {
   if (isGuest()) { toast('Открой игру из Telegram, чтобы покупать'); return; }
@@ -555,7 +616,7 @@ async function buyMinerWithStars(tier) {
   toast('⛏ ' + t.name + ' куплен и уже майнит!');
 }
 
-// ============ ПОПОЛНЕНИЕ ЗВЁЗДАМИ (счёт из игры, без команд) ============
+// ============ ПОПОЛНЕНИЕ (подарок админу) ============
 function updateTopup() {
   var input = document.getElementById('topup-input');
   var sum = document.getElementById('topup-sum');
@@ -563,49 +624,56 @@ function updateTopup() {
   if (!stars || stars < MIN_TOPUP_STARS) {
     sum.textContent = 'Минимум ' + MIN_TOPUP_STARS + ' звёзд';
     sum.style.color = '#8b8b9a';
+    renderGiftHint();
     return null;
   }
   if (stars > MAX_TOPUP_STARS) {
     sum.textContent = 'Максимум ' + MAX_TOPUP_STARS + ' за раз';
     sum.style.color = '#8b8b9a';
+    renderGiftHint();
     return null;
   }
   sum.textContent = stars + ' звёзд';
   sum.style.color = 'var(--acc)';
+  renderGiftHint();
   return stars;
 }
 
-async function topupPay() {
+async function topupSubmit() {
   if (isGuest()) { toast('Открой игру из Telegram, чтобы пополнять'); return; }
   var stars = updateTopup();
   if (!stars) { toast('Сумма: от ' + MIN_TOPUP_STARS + ' до ' + MAX_TOPUP_STARS + ' звёзд'); return; }
-  var btn = document.getElementById('btn-topup');
-  btn.disabled = true;
-  var res = null;
-  try {
-    var r = await fetch(FN_BASE + '/' + PAYMENT_FN, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SB_KEY },
-      body: JSON.stringify({ action: 'topup', player_id: state.user_id, amount: stars })
-    });
-    res = await r.json();
-  } catch (e) { console.error(e); res = null; }
-  btn.disabled = false;
-  if (res && res.ok) {
-    toast('Счёт отправлен в чат бота — открываю…');
-    setTimeout(function(){ openBot(); }, 600);
-  } else {
-    toast('Не удалось создать счёт, попробуй ещё раз');
-  }
+  var pick = chooseGift(stars);
+  var giftLine = pick.gift.emoji + ' ' + pick.gift.name + ' (' + pick.gift.price + ' ⭐)' + (pick.count > 1 ? ' × ' + pick.count : '');
+  var text =
+    '💎 Пополнение ZINI DROP\n' +
+    'Ник: ' + state.name + '\n' +
+    'Мой ID: ' + state.user_id + '\n' +
+    'Подарю: ' + giftLine + ' = ' + pick.total + ' ⭐\n\n' +
+    'Админ, зачисли, пожалуйста: /add ' + state.user_id + ' ' + pick.total;
+  try { await navigator.clipboard.writeText(text); toast('Инструкция скопирована — отправь подарок и это сообщение'); }
+  catch (e) { toast('Скопируй инструкцию и отправь админу'); }
+  openAdminChat();
 }
 
 function topupRubs() {
   if (isGuest()) { toast('Открой игру из Telegram, чтобы пополнять'); return; }
   var stars = updateTopup() || MIN_TOPUP_STARS;
-  var rub = stars * RUB_PER_STAR;
-  var link = 'https://t.me/' + BOT_USERNAME + '?start=rubs_' + rub;
-  if (tg && tg.openTelegramLink) tg.openTelegramLink(link);
-  else window.open(link, '_blank');
+  var rub = Math.round(stars * RUB_PER_STAR * 100) / 100;
+  var text =
+    '🇷🇺 Пополнение ZINI DROP рублями\n' +
+    'Ник: ' + state.name + '\n' +
+    'Мой ID: ' + state.user_id + '\n' +
+    'Куплю: ' + stars + ' ⭐ за ' + rub + ' ₽ (1 ⭐ = 1,30 ₽)\n\n' +
+    'Админ, зачисли после перевода: /add ' + state.user_id + ' ' + stars;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function(){
+      toast('Сообщение скопировано — переведи ' + rub + ' ₽ и отправь админу');
+      openAdminChat();
+    }).catch(function(){ toast('Не удалось скопировать'); openAdminChat(); });
+  } else {
+    openAdminChat();
+  }
 }
 
 // ============ ЗАЯВКА НА ВЫВОД ============
@@ -763,7 +831,7 @@ function bindUI() {
   document.getElementById('tap-zone').addEventListener('click', tap);
   document.getElementById('btn-boost').addEventListener('click', watchBoostAd);
   document.getElementById('btn-sell').addEventListener('click', sellCoins);
-  document.getElementById('btn-topup').addEventListener('click', topupPay);
+  document.getElementById('btn-topup').addEventListener('click', topupSubmit);
   document.getElementById('btn-topup-rub').addEventListener('click', topupRubs);
   document.getElementById('topup-input').addEventListener('input', updateTopup);
   document.querySelectorAll('.quick-btn').forEach(function(b) {
