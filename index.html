@@ -9,53 +9,69 @@
 <style>
 :root{--bg:#0a0a10;--card:#16161f;--card2:#1e1e2a;--acc:#c6ff5e;--acc2:#4ade80;--mut:#8b8b9a;--red:#ff6b6b;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
-body{background:var(--bg);color:#fff;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;padding:12px 12px 78px;}
+body{background:var(--bg);color:#fff;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;padding:12px 12px 118px;}
 header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-#h-name{font-weight:800;font-size:16px;}
-#h-level{font-size:12px;color:var(--acc);}
-#ticker-bar{display:flex;align-items:center;border-radius:10px;background:rgba(198,255,94,.07);border:1px solid rgba(198,255,94,.25);overflow:hidden;height:32px;margin-bottom:12px;}
-.ticker-label{flex:none;background:var(--acc);color:#0a0a10;font-size:10px;font-weight:800;padding:0 8px;border-radius:8px;margin:3px;}
-#ticker-track{white-space:nowrap;font-size:12px;color:var(--acc);padding-right:20px;animation:ticker 25s linear infinite;will-change:transform;}
+#h-name{font-weight:800;font-size:17px;}
+#h-level{font-size:13px;color:var(--acc);}
+
+#ticker-bar{display:flex;align-items:center;border-radius:12px;background:rgba(198,255,94,.07);border:1px solid rgba(198,255,94,.3);overflow:hidden;height:48px;margin-bottom:12px;}
+.ticker-label{flex:none;background:var(--acc);color:#0a0a10;font-size:14px;font-weight:800;padding:0 14px;border-radius:10px;margin:5px;white-space:nowrap;}
+#ticker-track{white-space:nowrap;font-size:16px;font-weight:600;color:var(--acc);padding-right:20px;animation:ticker 30s linear infinite;will-change:transform;}
 @keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
 .screen{display:none;}
 .screen.active{display:block;}
-.tree-stage{text-align:center;background:var(--card);border-radius:16px;padding:22px 12px;margin-bottom:12px;}
-#tree-emoji{font-size:72px;line-height:1;}
-#tree-title{margin-top:8px;font-weight:800;color:var(--acc);}
-#tree-sub{font-size:12px;color:var(--mut);margin-top:4px;}
+
+.tree-stage{text-align:center;background:var(--card);border-radius:16px;padding:24px 12px;margin-bottom:12px;}
+#tree-emoji{font-size:76px;line-height:1;}
+#tree-title{margin-top:8px;font-weight:800;font-size:18px;color:var(--acc);}
+#tree-sub{font-size:13px;color:var(--mut);margin-top:4px;}
+
 .card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;}
-.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:13px;}
-.bar-row span{flex:none;width:100px;}
-.bar-bg{flex:1;height:10px;background:#2a2a38;border-radius:5px;overflow:hidden;}
-.bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--acc2),var(--acc));border-radius:5px;transition:width .4s ease;}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:14px;}
+.bar-row span{flex:none;width:110px;}
+.bar-bg{flex:1;height:12px;background:#2a2a38;border-radius:6px;overflow:hidden;}
+.bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--acc2),var(--acc));border-radius:6px;transition:width .4s ease;}
 .bar-fill.snow{background:linear-gradient(90deg,#8ecfff,#e0f4ff);}
-.btn{display:block;width:100%;padding:13px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#0a0a10;font-weight:800;font-size:15px;cursor:pointer;font-family:inherit;}
+
+.btn{display:block;width:100%;padding:14px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#0a0a10;font-weight:800;font-size:16px;cursor:pointer;font-family:inherit;}
 .btn:disabled{opacity:.45;}
 .btn.ghost{background:transparent;border:1px solid rgba(198,255,94,.4);color:var(--acc);}
 .btn-row{display:flex;gap:8px;}
 .btn-row .btn{flex:1;}
+
 .pinecone-card{display:flex;align-items:center;justify-content:space-between;gap:10px;}
-#pinecone-count{font-size:22px;font-weight:800;color:var(--acc);}
-#btn-collect{width:auto;padding:10px 14px;font-size:13px;}
-#xp-line{text-align:center;font-size:12px;color:var(--mut);margin-top:10px;}
-h3{margin:4px 0 12px;font-size:16px;}
+#pinecone-count{font-size:24px;font-weight:800;color:var(--acc);}
+#btn-collect{width:auto;padding:12px 16px;font-size:14px;}
+
+#xp-line{text-align:center;font-size:13px;color:var(--mut);margin-top:10px;}
+h3{margin:4px 0 12px;font-size:18px;}
 .muted{color:var(--mut);font-size:13px;}
-.top-row{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:12px;padding:10px 12px;margin-bottom:8px;}
+
+.top-row{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:12px;padding:12px;margin-bottom:8px;font-size:14px;}
 .top-row.me{border:1px solid var(--acc);}
-.top-rank{flex:none;width:26px;text-align:center;font-weight:800;}
+.top-rank{flex:none;width:28px;text-align:center;font-weight:800;}
 .top-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.top-val{color:var(--acc);font-weight:700;font-size:13px;flex:none;}
-.inv-item{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:12px;padding:10px 12px;margin-bottom:8px;}
-.inv-emoji{font-size:24px;flex:none;}
+.top-val{color:var(--acc);font-weight:700;font-size:14px;flex:none;}
+
+.inv-item{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:12px;padding:12px;margin-bottom:8px;}
+.inv-emoji{font-size:26px;flex:none;}
 .inv-name{flex:1;}
-.inv-name b{display:block;font-size:14px;}
-.inv-count{color:var(--mut);font-size:12px;}
+.inv-name b{display:block;font-size:15px;}
+.inv-count{color:var(--mut);font-size:13px;}
 .r-common{color:#b8b8c4;} .r-rare{color:#4da3ff;} .r-epic{color:#b678ff;} .r-legendary{color:#ffd75e;} .r-mythic{color:#ff7ad9;}
-.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:#12121c;border-top:1px solid #26263a;padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:50;}
-.tab{flex:1;background:none;border:0;color:var(--mut);font-size:11px;padding:8px 0;border-radius:10px;cursor:pointer;font-family:inherit;}
-.tab.active{background:rgba(198,255,94,.12);color:var(--acc);font-weight:700;}
-#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#22223a;border:1px solid var(--acc);color:#fff;padding:10px 16px;border-radius:12px;font-size:13px;display:none;z-index:99;max-width:90%;text-align:center;}
-#guest-note{background:#3a2a12;border:1px solid #ffb020;color:#ffd75e;border-radius:10px;padding:10px;font-size:12px;margin-bottom:12px;display:none;}
+
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:#1a1a26;border-top:3px solid #3a3a52;padding:10px 4px calc(10px + env(safe-area-inset-bottom));z-index:99;box-shadow:0 -6px 20px rgba(0,0,0,.45);}
+.tab{flex:1;background:none;border:0;color:#8b8b9a;font-size:15px;font-weight:800;padding:14px 0 12px;border-radius:16px;cursor:pointer;font-family:inherit;text-align:center;line-height:1.25;margin:0 3px;transition:all .2s ease;}
+.tab .tab-icon{display:block;font-size:28px;margin-bottom:4px;}
+.tab.active{color:var(--acc);background:rgba(198,255,94,.16);box-shadow:0 0 18px rgba(198,255,94,.35);border:1px solid rgba(198,255,94,.4);}
+
+#toast{position:fixed;left:50%;bottom:130px;transform:translateX(-50%);background:#22223a;border:1px solid var(--acc);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;display:none;z-index:99;max-width:90%;text-align:center;}
+#guest-note{background:#3a2a12;border:1px solid #ffb020;color:#ffd75e;border-radius:10px;padding:10px;font-size:13px;margin-bottom:12px;display:none;}
+
+.gift{position:absolute;font-size:36px;cursor:pointer;z-index:2;will-change:transform;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));}
+#mg-score{position:absolute;top:8px;right:10px;font-size:15px;font-weight:800;color:var(--acc);z-index:3;}
+#mg-miss{position:absolute;top:8px;left:10px;font-size:15px;font-weight:800;color:var(--red);z-index:3;}
 </style>
 </head>
 <body>
@@ -97,13 +113,22 @@ h3{margin:4px 0 12px;font-size:16px;}
   </section>
 
   <section id="screen-mini" class="screen">
-    <h3>🎮 Мини-игры</h3>
-    <div class="card">Пять мини-игр («Поймай подарок», «Снежный тир», «Снежный лабиринт», «Собери оленя», «Бой с Бабой-ягой») появятся в следующем обновлении — следи за каналом! 🎄</div>
-  </section>
-
-  <section id="screen-quest" class="screen">
-    <h3>📋 Задания</h3>
-    <div class="card">Ежедневные задания и особые награды появятся в следующем обновлении!</div>
+    <h3>🎮 Поймай подарок</h3>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div><div class="muted">Попытки</div><div id="mg-attempts" style="font-size:20px;font-weight:800;color:var(--acc);">3</div></div>
+        <button id="mg-start" class="btn" style="width:auto;padding:12px 20px;">▶️ Играть</button>
+      </div>
+      <div class="muted" style="margin-top:10px;">Тапай по падающим подаркам. 3 промаха — конец. Очки = шишки и шанс выбить шар!</div>
+    </div>
+    <div id="mg-area" style="position:relative;height:340px;background:linear-gradient(180deg,#101018,#1a1a2e);border-radius:14px;overflow:hidden;margin-bottom:12px;">
+      <div id="mg-overlay" style="position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,10,16,.82);text-align:center;padding:16px;z-index:5;">
+        <div id="mg-title" style="font-weight:800;font-size:18px;margin-bottom:8px;">🎄 Готов?</div>
+        <div id="mg-sub" class="muted" style="margin-bottom:14px;">Нажми «Играть» и лови подарки</div>
+        <button id="mg-claim" class="btn" style="display:none;max-width:220px;">Забрать награду</button>
+      </div>
+    </div>
+    <button id="mg-ad" class="btn ghost">🎬 Ещё попытка за рекламу</button>
   </section>
 
   <section id="screen-top" class="screen">
@@ -119,21 +144,43 @@ h3{margin:4px 0 12px;font-size:16px;}
 </main>
 
 <nav class="tabs">
-  <button class="tab active" data-screen="tree">🎄 Ёлка</button>
-  <button class="tab" data-screen="inv">🎒</button>
-  <button class="tab" data-screen="mini">🎮</button>
-  <button class="tab" data-screen="top">🏆</button>
-  <button class="tab" data-screen="pass">✨</button>
+  <button class="tab active" data-screen="tree"><span class="tab-icon">🎄</span>Ёлка</button>
+  <button class="tab" data-screen="inv"><span class="tab-icon">🎒</span>Инвентарь</button>
+  <button class="tab" data-screen="mini"><span class="tab-icon">🎮</span>Игры</button>
+  <button class="tab" data-screen="top"><span class="tab-icon">🏆</span>Топ</button>
+  <button class="tab" data-screen="pass"><span class="tab-icon">✨</span>Пропуск</button>
 </nav>
 
 <div id="toast"></div>
 
-<script src="levels.js"></script>
+<script>
+// ===== Ёлка Зини: таблица 100 уровней (встроена в файл, отдельный levels.js больше не нужен) =====
+var XP_TABLE = [];
+(function () {
+  for (var i = 1; i <= 100; i++) {
+    XP_TABLE.push(Math.round(200 * Math.pow(i, 1.5)));
+  }
+})();
+function xpToNext(level) {
+  return XP_TABLE[Math.min(level - 1, 99)] || 400;
+}
+</script>
+
+<script>
+// Ловушка ошибок: если что-то падает — покажем на экране, а не молча
+window.addEventListener('error', function (e) {
+  var t = document.getElementById('toast');
+  if (t) { t.style.display = 'block'; t.textContent = '⚠️ Ошибка: ' + e.message; }
+});
+</script>
+
 <script>
 'use strict';
-// ===== НАСТРОЙКИ: впиши свои ключи из Supabase → Settings → API =====
-var SB_URL = 'https://https://clxewmkuntmgtbovrgqk.supabase.co/rest/v1/.supabase.co';
+// ===================== ВСТАВЬ СВОИ КЛЮЧИ В ДВЕ СТРОКИ НИЖЕ =====================
+// Supabase → Settings → API: URL — это SB_URL, anon public key — это SB_KEY
+var SB_URL = 'https://clxewmkuntmgtbovrgqk.supabase.co/rest/v1/';
 var SB_KEY = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX';
+// ===============================================================================
 
 var tg = window.Telegram.WebApp;
 try { tg.expand(); tg.setHeaderColor('#0a0a10'); tg.setBackgroundColor('#0a0a10'); } catch(e){}
@@ -145,10 +192,10 @@ var playerName = me ? (me.first_name || 'Игрок') : 'Игрок';
 var supabase = null;
 try { supabase = window.supabase.createClient(SB_URL, SB_KEY); } catch(e){ console.warn('Supabase не создан', e); }
 
-// ===== Константы =====
-var WATER_CD = 2 * 3600 * 1000;   // полив раз в 2 часа
-var SHAKE_CD = 4 * 3600 * 1000;   // стряхивание раз в 4 часа
-var PASSIVE_CAP_H = 24;           // пассив копится максимум сутки
+var WATER_CD = 2 * 3600 * 1000;
+var SHAKE_CD = 4 * 3600 * 1000;
+var PASSIVE_CAP_H = 24;
+var ADS_TAG = null; // ID блока AdsGram — впиши, когда подключишь рекламу
 
 var ORNAMENTS = {
   common:    ['Красный шар','Синий шар','Жёлтый шар','Снежинка','Колокольчик','Шишка-игрушка','Мандаринка','Конфета-тросточка'],
@@ -165,7 +212,6 @@ var RARITY_INFO = {
   mythic:    {icon:'🌈', label:'Мифический'}
 };
 
-// ===== Состояние =====
 var state = {
   xp:0, level:1, pinecones:0,
   moisture:0, snow:0,
@@ -173,12 +219,12 @@ var state = {
   weekly_pinecones:0, week_key:'', total_drops:0
 };
 
-// ===== Утилиты =====
 function fmt(n){ return String(Math.floor(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
-function todayKey(){
+function weekKey(){
   var d = new Date();
-  var day = d.getUTCFullYear() + '-' + (d.getUTCMonth()+1) + '-' + d.getUTCDate();
-  return 'w' + Math.floor((d.getTime() - 3*d.getTime()) / (7*86400000)); // номер недели от эпохи
+  var day = d.getUTCDay();
+  var monday = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() - ((day + 6) % 7));
+  return monday.getUTCFullYear() + '-' + (monday.getUTCMonth()+1) + '-' + monday.getUTCDate();
 }
 var toastTimer = 0;
 function toast(msg){
@@ -188,7 +234,6 @@ function toast(msg){
   toastTimer = setTimeout(function(){ t.style.display = 'none'; }, 2600);
 }
 
-// ===== Кеш для слабых устройств =====
 function saveLocal(){ try { localStorage.setItem('zinixmas_' + playerId, JSON.stringify(state)); } catch(e){} }
 function loadLocal(){
   try {
@@ -197,7 +242,6 @@ function loadLocal(){
   } catch(e){}
 }
 
-// ===== Загрузка из базы =====
 async function loadRemote(){
   if (!supabase || isGuest) { renderAll(); return; }
   var res = await supabase.from('players').select('*').eq('player_id', playerId).maybeSingle();
@@ -221,16 +265,12 @@ function applyPlayer(p){
   state.weekly_pinecones = p.weekly_pinecones || 0;
   state.week_key = p.week_key || '';
   state.total_drops = p.total_drops || 0;
-  // Сброс недельного топа
-  var wk = todayKey();
-  if (state.week_key !== wk) {
-    state.weekly_pinecones = 0; state.week_key = wk; markDirty();
-  }
+  var wk = weekKey();
+  if (state.week_key !== wk) { state.weekly_pinecones = 0; state.week_key = wk; markDirty(); }
   saveLocal();
 }
 
-// ===== Экономика =====
-function passiveRate(){ return 500 + state.level * 50; } // шишек в час
+function passiveRate(){ return 500 + state.level * 50; }
 function pendingPassive(){
   var t = state.last_collect || Date.now();
   var hours = Math.min(PASSIVE_CAP_H, (Date.now() - t) / 3600000);
@@ -242,7 +282,6 @@ function shakeReward(){ return 1000 + state.level * 100; }
 function canWater(){ return Date.now() - state.last_watered >= WATER_CD; }
 function canShake(){ return Date.now() - state.last_shake >= SHAKE_CD; }
 
-// ===== Уровни =====
 function gainXp(n){
   state.xp += n;
   var ups = 0;
@@ -259,7 +298,6 @@ function gainXp(n){
   if (ups > 0 && state.level < 100) toast('🎉 Ёлка выросла до уровня ' + state.level + '!');
 }
 
-// ===== Дроп шаров =====
 function rollRarity(){
   var r = Math.random() * 100;
   if (r < 0.2) return 'mythic';
@@ -286,24 +324,27 @@ function dropOrnament(forcedRarity, source, forced){
   toast(info.icon + ' Выбит ' + info.label + ': «' + itemName + '»!');
 }
 
-// ===== Действия игрока =====
 function doWater(){
   if (!canWater()) { toast('Ёлку можно полить через ' + timeLeft(state.last_watered, WATER_CD)); return; }
   state.last_watered = Date.now();
-  state.pinecones += waterReward();
-  state.weekly_pinecones += waterReward();
+  var rew = waterReward();
+  state.pinecones += rew;
+  state.weekly_pinecones += rew;
   gainXp(60);
   if (Math.random() < 0.2) dropOrnament(null, 'water');
   markDirty(); renderAll();
+  toast('💧 Полил ёлку! +' + fmt(rew) + ' 🌰');
 }
 function doShake(){
   if (!canShake()) { toast('Снег ещё не напрёсся — вернись через ' + timeLeft(state.last_shake, SHAKE_CD)); return; }
   state.last_shake = Date.now();
-  state.pinecones += shakeReward();
-  state.weekly_pinecones += shakeReward();
+  var rew = shakeReward();
+  state.pinecones += rew;
+  state.weekly_pinecones += rew;
   gainXp(40);
   if (Math.random() < 0.15) dropOrnament(null, 'shake');
   markDirty(); renderAll();
+  toast('❄️ Снег стряхнут! +' + fmt(rew) + ' 🌰');
 }
 function doCollect(){
   var p = pendingPassive();
@@ -322,7 +363,6 @@ function timeLeft(fromTs, cd){
   return Math.floor(m / 60) + ' ч ' + (m % 60) + ' мин';
 }
 
-// ===== Рендер =====
 function stageFor(level){
   if (level >= 100) return {e:'🌟🎄', t:'ЛЕГЕНДА ИГРЫ'};
   if (level >= 86)  return {e:'🎄🌟', t:'Сияющая'};
@@ -341,14 +381,12 @@ function renderAll(){
   document.getElementById('pinecone-count').textContent = fmt(state.pinecones);
   document.getElementById('btn-collect').textContent = 'Забрать ' + fmt(pendingPassive()) + ' 🌰';
 
-  // Полив/стряхивание: текст и доступность
   var bw = document.getElementById('btn-water'), bs = document.getElementById('btn-shake');
   if (canWater()) { bw.disabled = false; bw.textContent = '💧 Полить'; }
   else { bw.disabled = true; bw.textContent = '💧 ' + timeLeft(state.last_watered, WATER_CD); }
   if (canShake()) { bs.disabled = false; bs.textContent = '❄️ Стряхнуть'; }
   else { bs.disabled = true; bs.textContent = '❄️ ' + timeLeft(state.last_shake, SHAKE_CD); }
 
-  // Полоски (декоративные: влажность падает 5%/час, снег растёт 8%/час)
   var mh = (Date.now() - (state.last_watered || Date.now())) / 3600000;
   var moist = Math.max(0, 100 - Math.floor(mh * 5));
   var sh = (Date.now() - (state.last_shake || 0)) / 3600000;
@@ -356,7 +394,6 @@ function renderAll(){
   document.getElementById('bar-moist').style.width = moist + '%';
   document.getElementById('bar-snow').style.width = snow + '%';
 
-  // Опыт
   var need = xpToNext(state.level);
   if (state.level >= 100) {
     document.getElementById('xp-line').textContent = '👑 Максимальный уровень — ЛЕГЕНДА ИГРЫ!';
@@ -365,7 +402,6 @@ function renderAll(){
   }
 }
 
-// ===== Бегущая строка (реальные данные из drop_log) =====
 async function loadTicker(){
   if (!supabase || isGuest) return;
   var res = await supabase.from('drop_log').select('player_name,item_name,rarity').order('created_at', {ascending:false}).limit(8);
@@ -376,11 +412,10 @@ async function loadTicker(){
     return '👤 ' + (w.player_name || 'Игрок') + ' выбил ' + info.icon + ' ' + w.item_name;
   });
   var line = items.join('   •   ') + '   •   ';
-  track.textContent = line + line; // дубль для бесшовной прокрутки
-  track.style.animation = 'none'; void track.offsetWidth; track.style.animation = ''; // перезапуск анимации
+  track.textContent = line + line;
+  track.style.animation = 'none'; void track.offsetWidth; track.style.animation = '';
 }
 
-// ===== Топ недели =====
 async function loadTop(){
   if (!supabase || isGuest) { document.getElementById('top-list').textContent = 'Топ доступен только в Telegram.'; return; }
   var res = await supabase.from('players').select('player_id,name,weekly_pinecones').order('weekly_pinecones', {ascending:false}).limit(10);
@@ -399,7 +434,6 @@ async function loadTop(){
   el.innerHTML = html;
 }
 
-// ===== Инвентарь =====
 async function loadInventory(){
   if (!supabase || isGuest) return;
   var res = await supabase.from('inventory').select('item_name,rarity').eq('player_id', playerId).limit(200);
@@ -424,7 +458,6 @@ async function loadInventory(){
   el.innerHTML = html;
 }
 
-// ===== Сохранение (пачками, для слабых устройств) =====
 var dirty = false;
 function markDirty(){ dirty = true; }
 async function saveRemote(){
@@ -442,10 +475,8 @@ async function saveRemote(){
 setInterval(function(){ if (dirty) { dirty = false; saveRemote(); } }, 8000);
 document.addEventListener('visibilitychange', function(){ if (document.hidden && dirty) { dirty = false; saveRemote(); } });
 
-// ===== Обновление кнопок каждые 30 сек (лёгкий таймер) =====
 setInterval(renderAll, 30000);
 
-// ===== Вкладки =====
 document.querySelectorAll('.tab').forEach(function(b){
   b.addEventListener('click', function(){
     document.querySelectorAll('.tab').forEach(function(x){ x.classList.remove('active'); });
@@ -458,10 +489,129 @@ document.querySelectorAll('.tab').forEach(function(b){
   });
 });
 
-// ===== Кнопки =====
 document.getElementById('btn-water').addEventListener('click', doWater);
 document.getElementById('btn-shake').addEventListener('click', doShake);
 document.getElementById('btn-collect').addEventListener('click', doCollect);
+
+// ============================================================
+// МИНИ-ИГРА: ПОЙМАЙ ПОДАРОК
+// ============================================================
+var MG_KEY = 'zini_mini_' + playerId;
+var GIFT_EMOJI = ['🎁','🎀','🍬','🍭','🧸','⭐'];
+var mg = { active:false, score:0, misses:0, spawnT:0, timeout:0, pendReward:0, pendDrop:false };
+
+function mgAttempts(){
+  try {
+    var raw = JSON.parse(localStorage.getItem(MG_KEY) || '{}');
+    if (raw.day !== new Date().toDateString()) return 3;
+    return Math.max(0, 3 - (raw.used || 0));
+  } catch(e){ return 3; }
+}
+function mgUseAttempt(){
+  var raw = {};
+  try { raw = JSON.parse(localStorage.getItem(MG_KEY) || '{}'); } catch(e){}
+  if (raw.day !== new Date().toDateString()) raw = { day: new Date().toDateString(), used: 0 };
+  raw.used = (raw.used || 0) + 1;
+  try { localStorage.setItem(MG_KEY, JSON.stringify(raw)); } catch(e){}
+  renderMg();
+}
+function renderMg(){
+  document.getElementById('mg-attempts').textContent = mgAttempts();
+}
+function mgOverlay(title, sub, showClaim){
+  document.getElementById('mg-title').textContent = title;
+  document.getElementById('mg-sub').textContent = sub;
+  document.getElementById('mg-claim').style.display = showClaim ? 'block' : 'none';
+}
+
+function mgStart(){
+  if (mg.active) return;
+  if (mgAttempts() <= 0) { toast('Попытки на сегодня кончились. Вернись завтра или посмотри рекламу! 🎬'); return; }
+  mgUseAttempt();
+  mg.active = true; mg.score = 0; mg.misses = 0;
+  document.getElementById('mg-overlay').style.display = 'none';
+  mgUpdateHud();
+  mgSpawn();
+}
+function mgUpdateHud(){
+  document.getElementById('mg-score').textContent = '🎯 ' + mg.score;
+  document.getElementById('mg-miss').textContent = '💔 ' + mg.misses + '/3';
+}
+function mgSpawn(){
+  if (!mg.active) return;
+  var g = document.createElement('div');
+  g.className = 'gift';
+  g.textContent = GIFT_EMOJI[Math.floor(Math.random() * GIFT_EMOJI.length)];
+  g.style.left = (5 + Math.random() * 80) + '%';
+  g.style.top = '-40px';
+  var dur = Math.max(1800, 3200 - mg.score * 40);
+  g.style.transition = 'transform ' + dur + 'ms linear';
+  document.getElementById('mg-area').appendChild(g);
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ g.style.transform = 'translateY(' + (document.getElementById('mg-area').offsetHeight + 50) + 'px)'; }); });
+  g.addEventListener('pointerdown', function(e){
+    e.stopPropagation();
+    if (!mg.active || g.dataset.done) return;
+    g.dataset.done = '1';
+    mg.score++;
+    mgUpdateHud();
+    try { tg.HapticFeedback && tg.HapticFeedback.impactOccurred('light'); } catch(err){}
+    g.remove();
+  });
+  mg.timeout = setTimeout(function(){
+    if (!g.parentNode || g.dataset.done) return;
+    g.remove();
+    mg.misses++;
+    mgUpdateHud();
+    if (mg.misses >= 3) { mgEnd(); return; }
+    mgSpawn();
+  }, dur + 60);
+  mg.spawnT = setTimeout(mgSpawn, 750 + Math.random() * 500);
+}
+function mgEnd(){
+  mg.active = false;
+  clearTimeout(mg.spawnT); clearTimeout(mg.timeout);
+  document.querySelectorAll('#mg-area .gift').forEach(function(g){ g.remove(); });
+  var rew = 300 * mg.score + state.level * 100;
+  var dropChance = Math.min(0.5, 0.15 + mg.score * 0.02);
+  mgOverlay('Игра окончена!', 'Очки: ' + mg.score + ' • Награда: ' + fmt(rew) + ' 🌰', true);
+  mg.pendReward = rew;
+  mg.pendDrop = Math.random() < dropChance;
+}
+function mgClaim(){
+  var rew = mg.pendReward || 0;
+  state.pinecones += rew;
+  state.weekly_pinecones += rew;
+  markDirty(); renderAll(); saveLocal();
+  if (mg.pendDrop) dropOrnament(null, 'mini_game');
+  else if (rew > 0) toast('🌰 +' + fmt(rew) + ' шишек!');
+  mg.pendReward = 0; mg.pendDrop = false;
+  mgOverlay('🎄 Готов?', 'Нажми «Играть» и лови подарки', false);
+  renderMg();
+}
+function mgAd(){
+  if (mgAttempts() >= 3) { toast('У тебя ещё есть попытки — играй!'); return; }
+  if (ADS_TAG && window.AdsGram) {
+    try {
+      var ad = window.AdsGram.init({ blockId: ADS_TAG });
+      ad.show().then(function(){
+        var raw = {};
+        try { raw = JSON.parse(localStorage.getItem(MG_KEY) || '{}'); } catch(e){}
+        if (raw.day !== new Date().toDateString()) raw = { day: new Date().toDateString(), used: 0 };
+        raw.used = Math.max(0, (raw.used || 0) - 1);
+        localStorage.setItem(MG_KEY, JSON.stringify(raw));
+        renderMg(); toast('🎬 +1 попытка!');
+      }).catch(function(){ toast('Реклама недоступна, попробуй позже'); });
+    } catch(e){ toast('Реклама скоро подключится 🎬'); }
+  } else {
+    toast('Реклама скоро подключится 🎬');
+  }
+}
+
+document.getElementById('mg-start').addEventListener('click', mgStart);
+document.getElementById('mg-claim').addEventListener('click', mgClaim);
+document.getElementById('mg-ad').addEventListener('click', mgAd);
+mgOverlay('🎄 Готов?', 'Нажми «Играть» и лови подарки', false);
+renderMg();
 
 // ===== Старт =====
 if (isGuest) document.getElementById('guest-note').style.display = 'block';
