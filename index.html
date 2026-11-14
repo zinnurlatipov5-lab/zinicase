@@ -8,72 +8,150 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 <style>
+  :root {
+    --bg:#0a0a10; --card:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
+    --acc:#c6ff5e; --acc2:#4ade80; --txt:#f2f2f5; --mut:#8b8b9a;
+  }
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html, body {
     height:100%; overflow-x:hidden; width:100%; max-width:100%;
-    background:#0d0d12; color:#f1f1f1;
-    font-family:-apple-system,'Segoe UI',Roboto,sans-serif;
+    background:radial-gradient(1200px 600px at 50% -10%, #1a2312, var(--bg));
+    color:var(--txt); font-family:-apple-system,'Segoe UI',Roboto,sans-serif;
   }
-  body { overscroll-behavior-x:none; touch-action:pan-y; padding:16px; max-width:480px; margin:0 auto; padding-bottom:40px; }
+  body { overscroll-behavior-x:none; touch-action:pan-y; padding:16px; max-width:480px; margin:0 auto; padding-bottom:48px; }
   button, .card, .tap-zone { -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
-  h1 { font-size:22px; text-align:center; margin:12px 0 4px; color:#bfff58; }
-  .muted { color:#8a8a99; font-size:13px; }
-  .row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
-  .card {
-    background:#17171f; border:1px solid #2a2a36; border-radius:14px;
-    padding:14px; margin-top:12px;
+
+  header { display:flex; align-items:center; gap:10px; padding:14px 4px 4px; }
+  .logo {
+    width:38px; height:38px; border-radius:12px; flex:none;
+    background:linear-gradient(135deg,#c6ff5e,#4ade80);
+    display:flex; align-items:center; justify-content:center; font-size:20px;
+    box-shadow:0 4px 18px rgba(198,255,94,.35);
   }
-  .card p { margin-top:4px; }
-  .btn {
-    display:block; width:100%; padding:12px; margin-top:10px;
-    background:#bfff58; color:#0d0d12; border:none; border-radius:10px;
-    font-size:15px; font-weight:700; cursor:pointer;
+  .logo-title { font-size:18px; font-weight:800; letter-spacing:.5px; }
+  .logo-sub { font-size:11px; color:var(--mut); }
+  .lvl-badge {
+    margin-left:auto; background:var(--card); border:1px solid var(--line);
+    padding:6px 10px; border-radius:20px; font-size:12px; color:var(--acc);
   }
-  .btn:disabled { opacity:.5; }
-  #balance { text-align:center; font-size:30px; font-weight:800; margin-top:8px; }
+
+  .balance-wrap { text-align:center; margin-top:14px; }
+  #balance {
+    font-size:40px; font-weight:900; letter-spacing:-1px;
+    background:linear-gradient(90deg,#eaffc0,#c6ff5e 40%,#4ade80);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .per-day { color:var(--mut); font-size:13px; margin-top:2px; }
+  .per-day b { color:var(--acc); }
+
+  .progress-wrap { margin:14px auto 0; max-width:340px; }
+  .progress-label { display:flex; justify-content:space-between; font-size:11px; color:var(--mut); margin-bottom:5px; }
+  .progress { height:8px; border-radius:8px; background:rgba(255,255,255,.07); overflow:hidden; }
+  .progress-fill { height:100%; border-radius:8px; width:0%; background:linear-gradient(90deg,#c6ff5e,#4ade80); transition:width .5s ease; }
+
   .tap-zone {
-    width:200px; height:200px; margin:20px auto; border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #e2ff9e, #bfff58 45%, #6fae1e);
+    width:210px; height:210px; margin:26px auto; border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #eaffc0, #c6ff5e 45%, #5da422);
     display:flex; align-items:center; justify-content:center;
-    font-size:44px; cursor:pointer; box-shadow:0 0 40px rgba(191,255,88,.25);
-    transition:transform .08s;
+    font-size:46px; cursor:pointer; position:relative;
+    box-shadow:0 0 50px rgba(198,255,94,.28), inset 0 -8px 18px rgba(0,0,0,.25);
+    transition:transform .08s; animation:pulse 2.6s ease-in-out infinite;
   }
-  .tap-zone:active { transform:scale(.94); }
+  @keyframes pulse { 0%,100% { box-shadow:0 0 34px rgba(198,255,94,.2), inset 0 -8px 18px rgba(0,0,0,.25); } 50% { box-shadow:0 0 60px rgba(198,255,94,.4), inset 0 -8px 18px rgba(0,0,0,.25); } }
+  .tap-zone:active { transform:scale(.93); }
+  .ring { position:absolute; inset:-8px; border-radius:50%; border:2px solid rgba(198,255,94,.25); }
   .fly {
-    position:fixed; font-size:18px; font-weight:800; color:#bfff58;
-    pointer-events:none; animation:fly .8s ease-out forwards; z-index:99;
+    position:fixed; font-size:19px; font-weight:900; color:#c6ff5e;
+    text-shadow:0 2px 8px rgba(0,0,0,.5); pointer-events:none;
+    animation:fly .9s ease-out forwards; z-index:99;
   }
-  @keyframes fly { to { transform:translateY(-80px); opacity:0; } }
-  .tabs { display:flex; gap:6px; margin-top:14px; }
-  .tab {
-    flex:1; text-align:center; padding:10px 0; border-radius:10px;
-    background:#17171f; border:1px solid #2a2a36; cursor:pointer; font-size:14px;
+  @keyframes fly { to { transform:translateY(-90px) scale(1.2); opacity:0; } }
+
+  .tabs {
+    display:flex; gap:4px; margin-top:16px; padding:5px;
+    background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:14px;
   }
-  .tab.active { background:#bfff58; color:#0d0d12; font-weight:700; }
+  .tab { flex:1; text-align:center; padding:10px 0; border-radius:10px; cursor:pointer; font-size:12px; color:var(--mut); transition:.2s; }
+  .tab.active { background:linear-gradient(135deg,#c6ff5e,#4ade80); color:#0a0a10; font-weight:800; }
+
   .screen { display:none; } .screen.active { display:block; }
-  .top-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #2a2a36; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:15px; margin-top:12px; backdrop-filter:blur(8px); }
+  .card p { margin-top:4px; font-size:13px; }
+  .row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
+  .muted { color:var(--mut); font-size:13px; }
+
+  .btn {
+    display:block; width:100%; padding:13px; margin-top:11px;
+    background:linear-gradient(135deg,#c6ff5e,#4ade80); color:#0a0a10; border:none;
+    border-radius:12px; font-size:15px; font-weight:800; cursor:pointer; transition:.15s;
+  }
+  .btn:active { transform:scale(.98); }
+  .btn:disabled { opacity:.4; }
+  .btn.ghost { background:rgba(255,255,255,.06); color:var(--txt); border:1px solid var(--line); font-weight:600; }
+
+  .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px; }
+  .stat { background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:12px; padding:11px; }
+  .stat .v { font-size:17px; font-weight:800; color:var(--acc); }
+  .stat .k { font-size:11px; color:var(--mut); margin-top:2px; }
+
+  .miner-card { background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:14px; padding:13px; margin-top:10px; }
+  .miner-head { display:flex; align-items:center; gap:10px; }
+  .miner-emoji { width:40px; height:40px; border-radius:11px; flex:none; font-size:22px; background:rgba(255,255,255,.06); display:flex; align-items:center; justify-content:center; }
+
+  .top-row { display:flex; justify-content:space-between; padding:10px 2px; border-bottom:1px solid var(--line); font-size:14px; }
+  .top-row:last-child { border-bottom:none; }
+
+  .card-box {
+    background:linear-gradient(135deg,rgba(198,255,94,.12),rgba(74,222,128,.06));
+    border:1px solid rgba(198,255,94,.3); border-radius:14px; padding:16px; margin-top:10px; text-align:center;
+  }
+  .card-num { font-size:20px; font-weight:900; letter-spacing:2px; color:var(--acc); }
+
+  .topup-input {
+    width:100%; padding:13px; margin-top:10px; border-radius:12px;
+    background:rgba(255,255,255,.06); border:1px solid var(--line);
+    color:var(--txt); font-size:18px; font-weight:800; text-align:center; outline:none;
+  }
+  .topup-input:focus { border-color:var(--acc); }
+  .pay-sum { font-size:26px; font-weight:900; color:var(--acc); margin-top:8px; }
+
   #toast {
-    position:fixed; left:50%; bottom:30px; transform:translateX(-50%);
-    background:#26262f; color:#fff; padding:10px 16px; border-radius:10px;
+    position:fixed; left:50%; bottom:32px; transform:translateX(-50%);
+    background:rgba(30,30,38,.95); color:#fff; padding:11px 18px; border-radius:12px;
     font-size:14px; opacity:0; transition:opacity .3s; pointer-events:none; z-index:999;
-    max-width:90%; text-align:center;
+    max-width:90%; text-align:center; border:1px solid var(--line); backdrop-filter:blur(8px);
   }
   #toast.show { opacity:1; }
 </style>
 </head>
 <body>
 
-<h1>⛏ ZINI DROP</h1>
+<header>
+  <div class="logo">⛏</div>
+  <div>
+    <div class="logo-title">ZINI DROP</div>
+    <div class="logo-sub">майнинг · реклама · вывод</div>
+  </div>
+  <div class="lvl-badge" id="user-badge">👤</div>
+</header>
 
-<div id="balance">0 монет</div>
-<div class="muted" style="text-align:center" id="per-day">пассив: 0/сутки</div>
+<div class="balance-wrap">
+  <div id="balance">0</div>
+  <div class="per-day" id="per-day">пассив: <b>0</b>/сутки</div>
+</div>
 
-<div class="tap-zone" id="tap-zone">⛏</div>
+<div class="progress-wrap">
+  <div class="progress-label"><span id="prog-left">До вывода: 500 000 монет</span><span id="prog-pct">0%</span></div>
+  <div class="progress"><div class="progress-fill" id="prog-fill"></div></div>
+</div>
+
+<div class="tap-zone" id="tap-zone"><div class="ring"></div>⛏</div>
 
 <div class="tabs">
-  <div class="tab active" data-screen="main">Шахта</div>
-  <div class="tab" data-screen="miners">Майнеры</div>
-  <div class="tab" data-screen="top">Топ</div>
+  <div class="tab active" data-screen="main">⚡ Шахта</div>
+  <div class="tab" data-screen="miners">⛏ Майнеры</div>
+  <div class="tab" data-screen="sell">💰 Продать</div>
+  <div class="tab" data-screen="top">🏆 Топ</div>
 </div>
 
 <div class="screen active" id="screen-main">
@@ -83,16 +161,51 @@
     <button class="btn" id="btn-boost">🎬 Ускорить доход за рекламу</button>
   </div>
   <div class="card">
-    <div class="row"><b>📊 Статистика</b></div>
-    <p class="muted" id="stats-line" style="margin-top:6px">—</p>
+    <b>📊 Статистика</b>
+    <div class="stats-grid">
+      <div class="stat"><div class="v" id="stat-taps">0</div><div class="k">Тапов</div></div>
+      <div class="stat"><div class="v" id="stat-mined">0</div><div class="k">Всего намайнено</div></div>
+      <div class="stat"><div class="v" id="stat-miners">0</div><div class="k">Майнеров</div></div>
+      <div class="stat"><div class="v" id="stat-rub">0 ₽</div><div class="k">Можно вывести</div></div>
+    </div>
   </div>
 </div>
 
 <div class="screen" id="screen-miners">
   <div class="card">
+    <b>💳 Пополнить баланс</b>
+    <p class="muted">Введи количество звёзд для пополнения (минимум 15) — покажу сумму в рублях и реквизиты. Переводишь на карту, отправляешь чек боту — звёзды зачислят, и сможешь купить майнер.</p>
+    <input class="topup-input" id="topup-input" type="number" inputmode="numeric" min="15" placeholder="Например: 15" value="15">
+    <div class="pay-sum" id="topup-sum">19,50 ₽</div>
+    <button class="btn" id="btn-topup">💳 Оплатить</button>
+  </div>
+  <div class="card">
     <div class="row"><b>⛏ Майнеры</b><span class="muted" id="miners-count"></span></div>
-    <p class="muted">Купи майнера за звёзды — он майнит монеты каждый день. Курс: 10 000 монет = 1 ⭐</p>
-    <div id="miners-list" style="display:flex; flex-direction:column; gap:8px; margin-top:8px;"></div>
+    <p class="muted">Майнер добывает монеты каждый день. Курс: 10 000 монет = 1,30 ₽</p>
+    <div id="miners-list"></div>
+  </div>
+  <div class="card">
+    <b>🏦 Реквизиты для перевода</b>
+    <div class="card-box">
+      <div class="muted" id="card-bank">Т-Банк</div>
+      <div class="card-num" id="card-num">5536 9140 7429 024</div>
+    </div>
+    <button class="btn ghost" id="btn-copy-card">📋 Скопировать номер карты</button>
+    <button class="btn ghost" id="btn-open-bot">✅ Отправить чек боту</button>
+    <p class="muted" style="margin-top:8px">После перевода нажми «Отправить чек боту» — пришли сумму и скрин перевода. Баланс зачислят в течение нескольких минут.</p>
+  </div>
+</div>
+
+<div class="screen" id="screen-sell">
+  <div class="card">
+    <b>💰 Продажа монет</b>
+    <p class="muted">Меняй монеты на рубли по курсу <b style="color:var(--acc)">10 000 монет = 1,30 ₽</b>. Минимальный вывод — <b style="color:var(--acc)">50 звёзд = 500 000 монет = 65 ₽</b>.</p>
+    <p class="muted" id="sell-info" style="margin-top:8px">—</p>
+    <button class="btn" id="btn-sell" disabled>Заявка на вывод — недостаточно монет</button>
+  </div>
+  <div class="card">
+    <b>📌 Как проходит выплата</b>
+    <p class="muted">1. Оставляешь заявку кнопкой выше — её текст копируется автоматически.<br>2. Отправляешь его боту и указываешь номер карты для получения.<br>3. Администратор подтверждает выплату и переводит рубли на твою карту.</p>
   </div>
 </div>
 
@@ -112,21 +225,21 @@
 // ============ НАСТРОЙКИ ============
 var SB_URL = 'https://clxewmkuntmgtbovrgqk.supabase.co';
 var SB_KEY = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX';
-var FN_BASE = 'https://clxewmkuntmgtbovrgqk.supabase.co/functions/v1';
-var PAYMENT_FN = 'quick-function'; // реальный URL твоей функции оплаты
-var ADSGRAM_ID = '59627'; // твой Block ID (сверь точный формат в кабинете AdsGram → Show Code)
+var ADSGRAM_ID = '59627';
+var BOT_USERNAME = 'ТВОЙ_БОТ_БЕЗ_СОБАКИ'; // ← username бота
 
-var supabase = null;
-try {
-  if (window.supabase) {
-    supabase = window.supabase.createClient(SB_URL, SB_KEY);
-  }
-} catch (e) { console.error('supabase init:', e); }
-
-var tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
-try { if (tg) { tg.ready(); if (tg.disableVerticalSwipes) tg.disableVerticalSwipes(); tg.expand(); } } catch (e) {}
+// === РЕКВИЗИТЫ ===
+var CARD_NUMBER = '5536 9140 7429 024';
+var CARD_BANK = 'Т-Банк';
+var STAR_RUB = 1.30;                    // 1 звезда = 1,30 ₽
 
 // ============ ЭКОНОМИКА ============
+var TAP_REWARD = 100;
+var COINS_PER_STAR = 10000;             // 10 000 монет = 1 звезда
+var MIN_WITHDRAW_STARS = 50;            // минимум для вывода
+var MIN_WITHDRAW_COINS = MIN_WITHDRAW_STARS * COINS_PER_STAR;
+var MIN_TOPUP_STARS = 15;               // минимум пополнения
+
 var TIERS = {
   0: { name:'Test',     stars:1,   perDay:6000,    emoji:'🧪' },
   1: { name:'Bronze',   stars:10,  perDay:60000,   emoji:'🥉' },
@@ -135,13 +248,30 @@ var TIERS = {
   4: { name:'Platinum', stars:500, perDay:2200000, emoji:'💎' }
 };
 var DAILY_BY_TIER = { 0:6000, 1:60000, 2:260000, 3:480000, 4:2200000 };
-var TAP_REWARD = 500;
 var BOOST_AD = { maxPerDay:3, intervalMs:10*60*1000, boostMinutes:60 };
+
+var supabase = null;
+try { if (window.supabase) supabase = window.supabase.createClient(SB_URL, SB_KEY); } catch (e) { console.error(e); }
+
+var tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+try { if (tg) { tg.ready(); if (tg.disableVerticalSwipes) tg.disableVerticalSwipes(); tg.expand(); } } catch (e) {}
 
 var state = null;
 var myMiners = [];
 
 function isGuest() { return !state || String(state.user_id).indexOf('guest_') === 0; }
+function fmt(n) { return Math.floor(n).toLocaleString('ru-RU'); }
+function rub(n) {
+  var v = Math.round(n * 100) / 100;
+  return v % 1 === 0 ? v.toLocaleString('ru-RU') + ' ₽' : v.toFixed(2).replace('.', ',') + ' ₽';
+}
+function coinsToRub(coins) { return coins / COINS_PER_STAR * STAR_RUB; }
+function starsToRub(stars) { return stars * STAR_RUB; }
+function openBot() {
+  var link = 'https://t.me/' + BOT_USERNAME;
+  if (tg && tg.openTelegramLink) tg.openTelegramLink(link);
+  else window.open(link, '_blank');
+}
 
 function initUser() {
   var saved = null;
@@ -154,18 +284,18 @@ function initUser() {
       name = tg.initDataUnsafe.user.first_name || 'Игрок';
     }
   } catch (e) {}
-  state = saved || { user_id: uid, name: name, coins: 0, total_mined: 0, taps: 0, boostUntil: 0, boostAds: null };
+  state = saved || { user_id: uid, name: name, coins: 0, total_mined: 0, taps: 0, boostUntil: 0, boostAds: null, starsBalance: 0 };
   if (uid.indexOf('guest_') !== 0 && state.user_id !== uid) { state.user_id = uid; state.name = name; save(); }
+  var badge = document.getElementById('user-badge');
+  if (badge) badge.textContent = isGuest() ? '👤 Гость' : '👤 ' + state.name;
 }
 
 function save() { try { localStorage.setItem('zini_state', JSON.stringify(state)); } catch (e) {} }
 
 function toast(text) {
   var t = document.getElementById('toast');
-  t.textContent = text;
-  t.classList.add('show');
-  clearTimeout(t._h);
-  t._h = setTimeout(function(){ t.classList.remove('show'); }, 3000);
+  t.textContent = text; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 
 // ============ ТАПЫ ============
@@ -173,13 +303,13 @@ function tap(e) {
   state.coins += TAP_REWARD;
   state.taps++;
   state.total_mined += TAP_REWARD;
-  save(); renderBalance();
+  save(); renderAll();
   var fly = document.createElement('div');
   fly.className = 'fly'; fly.textContent = '+' + TAP_REWARD;
   fly.style.left = ((e.clientX || 150) - 10) + 'px';
   fly.style.top = ((e.clientY || 300) - 30) + 'px';
   document.body.appendChild(fly);
-  setTimeout(function(){ fly.remove(); }, 800);
+  setTimeout(function(){ fly.remove(); }, 900);
 }
 
 // ============ ДОХОД ============
@@ -190,21 +320,41 @@ setInterval(function() {
   if (!state) return;
   var perTick = (minersPerDay() / 86400) * 10 * activeBoost();
   if (perTick > 0) {
-    state.coins += perTick;
-    state.total_mined += perTick;
-    save(); renderBalance();
+    state.coins += perTick; state.total_mined += perTick;
+    save(); renderAll();
   }
   renderBoost();
 }, 10000);
 
 // ============ РЕНДЕР ============
-function renderBalance() {
+function renderAll() {
   if (!state) return;
-  document.getElementById('balance').textContent = Math.floor(state.coins).toLocaleString('ru-RU') + ' монет';
-  document.getElementById('per-day').textContent =
-    'пассив: ' + (minersPerDay() * (activeBoost() ? 2 : 1)).toLocaleString('ru-RU') + '/сутки' + (activeBoost() ? ' · ⚡×2' : '');
-  var st = document.getElementById('stats-line');
-  if (st) st.textContent = 'Тапов: ' + state.taps.toLocaleString('ru-RU') + ' · Всего намайнено: ' + Math.floor(state.total_mined).toLocaleString('ru-RU');
+  document.getElementById('balance').textContent = fmt(state.coins);
+  document.getElementById('per-day').innerHTML =
+    'пассив: <b>' + fmt(minersPerDay() * (activeBoost() ? 2 : 1)) + '</b>/сутки' + (activeBoost() ? ' · ⚡×2' : '');
+  document.getElementById('stat-taps').textContent = fmt(state.taps);
+  document.getElementById('stat-mined').textContent = fmt(state.total_mined);
+  document.getElementById('stat-miners').textContent = String(myMiners.length);
+  document.getElementById('stat-rub').textContent = rub(coinsToRub(Math.floor(state.coins)));
+
+  var pct = Math.min(100, Math.round(state.coins / MIN_WITHDRAW_COINS * 100));
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-left').textContent =
+    state.coins >= MIN_WITHDRAW_COINS ? 'Вывод доступен!' : 'До вывода: ' + fmt(MIN_WITHDRAW_COINS - state.coins) + ' монет';
+
+  var btn = document.getElementById('btn-sell');
+  var info = document.getElementById('sell-info');
+  if (state.coins >= MIN_WITHDRAW_COINS) {
+    var stars = Math.floor(state.coins / COINS_PER_STAR);
+    btn.disabled = false;
+    btn.textContent = 'Продать ' + fmt(stars * COINS_PER_STAR) + ' монет за ' + rub(starsToRub(stars));
+    info.textContent = 'Готово к продаже: ' + fmt(stars * COINS_PER_STAR) + ' монет = ' + rub(starsToRub(stars));
+  } else {
+    btn.disabled = true;
+    btn.textContent = 'Заявка на вывод — недостаточно монет';
+    info.textContent = 'Накоплено: ' + fmt(state.coins) + ' из ' + fmt(MIN_WITHDRAW_COINS) + ' монет';
+  }
 }
 
 function renderMiners() {
@@ -214,20 +364,59 @@ function renderMiners() {
   Object.keys(TIERS).forEach(function(tier) {
     var t = TIERS[tier];
     var cnt = myMiners.filter(function(m){ return m.tier == tier; }).length;
+    var price = rub(starsToRub(t.stars));
     var card = document.createElement('div');
-    card.className = 'card';
+    card.className = 'miner-card';
     card.innerHTML =
-      '<b>' + t.emoji + ' ' + t.name + (cnt ? ' ×' + cnt : '') + '</b>' +
-      '<p class="muted">' + t.perDay.toLocaleString('ru-RU') + ' монет в сутки · окупаемость ~' + Math.ceil(t.stars * 10000 / t.perDay) + ' дн.</p>' +
-      '<button class="btn" data-tier="' + tier + '">Купить за ' + t.stars + ' ⭐</button>';
-    card.querySelector('button').addEventListener('click', function(ev){ buyMiner(tier, ev); });
+      '<div class="miner-head"><div class="miner-emoji">' + t.emoji + '</div><div style="flex:1">' +
+      '<b>' + t.name + (cnt ? ' ×' + cnt : '') + '</b>' +
+      '<div class="muted">' + fmt(t.perDay) + ' монет/сутки · окупаемость ~' + Math.ceil(t.stars * COINS_PER_STAR / t.perDay) + ' дн.</div></div>' +
+      '<div style="font-size:15px;font-weight:800;color:var(--acc)">' + price + '</div></div>' +
+      '<button class="btn ghost">💳 Оплатить ' + price + '</button>';
+    card.querySelector('button').addEventListener('click', function(){ payWithCard(tier); });
     list.appendChild(card);
   });
   var c = document.getElementById('miners-count');
   if (c) c.textContent = myMiners.length ? myMiners.length + ' активных' : '';
 }
 
-// ============ МАЙНЕРЫ ============
+// ============ ОПЛАТА С КАРТЫ ============
+function updateTopup() {
+  var input = document.getElementById('topup-input');
+  var sum = document.getElementById('topup-sum');
+  var stars = parseInt(input.value, 10);
+  if (!stars || stars < MIN_TOPUP_STARS) {
+    sum.textContent = 'Минимум ' + MIN_TOPUP_STARS + ' звёзд';
+    sum.style.color = '#8b8b9a';
+    return null;
+  }
+  sum.textContent = stars + ' звёзд = ' + rub(starsToRub(stars));
+  sum.style.color = 'var(--acc)';
+  return stars;
+}
+
+function payWithCard(tier) {
+  var t = TIERS[tier];
+  var text = '💳 Покупка майнера\nМайнер: ' + t.emoji + ' ' + t.name + '\n' +
+    'Сумма: ' + rub(starsToRub(t.stars)) + '\nИгрок: ' + (state ? state.name : 'Игрок') + ' (ID ' + (state ? state.user_id : '-') + ')\n' +
+    'Перевёл на карту ' + CARD_NUMBER + '. Чек прилагаю.';
+  try { navigator.clipboard.writeText(text); } catch (e) {}
+  toast('Шаблон скопирован — вставь его боту');
+  openBot();
+}
+
+function topupSubmit() {
+  var stars = updateTopup();
+  if (!stars) { toast('Минимум ' + MIN_TOPUP_STARS + ' звёзд'); return; }
+  var text = '💳 Пополнение баланса\nЗвёзд: ' + stars + '\nСумма: ' + rub(starsToRub(stars)) + '\n' +
+    'Игрок: ' + (state ? state.name : 'Игрок') + ' (ID ' + (state ? state.user_id : '-') + ')\n' +
+    'Перевёл на карту ' + CARD_NUMBER + '. Чек прилагаю.';
+  try { navigator.clipboard.writeText(text); } catch (e) {}
+  toast('Шаблон скопирован — вставь его боту');
+  openBot();
+}
+
+// ============ МАЙНЕРЫ ИГРОКА ============
 async function loadMyMiners() {
   if (!supabase || isGuest()) return [];
   var res = await supabase.from('miners').select('tier, created_at').eq('player_id', state.user_id);
@@ -236,37 +425,21 @@ async function loadMyMiners() {
   return myMiners;
 }
 
-async function buyMiner(tier, ev) {
-  if (isGuest()) { toast('Открой игру из Telegram, чтобы покупать'); return; }
-  var btn = ev.currentTarget;
-  btn.disabled = true;
-  try {
-    var res = await fetch(FN_BASE + '/' + PAYMENT_FN, {
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json',
-        'Authorization':'Bearer ' + SB_KEY
-      },
-      body: JSON.stringify({ player_id: state.user_id, tier: tier })
-    });
-    var data = await res.json();
-    if (!data.url) throw new Error(data.error || 'no url');
-    if (tg && tg.openInvoice) tg.openInvoice(data.url);
-    else toast('Оплата доступна только внутри Telegram');
-    var before = (await loadMyMiners()).length;
-    for (var i = 0; i < 20; i++) {
-      await new Promise(function(r){ setTimeout(r, 3000); });
-      var now = (await loadMyMiners()).length;
-      if (now > before) { toast('⛏ Майнер куплен и уже майнит!'); renderMiners(); break; }
-    }
-  } catch (e) { console.error(e); toast('Не удалось создать счёт, попробуйте позже'); }
-  btn.disabled = false;
+// ============ ЗАЯВКА НА ВЫВОД ============
+async function sellCoins() {
+  if (isGuest()) { toast('Открой игру из Telegram, чтобы продавать'); return; }
+  var coins = Math.floor(state.coins);
+  if (coins < MIN_WITHDRAW_COINS) { toast('Минимум ' + fmt(MIN_WITHDRAW_COINS) + ' монет'); return; }
+  var stars = Math.floor(coins / COINS_PER_STAR);
+  var text = '💸 Заявка на вывод\nИгрок: ' + state.name + ' (ID ' + state.user_id + ')\n' +
+    'Монеты: ' + fmt(stars * COINS_PER_STAR) + '\nК выплате: ' + rub(starsToRub(stars)) + '\nКарта для выплаты: [укажи номер карты]';
+  try { await navigator.clipboard.writeText(text); } catch (e) {}
+  toast('Заявка скопирована — отправь её боту');
+  openBot();
 }
 
-// ============ РЕКЛАМА ×2 (AdsGram) ============
+// ============ РЕКЛАМА ×2 ============
 var Adg = null;
-var adReady = false;
-
 function initAds() {
   if (!ADSGRAM_ID) return;
   var tries = 0;
@@ -274,15 +447,8 @@ function initAds() {
     tries++;
     if (window.Adsgram) {
       clearInterval(timer);
-      try {
-        Adg = window.Adsgram.init({ blockId: ADSGRAM_ID });
-        adReady = true;
-        console.log('AdsGram готов');
-      } catch (e) { console.error('ads init:', e); }
-    } else if (tries > 20) {
-      clearInterval(timer);
-      console.error('AdsGram SDK не загрузился');
-    }
+      try { Adg = window.Adsgram.init({ blockId: ADSGRAM_ID }); } catch (e) { console.error('ads init:', e); }
+    } else if (tries > 20) { clearInterval(timer); console.error('AdsGram SDK не загрузился'); }
   }, 500);
 }
 
@@ -310,12 +476,9 @@ async function watchBoostAd() {
     state.boostAds.count++;
     state.boostAds.last = Date.now();
     state.boostUntil = Date.now() + BOOST_AD.boostMinutes * 60000;
-    save(); renderBalance(); renderBoost();
+    save(); renderAll();
     toast('⚡ Доход ×2 на 1 час!');
-  } catch (e) {
-    console.error('ad show:', e);
-    toast('Реклама не показана, попробуйте позже');
-  }
+  } catch (e) { toast('Реклама не показана, попробуйте позже'); }
   btn.disabled = false;
 }
 
@@ -339,19 +502,16 @@ async function loadTop() {
   var list = document.getElementById('top-list');
   list.innerHTML = '<p class="muted">Загрузка…</p>';
   if (!supabase) { list.innerHTML = '<p class="muted">База не подключена</p>'; return; }
-  var res = await supabase
-    .from('weekly_top')
-    .select('name, mined')
-    .eq('week_key', weekKey())
-    .order('mined', { ascending:false })
-    .limit(10);
+  var res = await supabase.from('weekly_top').select('name, mined')
+    .eq('week_key', weekKey()).order('mined', { ascending:false }).limit(10);
   list.innerHTML = '';
-  if (res.error) { console.error('top:', res.error); list.innerHTML = '<p class="muted">Ошибка загрузки топа</p>'; return; }
+  if (res.error) { list.innerHTML = '<p class="muted">Ошибка загрузки топа</p>'; return; }
   if (!res.data || !res.data.length) { list.innerHTML = '<p class="muted">Пока нет игроков в топе недели</p>'; return; }
+  var medals = ['🥇','🥈','🥉'];
   res.data.forEach(function(r, i) {
     var row = document.createElement('div');
     row.className = 'top-row';
-    row.innerHTML = '<b>' + (i+1) + '. ' + (r.name || 'Игрок') + '</b><span class="muted">' + Math.floor(r.mined||0).toLocaleString('ru-RU') + '</span>';
+    row.innerHTML = '<b>' + (medals[i] || (i+1) + '.') + ' ' + (r.name || 'Игрок') + '</b><span class="muted">' + fmt(r.mined||0) + '</span>';
     list.appendChild(row);
   });
 }
@@ -359,20 +519,30 @@ async function loadTop() {
 async function pushMyScore() {
   if (!supabase || isGuest()) return;
   await supabase.from('weekly_top').upsert({
-    player_id: state.user_id,
-    week_key: weekKey(),
-    name: state.name,
-    mined: Math.floor(state.total_mined),
-    coins: Math.floor(state.coins),
-    taps: state.taps,
+    player_id: state.user_id, week_key: weekKey(), name: state.name,
+    mined: Math.floor(state.total_mined), coins: Math.floor(state.coins), taps: state.taps,
     updated_at: new Date().toISOString()
   }, { onConflict: 'player_id,week_key' });
 }
 
-// ============ ТАБЫ И КНОПКИ ============
+// ============ UI ============
 function bindUI() {
   document.getElementById('tap-zone').addEventListener('click', tap);
   document.getElementById('btn-boost').addEventListener('click', watchBoostAd);
+  document.getElementById('btn-sell').addEventListener('click', sellCoins);
+  document.getElementById('btn-topup').addEventListener('click', topupSubmit);
+  document.getElementById('topup-input').addEventListener('input', updateTopup);
+
+  document.getElementById('btn-copy-card').addEventListener('click', function() {
+    try { navigator.clipboard.writeText(CARD_NUMBER.replace(/\s/g, '')); toast('Номер карты скопирован'); }
+    catch (e) { toast('Номер: ' + CARD_NUMBER); }
+  });
+  document.getElementById('btn-open-bot').addEventListener('click', function() {
+    var text = '✅ Чек перевода\nИгрок: ' + (state ? state.name : 'Игрок') + ' (ID ' + (state ? state.user_id : '-') + ')\nКарта: ' + CARD_NUMBER;
+    try { navigator.clipboard.writeText(text); } catch (e) {}
+    toast('Шаблон скопирован — прикрепи скрин перевода');
+    openBot();
+  });
 
   document.querySelectorAll('.tab').forEach(function(t) {
     t.addEventListener('click', function() {
@@ -390,12 +560,14 @@ function bindUI() {
 initUser();
 bindUI();
 initAds();
-renderBalance();
+renderMiners();
+updateTopup();
+renderAll();
 renderBoost();
 
 (async function start() {
   try { await loadMyMiners(); } catch (e) { console.error(e); }
-  renderMiners();
+  renderMiners(); renderAll();
   try { await pushMyScore(); } catch (e) {}
   setInterval(pushMyScore, 5 * 60 * 1000);
 })();
