@@ -13,22 +13,22 @@
     background:#0d0d12; color:#f1f1f1;
     font-family:-apple-system,'Segoe UI',Roboto,sans-serif;
   }
-  body { overscroll-behavior-x:none; touch-action:pan-y; padding:16px; max-width:480px; margin:0 auto; }
+  body { overscroll-behavior-x:none; touch-action:pan-y; padding:16px; max-width:480px; margin:0 auto; padding-bottom:40px; }
   button, .card, .tap-zone { -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
   h1 { font-size:22px; text-align:center; margin:12px 0 4px; color:#bfff58; }
   .muted { color:#8a8a99; font-size:13px; }
-  .row { display:flex; justify-content:space-between; align-items:center; }
+  .row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
   .card {
     background:#17171f; border:1px solid #2a2a36; border-radius:14px;
     padding:14px; margin-top:12px;
   }
+  .card p { margin-top:4px; }
   .btn {
     display:block; width:100%; padding:12px; margin-top:10px;
     background:#bfff58; color:#0d0d12; border:none; border-radius:10px;
     font-size:15px; font-weight:700; cursor:pointer;
   }
   .btn:disabled { opacity:.5; }
-  .btn-ghost { background:transparent; color:#bfff58; border:1px solid #bfff58; }
   #balance { text-align:center; font-size:30px; font-weight:800; margin-top:8px; }
   .tap-zone {
     width:200px; height:200px; margin:20px auto; border-radius:50%;
@@ -51,6 +51,13 @@
   .tab.active { background:#bfff58; color:#0d0d12; font-weight:700; }
   .screen { display:none; } .screen.active { display:block; }
   .top-row { display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #2a2a36; }
+  #toast {
+    position:fixed; left:50%; bottom:30px; transform:translateX(-50%);
+    background:#26262f; color:#fff; padding:10px 16px; border-radius:10px;
+    font-size:14px; opacity:0; transition:opacity .3s; pointer-events:none; z-index:999;
+    max-width:90%; text-align:center;
+  }
+  #toast.show { opacity:1; }
 </style>
 </head>
 <body>
@@ -58,7 +65,7 @@
 <h1>⛏ ZINI DROP</h1>
 
 <div id="balance">0 монет</div>
-<div class="muted" style="text-align:center" id="per-day">пассив: 0/сек</div>
+<div class="muted" style="text-align:center" id="per-day">пассив: 0/сутки</div>
 
 <div class="tap-zone" id="tap-zone">⛏</div>
 
@@ -70,9 +77,9 @@
 
 <div class="screen active" id="screen-main">
   <div class="card">
-    <div class="row"><b>⚡ Ускорение майнеров</b><span class="muted" id="boost-status"></span></div>
+    <div class="row"><b>⚡ Ускорение</b><span class="muted" id="boost-status"></span></div>
     <p class="muted">Смотри рекламу — доход ×2 на 1 час. Максимум 3 просмотра в день, перерыв 10 минут.</p>
-    <button class="btn" onclick="watchBoostAd(event)">🎬 Ускорить доход за рекламу</button>
+    <button class="btn" id="btn-boost">🎬 Ускорить доход за рекламу</button>
   </div>
   <div class="card">
     <div class="row"><b>📊 Статистика</b></div>
@@ -91,68 +98,97 @@
 <div class="screen" id="screen-top">
   <div class="card">
     <div class="row"><b>🏆 Топ недели</b></div>
-    <div id="top-list" style="margin-top:8px;"></div>
+    <div id="top-list" style="margin-top:8px;"><p class="muted">Загрузка…</p></div>
   </div>
 </div>
 
+<div id="toast"></div>
+
 <script>
+(function() {
+'use strict';
+
 // ============ НАСТРОЙКИ (замени anon key!) ============
-const SB_URL = 'https://clxewmkuntmgtbovrgqk.supabase.co';
-const SB_KEY = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX'; // ← Settings → API → anon public key
-const FN_BASE = 'https://clxewmkuntmgtbovrgqk.supabase.co/functions/v1';
+var SB_URL = 'https://clxewmkuntmgtbovrgqk.supabase.co';
+var SB_KEY = 'ТВОЙ_ANON_KEY'; // ← Settings → API → anon public key
+var FN_BASE = 'https://clxewmkuntmgtbovrgqk.supabase.co/functions/v1';
+var ADSGRAM_ID = ''; // ← ID рекламного блока с adsgram.com (оставь пустым, чтобы не было ошибок)
 
-const supabase = window.supabase.createClient(SB_URL, SB_KEY);
-const tg = window.Telegram?.WebApp;
-if (tg) { tg.ready(); tg.disableVerticalSwipes?.(); tg.expand(); }
+var supabase = null;
+try {
+  if (SB_KEY && SB_KEY !== 'ТВОЙ_ANON_KEY' && window.supabase) {
+    supabase = window.supabase.createClient(SB_URL, SB_KEY);
+  } else if (SB_KEY === 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX') {
+    console.warn('Не вставлен anon key — топ и майнеры работать не будут, тапы работают.');
+  }
+} catch (e) { console.error('supabase init:', e); }
 
-// ============ СОСТОЯНИЕ ============
-const TIERS = {
-  0: { name:'Test',     stars:1,   perDay:6000,    emoji:'🧪' }, // тестовый, потом удалить
+var tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+try { if (tg) { tg.ready(); if (tg.disableVerticalSwipes) tg.disableVerticalSwipes(); tg.expand(); } } catch (e) {}
+
+// ============ ЭКОНОМИКА ============
+var TIERS = {
+  0: { name:'Test',     stars:1,   perDay:6000,    emoji:'🧪' },
   1: { name:'Bronze',   stars:10,  perDay:60000,   emoji:'🥉' },
   2: { name:'Silver',   stars:50,  perDay:260000,  emoji:'🥈' },
   3: { name:'Gold',     stars:100, perDay:480000,  emoji:'🥇' },
-  4: { name:'Platinum', stars:500, perDay:2200000, emoji:'💎' },
+  4: { name:'Platinum', stars:500, perDay:2200000, emoji:'💎' }
 };
-const DAILY_BY_TIER = { 0:6000, 1:60000, 2:260000, 3:480000, 4:2200000 };
-const TAP_REWARD = 500;
+var DAILY_BY_TIER = { 0:6000, 1:60000, 2:260000, 3:480000, 4:2200000 };
+var TAP_REWARD = 500;
+var BOOST_AD = { maxPerDay:3, intervalMs:10*60*1000, boostMinutes:60 };
 
-let state = null;
-let myMiners = [];
+var state = null;
+var myMiners = [];
+
+function isGuest() { return !state || String(state.user_id).indexOf('guest_') === 0; }
 
 function initUser() {
-  let saved = null;
-  try { saved = JSON.parse(localStorage.getItem('zini_state')); } catch(e){}
-  const uid = tg?.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : 'guest_' + Math.random().toString(36).slice(2);
-  const name = tg?.initDataUnsafe?.user?.first_name || 'Игрок';
-  state = saved || { user_id: uid, name, coins: 0, total_mined: 0, taps: 0, boostUntil: 0, boostAds: null };
-  if (state.user_id !== uid && !uid.startsWith('guest_')) { state.user_id = uid; state.name = name; save(); }
+  var saved = null;
+  try { saved = JSON.parse(localStorage.getItem('zini_state')); } catch (e) {}
+  var uid = 'guest_' + Math.random().toString(36).slice(2);
+  var name = 'Игрок';
+  try {
+    if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
+      uid = String(tg.initDataUnsafe.user.id);
+      name = tg.initDataUnsafe.user.first_name || 'Игрок';
+    }
+  } catch (e) {}
+  state = saved || { user_id: uid, name: name, coins: 0, total_mined: 0, taps: 0, boostUntil: 0, boostAds: null };
+  if (!uid.startsWith('guest_') && state.user_id !== uid) { state.user_id = uid; state.name = name; save(); }
 }
 
-function save() { localStorage.setItem('zini_state', JSON.stringify(state)); }
+function save() { try { localStorage.setItem('zini_state', JSON.stringify(state)); } catch (e) {} }
+
+function toast(text) {
+  var t = document.getElementById('toast');
+  t.textContent = text;
+  t.classList.add('show');
+  clearTimeout(t._h);
+  t._h = setTimeout(function(){ t.classList.remove('show'); }, 3000);
+}
 
 // ============ ТАПЫ ============
 function tap(e) {
-  const boost = activeBoost();
   state.coins += TAP_REWARD;
   state.taps++;
   state.total_mined += TAP_REWARD;
   save(); renderBalance();
-  const fly = document.createElement('div');
+  var fly = document.createElement('div');
   fly.className = 'fly'; fly.textContent = '+' + TAP_REWARD;
-  fly.style.left = (e.clientX - 10) + 'px';
-  fly.style.top = (e.clientY - 30) + 'px';
+  fly.style.left = ((e.clientX || 150) - 10) + 'px';
+  fly.style.top = ((e.clientY || 300) - 30) + 'px';
   document.body.appendChild(fly);
-  setTimeout(() => fly.remove(), 800);
+  setTimeout(function(){ fly.remove(); }, 800);
 }
 
-// ============ ДОХОД МАЙНЕРОВ ============
-function activeBoost() { return state.boostUntil && Date.now() < state.boostUntil ? 2 : 1; }
-function minersPerDay() { return myMiners.reduce((s, m) => s + (DAILY_BY_TIER[m.tier] || 0), 0); }
+// ============ ДОХОД ============
+function activeBoost() { return state && state.boostUntil && Date.now() < state.boostUntil ? 2 : 1; }
+function minersPerDay() { return myMiners.reduce(function(s, m){ return s + (DAILY_BY_TIER[m.tier] || 0); }, 0); }
 
-// тик каждые 10 секунд
-setInterval(() => {
+setInterval(function() {
   if (!state) return;
-  const perTick = (minersPerDay() / 86400) * 10 * activeBoost();
+  var perTick = (minersPerDay() / 86400) * 10 * activeBoost();
   if (perTick > 0) {
     state.coins += perTick;
     state.total_mined += perTick;
@@ -163,125 +199,143 @@ setInterval(() => {
 
 // ============ РЕНДЕР ============
 function renderBalance() {
+  if (!state) return;
   document.getElementById('balance').textContent = Math.floor(state.coins).toLocaleString('ru-RU') + ' монет';
-  const pd = minersPerDay();
-  document.getElementById('per-day').textContent = 'пассив: ' + pd.toLocaleString('ru-RU') + '/сутки' + (activeBoost() ? ' · ⚡×2' : '');
-  const st = document.getElementById('stats-line');
+  document.getElementById('per-day').textContent =
+    'пассив: ' + (minersPerDay() * (activeBoost() ? 2 : 1)).toLocaleString('ru-RU') + '/сутки' + (activeBoost() ? ' · ⚡×2' : '');
+  var st = document.getElementById('stats-line');
   if (st) st.textContent = 'Тапов: ' + state.taps.toLocaleString('ru-RU') + ' · Всего намайнено: ' + Math.floor(state.total_mined).toLocaleString('ru-RU');
 }
 
 function renderMiners() {
-  const list = document.getElementById('miners-list');
+  var list = document.getElementById('miners-list');
   if (!list) return;
   list.innerHTML = '';
-  Object.entries(TIERS).forEach(([tier, t]) => {
-    const cnt = myMiners.filter(m => m.tier == tier).length;
-    const card = document.createElement('div');
+  Object.keys(TIERS).forEach(function(tier) {
+    var t = TIERS[tier];
+    var cnt = myMiners.filter(function(m){ return m.tier == tier; }).length;
+    var card = document.createElement('div');
     card.className = 'card';
     card.innerHTML =
       '<b>' + t.emoji + ' ' + t.name + (cnt ? ' ×' + cnt : '') + '</b>' +
       '<p class="muted">' + t.perDay.toLocaleString('ru-RU') + ' монет в сутки · окупаемость ~' + Math.ceil(t.stars * 10000 / t.perDay) + ' дн.</p>' +
-      '<button class="btn" onclick="buyMiner(' + tier + ', event)">Купить за ' + t.stars + ' ⭐</button>';
+      '<button class="btn" data-tier="' + tier + '">Купить за ' + t.stars + ' ⭐</button>';
+    card.querySelector('button').addEventListener('click', function(ev){ buyMiner(tier, ev); });
     list.appendChild(card);
   });
-  const c = document.getElementById('miners-count');
+  var c = document.getElementById('miners-count');
   if (c) c.textContent = myMiners.length ? myMiners.length + ' активных' : '';
 }
 
-// ============ МАЙНЕРЫ: ЗАГРУЗКА И ПОКУПКА ============
+// ============ МАЙНЕРЫ ============
 async function loadMyMiners() {
-  if (state.user_id.startsWith('guest_')) return [];
-  const res = await supabase.from('miners').select('tier, created_at').eq('player_id', state.user_id);
+  if (!supabase || isGuest()) return [];
+  var res = await supabase.from('miners').select('tier, created_at').eq('player_id', state.user_id);
   if (res.error) { console.error('miners:', res.error); return []; }
-  myMiners = res.data;
+  myMiners = res.data || [];
   return myMiners;
 }
 
 async function buyMiner(tier, ev) {
-  if (state.user_id.startsWith('guest_')) { popup('Открой игру из Telegram, чтобы покупать'); return; }
-  const btn = ev.currentTarget;
+  if (isGuest()) { toast('Открой игру из Telegram, чтобы покупать'); return; }
+  var btn = ev.currentTarget;
   btn.disabled = true;
   try {
-    const res = await fetch(FN_BASE + '/create-payment', {
+    var res = await fetch(FN_BASE + '/create-payment', {
       method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ player_id: state.user_id, tier })
+      body: JSON.stringify({ player_id: state.user_id, tier: tier })
     });
-    const data = await res.json();
+    var data = await res.json();
     if (!data.url) throw new Error(data.error || 'no url');
-    tg.openInvoice(data.url);
-    const before = (await loadMyMiners()).length;
-    for (let i = 0; i < 20; i++) {
-      await new Promise(r => setTimeout(r, 3000));
-      const now = (await loadMyMiners()).length;
-      if (now > before) { popup('⛏ Майнер куплен и уже майнит!'); renderMiners(); break; }
+    if (tg && tg.openInvoice) tg.openInvoice(data.url);
+    else toast('Оплата доступна только внутри Telegram');
+    var before = (await loadMyMiners()).length;
+    for (var i = 0; i < 20; i++) {
+      await new Promise(function(r){ setTimeout(r, 3000); });
+      var now = (await loadMyMiners()).length;
+      if (now > before) { toast('⛏ Майнер куплен и уже майнит!'); renderMiners(); break; }
     }
-  } catch (e) { console.error(e); popup('Не удалось создать счёт, попробуйте позже'); }
+  } catch (e) { console.error(e); toast('Не удалось создать счёт, попробуйте позже'); }
   btn.disabled = false;
 }
 
 // ============ РЕКЛАМА ×2 ============
-const BOOST_AD = { maxPerDay:3, intervalMs:10*60*1000, boostMinutes:60 };
-
-// Сюда вставь инициализацию AdsGram (получить на adsgram.com), пример:
-// window.Adg = new AdsGramController({ id: '59627' });
-function getAdCtl() { return window.Adg; }
+var Adg = null;
+function initAds() {
+  if (!ADSGRAM_ID) return;
+  try {
+    if (window.Adsgram) {
+      Adg = window.Adsgram.init({ blockId: ADSGRAM_ID });
+    } else {
+      var s = document.createElement('script');
+      s.src = 'https://sad.adsgram.com/adsg.min.js';
+      s.onload = function(){ try { Adg = window.Adsgram.init({ blockId: ADSGRAM_ID }); } catch(e){ console.error(e); } };
+      document.head.appendChild(s);
+    }
+  } catch (e) { console.error('ads init:', e); }
+}
 
 function todayKey() { return new Date().toISOString().slice(0,10); }
 
 function canWatchBoostAd() {
-  const now = Date.now();
+  var now = Date.now();
   state.boostAds = state.boostAds || { day: todayKey(), count:0, last:0 };
   if (state.boostAds.day !== todayKey()) state.boostAds = { day: todayKey(), count:0, last:0 };
   if (state.boostAds.count >= BOOST_AD.maxPerDay) return { ok:false, why:'Лимит 3 просмотра на сегодня израсходован' };
-  const wait = state.boostAds.last + BOOST_AD.intervalMs - now;
+  var wait = state.boostAds.last + BOOST_AD.intervalMs - now;
   if (wait > 0) return { ok:false, why:'Следующая реклама через ' + Math.ceil(wait/60000) + ' мин' };
   return { ok:true };
 }
 
-async function watchBoostAd(ev) {
-  if (!getAdCtl()) { popup('Реклама ещё не подключена'); return; }
-  const check = canWatchBoostAd();
-  if (!check.ok) { popup(check.why); return; }
-  const btn = ev.currentTarget; btn.disabled = true;
+async function watchBoostAd() {
+  if (!state) return;
+  if (!Adg) { toast('Реклама ещё не подключена'); return; }
+  var check = canWatchBoostAd();
+  if (!check.ok) { toast(check.why); return; }
+  var btn = document.getElementById('btn-boost');
+  btn.disabled = true;
   try {
-    await getAdCtl().show();
-    state.boostAds.count++; state.boostAds.last = Date.now();
+    await Adg.show();
+    state.boostAds.count++;
+    state.boostAds.last = Date.now();
     state.boostUntil = Date.now() + BOOST_AD.boostMinutes * 60000;
     save(); renderBalance(); renderBoost();
-    popup('⚡ Доход ×2 на 1 час!');
-  } catch (e) { popup('Реклама не показана, попробуйте позже'); }
+    toast('⚡ Доход ×2 на 1 час!');
+  } catch (e) { toast('Реклама не показана, попробуйте позже'); }
   btn.disabled = false;
 }
 
 function renderBoost() {
-  const st = document.getElementById('boost-status');
-  if (!st) return;
+  var st = document.getElementById('boost-status');
+  if (!st || !state) return;
   if (activeBoost()) st.textContent = '×2 ещё ' + Math.ceil((state.boostUntil - Date.now())/60000) + ' мин';
   else st.textContent = '';
 }
 
 // ============ ТОП НЕДЕЛИ ============
 function weekKey() {
-  const d = new Date();
+  var d = new Date();
   d.setUTCHours(0,0,0,0);
-  d.setUTCDate(d.getUTCDate() - d.getUTCDay() + 1); // понедельник
+  var day = d.getUTCDay() === 0 ? 7 : d.getUTCDay();
+  d.setUTCDate(d.getUTCDate() - day + 1);
   return d.toISOString().slice(0,10);
 }
 
 async function loadTop() {
-  const list = document.getElementById('top-list');
+  var list = document.getElementById('top-list');
   list.innerHTML = '<p class="muted">Загрузка…</p>';
-  const res = await supabase
+  if (!supabase) { list.innerHTML = '<p class="muted">База не подключена (проверь anon key)</p>'; return; }
+  var res = await supabase
     .from('weekly_top')
-    .select('name, mined, week_key')
+    .select('name, mined')
     .eq('week_key', weekKey())
     .order('mined', { ascending:false })
     .limit(10);
   list.innerHTML = '';
-  if (res.error) { console.error('top:', res.error); list.innerHTML = '<p class="muted">Ошибка загрузки</p>'; return; }
-  if (!res.data.length) { list.innerHTML = '<p class="muted">Пока нет игроков в топе недели</p>'; return; }
-  res.data.forEach((r, i) => {
-    const row = document.createElement('div');
+  if (res.error) { console.error('top:', res.error); list.innerHTML = '<p class="muted">Ошибка загрузки топа</p>'; return; }
+  if (!res.data || !res.data.length) { list.innerHTML = '<p class="muted">Пока нет игроков в топе недели</p>'; return; }
+  res.data.forEach(function(r, i) {
+    var row = document.createElement('div');
     row.className = 'top-row';
     row.innerHTML = '<b>' + (i+1) + '. ' + (r.name || 'Игрок') + '</b><span class="muted">' + Math.floor(r.mined||0).toLocaleString('ru-RU') + '</span>';
     list.appendChild(row);
@@ -289,43 +343,49 @@ async function loadTop() {
 }
 
 async function pushMyScore() {
-  if (state.user_id.startsWith('guest_')) return;
+  if (!supabase || isGuest()) return;
   await supabase.from('weekly_top').upsert({
     player_id: state.user_id,
     week_key: weekKey(),
     name: state.name,
     mined: Math.floor(state.total_mined),
     coins: Math.floor(state.coins),
-    total_mined: Math.floor(state.total_mined),
     taps: state.taps,
     updated_at: new Date().toISOString()
   }, { onConflict: 'player_id,week_key' });
 }
 
-// ============ ТАБЫ ============
-document.querySelectorAll('.tab').forEach(t => {
-  t.onclick = () => {
-    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
-    document.querySelectorAll('.screen').forEach(x => x.classList.remove('active'));
-    t.classList.add('active');
-    document.getElementById('screen-' + t.dataset.screen).classList.add('active');
-    if (t.dataset.screen === 'top') loadTop();
-  };
-});
+// ============ ТАБЫ И КНОПКИ ============
+function bindUI() {
+  document.getElementById('tap-zone').addEventListener('click', tap);
+  document.getElementById('btn-boost').addEventListener('click', watchBoostAd);
 
-function popup(text) {
-  if (tg?.showPopup) tg.showPopup({ title:'ZINI DROP', message:text, buttons:[{type:'ok'}] });
-  else alert(text);
+  document.querySelectorAll('.tab').forEach(function(t) {
+    t.addEventListener('click', function() {
+      document.querySelectorAll('.tab').forEach(function(x){ x.classList.remove('active'); });
+      document.querySelectorAll('.screen').forEach(function(x){ x.classList.remove('active'); });
+      t.classList.add('active');
+      var scr = document.getElementById('screen-' + t.dataset.screen);
+      if (scr) scr.classList.add('active');
+      if (t.dataset.screen === 'top') loadTop();
+    });
+  });
 }
 
 // ============ ЗАПУСК ============
 initUser();
-document.getElementById('tap-zone').onclick = tap;
-(async () => {
-  await loadMyMiners();
-  renderBalance(); renderMiners(); renderBoost();
-  pushMyScore(); // отправляем свой результат в топ
-  setInterval(pushMyScore, 5 * 60 * 1000); // обновляем каждые 5 минут
+bindUI();
+initAds();
+renderBalance();
+renderBoost();
+
+(async function start() {
+  try { await loadMyMiners(); } catch (e) { console.error(e); }
+  renderMiners();
+  try { await pushMyScore(); } catch (e) {}
+  setInterval(pushMyScore, 5 * 60 * 1000);
+})();
+
 })();
 </script>
 </body>
