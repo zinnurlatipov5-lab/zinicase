@@ -522,6 +522,28 @@ async function buyMinerWithStars(tier) {
   toast('⛏ ' + t.name + ' куплен и уже майнит!');
 }
 
+// ============ ФОНОВАЯ ПРОВЕРКА ОПЛАТЫ ============
+async function pollPayments() {
+  for (var i = 0; i < 20; i++) {
+    try {
+      var res = await fetch(FN_BASE + '/' + PAYMENT_FN, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SB_KEY },
+        body: JSON.stringify({ action: 'check_payment', player_id: state.user_id })
+      });
+      var d = await res.json();
+      if (d && d.ok && d.credits > 0) {
+        await loadRemote();
+        await loadWeekDeposit();
+        toast('✅ Зачислено ' + d.credits + ' ⭐');
+        return true;
+      }
+    } catch (e) {}
+    await new Promise(function(r){ setTimeout(r, 3000); });
+  }
+  return false;
+}
+
 // ============ ПОПОЛНЕНИЕ (инвойс Telegram Stars) ============
 function updateTopup() {
   var input = document.getElementById('topup-input');
@@ -548,7 +570,6 @@ async function topupSubmit() {
   if (!stars) { toast('Сумма: от ' + MIN_TOPUP_STARS + ' до ' + MAX_TOPUP_STARS + ' звёзд'); return; }
   var btn = document.getElementById('btn-topup');
   btn.disabled = true;
-  var credited = false;
   try {
     var res = await fetch(FN_BASE + '/' + PAYMENT_FN, {
       method: 'POST',
@@ -564,37 +585,19 @@ async function topupSubmit() {
     }
     if (!tg || !tg.openInvoice) { toast('Оплата доступна только внутри Telegram'); btn.disabled = false; return; }
 
-    // открываем инвойс и ловим статус напрямую
     var before = state.stars_balance || 0;
     tg.openInvoice(data.url, function(status) {
-      if (status === 'paid') {
-        credited = true;
-        setTimeout(async function() {
-          await loadRemote();
-          if ((state.stars_balance || 0) > before) toast('✅ Зачислено ' + stars + ' ⭐');
-          else toast('Оплата принята! Звёзды зачислятся за пару секунд');
-          loadWeekDeposit();
-        }, 1500);
-      } else if (status === 'failed') {
-        toast('Оплата не прошла');
-      } else if (status === 'pending') {
-        toast('Платёж обрабатывается…');
-      }
+      if (status === 'failed') toast('Оплата не прошла');
+      // статусы paid и pending подхватит фоновая проверка
     });
 
-    // запасной опрос базы, если колбэк не сработал
-    for (var i = 0; i < 30; i++) {
-      await new Promise(function(r){ setTimeout(r, 2000); });
-      await loadRemote();
-      if ((state.stars_balance || 0) > before) {
-        if (!credited) {
-          credited = true;
-          toast('✅ Зачислено ' + stars + ' ⭐');
-        }
+    // сразу запускаем проверку: как только оплата пройдёт — зачислим
+    pollPayments().then(function(found) {
+      if (!found && (state.stars_balance || 0) > before) {
+        toast('✅ Зачислено ' + stars + ' ⭐');
         loadWeekDeposit();
-        break;
       }
-    }
+    });
   } catch (e) {
     console.error(e);
     toast('Не удалось создать счёт, попробуй позже');
