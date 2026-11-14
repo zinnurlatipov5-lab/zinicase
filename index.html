@@ -68,10 +68,6 @@ h3{margin:4px 0 12px;font-size:18px;}
 
 #toast{position:fixed;left:50%;bottom:130px;transform:translateX(-50%);background:#22223a;border:1px solid var(--acc);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;display:none;z-index:99;max-width:90%;text-align:center;}
 #guest-note{background:#3a2a12;border:1px solid #ffb020;color:#ffd75e;border-radius:10px;padding:10px;font-size:13px;margin-bottom:12px;display:none;}
-
-.gift{position:absolute;font-size:36px;cursor:pointer;z-index:2;will-change:transform;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));}
-#mg-score{position:absolute;top:8px;right:10px;font-size:15px;font-weight:800;color:var(--acc);z-index:3;}
-#mg-miss{position:absolute;top:8px;left:10px;font-size:15px;font-weight:800;color:var(--red);z-index:3;}
 </style>
 </head>
 <body>
@@ -112,24 +108,7 @@ h3{margin:4px 0 12px;font-size:18px;}
     <div id="inv-list" class="muted">Пока пусто — играй в мини-игры и ухаживай за ёлкой!</div>
   </section>
 
-  <section id="screen-mini" class="screen">
-    <h3>🎮 Поймай подарок</h3>
-    <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div><div class="muted">Попытки</div><div id="mg-attempts" style="font-size:20px;font-weight:800;color:var(--acc);">3</div></div>
-        <button id="mg-start" class="btn" style="width:auto;padding:12px 20px;">▶️ Играть</button>
-      </div>
-      <div class="muted" style="margin-top:10px;">Тапай по падающим подаркам. 3 промаха — конец. Очки = шишки и шанс выбить шар!</div>
-    </div>
-    <div id="mg-area" style="position:relative;height:340px;background:linear-gradient(180deg,#101018,#1a1a2e);border-radius:14px;overflow:hidden;margin-bottom:12px;">
-      <div id="mg-overlay" style="position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,10,16,.82);text-align:center;padding:16px;z-index:5;">
-        <div id="mg-title" style="font-weight:800;font-size:18px;margin-bottom:8px;">🎄 Готов?</div>
-        <div id="mg-sub" class="muted" style="margin-bottom:14px;">Нажми «Играть» и лови подарки</div>
-        <button id="mg-claim" class="btn" style="display:none;max-width:220px;">Забрать награду</button>
-      </div>
-    </div>
-    <button id="mg-ad" class="btn ghost">🎬 Ещё попытка за рекламу</button>
-  </section>
+  <section id="screen-mini" class="screen"></section>
 
   <section id="screen-top" class="screen">
     <h3>🏆 Топ недели</h3>
@@ -154,7 +133,7 @@ h3{margin:4px 0 12px;font-size:18px;}
 <div id="toast"></div>
 
 <script>
-// ===== Ёлка Зини: таблица 100 уровней (встроена в файл, отдельный levels.js больше не нужен) =====
+// ===== Таблица 100 уровней (встроена в файл) =====
 var XP_TABLE = [];
 (function () {
   for (var i = 1; i <= 100; i++) {
@@ -167,7 +146,7 @@ function xpToNext(level) {
 </script>
 
 <script>
-// Ловушка ошибок: если что-то падает — покажем на экране, а не молча
+// Ловушка ошибок: если что-то падает — покажем на экране
 window.addEventListener('error', function (e) {
   var t = document.getElementById('toast');
   if (t) { t.style.display = 'block'; t.textContent = '⚠️ Ошибка: ' + e.message; }
@@ -176,11 +155,10 @@ window.addEventListener('error', function (e) {
 
 <script>
 'use strict';
-// ===================== ВСТАВЬ СВОИ КЛЮЧИ В ДВЕ СТРОКИ НИЖЕ =====================
-// Supabase → Settings → API: URL — это SB_URL, anon public key — это SB_KEY
-var SB_URL = 'https://clxewmkuntmgtbovrgqk.supabase.co/rest/v1/';
+// ===================== КЛЮЧИ SUPABASE (уже вписаны) =====================
+var SB_URL = 'https://clxewmkuntmgtbovrgqk.supabase.co';
 var SB_KEY = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX';
-// ===============================================================================
+// =========================================================================
 
 var tg = window.Telegram.WebApp;
 try { tg.expand(); tg.setHeaderColor('#0a0a10'); tg.setBackgroundColor('#0a0a10'); } catch(e){}
@@ -494,11 +472,51 @@ document.getElementById('btn-shake').addEventListener('click', doShake);
 document.getElementById('btn-collect').addEventListener('click', doCollect);
 
 // ============================================================
-// МИНИ-ИГРА: ПОЙМАЙ ПОДАРОК
+// МИНИ-ИГРА: ПОЙМАЙ ПОДАРОК (самособирающаяся)
 // ============================================================
 var MG_KEY = 'zini_mini_' + playerId;
 var GIFT_EMOJI = ['🎁','🎀','🍬','🍭','🧸','⭐'];
 var mg = { active:false, score:0, misses:0, spawnT:0, timeout:0, pendReward:0, pendDrop:false };
+var mgEl = {};
+
+function mgBuild(){
+  var host = document.getElementById('screen-mini');
+  if (!host) return;
+  host.innerHTML =
+    '<h3>🎮 Поймай подарок</h3>' +
+    '<div class="card">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+        '<div><div class="muted">Попытки</div><div id="mg-attempts" style="font-size:20px;font-weight:800;color:var(--acc);">3</div></div>' +
+        '<button id="mg-start" class="btn" style="width:auto;padding:12px 20px;">▶️ Играть</button>' +
+      '</div>' +
+      '<div class="muted" style="margin-top:10px;">Тапай по падающим подаркам. 3 промаха — конец. Очки = шишки и шанс выбить шар!</div>' +
+    '</div>' +
+    '<div id="mg-area" style="position:relative;height:340px;background:linear-gradient(180deg,#101018,#1a1a2e);border-radius:14px;overflow:hidden;margin-bottom:12px;">' +
+      '<div id="mg-score" style="position:absolute;top:8px;right:10px;font-size:15px;font-weight:800;color:var(--acc);z-index:3;"></div>' +
+      '<div id="mg-miss" style="position:absolute;top:8px;left:10px;font-size:15px;font-weight:800;color:var(--red);z-index:3;"></div>' +
+      '<div id="mg-overlay" style="position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,10,16,.82);text-align:center;padding:16px;z-index:5;">' +
+        '<div id="mg-title" style="font-weight:800;font-size:18px;margin-bottom:8px;">🎄 Готов?</div>' +
+        '<div id="mg-sub" class="muted" style="margin-bottom:14px;">Нажми «Играть» и лови подарки</div>' +
+        '<button id="mg-claim" class="btn" style="display:none;max-width:220px;">Забрать награду</button>' +
+      '</div>' +
+    '</div>' +
+    '<button id="mg-ad" class="btn ghost">🎬 Ещё попытка за рекламу</button>';
+
+  mgEl.attempts = document.getElementById('mg-attempts');
+  mgEl.start    = document.getElementById('mg-start');
+  mgEl.claim    = document.getElementById('mg-claim');
+  mgEl.ad       = document.getElementById('mg-ad');
+  mgEl.area     = document.getElementById('mg-area');
+  mgEl.overlay  = document.getElementById('mg-overlay');
+  mgEl.title    = document.getElementById('mg-title');
+  mgEl.sub      = document.getElementById('mg-sub');
+  mgEl.score    = document.getElementById('mg-score');
+  mgEl.miss     = document.getElementById('mg-miss');
+
+  if (mgEl.start) mgEl.start.addEventListener('click', mgStart);
+  if (mgEl.claim) mgEl.claim.addEventListener('click', mgClaim);
+  if (mgEl.ad)    mgEl.ad.addEventListener('click', mgAd);
+}
 
 function mgAttempts(){
   try {
@@ -516,12 +534,13 @@ function mgUseAttempt(){
   renderMg();
 }
 function renderMg(){
-  document.getElementById('mg-attempts').textContent = mgAttempts();
+  if (mgEl.attempts) mgEl.attempts.textContent = mgAttempts();
 }
 function mgOverlay(title, sub, showClaim){
-  document.getElementById('mg-title').textContent = title;
-  document.getElementById('mg-sub').textContent = sub;
-  document.getElementById('mg-claim').style.display = showClaim ? 'block' : 'none';
+  if (!mgEl.title) return;
+  mgEl.title.textContent = title;
+  mgEl.sub.textContent = sub;
+  mgEl.claim.style.display = showClaim ? 'block' : 'none';
 }
 
 function mgStart(){
@@ -529,25 +548,27 @@ function mgStart(){
   if (mgAttempts() <= 0) { toast('Попытки на сегодня кончились. Вернись завтра или посмотри рекламу! 🎬'); return; }
   mgUseAttempt();
   mg.active = true; mg.score = 0; mg.misses = 0;
-  document.getElementById('mg-overlay').style.display = 'none';
+  if (mgEl.overlay) mgEl.overlay.style.display = 'none';
   mgUpdateHud();
   mgSpawn();
 }
 function mgUpdateHud(){
-  document.getElementById('mg-score').textContent = '🎯 ' + mg.score;
-  document.getElementById('mg-miss').textContent = '💔 ' + mg.misses + '/3';
+  if (mgEl.score) mgEl.score.textContent = '🎯 ' + mg.score;
+  if (mgEl.miss)  mgEl.miss.textContent  = '💔 ' + mg.misses + '/3';
 }
 function mgSpawn(){
-  if (!mg.active) return;
+  if (!mg.active || !mgEl.area) return;
   var g = document.createElement('div');
-  g.className = 'gift';
   g.textContent = GIFT_EMOJI[Math.floor(Math.random() * GIFT_EMOJI.length)];
+  g.style.cssText = 'position:absolute;font-size:36px;cursor:pointer;z-index:2;user-select:none;';
   g.style.left = (5 + Math.random() * 80) + '%';
   g.style.top = '-40px';
   var dur = Math.max(1800, 3200 - mg.score * 40);
   g.style.transition = 'transform ' + dur + 'ms linear';
-  document.getElementById('mg-area').appendChild(g);
-  requestAnimationFrame(function(){ requestAnimationFrame(function(){ g.style.transform = 'translateY(' + (document.getElementById('mg-area').offsetHeight + 50) + 'px)'; }); });
+  mgEl.area.appendChild(g);
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    g.style.transform = 'translateY(' + (mgEl.area.offsetHeight + 50) + 'px)';
+  }); });
   g.addEventListener('pointerdown', function(e){
     e.stopPropagation();
     if (!mg.active || g.dataset.done) return;
@@ -570,7 +591,9 @@ function mgSpawn(){
 function mgEnd(){
   mg.active = false;
   clearTimeout(mg.spawnT); clearTimeout(mg.timeout);
-  document.querySelectorAll('#mg-area .gift').forEach(function(g){ g.remove(); });
+  if (mgEl.area) mgEl.area.querySelectorAll('div').forEach(function(g){
+    if (g.id === '') g.remove();
+  });
   var rew = 300 * mg.score + state.level * 100;
   var dropChance = Math.min(0.5, 0.15 + mg.score * 0.02);
   mgOverlay('Игра окончена!', 'Очки: ' + mg.score + ' • Награда: ' + fmt(rew) + ' 🌰', true);
@@ -598,7 +621,7 @@ function mgAd(){
         try { raw = JSON.parse(localStorage.getItem(MG_KEY) || '{}'); } catch(e){}
         if (raw.day !== new Date().toDateString()) raw = { day: new Date().toDateString(), used: 0 };
         raw.used = Math.max(0, (raw.used || 0) - 1);
-        localStorage.setItem(MG_KEY, JSON.stringify(raw));
+        try { localStorage.setItem(MG_KEY, JSON.stringify(raw)); } catch(e){}
         renderMg(); toast('🎬 +1 попытка!');
       }).catch(function(){ toast('Реклама недоступна, попробуй позже'); });
     } catch(e){ toast('Реклама скоро подключится 🎬'); }
@@ -607,9 +630,7 @@ function mgAd(){
   }
 }
 
-document.getElementById('mg-start').addEventListener('click', mgStart);
-document.getElementById('mg-claim').addEventListener('click', mgClaim);
-document.getElementById('mg-ad').addEventListener('click', mgAd);
+mgBuild();
 mgOverlay('🎄 Готов?', 'Нажми «Играть» и лови подарки', false);
 renderMg();
 
