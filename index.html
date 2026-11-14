@@ -6,6 +6,7 @@
 <title>ZINI DROP</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   html, body {
@@ -113,7 +114,7 @@ var SB_URL = 'https://clxewmkuntmgtbovrgqk.supabase.co';
 var SB_KEY = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX';
 var FN_BASE = 'https://clxewmkuntmgtbovrgqk.supabase.co/functions/v1';
 var PAYMENT_FN = 'quick-function'; // реальный URL твоей функции оплаты
-var ADSGRAM_ID = '59627'; // ← твой ID рекламного блока
+var ADSGRAM_ID = '59627'; // твой Block ID (сверь точный формат в кабинете AdsGram → Show Code)
 
 var supabase = null;
 try {
@@ -262,20 +263,27 @@ async function buyMiner(tier, ev) {
   btn.disabled = false;
 }
 
-// ============ РЕКЛАМА ×2 ============
+// ============ РЕКЛАМА ×2 (AdsGram) ============
 var Adg = null;
+var adReady = false;
+
 function initAds() {
   if (!ADSGRAM_ID) return;
-  try {
+  var tries = 0;
+  var timer = setInterval(function() {
+    tries++;
     if (window.Adsgram) {
-      Adg = window.Adsgram.init({ blockId: ADSGRAM_ID });
-    } else {
-      var s = document.createElement('script');
-      s.src = 'https://sad.adsgram.com/adsg.min.js';
-      s.onload = function(){ try { Adg = window.Adsgram.init({ blockId: ADSGRAM_ID }); } catch(e){ console.error(e); } };
-      document.head.appendChild(s);
+      clearInterval(timer);
+      try {
+        Adg = window.Adsgram.init({ blockId: ADSGRAM_ID });
+        adReady = true;
+        console.log('AdsGram готов');
+      } catch (e) { console.error('ads init:', e); }
+    } else if (tries > 20) {
+      clearInterval(timer);
+      console.error('AdsGram SDK не загрузился');
     }
-  } catch (e) { console.error('ads init:', e); }
+  }, 500);
 }
 
 function todayKey() { return new Date().toISOString().slice(0,10); }
@@ -304,7 +312,10 @@ async function watchBoostAd() {
     state.boostUntil = Date.now() + BOOST_AD.boostMinutes * 60000;
     save(); renderBalance(); renderBoost();
     toast('⚡ Доход ×2 на 1 час!');
-  } catch (e) { toast('Реклама не показана, попробуйте позже'); }
+  } catch (e) {
+    console.error('ad show:', e);
+    toast('Реклама не показана, попробуйте позже');
+  }
   btn.disabled = false;
 }
 
