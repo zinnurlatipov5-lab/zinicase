@@ -43,6 +43,7 @@
   }
   .per-day { color:var(--mut); font-size:13px; margin-top:2px; }
   .per-day b { color:var(--acc); }
+  .stars-badge { text-align:center; font-size:15px; font-weight:800; color:var(--acc); margin-top:6px; }
 
   .progress-wrap { margin:14px auto 0; max-width:340px; }
   .progress-label { display:flex; justify-content:space-between; font-size:11px; color:var(--mut); margin-bottom:5px; }
@@ -101,19 +102,13 @@
   .top-row { display:flex; justify-content:space-between; padding:10px 2px; border-bottom:1px solid var(--line); font-size:14px; }
   .top-row:last-child { border-bottom:none; }
 
-  .card-box {
-    background:linear-gradient(135deg,rgba(198,255,94,.12),rgba(74,222,128,.06));
-    border:1px solid rgba(198,255,94,.3); border-radius:14px; padding:16px; margin-top:10px; text-align:center;
-  }
-  .card-num { font-size:20px; font-weight:900; letter-spacing:2px; color:var(--acc); }
-
   .topup-input {
     width:100%; padding:13px; margin-top:10px; border-radius:12px;
     background:rgba(255,255,255,.06); border:1px solid var(--line);
     color:var(--txt); font-size:18px; font-weight:800; text-align:center; outline:none;
   }
   .topup-input:focus { border-color:var(--acc); }
-  .pay-sum { font-size:26px; font-weight:900; color:var(--acc); margin-top:8px; }
+  .pay-sum { font-size:24px; font-weight:900; color:var(--acc); margin-top:8px; }
 
   #toast {
     position:fixed; left:50%; bottom:32px; transform:translateX(-50%);
@@ -138,6 +133,7 @@
 <div class="balance-wrap">
   <div id="balance">0</div>
   <div class="per-day" id="per-day">пассив: <b>0</b>/сутки</div>
+  <div class="stars-badge" id="stars-badge">⭐ 0 звёзд</div>
 </div>
 
 <div class="progress-wrap">
@@ -166,46 +162,36 @@
       <div class="stat"><div class="v" id="stat-taps">0</div><div class="k">Тапов</div></div>
       <div class="stat"><div class="v" id="stat-mined">0</div><div class="k">Всего намайнено</div></div>
       <div class="stat"><div class="v" id="stat-miners">0</div><div class="k">Майнеров</div></div>
-      <div class="stat"><div class="v" id="stat-rub">0 ₽</div><div class="k">Можно вывести</div></div>
+      <div class="stat"><div class="v" id="stat-stars">0 ⭐</div><div class="k">Можно вывести</div></div>
     </div>
   </div>
 </div>
 
 <div class="screen" id="screen-miners">
   <div class="card">
-    <b>💳 Пополнить баланс</b>
-    <p class="muted">Введи количество звёзд для пополнения (минимум 15) — покажу сумму в рублях и реквизиты. Переводишь на карту, отправляешь чек боту — звёзды зачислят, и сможешь купить майнер.</p>
+    <b>⭐ Пополнить звёзды</b>
+    <p class="muted">Введи количество звёзд (минимум 15) и оплати — звёзды можно купить прямо в окне оплаты картой. Зачисление автоматическое.</p>
     <input class="topup-input" id="topup-input" type="number" inputmode="numeric" min="15" placeholder="Например: 15" value="15">
-    <div class="pay-sum" id="topup-sum">19,50 ₽</div>
-    <button class="btn" id="btn-topup">💳 Оплатить</button>
+    <div class="pay-sum" id="topup-sum">15 звёзд</div>
+    <button class="btn" id="btn-topup">⭐ Пополнить</button>
   </div>
   <div class="card">
     <div class="row"><b>⛏ Майнеры</b><span class="muted" id="miners-count"></span></div>
-    <p class="muted">Майнер добывает монеты каждый день. Курс: 10 000 монет = 1,30 ₽</p>
+    <p class="muted">Майнер добывает монеты каждый день. Покупается за звёзды с твоего баланса.</p>
     <div id="miners-list"></div>
-  </div>
-  <div class="card">
-    <b>🏦 Реквизиты для перевода</b>
-    <div class="card-box">
-      <div class="muted" id="card-bank">Т-Банк</div>
-      <div class="card-num" id="card-num">5536 9140 7429 024</div>
-    </div>
-    <button class="btn ghost" id="btn-copy-card">📋 Скопировать номер карты</button>
-    <button class="btn ghost" id="btn-open-bot">✅ Отправить чек боту</button>
-    <p class="muted" style="margin-top:8px">После перевода нажми «Отправить чек боту» — пришли сумму и скрин перевода. Баланс зачислят в течение нескольких минут.</p>
   </div>
 </div>
 
 <div class="screen" id="screen-sell">
   <div class="card">
     <b>💰 Продажа монет</b>
-    <p class="muted">Меняй монеты на рубли по курсу <b style="color:var(--acc)">10 000 монет = 1,30 ₽</b>. Минимальный вывод — <b style="color:var(--acc)">50 звёзд = 500 000 монет = 65 ₽</b>.</p>
+    <p class="muted">Меняй монеты на звёзды по курсу <b style="color:var(--acc)">10 000 монет = 1 ⭐</b>. Минимальный вывод — <b style="color:var(--acc)">50 ⭐ (500 000 монет)</b>.</p>
     <p class="muted" id="sell-info" style="margin-top:8px">—</p>
     <button class="btn" id="btn-sell" disabled>Заявка на вывод — недостаточно монет</button>
   </div>
   <div class="card">
     <b>📌 Как проходит выплата</b>
-    <p class="muted">1. Оставляешь заявку кнопкой выше — её текст копируется автоматически.<br>2. Отправляешь его боту и указываешь номер карты для получения.<br>3. Администратор подтверждает выплату и переводит рубли на твою карту.</p>
+    <p class="muted">1. Оставляешь заявку — она попадает администратору.<br>2. Администратор отправляет тебе звёзды в Telegram.<br>3. Звёзды можешь потратить в Telegram или обменять на рубли.</p>
   </div>
 </div>
 
@@ -225,20 +211,17 @@
 // ============ НАСТРОЙКИ ============
 var SB_URL = 'https://clxewmkuntmgtbovrgqk.supabase.co';
 var SB_KEY = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX';
+var FN_BASE = 'https://clxewmkuntmgtbovrgqk.supabase.co/functions/v1';
+var PAYMENT_FN = 'quick-function';
 var ADSGRAM_ID = '59627';
 var BOT_USERNAME = 'ТВОЙ_БОТ_БЕЗ_СОБАКИ'; // ← username бота
 
-// === РЕКВИЗИТЫ ===
-var CARD_NUMBER = '5536 9140 7429 024';
-var CARD_BANK = 'Т-Банк';
-var STAR_RUB = 1.30;                    // 1 звезда = 1,30 ₽
-
 // ============ ЭКОНОМИКА ============
 var TAP_REWARD = 100;
-var COINS_PER_STAR = 10000;             // 10 000 монет = 1 звезда
-var MIN_WITHDRAW_STARS = 50;            // минимум для вывода
+var COINS_PER_STAR = 10000;
+var MIN_WITHDRAW_STARS = 50;
 var MIN_WITHDRAW_COINS = MIN_WITHDRAW_STARS * COINS_PER_STAR;
-var MIN_TOPUP_STARS = 15;               // минимум пополнения
+var MIN_TOPUP_STARS = 15;
 
 var TIERS = {
   0: { name:'Test',     stars:1,   perDay:6000,    emoji:'🧪' },
@@ -261,12 +244,6 @@ var myMiners = [];
 
 function isGuest() { return !state || String(state.user_id).indexOf('guest_') === 0; }
 function fmt(n) { return Math.floor(n).toLocaleString('ru-RU'); }
-function rub(n) {
-  var v = Math.round(n * 100) / 100;
-  return v % 1 === 0 ? v.toLocaleString('ru-RU') + ' ₽' : v.toFixed(2).replace('.', ',') + ' ₽';
-}
-function coinsToRub(coins) { return coins / COINS_PER_STAR * STAR_RUB; }
-function starsToRub(stars) { return stars * STAR_RUB; }
 function openBot() {
   var link = 'https://t.me/' + BOT_USERNAME;
   if (tg && tg.openTelegramLink) tg.openTelegramLink(link);
@@ -284,13 +261,13 @@ function initUser() {
       name = tg.initDataUnsafe.user.first_name || 'Игрок';
     }
   } catch (e) {}
-  state = saved || { user_id: uid, name: name, coins: 0, total_mined: 0, taps: 0, boostUntil: 0, boostAds: null, starsBalance: 0 };
-  if (uid.indexOf('guest_') !== 0 && state.user_id !== uid) { state.user_id = uid; state.name = name; save(); }
+  state = saved || { user_id: uid, name: name, coins: 0, total_mined: 0, taps: 0, stars_balance: 0, boostUntil: 0, boostAds: null };
+  if (uid.indexOf('guest_') !== 0 && state.user_id !== uid) { state.user_id = uid; state.name = name; saveLocal(); }
   var badge = document.getElementById('user-badge');
   if (badge) badge.textContent = isGuest() ? '👤 Гость' : '👤 ' + state.name;
 }
 
-function save() { try { localStorage.setItem('zini_state', JSON.stringify(state)); } catch (e) {} }
+function saveLocal() { try { localStorage.setItem('zini_state', JSON.stringify(state)); } catch (e) {} }
 
 function toast(text) {
   var t = document.getElementById('toast');
@@ -298,12 +275,46 @@ function toast(text) {
   clearTimeout(t._h); t._h = setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 
+// ============ СИНХРОНИЗАЦИЯ С БАЗОЙ ============
+async function loadRemote() {
+  if (!supabase || isGuest()) return;
+  var res = await supabase.from('players').select('*').eq('player_id', state.user_id).maybeSingle();
+  if (res.error) { console.error('load:', res.error); return; }
+  if (res.data) {
+    state.coins = Number(res.data.coins) || 0;
+    state.total_mined = Number(res.data.total_mined) || 0;
+    state.taps = res.data.taps || 0;
+    state.stars_balance = res.data.stars_balance || 0;
+    state.boostUntil = res.data.boost_until || 0;
+    saveLocal(); renderAll(); renderMiners();
+  } else {
+    await supabase.from('players').insert({
+      player_id: state.user_id, name: state.name,
+      coins: Math.floor(state.coins), total_mined: Math.floor(state.total_mined),
+      taps: state.taps, stars_balance: 0, boost_until: 0
+    });
+  }
+}
+
+async function pushRemote() {
+  if (!supabase || isGuest() || !state) return;
+  await supabase.from('players').upsert({
+    player_id: state.user_id, name: state.name,
+    coins: Math.floor(state.coins), total_mined: Math.floor(state.total_mined),
+    taps: state.taps, stars_balance: state.stars_balance, boost_until: state.boostUntil,
+    updated_at: new Date().toISOString()
+  }, { onConflict: 'player_id' });
+}
+
+setInterval(loadRemote, 20000);
+setInterval(pushRemote, 30000);
+
 // ============ ТАПЫ ============
 function tap(e) {
   state.coins += TAP_REWARD;
   state.taps++;
   state.total_mined += TAP_REWARD;
-  save(); renderAll();
+  saveLocal(); renderAll();
   var fly = document.createElement('div');
   fly.className = 'fly'; fly.textContent = '+' + TAP_REWARD;
   fly.style.left = ((e.clientX || 150) - 10) + 'px';
@@ -321,7 +332,7 @@ setInterval(function() {
   var perTick = (minersPerDay() / 86400) * 10 * activeBoost();
   if (perTick > 0) {
     state.coins += perTick; state.total_mined += perTick;
-    save(); renderAll();
+    saveLocal(); renderAll();
   }
   renderBoost();
 }, 10000);
@@ -330,12 +341,13 @@ setInterval(function() {
 function renderAll() {
   if (!state) return;
   document.getElementById('balance').textContent = fmt(state.coins);
+  document.getElementById('stars-badge').textContent = '⭐ ' + (state.stars_balance || 0) + ' звёзд';
   document.getElementById('per-day').innerHTML =
     'пассив: <b>' + fmt(minersPerDay() * (activeBoost() ? 2 : 1)) + '</b>/сутки' + (activeBoost() ? ' · ⚡×2' : '');
   document.getElementById('stat-taps').textContent = fmt(state.taps);
   document.getElementById('stat-mined').textContent = fmt(state.total_mined);
   document.getElementById('stat-miners').textContent = String(myMiners.length);
-  document.getElementById('stat-rub').textContent = rub(coinsToRub(Math.floor(state.coins)));
+  document.getElementById('stat-stars').textContent = Math.floor(state.coins / COINS_PER_STAR) + ' ⭐';
 
   var pct = Math.min(100, Math.round(state.coins / MIN_WITHDRAW_COINS * 100));
   document.getElementById('prog-fill').style.width = pct + '%';
@@ -348,8 +360,8 @@ function renderAll() {
   if (state.coins >= MIN_WITHDRAW_COINS) {
     var stars = Math.floor(state.coins / COINS_PER_STAR);
     btn.disabled = false;
-    btn.textContent = 'Продать ' + fmt(stars * COINS_PER_STAR) + ' монет за ' + rub(starsToRub(stars));
-    info.textContent = 'Готово к продаже: ' + fmt(stars * COINS_PER_STAR) + ' монет = ' + rub(starsToRub(stars));
+    btn.textContent = 'Продать ' + fmt(stars * COINS_PER_STAR) + ' монет за ' + stars + ' ⭐';
+    info.textContent = 'Готово к продаже: ' + fmt(stars * COINS_PER_STAR) + ' монет = ' + stars + ' ⭐';
   } else {
     btn.disabled = true;
     btn.textContent = 'Заявка на вывод — недостаточно монет';
@@ -359,28 +371,45 @@ function renderAll() {
 
 function renderMiners() {
   var list = document.getElementById('miners-list');
-  if (!list) return;
+  if (!list || !state) return;
   list.innerHTML = '';
   Object.keys(TIERS).forEach(function(tier) {
     var t = TIERS[tier];
     var cnt = myMiners.filter(function(m){ return m.tier == tier; }).length;
-    var price = rub(starsToRub(t.stars));
     var card = document.createElement('div');
     card.className = 'miner-card';
     card.innerHTML =
       '<div class="miner-head"><div class="miner-emoji">' + t.emoji + '</div><div style="flex:1">' +
       '<b>' + t.name + (cnt ? ' ×' + cnt : '') + '</b>' +
       '<div class="muted">' + fmt(t.perDay) + ' монет/сутки · окупаемость ~' + Math.ceil(t.stars * COINS_PER_STAR / t.perDay) + ' дн.</div></div>' +
-      '<div style="font-size:15px;font-weight:800;color:var(--acc)">' + price + '</div></div>' +
-      '<button class="btn ghost">💳 Оплатить ' + price + '</button>';
-    card.querySelector('button').addEventListener('click', function(){ payWithCard(tier); });
+      '<div style="font-size:15px;font-weight:800;color:var(--acc)">' + t.stars + ' ⭐</div></div>' +
+      '<button class="btn ghost">Купить за ' + t.stars + ' ⭐</button>';
+    card.querySelector('button').addEventListener('click', function(){ buyMinerWithStars(tier); });
     list.appendChild(card);
   });
   var c = document.getElementById('miners-count');
   if (c) c.textContent = myMiners.length ? myMiners.length + ' активных' : '';
 }
 
-// ============ ОПЛАТА С КАРТЫ ============
+// ============ ПОКУПКА МАЙНЕРА ЗА ЗВЁЗДЫ ============
+async function buyMinerWithStars(tier) {
+  if (isGuest()) { toast('Открой игру из Telegram, чтобы покупать'); return; }
+  var t = TIERS[tier];
+  if (!state.stars_balance || state.stars_balance < t.stars) {
+    toast('Не хватает звёзд — пополни баланс');
+    return;
+  }
+  var newBal = state.stars_balance - t.stars;
+  var upd = await supabase.from('players').update({ stars_balance: newBal }).eq('player_id', state.user_id);
+  if (upd.error) { console.error(upd.error); toast('Ошибка покупки, попробуй позже'); return; }
+  state.stars_balance = newBal;
+  var ins = await supabase.from('miners').insert({ player_id: state.user_id, tier: tier, created_at: new Date().toISOString() });
+  if (ins.error) { console.error(ins.error); toast('Ошибка активации майнера'); return; }
+  saveLocal(); renderAll(); renderMiners();
+  toast('⛏ ' + t.name + ' куплен и уже майнит!');
+}
+
+// ============ ПОПОЛНЕНИЕ ЗВЁЗДАМИ (инвойс Telegram) ============
 function updateTopup() {
   var input = document.getElementById('topup-input');
   var sum = document.getElementById('topup-sum');
@@ -390,51 +419,61 @@ function updateTopup() {
     sum.style.color = '#8b8b9a';
     return null;
   }
-  sum.textContent = stars + ' звёзд = ' + rub(starsToRub(stars));
+  sum.textContent = stars + ' звёзд';
   sum.style.color = 'var(--acc)';
   return stars;
 }
 
-function payWithCard(tier) {
-  var t = TIERS[tier];
-  var text = '💳 Покупка майнера\nМайнер: ' + t.emoji + ' ' + t.name + '\n' +
-    'Сумма: ' + rub(starsToRub(t.stars)) + '\nИгрок: ' + (state ? state.name : 'Игрок') + ' (ID ' + (state ? state.user_id : '-') + ')\n' +
-    'Перевёл на карту ' + CARD_NUMBER + '. Чек прилагаю.';
-  try { navigator.clipboard.writeText(text); } catch (e) {}
-  toast('Шаблон скопирован — вставь его боту');
-  openBot();
-}
-
-function topupSubmit() {
+async function topupSubmit() {
+  if (isGuest()) { toast('Открой игру из Telegram, чтобы пополнять'); return; }
   var stars = updateTopup();
   if (!stars) { toast('Минимум ' + MIN_TOPUP_STARS + ' звёзд'); return; }
-  var text = '💳 Пополнение баланса\nЗвёзд: ' + stars + '\nСумма: ' + rub(starsToRub(stars)) + '\n' +
-    'Игрок: ' + (state ? state.name : 'Игрок') + ' (ID ' + (state ? state.user_id : '-') + ')\n' +
-    'Перевёл на карту ' + CARD_NUMBER + '. Чек прилагаю.';
-  try { navigator.clipboard.writeText(text); } catch (e) {}
-  toast('Шаблон скопирован — вставь его боту');
-  openBot();
+  var btn = document.getElementById('btn-topup');
+  btn.disabled = true;
+  try {
+    var res = await fetch(FN_BASE + '/' + PAYMENT_FN, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SB_KEY },
+      body: JSON.stringify({ action: 'topup', stars: stars, player_id: state.user_id })
+    });
+    var data = await res.json();
+    if (!data.url) throw new Error(data.error || 'no url');
+    if (tg && tg.openInvoice) tg.openInvoice(data.url);
+    else { toast('Оплата доступна только внутри Telegram'); return; }
+
+    var before = state.stars_balance || 0;
+    for (var i = 0; i < 30; i++) {
+      await new Promise(function(r){ setTimeout(r, 2000); });
+      await loadRemote();
+      if ((state.stars_balance || 0) > before) {
+        toast('✅ Зачислено ' + stars + ' ⭐');
+        break;
+      }
+    }
+  } catch (e) {
+    console.error(e);
+    toast('Не удалось создать счёт, попробуй позже');
+  }
+  btn.disabled = false;
 }
 
-// ============ МАЙНЕРЫ ИГРОКА ============
-async function loadMyMiners() {
-  if (!supabase || isGuest()) return [];
-  var res = await supabase.from('miners').select('tier, created_at').eq('player_id', state.user_id);
-  if (res.error) { console.error('miners:', res.error); return []; }
-  myMiners = res.data || [];
-  return myMiners;
-}
-
-// ============ ЗАЯВКА НА ВЫВОД ============
+// ============ ЗАЯВКА НА ВЫВОД (монеты → звёзды) ============
 async function sellCoins() {
   if (isGuest()) { toast('Открой игру из Telegram, чтобы продавать'); return; }
   var coins = Math.floor(state.coins);
   if (coins < MIN_WITHDRAW_COINS) { toast('Минимум ' + fmt(MIN_WITHDRAW_COINS) + ' монет'); return; }
   var stars = Math.floor(coins / COINS_PER_STAR);
-  var text = '💸 Заявка на вывод\nИгрок: ' + state.name + ' (ID ' + state.user_id + ')\n' +
-    'Монеты: ' + fmt(stars * COINS_PER_STAR) + '\nК выплате: ' + rub(starsToRub(stars)) + '\nКарта для выплаты: [укажи номер карты]';
+  var ins = await supabase.from('withdrawals').insert({
+    player_id: state.user_id, name: state.name,
+    coins: stars * COINS_PER_STAR, stars: stars, rub: 0, status: 'new'
+  });
+  if (ins.error) { console.error(ins.error); toast('Ошибка заявки, попробуй позже'); return; }
+  state.coins -= stars * COINS_PER_STAR;
+  saveLocal(); renderAll();
+  var text = '💸 Заявка на вывод\nИгрок: ' + state.name + '\nID: ' + state.user_id +
+    '\nК выплате: ' + stars + ' ⭐';
   try { await navigator.clipboard.writeText(text); } catch (e) {}
-  toast('Заявка скопирована — отправь её боту');
+  toast('Заявка отправлена! Ожидай звёзды от админа');
   openBot();
 }
 
@@ -476,7 +515,7 @@ async function watchBoostAd() {
     state.boostAds.count++;
     state.boostAds.last = Date.now();
     state.boostUntil = Date.now() + BOOST_AD.boostMinutes * 60000;
-    save(); renderAll();
+    saveLocal(); pushRemote(); renderAll();
     toast('⚡ Доход ×2 на 1 час!');
   } catch (e) { toast('Реклама не показана, попробуйте позже'); }
   btn.disabled = false;
@@ -525,6 +564,14 @@ async function pushMyScore() {
   }, { onConflict: 'player_id,week_key' });
 }
 
+async function loadMyMiners() {
+  if (!supabase || isGuest()) return [];
+  var res = await supabase.from('miners').select('tier, created_at').eq('player_id', state.user_id);
+  if (res.error) { console.error('miners:', res.error); return []; }
+  myMiners = res.data || [];
+  return myMiners;
+}
+
 // ============ UI ============
 function bindUI() {
   document.getElementById('tap-zone').addEventListener('click', tap);
@@ -532,17 +579,6 @@ function bindUI() {
   document.getElementById('btn-sell').addEventListener('click', sellCoins);
   document.getElementById('btn-topup').addEventListener('click', topupSubmit);
   document.getElementById('topup-input').addEventListener('input', updateTopup);
-
-  document.getElementById('btn-copy-card').addEventListener('click', function() {
-    try { navigator.clipboard.writeText(CARD_NUMBER.replace(/\s/g, '')); toast('Номер карты скопирован'); }
-    catch (e) { toast('Номер: ' + CARD_NUMBER); }
-  });
-  document.getElementById('btn-open-bot').addEventListener('click', function() {
-    var text = '✅ Чек перевода\nИгрок: ' + (state ? state.name : 'Игрок') + ' (ID ' + (state ? state.user_id : '-') + ')\nКарта: ' + CARD_NUMBER;
-    try { navigator.clipboard.writeText(text); } catch (e) {}
-    toast('Шаблон скопирован — прикрепи скрин перевода');
-    openBot();
-  });
 
   document.querySelectorAll('.tab').forEach(function(t) {
     t.addEventListener('click', function() {
@@ -566,7 +602,8 @@ renderAll();
 renderBoost();
 
 (async function start() {
-  try { await loadMyMiners(); } catch (e) { console.error(e); }
+  try { await loadRemote(); } catch (e) { console.error(e); }
+  try { await loadMyMiners(); } catch (e) {}
   renderMiners(); renderAll();
   try { await pushMyScore(); } catch (e) {}
   setInterval(pushMyScore, 5 * 60 * 1000);
