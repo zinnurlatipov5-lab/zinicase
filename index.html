@@ -214,7 +214,7 @@
   </div>
   <div class="card">
     <b>📌 Как проходит выплата</b>
-    <p class="muted">1. Оставляешь заявку — она попадает администратору.<br>2. Администратор отправляет тебе звёзды в Telegram.<br>3. Звёзды можешь потратить в Telegram или обменять на рубли.</p>
+    <p class="muted">1. Жмёшь кнопку — данные заявки копируются автоматически.<br>2. Отправляешь скопированное в чат админу — чат откроется сам.<br>3. Администратор отправляет тебе звёзды в Telegram в течение 24 часов.</p>
   </div>
 </div>
 
@@ -238,6 +238,7 @@ var FN_BASE = 'https://clxewmkuntmgtbovrgqk.supabase.co/functions/v1';
 var PAYMENT_FN = 'telegram-webhook';
 var ADSGRAM_ID = '59627';
 var BOT_USERNAME = 'zini_drop_bot';
+var ADMIN_CHAT = 'zinidropadmin';
 
 // ============ ЭКОНОМИКА ============
 var TAP_REWARD = 100;
@@ -246,7 +247,6 @@ var MIN_WITHDRAW_STARS = 50;
 var MIN_WITHDRAW_COINS = MIN_WITHDRAW_STARS * COINS_PER_STAR;
 var MIN_TOPUP_STARS = 15;
 
-// Условия вывода
 var ADS_REQUIRED = 3;        // минимум 3 рекламы за последние сутки
 var MIN_WEEK_DEPOSIT = 15;   // минимум 15 ⭐ депозитов за последние 7 дней
 
@@ -274,6 +274,11 @@ function isGuest() { return !state || String(state.user_id).indexOf('guest_') ==
 function fmt(n) { return Math.floor(n).toLocaleString('ru-RU'); }
 function openBot() {
   var link = 'https://t.me/' + BOT_USERNAME;
+  if (tg && tg.openTelegramLink) tg.openTelegramLink(link);
+  else window.open(link, '_blank');
+}
+function openAdminChat() {
+  var link = 'https://t.me/' + ADMIN_CHAT;
   if (tg && tg.openTelegramLink) tg.openTelegramLink(link);
   else window.open(link, '_blank');
 }
@@ -324,7 +329,7 @@ async function addAdView() {
   renderAll();
 }
 
-// ============ ДЕПОЗИТ ЗА НЕДЕЛЮ (из таблицы topups) ============
+// ============ ДЕПОЗИТ ЗА НЕДЕЛЮ ============
 async function loadWeekDeposit() {
   if (!supabase || isGuest()) { weekDeposit = 0; renderAll(); return; }
   var since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
@@ -427,7 +432,6 @@ function renderAll() {
   document.getElementById('prog-left').textContent =
     state.coins >= MIN_WITHDRAW_COINS ? 'Вывод доступен!' : 'До вывода: ' + fmt(MIN_WITHDRAW_COINS - state.coins) + ' монет';
 
-  // прогресс рекламы за сутки
   var views = adsToday();
   var ap = document.getElementById('ads-progress');
   var af = document.getElementById('ads-fill');
@@ -441,7 +445,6 @@ function renderAll() {
     ? '✅ Активность выполнена.'
     : 'Посмотри ещё ' + (ADS_REQUIRED - views) + ' ' + (ADS_REQUIRED - views === 1 ? 'рекламу' : 'рекламы') + ' на вкладке «Шахта».';
 
-  // прогресс депозита за неделю
   var dp = document.getElementById('dep-progress');
   var df = document.getElementById('dep-fill');
   var dn = document.getElementById('dep-note');
@@ -500,7 +503,7 @@ function renderMiners() {
   if (c) c.textContent = myMiners.length ? myMiners.length + ' активных' : '';
 }
 
-// ============ ПОКУПКА МАЙНЕРА ЗА ЗВЁЗДЫ ============
+// ============ ПОКУПКА МАЙНЕРА ============
 async function buyMinerWithStars(tier) {
   if (isGuest()) { toast('Открой игру из Telegram, чтобы покупать'); return; }
   var t = TIERS[tier];
@@ -518,7 +521,7 @@ async function buyMinerWithStars(tier) {
   toast('⛏ ' + t.name + ' куплен и уже майнит!');
 }
 
-// ============ ПОПОЛНЕНИЕ ЗВЁЗДАМИ (инвойс Telegram) ============
+// ============ ПОПОЛНЕНИЕ ============
 function updateTopup() {
   var input = document.getElementById('topup-input');
   var sum = document.getElementById('topup-sum');
@@ -567,8 +570,6 @@ async function topupSubmit() {
   btn.disabled = false;
 }
 
-// ============ ЗАЯВКА НА ВЫВОД (монеты → звёзды) ============
-async function sellCoins() {
 // ============ ЗАЯВКА НА ВЫВОД (копирование в буфер) ============
 async function sellCoins() {
   if (isGuest()) { toast('Открой игру из Telegram, чтобы продавать'); return; }
@@ -581,18 +582,18 @@ async function sellCoins() {
     return;
   }
   var stars = Math.floor(coins / COINS_PER_STAR);
+  var btn = document.getElementById('btn-sell');
+  btn.disabled = true;
 
-  // запись заявки в базу (снимаем монеты с баланса)
   var ins = await supabase.from('withdrawals').insert({
     player_id: state.user_id, name: state.name,
     coins: stars * COINS_PER_STAR, stars: stars, rub: 0, status: 'new'
   }).select('id').single();
-  if (ins.error) { console.error(ins.error); toast('Ошибка заявки, попробуй позже'); return; }
+  if (ins.error) { console.error(ins.error); btn.disabled = false; toast('Ошибка заявки, попробуй позже'); return; }
 
   state.coins -= stars * COINS_PER_STAR;
   saveLocal(); renderAll();
 
-  // формируем текст заявки и копируем в буфер
   var text =
     '🔔 Заявка на вывод #' + (ins.data ? ins.data.id : '?') + '\n' +
     'Ник: ' + state.name + '\n' +
@@ -612,12 +613,7 @@ async function sellCoins() {
 
   toast('Данные скопированы! Отправь их в чат админу');
   openAdminChat();
-}
-
-function openAdminChat() {
-  var link = 'https://t.me/zinidropadmin';
-  if (tg && tg.openTelegramLink) tg.openTelegramLink(link);
-  else window.open(link, '_blank');
+  btn.disabled = false;
 }
 
 // ============ РЕКЛАМА ×2 ============
