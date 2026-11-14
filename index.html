@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Ёлка Зини 🎄 v6.2</title>
+<title>Ёлка Зини 🎄 v6.3</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -18,6 +18,7 @@ header,#ticker-bar,main,.tabs,#toast{position:relative;z-index:1;}
 header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
 #h-name{font-weight:800;font-size:17px;}
 #h-level{font-size:13px;color:var(--acc);}
+#h-pass{display:none;font-size:12px;font-weight:800;color:#7dd3fc;border:1px solid rgba(125,211,252,.5);border-radius:8px;padding:2px 8px;}
 
 #ticker-bar{display:flex;align-items:center;border-radius:12px;background:rgba(198,255,94,.07);border:1px solid rgba(198,255,94,.3);overflow:hidden;height:48px;margin-bottom:12px;}
 .ticker-label{flex:none;background:var(--acc);color:#0a0a10;font-size:14px;font-weight:800;padding:0 14px;border-radius:10px;margin:5px;white-space:nowrap;}
@@ -42,6 +43,7 @@ header{display:flex;justify-content:space-between;align-items:center;margin-bott
 .btn{display:block;width:100%;padding:14px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#0a0a10;font-weight:800;font-size:16px;cursor:pointer;font-family:inherit;}
 .btn:disabled{opacity:.45;}
 .btn.ghost{background:transparent;border:1px solid rgba(198,255,94,.4);color:var(--acc);}
+.btn.blue{background:linear-gradient(135deg,#38bdf8,#818cf8);color:#0a0a10;}
 .btn-row{display:flex;gap:8px;}
 .btn-row .btn{flex:1;}
 
@@ -65,11 +67,11 @@ h3{margin:4px 0 12px;font-size:18px;}
 .inv-name{flex:1;}
 .inv-name b{display:block;font-size:15px;}
 .inv-count{color:var(--mut);font-size:13px;}
-.r-common{color:#b8b8c4;} .r-rare{color:#4da3ff;} .r-epic{color:#b678ff;} .r-legendary{color:#ffd75e;} .r-mythic{color:#ff7ad9;}
+.r-common{color:#b8b8c4;} .r-rare{color:#4da3ff;} .r-epic{color:#b678ff;} .r-legendary{color:#ffd75e;} .r-mythic{color:#ff7ad9;} .r-pass{color:#7dd3fc;}
 
 .tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:rgba(20,27,50,.95);border-top:3px solid #3a3a52;padding:10px 2px calc(10px + env(safe-area-inset-bottom));z-index:99;box-shadow:0 -6px 20px rgba(0,0,0,.45);}
-.tab{flex:1;background:none;border:0;color:#8b9bc4;font-size:13px;font-weight:800;padding:12px 0 10px;border-radius:14px;cursor:pointer;font-family:inherit;text-align:center;line-height:1.2;margin:0 2px;transition:all .2s ease;}
-.tab .tab-icon{display:block;font-size:26px;margin-bottom:3px;}
+.tab{flex:1;background:none;border:0;color:#8b9bc4;font-size:12px;font-weight:800;padding:12px 0 10px;border-radius:14px;cursor:pointer;font-family:inherit;text-align:center;line-height:1.2;margin:0 2px;transition:all .2s ease;}
+.tab .tab-icon{display:block;font-size:24px;margin-bottom:3px;}
 .tab.active{color:var(--acc);background:rgba(198,255,94,.16);box-shadow:0 0 18px rgba(198,255,94,.35);border:1px solid rgba(198,255,94,.4);}
 
 #toast{position:fixed;left:50%;bottom:130px;transform:translateX(-50%);background:#22223a;border:1px solid var(--acc);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;display:none;z-index:99;max-width:90%;text-align:center;}
@@ -88,6 +90,18 @@ h3{margin:4px 0 12px;font-size:18px;}
 .prize-cost{flex:none;font-weight:700;color:var(--acc);min-width:90px;font-size:14px;}
 .prize-desc{flex:1;color:var(--mut);font-size:13px;}
 .prize-btn{width:auto;padding:8px 14px;font-size:13px;}
+
+.quest-row{background:var(--card2);border-radius:12px;padding:12px;margin-bottom:8px;backdrop-filter:blur(6px);}
+.quest-top{display:flex;align-items:center;gap:10px;}
+.quest-icon{font-size:24px;flex:none;}
+.quest-name{flex:1;font-size:14px;font-weight:700;}
+.quest-prog{font-size:12px;color:var(--mut);}
+.quest-bar{height:8px;background:#2a2a44;border-radius:4px;overflow:hidden;margin:8px 0;}
+.quest-bar-fill{height:100%;background:linear-gradient(90deg,#7dd3fc,#c084fc);border-radius:4px;transition:width .4s ease;}
+.quest-reward{font-size:12px;color:var(--mut);margin-bottom:8px;}
+.quest-btn{width:100%;padding:10px;font-size:14px;}
+.pass-badge{display:inline-block;background:linear-gradient(135deg,#38bdf8,#c084fc);color:#0a0a10;font-weight:800;font-size:12px;border-radius:8px;padding:2px 8px;margin-left:6px;}
+.pass-done{opacity:.55;}
 </style>
 </head>
 <body>
@@ -96,7 +110,10 @@ h3{margin:4px 0 12px;font-size:18px;}
 
 <header>
   <div id="h-name">Игрок</div>
-  <div id="h-level">Уровень 1 🌱</div>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <span id="h-pass">💠 ПАСС</span>
+    <span id="h-level">Уровень 1 🌱</span>
+  </div>
 </header>
 
 <div id="guest-note">⚠️ Открой игру через Telegram — прогресс сохраняется только там.</div>
@@ -138,9 +155,14 @@ h3{margin:4px 0 12px;font-size:18px;}
     <button id="btn-ad-bonus" class="btn ghost">🎁 Бонус за рекламу: +500 🌰 (раз в день)</button>
   </section>
 
+  <section id="screen-pass" class="screen">
+    <h3>✨ Зимний пропуск</h3>
+    <div id="pass-content"></div>
+  </section>
+
   <section id="screen-shop" class="screen">
     <h3>🛒 Витрина призов</h3>
-    <div class="muted" style="margin-bottom:10px;">Обменивай шишки на шары. Чем реже редкость — тем дороже.</div>
+    <div class="muted" style="margin-bottom:10px;">Обменивай шишки на шары. Эксклюзивные пасс-шары — только через пропуск!</div>
     <div id="prize-list"></div>
   </section>
 
@@ -149,20 +171,15 @@ h3{margin:4px 0 12px;font-size:18px;}
     <div id="top-list" class="muted">Загрузка…</div>
     <div class="muted" style="margin-top:8px;">Топ обнуляется каждый понедельник. Топ-3 получают медали и призы!</div>
   </section>
-
-  <section id="screen-pass" class="screen">
-    <h3>✨ Пропуск</h3>
-    <div class="card">Здесь появится зимний пропуск — следи за обновлениями! ✨</div>
-  </section>
 </main>
 
 <nav class="tabs">
   <button class="tab active" data-screen="tree"><span class="tab-icon">🎄</span>Ёлка</button>
   <button class="tab" data-screen="inv"><span class="tab-icon">🎒</span>Инвентарь</button>
   <button class="tab" data-screen="mini"><span class="tab-icon">🎮</span>Игры</button>
+  <button class="tab" data-screen="pass"><span class="tab-icon">✨</span>Пропуск</button>
   <button class="tab" data-screen="shop"><span class="tab-icon">🛒</span>Витрина</button>
   <button class="tab" data-screen="top"><span class="tab-icon">🏆</span>Топ</button>
-  <button class="tab" data-screen="pass"><span class="tab-icon">✨</span>Пропуск</button>
 </nav>
 
 <div id="toast"></div>
@@ -211,6 +228,11 @@ window.addEventListener('error', function (e) {
 var SB_URL = 'https://clxewmkuntmgtbovrgqk.supabase.co';
 var SB_KEY = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX';
 // =========================================================
+// НАСТРОЙКИ ПРОПУСКА: впиши свой бот и свои коды активации
+var BOT_USERNAME = 'zini_xmas_bot'; // имя твоего бота без @
+var PASS_CODES = ['ZINI2026', 'WINTER-PASS']; // коды активации пропуска — меняй как хочешь
+var PASS_PRICE_LABEL = '250 ⭐ Telegram Stars';
+var PASS_DAYS = 30;
 
 var tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
 try { if (tg) { tg.expand(); tg.setHeaderColor('#0b1224'); tg.setBackgroundColor('#0b1224'); } } catch(e){}
@@ -225,7 +247,7 @@ try { supabase = window.supabase.createClient(SB_URL, SB_KEY); } catch(e){ conso
 var WATER_CD = 2 * 3600 * 1000;
 var SHAKE_CD = 4 * 3600 * 1000;
 var PASSIVE_CAP_H = 24;
-var ADS_TAG = null; // ID блока AdsGram — впиши, когда подключишь рекламу
+var ADS_TAG = null;
 var AD_BONUS = 500;
 
 var ORNAMENTS = {
@@ -233,22 +255,35 @@ var ORNAMENTS = {
   rare:      ['Ледяной шар','Звёздный шар','Золотой мандарин','Ватное облачко','Серебряная шишка','Посох Деда Мороза'],
   epic:      ['Хрустальный шар','Огненный феникс','Северный олень','Золотая звезда','Шар «Млечный путь»'],
   legendary: ['Северное сияние','Шар Снежной королевы','Рождественский колокол'],
-  mythic:    ['Легендарная звезда Зини']
+  mythic:    ['Легендарная звезда Зини'],
+  pass:      ['Дракон Нового года','Золотая печать Зини','Ледяной феникс','Корона Зимнего владыки','Снежный дракончик','Аметистовая гирлянда']
 };
 var RARITY_INFO = {
   common:    {icon:'⚪', label:'Обычный'},
   rare:      {icon:'🔵', label:'Редкий'},
   epic:      {icon:'🟣', label:'Эпический'},
   legendary: {icon:'🟡', label:'Легендарный'},
-  mythic:    {icon:'🌈', label:'Мифический'}
+  mythic:    {icon:'🌈', label:'Мифический'},
+  pass:      {icon:'💠', label:'Пасс-эксклюзив'}
 };
 var PRICES = { common:5000, rare:15000, epic:50000, legendary:200000, mythic:1000000 };
+
+var QUESTS = [
+  { id:'q1', icon:'💧', name:'Полей ёлку 5 раз', need:5, key:'water_count', reward:{ pinecones:5000, drop:'rare' } },
+  { id:'q2', icon:'❄️', name:'Стряхни снег 3 раза', need:3, key:'shake_count', reward:{ pinecones:7500, drop:'rare' } },
+  { id:'q3', icon:'🎁', name:'Набери 30 очков в «Поймай подарок»', need:30, key:'mini_score', reward:{ drop:'epic' } },
+  { id:'q4', icon:'🎯', name:'30 попаданий в «Снежный тир»', need:30, key:'tir_hits', reward:{ drop:'epic' } },
+  { id:'q5', icon:'🛒', name:'Купи любой шар в витрине', need:1, key:'shop_buys', reward:{ pinecones:10000, drop:'pass' } },
+  { id:'q6', icon:'🏆', name:'Заработай 50 000 шишек за неделю', need:50000, key:'weekly_goal', reward:{ pinecones:20000, drop:'legendary' } }
+];
 
 var state = {
   xp:0, level:1, pinecones:0,
   moisture:0, snow:0,
   last_watered:0, last_shake:0, last_collect:0,
-  weekly_pinecones:0, week_key:'', total_drops:0
+  weekly_pinecones:0, week_key:'', total_drops:0,
+  pass_active:false, pass_until:0,
+  quests:{}, quest_claimed:{}
 };
 
 function fmt(n){ return String(Math.floor(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
@@ -266,25 +301,45 @@ function toast(msg){
   toastTimer = setTimeout(function(){ t.style.display = 'none'; }, 2600);
 }
 
+function questsKey(){ return 'zini_quests_' + playerId; }
+function saveQuests(){ try { localStorage.setItem(questsKey(), JSON.stringify(state.quests)); } catch(e){} }
+function loadQuests(){
+  try {
+    var raw = JSON.parse(localStorage.getItem(questsKey()) || '{}');
+    if (raw.week_key !== weekKey()) raw = { week_key: weekKey() };
+    state.quests = raw;
+  } catch(e){ state.quests = { week_key: weekKey() }; }
+}
+function questProg(key){
+  if (key === 'weekly_goal') return state.weekly_pinecones || 0;
+  return state.quests[key] || 0;
+}
+function bumpQuest(key, amount){
+  if (key === 'weekly_goal') return; // считается из weekly_pinecones
+  state.quests[key] = (state.quests[key] || 0) + amount;
+  saveQuests();
+}
+function passActive(){ return state.pass_active && state.pass_until > Date.now(); }
+
 function saveLocal(){ try { localStorage.setItem('zinixmas_' + playerId, JSON.stringify(state)); } catch(e){} }
 function loadLocal(){
   try {
     var raw = localStorage.getItem('zinixmas_' + playerId);
-    if (raw) { var s = JSON.parse(raw); for (var k in s) state[k] = s[k]; }
+    if (raw) { var s = JSON.parse(raw); for (var k in s) if (k !== 'quests') state[k] = s[k]; }
   } catch(e){}
 }
 
 async function loadRemote(){
-  if (!supabase || isGuest) { renderAll(); return; }
+  if (!supabase || isGuest) { renderAll(); renderPass(); return; }
   var res = await supabase.from('players').select('*').eq('player_id', playerId).maybeSingle();
-  if (res.error) { toast('Ошибка базы: ' + res.error.message); renderAll(); return; }
+  if (res.error) { toast('Ошибка базы: ' + res.error.message); renderAll(); renderPass(); return; }
   if (!res.data) {
     var ins = await supabase.from('players').insert({ player_id: playerId, name: playerName }).select().maybeSingle();
     if (ins.data) applyPlayer(ins.data);
   } else {
     applyPlayer(res.data);
   }
-  renderAll();
+  renderAll(); renderPass();
   loadTicker(); loadTop(); loadInventory();
 }
 function applyPlayer(p){
@@ -297,6 +352,9 @@ function applyPlayer(p){
   state.weekly_pinecones = p.weekly_pinecones || 0;
   state.week_key = p.week_key || '';
   state.total_drops = p.total_drops || 0;
+  state.pass_active = !!p.pass_active;
+  state.pass_until = p.pass_until ? new Date(p.pass_until).getTime() : 0;
+  if (state.pass_until && state.pass_until < Date.now()) { state.pass_active = false; }
   var wk = weekKey();
   if (state.week_key !== wk) { state.weekly_pinecones = 0; state.week_key = wk; markDirty(); }
   saveLocal();
@@ -342,6 +400,8 @@ function milestoneDrop(rarity){ dropOrnament(rarity, 'level_up', true); }
 function dropOrnament(forcedRarity, source, forced){
   var rarity = forcedRarity || rollRarity();
   var pool = ORNAMENTS[rarity];
+  if (!pool || !pool.length) rarity = 'common';
+  pool = ORNAMENTS[rarity];
   var idx = Math.floor(Math.random() * pool.length);
   var itemName = pool[idx];
   var itemId = rarity + '_' + idx;
@@ -362,9 +422,10 @@ function doWater(){
   var rew = waterReward();
   state.pinecones += rew;
   state.weekly_pinecones += rew;
+  bumpQuest('water_count', 1);
   gainXp(60);
   if (Math.random() < 0.2) dropOrnament(null, 'water');
-  markDirty(); renderAll();
+  markDirty(); renderAll(); renderPass();
   toast('💧 Полил ёлку! +' + fmt(rew) + ' 🌰');
 }
 function doShake(){
@@ -373,9 +434,10 @@ function doShake(){
   var rew = shakeReward();
   state.pinecones += rew;
   state.weekly_pinecones += rew;
+  bumpQuest('shake_count', 1);
   gainXp(40);
   if (Math.random() < 0.15) dropOrnament(null, 'shake');
-  markDirty(); renderAll();
+  markDirty(); renderAll(); renderPass();
   toast('❄️ Снег стряхнут! +' + fmt(rew) + ' 🌰');
 }
 function doCollect(){
@@ -384,7 +446,7 @@ function doCollect(){
   state.last_collect = Date.now();
   state.pinecones += p;
   state.weekly_pinecones += p;
-  markDirty(); renderAll();
+  markDirty(); renderAll(); renderPass();
   toast('🌰 +' + fmt(p) + ' шишек!');
 }
 function timeLeft(fromTs, cd){
@@ -410,6 +472,7 @@ function renderAll(){
   document.getElementById('tree-sub').textContent = 'Доход: ' + fmt(passiveRate()) + ' 🌰/час';
   document.getElementById('h-name').textContent = playerName;
   document.getElementById('h-level').textContent = 'Уровень ' + state.level;
+  document.getElementById('h-pass').style.display = passActive() ? 'inline-block' : 'none';
   document.getElementById('pinecone-count').textContent = fmt(state.pinecones);
   document.getElementById('btn-collect').textContent = 'Забрать ' + fmt(pendingPassive()) + ' 🌰';
 
@@ -468,7 +531,7 @@ async function loadTop(){
 
 async function loadInventory(){
   if (!supabase || isGuest) return;
-  var res = await supabase.from('inventory').select('item_name,rarity').eq('player_id', playerId).limit(200);
+  var res = await supabase.from('inventory').select('item_name,rarity').eq('player_id', playerId).limit(300);
   var el = document.getElementById('inv-list');
   if (res.error || !res.data || !res.data.length) { el.textContent = 'Пока пусто — играй в мини-игры и ухаживай за ёлкой!'; return; }
   var byId = {};
@@ -476,7 +539,7 @@ async function loadInventory(){
     var key = x.rarity + '|' + x.item_name;
     byId[key] = (byId[key] || 0) + 1;
   });
-  var order = ['mythic','legendary','epic','rare','common'];
+  var order = ['pass','mythic','legendary','epic','rare','common'];
   var html = '';
   order.forEach(function(r){
     Object.keys(byId).forEach(function(k){
@@ -515,6 +578,7 @@ function buyPrize(rarity){
   var cost = PRICES[rarity];
   if (state.pinecones < cost) { toast('Не хватает шишек: нужно ещё ' + fmt(cost - state.pinecones) + ' 🌰'); return; }
   state.pinecones -= cost;
+  bumpQuest('shop_buys', 1);
   markDirty(); renderAll();
   dropOrnament(rarity, 'shop', true);
   renderShop();
@@ -543,8 +607,117 @@ function grantAdBonus(){
   try { localStorage.setItem(adBonusKey(), JSON.stringify({ day: new Date().toDateString() })); } catch(e){}
   state.pinecones += AD_BONUS;
   state.weekly_pinecones += AD_BONUS;
-  markDirty(); renderAll();
+  markDirty(); renderAll(); renderPass();
   toast('🎁 Бонус получен: +' + fmt(AD_BONUS) + ' 🌰');
+}
+
+// ============================================================
+// ЗИМНИЙ ПРОПУСК: задания и покупка
+// ============================================================
+function renderPass(){
+  var el = document.getElementById('pass-content');
+  if (!el) return;
+  if (!passActive()) {
+    el.innerHTML =
+      '<div class="card">' +
+        '<div style="font-size:34px;text-align:center;">💠</div>' +
+        '<div style="text-align:center;font-weight:800;font-size:16px;margin:8px 0;">Зимний пропуск</div>' +
+        '<div class="muted" style="margin-bottom:10px;">Открывает 6 заданий с уникальными наградами, включая пасс-эксклюзивные шары (💠), которых нет в витрине. Действует ' + PASS_DAYS + ' дней с активации.</div>' +
+        '<button id="btn-buy-pass" class="btn blue">⭐ Купить за ' + PASS_PRICE_LABEL + '</button>' +
+      '</div>' +
+      '<div class="card">' +
+        '<div style="font-weight:700;font-size:14px;margin-bottom:8px;">Уже купил или получил код?</div>' +
+        '<input id="pass-code-input" placeholder="Введи код активации" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(198,255,94,.4);background:rgba(10,16,34,.8);color:#fff;font-size:14px;box-sizing:border-box;margin-bottom:8px;">' +
+        '<button id="btn-activate-pass" class="btn ghost">Активировать код</button>' +
+      '</div>' +
+      '<div class="card"><div class="muted">Задания пропуска будут доступны после покупки 💠</div></div>';
+    var bb = document.getElementById('btn-buy-pass');
+    if (bb) bb.addEventListener('click', function(){
+      if (tg && tg.openTelegramLink) {
+        tg.openTelegramLink('https://t.me/' + BOT_USERNAME + '?start=buy_pass_' + playerId);
+        toast('Напиши боту «Купить пропуск» — после оплаты пришли код!');
+      } else {
+        toast('Покупка через бота @' + BOT_USERNAME + ' — открой игру в Telegram');
+      }
+    });
+    var ab = document.getElementById('btn-activate-pass');
+    if (ab) ab.addEventListener('click', activatePass);
+    return;
+  }
+  // Пасс активен — показываем задания
+  var leftDays = Math.max(1, Math.ceil((state.pass_until - Date.now()) / 86400000));
+  var html = '<div class="card">' +
+    '<div style="font-weight:800;font-size:15px;">💠 Пропуск активен<span class="pass-badge">осталось ' + leftDays + ' дн.</span></div>' +
+    '<div class="muted" style="margin-top:6px;">Выполняй задания — забирай награды. Все задания обнуляются каждый понедельник вместе с топом.</div>' +
+    '</div>';
+  var allDone = true;
+  QUESTS.forEach(function(q){
+    var prog = Math.min(questProg(q.key), q.need);
+    var claimed = !!state.quest_claimed[q.id];
+    var done = prog >= q.need;
+    if (!done) allDone = false;
+    var pct = Math.floor((prog / q.need) * 100);
+    var rewParts = [];
+    if (q.reward.pinecones) rewParts.push(fmt(q.reward.pinecones) + ' 🌰');
+    if (q.reward.drop) {
+      var info = RARITY_INFO[q.reward.drop];
+      rewParts.push(info.icon + ' ' + info.label + ' шар');
+    }
+    html += '<div class="quest-row' + (claimed ? ' pass-done' : '') + '">' +
+      '<div class="quest-top">' +
+        '<div class="quest-icon">' + q.icon + '</div>' +
+        '<div class="quest-name">' + q.name + '</div>' +
+        '<div class="quest-prog">' + (claimed ? '✅' : fmt(prog) + ' / ' + fmt(q.need)) + '</div>' +
+      '</div>' +
+      '<div class="quest-bar"><div class="quest-bar-fill" style="width:' + pct + '%;"></div></div>' +
+      '<div class="quest-reward">Награда: ' + rewParts.join(' + ') + '</div>' +
+      '<button class="btn quest-btn" data-qid="' + q.id + '"' + (done && !claimed ? '' : ' disabled') + '>' +
+        (claimed ? 'Награда получена' : (done ? 'Забрать награду' : 'Выполни задание')) +
+      '</button>' +
+    '</div>';
+  });
+  if (allDone) {
+    html += '<div class="card" style="border:1px solid var(--acc);"><div style="text-align:center;">🏆 <b>Все задания выполнены!</b><br><span class="muted">Ты забрал максимум из пропуска этой недели — легенда 💠</span></div></div>';
+  }
+  el.innerHTML = html;
+  el.querySelectorAll('button[data-qid]').forEach(function(b){
+    b.addEventListener('click', function(){ claimQuest(b.dataset.qid); });
+  });
+}
+function claimQuest(qid){
+  var q = QUESTS.find(function(x){ return x.id === qid; });
+  if (!q) return;
+  if (!passActive()) { toast('Нужен активный пропуск 💠'); return; }
+  if (state.quest_claimed[qid]) return;
+  if (questProg(q.key) < q.need) { toast('Задание ещё не выполнено'); return; }
+  state.quest_claimed[qid] = true;
+  try { localStorage.setItem('zini_claimed_' + playerId, JSON.stringify(state.quest_claimed)); } catch(e){}
+  if (q.reward.pinecones) {
+    state.pinecones += q.reward.pinecones;
+  }
+  markDirty(); renderAll();
+  if (q.reward.drop) dropOrnament(q.reward.drop, 'pass_quest', true);
+  if (q.reward.pinecones) toast('🏆 Задание выполнено! +' + fmt(q.reward.pinecones) + ' 🌰');
+  renderPass();
+}
+function activatePass(){
+  var input = document.getElementById('pass-code-input');
+  if (!input) return;
+  var code = (input.value || '').trim().toUpperCase();
+  if (!code) { toast('Введи код активации'); return; }
+  if (PASS_CODES.indexOf(code) === -1) { toast('Код неверный — проверь написание'); return; }
+  state.pass_active = true;
+  state.pass_until = Date.now() + PASS_DAYS * 86400000;
+  state.quest_claimed = {};
+  try { localStorage.setItem('zini_claimed_' + playerId, JSON.stringify({})); } catch(e){}
+  markDirty(); renderAll(); renderPass();
+  toast('💠 Пропуск активирован на ' + PASS_DAYS + ' дней!');
+  if (supabase && !isGuest) {
+    supabase.from('players').update({
+      pass_active: true,
+      pass_until: new Date(state.pass_until).toISOString()
+    }).eq('player_id', playerId);
+  }
 }
 
 var dirty = false;
@@ -576,6 +749,7 @@ document.querySelectorAll('.tab').forEach(function(b){
     if (b.dataset.screen === 'top') loadTop();
     if (b.dataset.screen === 'inv') loadInventory();
     if (b.dataset.screen === 'shop') renderShop();
+    if (b.dataset.screen === 'pass') renderPass();
   });
 });
 
@@ -611,6 +785,7 @@ function finishGame(opts){
   markDirty(); renderAll(); saveLocal();
   if (opts.drop) dropOrnament(null, opts.source);
   else if (rew > 0) toast('🌰 +' + fmt(rew) + ' шишек!');
+  renderPass();
 }
 
 // ============================================================
@@ -712,6 +887,7 @@ function mgEnd(){
   var rew = 300 * mg.score + state.level * 100;
   mg.pendReward = rew;
   mg.pendDrop = Math.random() < Math.min(0.5, 0.15 + mg.score * 0.02);
+  bumpQuest('mini_score', mg.score);
   mgOverlay('Игра окончена!', 'Очки: ' + mg.score + ' • Награда: ' + fmt(rew) + ' 🌰', true);
 }
 function mgClaim(){
@@ -728,7 +904,7 @@ renderMg();
 // ============================================================
 var ST_KEY = 'zini_tir_' + playerId;
 var ST_TARGETS = ['🎯','⛄','🔔'];
-var st = { active:false, score:0, timeLeft:30, tickT:0, spawnT:0 };
+var st = { active:false, score:0, timeLeft:30, tickT:0, spawnT:0, pendReward:0, pendDrop:false };
 var stEl = {};
 
 function stBuild(){
@@ -741,7 +917,7 @@ function stBuild(){
         '<div><div class="muted">Попытки</div><div id="st-attempts" style="font-size:20px;font-weight:800;color:var(--acc);">3</div></div>' +
         '<button id="st-start" class="btn" style="width:auto;padding:12px 20px;">▶️ Играть</button>' +
       '</div>' +
-      '<div class="muted" style="margin-top:10px;">30 секунд. Тапай по мишеням — каждая попадание это очко и шишки в конце.</div>' +
+      '<div class="muted" style="margin-top:10px;">30 секунд. Тапай по мишеням — попадание это очко и шишки в конце.</div>' +
     '</div>' +
     '<div id="st-area" class="game-area">' +
       '<div id="st-score" class="hud-r"></div>' +
@@ -815,6 +991,7 @@ function stEnd(){
   var rew = 250 * st.score + state.level * 80;
   st.pendReward = rew;
   st.pendDrop = Math.random() < Math.min(0.5, 0.15 + st.score * 0.02);
+  bumpQuest('tir_hits', st.score);
   stOverlay('Время вышло!', 'Попаданий: ' + st.score + ' • Награда: ' + fmt(rew) + ' 🌰', true);
 }
 function stClaim(){
@@ -828,8 +1005,11 @@ renderSt();
 
 // ===== Старт =====
 if (isGuest) document.getElementById('guest-note').style.display = 'block';
+try { state.quest_claimed = JSON.parse(localStorage.getItem('zini_claimed_' + playerId) || '{}'); } catch(e){ state.quest_claimed = {}; }
 loadLocal();
+loadQuests();
 renderAll();
+renderPass();
 renderShop();
 loadRemote();
 </script>
