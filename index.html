@@ -569,6 +569,8 @@ async function topupSubmit() {
 
 // ============ ЗАЯВКА НА ВЫВОД (монеты → звёзды) ============
 async function sellCoins() {
+// ============ ЗАЯВКА НА ВЫВОД (копирование в буфер) ============
+async function sellCoins() {
   if (isGuest()) { toast('Открой игру из Telegram, чтобы продавать'); return; }
   await loadWeekDeposit();
   var coins = Math.floor(state.coins);
@@ -579,15 +581,43 @@ async function sellCoins() {
     return;
   }
   var stars = Math.floor(coins / COINS_PER_STAR);
+
+  // запись заявки в базу (снимаем монеты с баланса)
   var ins = await supabase.from('withdrawals').insert({
     player_id: state.user_id, name: state.name,
     coins: stars * COINS_PER_STAR, stars: stars, rub: 0, status: 'new'
-  });
+  }).select('id').single();
   if (ins.error) { console.error(ins.error); toast('Ошибка заявки, попробуй позже'); return; }
+
   state.coins -= stars * COINS_PER_STAR;
   saveLocal(); renderAll();
-  toast('Заявка отправлена! Ожидай звёзды от админа');
-  openBot();
+
+  // формируем текст заявки и копируем в буфер
+  var text =
+    '🔔 Заявка на вывод #' + (ins.data ? ins.data.id : '?') + '\n' +
+    'Ник: ' + state.name + '\n' +
+    'Telegram ID: ' + state.user_id + '\n' +
+    'Сумма: ' + stars + ' ⭐\n' +
+    'Монет списано: ' + fmt(stars * COINS_PER_STAR) + '\n' +
+    'Дата: ' + new Date().toLocaleString('ru-RU');
+
+  try { await navigator.clipboard.writeText(text); }
+  catch (e) {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = text; document.body.appendChild(ta);
+      ta.select(); document.execCommand('copy'); ta.remove();
+    } catch (e2) { toast(text); }
+  }
+
+  toast('Данные скопированы! Отправь их в чат админу');
+  openAdminChat();
+}
+
+function openAdminChat() {
+  var link = 'https://t.me/zinidropadmin';
+  if (tg && tg.openTelegramLink) tg.openTelegramLink(link);
+  else window.open(link, '_blank');
 }
 
 // ============ РЕКЛАМА ×2 ============
