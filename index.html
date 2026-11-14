@@ -3,13 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Ёлка Зини 🎄</title>
+<title>Ёлка Зини 🎄 v6.2</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#0a0a10;--card:#16161f;--card2:#1e1e2a;--acc:#c6ff5e;--acc2:#4ade80;--mut:#8b8b9a;--red:#ff6b6b;}
+:root{--bg:#0b1224;--card:rgba(22,30,55,.75);--card2:rgba(35,45,80,.7);--acc:#c6ff5e;--acc2:#4ade80;--mut:#9aa7c7;--red:#ff6b6b;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
-body{background:var(--bg);color:#fff;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;padding:12px 12px 118px;}
+html,body{height:100%;}
+body{background:linear-gradient(180deg,#0b1224 0%,#101a35 45%,#1b2a52 100%);color:#fff;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;padding:12px 12px 118px;overflow-x:hidden;}
+#snow{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.snowflake{position:absolute;top:-4%;background:#fff;border-radius:50%;opacity:.7;animation:fall linear infinite;}
+@keyframes fall{from{transform:translateY(-5vh);}to{transform:translateY(108vh);}}
+header,#ticker-bar,main,.tabs,#toast{position:relative;z-index:1;}
 header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
 #h-name{font-weight:800;font-size:17px;}
 #h-level{font-size:13px;color:var(--acc);}
@@ -22,15 +27,15 @@ header{display:flex;justify-content:space-between;align-items:center;margin-bott
 .screen{display:none;}
 .screen.active{display:block;}
 
-.tree-stage{text-align:center;background:var(--card);border-radius:16px;padding:24px 12px;margin-bottom:12px;}
+.tree-stage{text-align:center;background:var(--card);border-radius:16px;padding:24px 12px;margin-bottom:12px;backdrop-filter:blur(6px);}
 #tree-emoji{font-size:76px;line-height:1;}
 #tree-title{margin-top:8px;font-weight:800;font-size:18px;color:var(--acc);}
 #tree-sub{font-size:13px;color:var(--mut);margin-top:4px;}
 
-.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;}
+.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;backdrop-filter:blur(6px);}
 .bar-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:14px;}
 .bar-row span{flex:none;width:110px;}
-.bar-bg{flex:1;height:12px;background:#2a2a38;border-radius:6px;overflow:hidden;}
+.bar-bg{flex:1;height:12px;background:#2a2a44;border-radius:6px;overflow:hidden;}
 .bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--acc2),var(--acc));border-radius:6px;transition:width .4s ease;}
 .bar-fill.snow{background:linear-gradient(90deg,#8ecfff,#e0f4ff);}
 
@@ -53,24 +58,41 @@ h3{margin:4px 0 12px;font-size:18px;}
 .top-rank{flex:none;width:28px;text-align:center;font-weight:800;}
 .top-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .top-val{color:var(--acc);font-weight:700;font-size:14px;flex:none;}
+.medal-gold{color:#ffd75e;} .medal-silver{color:#d8e2f0;} .medal-bronze{color:#e8a15c;}
 
-.inv-item{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:12px;padding:12px;margin-bottom:8px;}
+.inv-item{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:12px;padding:12px;margin-bottom:8px;backdrop-filter:blur(6px);}
 .inv-emoji{font-size:26px;flex:none;}
 .inv-name{flex:1;}
 .inv-name b{display:block;font-size:15px;}
 .inv-count{color:var(--mut);font-size:13px;}
 .r-common{color:#b8b8c4;} .r-rare{color:#4da3ff;} .r-epic{color:#b678ff;} .r-legendary{color:#ffd75e;} .r-mythic{color:#ff7ad9;}
 
-.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:#1a1a26;border-top:3px solid #3a3a52;padding:10px 4px calc(10px + env(safe-area-inset-bottom));z-index:99;box-shadow:0 -6px 20px rgba(0,0,0,.45);}
-.tab{flex:1;background:none;border:0;color:#8b8b9a;font-size:15px;font-weight:800;padding:14px 0 12px;border-radius:16px;cursor:pointer;font-family:inherit;text-align:center;line-height:1.25;margin:0 3px;transition:all .2s ease;}
-.tab .tab-icon{display:block;font-size:28px;margin-bottom:4px;}
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:rgba(20,27,50,.95);border-top:3px solid #3a3a52;padding:10px 2px calc(10px + env(safe-area-inset-bottom));z-index:99;box-shadow:0 -6px 20px rgba(0,0,0,.45);}
+.tab{flex:1;background:none;border:0;color:#8b9bc4;font-size:13px;font-weight:800;padding:12px 0 10px;border-radius:14px;cursor:pointer;font-family:inherit;text-align:center;line-height:1.2;margin:0 2px;transition:all .2s ease;}
+.tab .tab-icon{display:block;font-size:26px;margin-bottom:3px;}
 .tab.active{color:var(--acc);background:rgba(198,255,94,.16);box-shadow:0 0 18px rgba(198,255,94,.35);border:1px solid rgba(198,255,94,.4);}
 
 #toast{position:fixed;left:50%;bottom:130px;transform:translateX(-50%);background:#22223a;border:1px solid var(--acc);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;display:none;z-index:99;max-width:90%;text-align:center;}
 #guest-note{background:#3a2a12;border:1px solid #ffb020;color:#ffd75e;border-radius:10px;padding:10px;font-size:13px;margin-bottom:12px;display:none;}
+
+.game-area{position:relative;height:340px;background:rgba(10,16,34,.85);border:1px solid rgba(120,150,255,.2);border-radius:14px;overflow:hidden;margin-bottom:12px;}
+.gift{position:absolute;font-size:36px;cursor:pointer;z-index:2;will-change:transform;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));}
+.hud-r{position:absolute;top:8px;right:10px;font-size:15px;font-weight:800;color:var(--acc);z-index:3;}
+.hud-l{position:absolute;top:8px;left:10px;font-size:15px;font-weight:800;color:var(--red);z-index:3;}
+.hud-c{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-size:15px;font-weight:800;color:#e0f4ff;z-index:3;}
+.overlay{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,14,30,.85);text-align:center;padding:16px;z-index:5;}
+.st-target{position:absolute;font-size:34px;cursor:pointer;z-index:2;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));animation:pop .3s ease;}
+@keyframes pop{from{transform:scale(.3);}to{transform:scale(1);}}
+
+.prize-row{display:flex;align-items:center;gap:10px;background:var(--card2);border-radius:12px;padding:10px;margin-bottom:8px;backdrop-filter:blur(6px);}
+.prize-cost{flex:none;font-weight:700;color:var(--acc);min-width:90px;font-size:14px;}
+.prize-desc{flex:1;color:var(--mut);font-size:13px;}
+.prize-btn{width:auto;padding:8px 14px;font-size:13px;}
 </style>
 </head>
 <body>
+
+<div id="snow"></div>
 
 <header>
   <div id="h-name">Игрок</div>
@@ -108,17 +130,29 @@ h3{margin:4px 0 12px;font-size:18px;}
     <div id="inv-list" class="muted">Пока пусто — играй в мини-игры и ухаживай за ёлкой!</div>
   </section>
 
-  <section id="screen-mini" class="screen"></section>
+  <section id="screen-mini" class="screen">
+    <h3>🎮 Поймай подарок</h3>
+    <div id="mg-host"></div>
+    <h3>🎯 Снежный тир</h3>
+    <div id="st-host"></div>
+    <button id="btn-ad-bonus" class="btn ghost">🎁 Бонус за рекламу: +500 🌰 (раз в день)</button>
+  </section>
+
+  <section id="screen-shop" class="screen">
+    <h3>🛒 Витрина призов</h3>
+    <div class="muted" style="margin-bottom:10px;">Обменивай шишки на шары. Чем реже редкость — тем дороже.</div>
+    <div id="prize-list"></div>
+  </section>
 
   <section id="screen-top" class="screen">
     <h3>🏆 Топ недели</h3>
     <div id="top-list" class="muted">Загрузка…</div>
-    <div class="muted" style="margin-top:8px;">Топ обнуляется каждый понедельник. Топ-3 получают призы!</div>
+    <div class="muted" style="margin-top:8px;">Топ обнуляется каждый понедельник. Топ-3 получают медали и призы!</div>
   </section>
 
   <section id="screen-pass" class="screen">
-    <h3>✨ Ноябрьский пропуск</h3>
-    <div class="card">Пропуск откроется после подключения платежей — очень скоро! ✨</div>
+    <h3>✨ Пропуск</h3>
+    <div class="card">Здесь появится зимний пропуск — следи за обновлениями! ✨</div>
   </section>
 </main>
 
@@ -126,6 +160,7 @@ h3{margin:4px 0 12px;font-size:18px;}
   <button class="tab active" data-screen="tree"><span class="tab-icon">🎄</span>Ёлка</button>
   <button class="tab" data-screen="inv"><span class="tab-icon">🎒</span>Инвентарь</button>
   <button class="tab" data-screen="mini"><span class="tab-icon">🎮</span>Игры</button>
+  <button class="tab" data-screen="shop"><span class="tab-icon">🛒</span>Витрина</button>
   <button class="tab" data-screen="top"><span class="tab-icon">🏆</span>Топ</button>
   <button class="tab" data-screen="pass"><span class="tab-icon">✨</span>Пропуск</button>
 </nav>
@@ -133,7 +168,7 @@ h3{margin:4px 0 12px;font-size:18px;}
 <div id="toast"></div>
 
 <script>
-// ===== Таблица 100 уровней (встроена в файл) =====
+// ===== Таблица 100 уровней =====
 var XP_TABLE = [];
 (function () {
   for (var i = 1; i <= 100; i++) {
@@ -146,23 +181,39 @@ function xpToNext(level) {
 </script>
 
 <script>
-// Ловушка ошибок: если что-то падает — покажем на экране
 window.addEventListener('error', function (e) {
   var t = document.getElementById('toast');
   if (t) { t.style.display = 'block'; t.textContent = '⚠️ Ошибка: ' + e.message; }
 });
+
+// ===== Ноябрьский снег =====
+(function () {
+  var host = document.getElementById('snow');
+  if (!host) return;
+  for (var i = 0; i < 45; i++) {
+    var f = document.createElement('div');
+    f.className = 'snowflake';
+    var size = 2 + Math.random() * 4;
+    f.style.width = size + 'px';
+    f.style.height = size + 'px';
+    f.style.left = (Math.random() * 100) + '%';
+    f.style.opacity = 0.25 + Math.random() * 0.5;
+    f.style.animationDuration = (6 + Math.random() * 9) + 's';
+    f.style.animationDelay = (-Math.random() * 12) + 's';
+    host.appendChild(f);
+  }
+})();
 </script>
 
 <script>
 'use strict';
-// ===================== КЛЮЧИ SUPABASE (уже вписаны) =====================
+// ===================== КЛЮЧИ SUPABASE =====================
 var SB_URL = 'https://clxewmkuntmgtbovrgqk.supabase.co';
 var SB_KEY = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX';
-// =========================================================================
+// =========================================================
 
-// Безопасная инициализация Telegram: работает и в Telegram, и в обычном браузере
 var tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
-try { if (tg) { tg.expand(); tg.setHeaderColor('#0a0a10'); tg.setBackgroundColor('#0a0a10'); } } catch(e){}
+try { if (tg) { tg.expand(); tg.setHeaderColor('#0b1224'); tg.setBackgroundColor('#0b1224'); } } catch(e){}
 var me = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user : null;
 var isGuest = !me;
 var playerId = me ? String(me.id) : 'guest';
@@ -175,6 +226,7 @@ var WATER_CD = 2 * 3600 * 1000;
 var SHAKE_CD = 4 * 3600 * 1000;
 var PASSIVE_CAP_H = 24;
 var ADS_TAG = null; // ID блока AdsGram — впиши, когда подключишь рекламу
+var AD_BONUS = 500;
 
 var ORNAMENTS = {
   common:    ['Красный шар','Синий шар','Жёлтый шар','Снежинка','Колокольчик','Шишка-игрушка','Мандаринка','Конфета-тросточка'],
@@ -190,6 +242,7 @@ var RARITY_INFO = {
   legendary: {icon:'🟡', label:'Легендарный'},
   mythic:    {icon:'🌈', label:'Мифический'}
 };
+var PRICES = { common:5000, rare:15000, epic:50000, legendary:200000, mythic:1000000 };
 
 var state = {
   xp:0, level:1, pinecones:0,
@@ -400,7 +453,7 @@ async function loadTop(){
   var res = await supabase.from('players').select('player_id,name,weekly_pinecones').order('weekly_pinecones', {ascending:false}).limit(10);
   var el = document.getElementById('top-list');
   if (res.error || !res.data || !res.data.length) { el.textContent = 'Пока никого — забирай шишки первым!'; return; }
-  var medals = ['🥇','🥈','🥉'];
+  var medals = ['<span class="medal-gold">🥇</span>','<span class="medal-silver">🥈</span>','<span class="medal-bronze">🥉</span>'];
   var html = '';
   for (var i = 0; i < res.data.length; i++) {
     var row = res.data[i];
@@ -437,6 +490,63 @@ async function loadInventory(){
   el.innerHTML = html;
 }
 
+// ===== Витрина призов =====
+function renderShop(){
+  var el = document.getElementById('prize-list');
+  if (!el) return;
+  var order = ['mythic','legendary','epic','rare','common'];
+  var html = '';
+  order.forEach(function(r){
+    var info = RARITY_INFO[r];
+    var afford = state.pinecones >= PRICES[r];
+    html += '<div class="prize-row">'
+      + '<div style="font-size:24px;">' + info.icon + '</div>'
+      + '<div class="prize-desc"><b class="r-' + r + '">' + info.label + '</b><br>случайный из набора «' + info.label.toLowerCase() + '»</div>'
+      + '<div class="prize-cost">' + fmt(PRICES[r]) + ' 🌰</div>'
+      + '<button class="btn prize-btn" data-rarity="' + r + '"' + (afford ? '' : ' disabled') + '>Купить</button>'
+      + '</div>';
+  });
+  el.innerHTML = html;
+  el.querySelectorAll('button[data-rarity]').forEach(function(b){
+    b.addEventListener('click', function(){ buyPrize(b.dataset.rarity); });
+  });
+}
+function buyPrize(rarity){
+  var cost = PRICES[rarity];
+  if (state.pinecones < cost) { toast('Не хватает шишек: нужно ещё ' + fmt(cost - state.pinecones) + ' 🌰'); return; }
+  state.pinecones -= cost;
+  markDirty(); renderAll();
+  dropOrnament(rarity, 'shop', true);
+  renderShop();
+}
+
+// ===== Бонус за рекламу (раз в день) =====
+function adBonusKey(){ return 'zini_adbonus_' + playerId; }
+function adBonusTaken(){
+  try {
+    var raw = JSON.parse(localStorage.getItem(adBonusKey()) || '{}');
+    return raw.day === new Date().toDateString();
+  } catch(e){ return false; }
+}
+function doAdBonus(){
+  if (adBonusTaken()) { toast('Бонус уже забран сегодня — приходи завтра! 🎁'); return; }
+  if (ADS_TAG && window.AdsGram) {
+    try {
+      var ad = window.AdsGram.init({ blockId: ADS_TAG });
+      ad.show().then(function(){ grantAdBonus(); }).catch(function(){ toast('Реклама недоступна, попробуй позже'); });
+    } catch(e){ grantAdBonus(); }
+  } else {
+    grantAdBonus();
+  }
+}
+function grantAdBonus(){
+  try { localStorage.setItem(adBonusKey(), JSON.stringify({ day: new Date().toDateString() })); } catch(e){}
+  state.pinecones += AD_BONUS;
+  state.weekly_pinecones += AD_BONUS;
+  markDirty(); renderAll();
+  toast('🎁 Бонус получен: +' + fmt(AD_BONUS) + ' 🌰');
+}
+
 var dirty = false;
 function markDirty(){ dirty = true; }
 async function saveRemote(){
@@ -465,15 +575,46 @@ document.querySelectorAll('.tab').forEach(function(b){
     if (scr) scr.classList.add('active');
     if (b.dataset.screen === 'top') loadTop();
     if (b.dataset.screen === 'inv') loadInventory();
+    if (b.dataset.screen === 'shop') renderShop();
   });
 });
 
 document.getElementById('btn-water').addEventListener('click', doWater);
 document.getElementById('btn-shake').addEventListener('click', doShake);
 document.getElementById('btn-collect').addEventListener('click', doCollect);
+document.getElementById('btn-ad-bonus').addEventListener('click', doAdBonus);
 
 // ============================================================
-// МИНИ-ИГРА: ПОЙМАЙ ПОДАРОК (самособирающаяся)
+// ПОМОЩНИКИ ДЛЯ ИГР
+// ============================================================
+function dayAttempts(key){
+  try {
+    var raw = JSON.parse(localStorage.getItem(key) || '{}');
+    if (raw.day !== new Date().toDateString()) return 3;
+    return Math.max(0, 3 - (raw.used || 0));
+  } catch(e){ return 3; }
+}
+function useAttempt(key){
+  var raw = {};
+  try { raw = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e){}
+  if (raw.day !== new Date().toDateString()) raw = { day: new Date().toDateString(), used: 0 };
+  raw.used = (raw.used || 0) + 1;
+  try { localStorage.setItem(key, JSON.stringify(raw)); } catch(e){}
+}
+function haptic(){
+  try { if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light'); } catch(e){}
+}
+function finishGame(opts){
+  var rew = opts.reward;
+  state.pinecones += rew;
+  state.weekly_pinecones += rew;
+  markDirty(); renderAll(); saveLocal();
+  if (opts.drop) dropOrnament(null, opts.source);
+  else if (rew > 0) toast('🌰 +' + fmt(rew) + ' шишек!');
+}
+
+// ============================================================
+// ИГРА 1: ПОЙМАЙ ПОДАРОК
 // ============================================================
 var MG_KEY = 'zini_mini_' + playerId;
 var GIFT_EMOJI = ['🎁','🎀','🍬','🍭','🧸','⭐'];
@@ -481,87 +622,63 @@ var mg = { active:false, score:0, misses:0, spawnT:0, timeout:0, pendReward:0, p
 var mgEl = {};
 
 function mgBuild(){
-  var host = document.getElementById('screen-mini');
-  if (!host) return;
+  var host = document.getElementById('mg-host');
+  if (!host || host.dataset.built) return;
+  host.dataset.built = '1';
   host.innerHTML =
-    '<h3>🎮 Поймай подарок</h3>' +
     '<div class="card">' +
       '<div style="display:flex;justify-content:space-between;align-items:center;">' +
         '<div><div class="muted">Попытки</div><div id="mg-attempts" style="font-size:20px;font-weight:800;color:var(--acc);">3</div></div>' +
         '<button id="mg-start" class="btn" style="width:auto;padding:12px 20px;">▶️ Играть</button>' +
       '</div>' +
-      '<div class="muted" style="margin-top:10px;">Тапай по падающим подаркам. 3 промаха — конец. Очки = шишки и шанс выбить шар!</div>' +
+      '<div class="muted" style="margin-top:10px;">Тапай по падающим подаркам. 3 промаха — конец.</div>' +
     '</div>' +
-    '<div id="mg-area" style="position:relative;height:340px;background:linear-gradient(180deg,#101018,#1a1a2e);border-radius:14px;overflow:hidden;margin-bottom:12px;">' +
-      '<div id="mg-score" style="position:absolute;top:8px;right:10px;font-size:15px;font-weight:800;color:var(--acc);z-index:3;"></div>' +
-      '<div id="mg-miss" style="position:absolute;top:8px;left:10px;font-size:15px;font-weight:800;color:var(--red);z-index:3;"></div>' +
-      '<div id="mg-overlay" style="position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,10,16,.82);text-align:center;padding:16px;z-index:5;">' +
+    '<div id="mg-area" class="game-area">' +
+      '<div id="mg-score" class="hud-r"></div>' +
+      '<div id="mg-miss" class="hud-l"></div>' +
+      '<div id="mg-overlay" class="overlay">' +
         '<div id="mg-title" style="font-weight:800;font-size:18px;margin-bottom:8px;">🎄 Готов?</div>' +
         '<div id="mg-sub" class="muted" style="margin-bottom:14px;">Нажми «Играть» и лови подарки</div>' +
         '<button id="mg-claim" class="btn" style="display:none;max-width:220px;">Забрать награду</button>' +
       '</div>' +
-    '</div>' +
-    '<button id="mg-ad" class="btn ghost">🎬 Ещё попытка за рекламу</button>';
-
-  mgEl.attempts = document.getElementById('mg-attempts');
-  mgEl.start    = document.getElementById('mg-start');
-  mgEl.claim    = document.getElementById('mg-claim');
-  mgEl.ad       = document.getElementById('mg-ad');
-  mgEl.area     = document.getElementById('mg-area');
-  mgEl.overlay  = document.getElementById('mg-overlay');
-  mgEl.title    = document.getElementById('mg-title');
-  mgEl.sub      = document.getElementById('mg-sub');
-  mgEl.score    = document.getElementById('mg-score');
-  mgEl.miss     = document.getElementById('mg-miss');
-
-  if (mgEl.start) mgEl.start.addEventListener('click', mgStart);
-  if (mgEl.claim) mgEl.claim.addEventListener('click', mgClaim);
-  if (mgEl.ad)    mgEl.ad.addEventListener('click', mgAd);
-}
-
-function mgAttempts(){
-  try {
-    var raw = JSON.parse(localStorage.getItem(MG_KEY) || '{}');
-    if (raw.day !== new Date().toDateString()) return 3;
-    return Math.max(0, 3 - (raw.used || 0));
-  } catch(e){ return 3; }
-}
-function mgUseAttempt(){
-  var raw = {};
-  try { raw = JSON.parse(localStorage.getItem(MG_KEY) || '{}'); } catch(e){}
-  if (raw.day !== new Date().toDateString()) raw = { day: new Date().toDateString(), used: 0 };
-  raw.used = (raw.used || 0) + 1;
-  try { localStorage.setItem(MG_KEY, JSON.stringify(raw)); } catch(e){}
-  renderMg();
+    '</div>';
+  mgEl.area = document.getElementById('mg-area');
+  mgEl.overlay = document.getElementById('mg-overlay');
+  mgEl.title = document.getElementById('mg-title');
+  mgEl.sub = document.getElementById('mg-sub');
+  mgEl.score = document.getElementById('mg-score');
+  mgEl.miss = document.getElementById('mg-miss');
+  document.getElementById('mg-start').addEventListener('click', mgStart);
+  document.getElementById('mg-claim').addEventListener('click', mgClaim);
 }
 function renderMg(){
-  if (mgEl.attempts) mgEl.attempts.textContent = mgAttempts();
+  var el = document.getElementById('mg-attempts');
+  if (el) el.textContent = dayAttempts(MG_KEY);
 }
 function mgOverlay(title, sub, showClaim){
-  if (!mgEl.title) return;
   mgEl.title.textContent = title;
   mgEl.sub.textContent = sub;
-  mgEl.claim.style.display = showClaim ? 'block' : 'none';
+  mgEl.claimBtn = mgEl.claimBtn || document.getElementById('mg-claim');
+  mgEl.claimBtn.style.display = showClaim ? 'block' : 'none';
 }
-
 function mgStart(){
   if (mg.active) return;
-  if (mgAttempts() <= 0) { toast('Попытки на сегодня кончились. Вернись завтра или посмотри рекламу! 🎬'); return; }
-  mgUseAttempt();
+  if (dayAttempts(MG_KEY) <= 0) { toast('Попытки на сегодня кончились — вернись завтра! 🎄'); return; }
+  useAttempt(MG_KEY); renderMg();
   mg.active = true; mg.score = 0; mg.misses = 0;
-  if (mgEl.overlay) mgEl.overlay.style.display = 'none';
+  mgEl.overlay.style.display = 'none';
   mgUpdateHud();
   mgSpawn();
 }
 function mgUpdateHud(){
-  if (mgEl.score) mgEl.score.textContent = '🎯 ' + mg.score;
-  if (mgEl.miss)  mgEl.miss.textContent  = '💔 ' + mg.misses + '/3';
+  mgEl.score.textContent = '🎯 ' + mg.score;
+  mgEl.miss.textContent = '💔 ' + mg.misses + '/3';
 }
 function mgSpawn(){
-  if (!mg.active || !mgEl.area) return;
+  if (!mg.active) return;
   var g = document.createElement('div');
+  g.className = 'gift';
   g.textContent = GIFT_EMOJI[Math.floor(Math.random() * GIFT_EMOJI.length)];
-  g.style.cssText = 'position:absolute;font-size:36px;cursor:pointer;z-index:2;user-select:none;';
   g.style.left = (5 + Math.random() * 80) + '%';
   g.style.top = '-40px';
   var dur = Math.max(1800, 3200 - mg.score * 40);
@@ -575,8 +692,7 @@ function mgSpawn(){
     if (!mg.active || g.dataset.done) return;
     g.dataset.done = '1';
     mg.score++;
-    mgUpdateHud();
-    try { if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light'); } catch(err){}
+    mgUpdateHud(); haptic();
     g.remove();
   });
   mg.timeout = setTimeout(function(){
@@ -592,53 +708,129 @@ function mgSpawn(){
 function mgEnd(){
   mg.active = false;
   clearTimeout(mg.spawnT); clearTimeout(mg.timeout);
-  if (mgEl.area) mgEl.area.querySelectorAll('div').forEach(function(g){
-    if (g.id === '') g.remove();
-  });
+  mgEl.area.querySelectorAll('.gift').forEach(function(g){ g.remove(); });
   var rew = 300 * mg.score + state.level * 100;
-  var dropChance = Math.min(0.5, 0.15 + mg.score * 0.02);
-  mgOverlay('Игра окончена!', 'Очки: ' + mg.score + ' • Награда: ' + fmt(rew) + ' 🌰', true);
   mg.pendReward = rew;
-  mg.pendDrop = Math.random() < dropChance;
+  mg.pendDrop = Math.random() < Math.min(0.5, 0.15 + mg.score * 0.02);
+  mgOverlay('Игра окончена!', 'Очки: ' + mg.score + ' • Награда: ' + fmt(rew) + ' 🌰', true);
 }
 function mgClaim(){
-  var rew = mg.pendReward || 0;
-  state.pinecones += rew;
-  state.weekly_pinecones += rew;
-  markDirty(); renderAll(); saveLocal();
-  if (mg.pendDrop) dropOrnament(null, 'mini_game');
-  else if (rew > 0) toast('🌰 +' + fmt(rew) + ' шишек!');
+  finishGame({ reward: mg.pendReward || 0, drop: mg.pendDrop, source: 'mini_game' });
   mg.pendReward = 0; mg.pendDrop = false;
   mgOverlay('🎄 Готов?', 'Нажми «Играть» и лови подарки', false);
-  renderMg();
 }
-function mgAd(){
-  if (mgAttempts() >= 3) { toast('У тебя ещё есть попытки — играй!'); return; }
-  if (ADS_TAG && window.AdsGram) {
-    try {
-      var ad = window.AdsGram.init({ blockId: ADS_TAG });
-      ad.show().then(function(){
-        var raw = {};
-        try { raw = JSON.parse(localStorage.getItem(MG_KEY) || '{}'); } catch(e){}
-        if (raw.day !== new Date().toDateString()) raw = { day: new Date().toDateString(), used: 0 };
-        raw.used = Math.max(0, (raw.used || 0) - 1);
-        try { localStorage.setItem(MG_KEY, JSON.stringify(raw)); } catch(e){}
-        renderMg(); toast('🎬 +1 попытка!');
-      }).catch(function(){ toast('Реклама недоступна, попробуй позже'); });
-    } catch(e){ toast('Реклама скоро подключится 🎬'); }
-  } else {
-    toast('Реклама скоро подключится 🎬');
-  }
-}
-
 mgBuild();
 mgOverlay('🎄 Готов?', 'Нажми «Играть» и лови подарки', false);
 renderMg();
+
+// ============================================================
+// ИГРА 2: СНЕЖНЫЙ ТИР
+// ============================================================
+var ST_KEY = 'zini_tir_' + playerId;
+var ST_TARGETS = ['🎯','⛄','🔔'];
+var st = { active:false, score:0, timeLeft:30, tickT:0, spawnT:0 };
+var stEl = {};
+
+function stBuild(){
+  var host = document.getElementById('st-host');
+  if (!host || host.dataset.built) return;
+  host.dataset.built = '1';
+  host.innerHTML =
+    '<div class="card">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+        '<div><div class="muted">Попытки</div><div id="st-attempts" style="font-size:20px;font-weight:800;color:var(--acc);">3</div></div>' +
+        '<button id="st-start" class="btn" style="width:auto;padding:12px 20px;">▶️ Играть</button>' +
+      '</div>' +
+      '<div class="muted" style="margin-top:10px;">30 секунд. Тапай по мишеням — каждая попадание это очко и шишки в конце.</div>' +
+    '</div>' +
+    '<div id="st-area" class="game-area">' +
+      '<div id="st-score" class="hud-r"></div>' +
+      '<div id="st-time" class="hud-c"></div>' +
+      '<div id="st-overlay" class="overlay">' +
+        '<div id="st-title" style="font-weight:800;font-size:18px;margin-bottom:8px;">🎯 Готов?</div>' +
+        '<div id="st-sub" class="muted" style="margin-bottom:14px;">Нажми «Играть» — у тебя 30 секунд</div>' +
+        '<button id="st-claim" class="btn" style="display:none;max-width:220px;">Забрать награду</button>' +
+      '</div>' +
+    '</div>';
+  stEl.area = document.getElementById('st-area');
+  stEl.overlay = document.getElementById('st-overlay');
+  stEl.title = document.getElementById('st-title');
+  stEl.sub = document.getElementById('st-sub');
+  stEl.score = document.getElementById('st-score');
+  stEl.time = document.getElementById('st-time');
+  document.getElementById('st-start').addEventListener('click', stStart);
+  document.getElementById('st-claim').addEventListener('click', stClaim);
+}
+function renderSt(){
+  var el = document.getElementById('st-attempts');
+  if (el) el.textContent = dayAttempts(ST_KEY);
+}
+function stOverlay(title, sub, showClaim){
+  stEl.title.textContent = title;
+  stEl.sub.textContent = sub;
+  stEl.claimBtn = stEl.claimBtn || document.getElementById('st-claim');
+  stEl.claimBtn.style.display = showClaim ? 'block' : 'none';
+}
+function stStart(){
+  if (st.active) return;
+  if (dayAttempts(ST_KEY) <= 0) { toast('Попытки на сегодня кончились — вернись завтра! 🎯'); return; }
+  useAttempt(ST_KEY); renderSt();
+  st.active = true; st.score = 0; st.timeLeft = 30;
+  stEl.overlay.style.display = 'none';
+  stUpdateHud();
+  stSpawn();
+  st.tickT = setInterval(function(){
+    st.timeLeft--;
+    stEl.time.textContent = '⏱ ' + st.timeLeft;
+    if (st.timeLeft <= 0) stEnd();
+  }, 1000);
+  stEl.time.textContent = '⏱ 30';
+}
+function stUpdateHud(){
+  stEl.score.textContent = '🎯 ' + st.score;
+}
+function stSpawn(){
+  if (!st.active) return;
+  var t = document.createElement('div');
+  t.className = 'st-target';
+  t.textContent = ST_TARGETS[Math.floor(Math.random() * ST_TARGETS.length)];
+  t.style.left = (3 + Math.random() * 85) + '%';
+  t.style.top = (5 + Math.random() * 75) + '%';
+  stEl.area.appendChild(t);
+  t.addEventListener('pointerdown', function(e){
+    e.stopPropagation();
+    if (!st.active || t.dataset.done) return;
+    t.dataset.done = '1';
+    st.score++;
+    stUpdateHud(); haptic();
+    t.remove();
+  });
+  setTimeout(function(){ if (t.parentNode && !t.dataset.done) t.remove(); }, 1300 + Math.random() * 800);
+  st.spawnT = setTimeout(stSpawn, 500 + Math.random() * 500);
+}
+function stEnd(){
+  st.active = false;
+  clearInterval(st.tickT); clearTimeout(st.spawnT);
+  stEl.area.querySelectorAll('.st-target').forEach(function(t){ t.remove(); });
+  var rew = 250 * st.score + state.level * 80;
+  st.pendReward = rew;
+  st.pendDrop = Math.random() < Math.min(0.5, 0.15 + st.score * 0.02);
+  stOverlay('Время вышло!', 'Попаданий: ' + st.score + ' • Награда: ' + fmt(rew) + ' 🌰', true);
+}
+function stClaim(){
+  finishGame({ reward: st.pendReward || 0, drop: st.pendDrop, source: 'snow_shooter' });
+  st.pendReward = 0; st.pendDrop = false;
+  stOverlay('🎯 Готов?', 'Нажми «Играть» — у тебя 30 секунд', false);
+}
+stBuild();
+stOverlay('🎯 Готов?', 'Нажми «Играть» — у тебя 30 секунд', false);
+renderSt();
 
 // ===== Старт =====
 if (isGuest) document.getElementById('guest-note').style.display = 'block';
 loadLocal();
 renderAll();
+renderShop();
 loadRemote();
 </script>
 </body>
