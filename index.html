@@ -172,7 +172,7 @@
 <div class="screen" id="screen-miners">
   <div class="card">
     <b>⭐ Пополнить звёзды</b>
-    <p class="muted">Введи количество звёзд (минимум 15) и оплати — звёзды можно купить прямо в окне оплаты картой. Зачисление автоматическое. Депозит за неделю открывает вывод монет.</p>
+    <p class="muted">Введи количество звёзд (от 15 до 2500) и оплати — звёзды можно купить прямо в окне оплаты картой. Зачисление автоматическое. Депозит за неделю открывает вывод монет.</p>
     <input class="topup-input" id="topup-input" type="number" inputmode="numeric" min="15" placeholder="Например: 15" value="15">
     <div class="pay-sum" id="topup-sum">15 звёзд</div>
     <button class="btn" id="btn-topup">⭐ Пополнить</button>
@@ -246,9 +246,10 @@ var COINS_PER_STAR = 10000;
 var MIN_WITHDRAW_STARS = 50;
 var MIN_WITHDRAW_COINS = MIN_WITHDRAW_STARS * COINS_PER_STAR;
 var MIN_TOPUP_STARS = 15;
+var MAX_TOPUP_STARS = 2500;
 
-var ADS_REQUIRED = 3;        // минимум 3 рекламы за последние сутки
-var MIN_WEEK_DEPOSIT = 15;   // минимум 15 ⭐ депозитов за последние 7 дней
+var ADS_REQUIRED = 3;
+var MIN_WEEK_DEPOSIT = 15;
 
 var TIERS = {
   0: { name:'Test',     stars:1,   perDay:6000,    emoji:'🧪' },
@@ -341,7 +342,7 @@ async function loadWeekDeposit() {
   renderAll();
 }
 
-// ============ СИНХРОНИЗАЦИЯ С БАЗОЙ ============
+// ============ СИНХРОНИЗАЦИЯ ============
 async function loadRemote() {
   if (!supabase || isGuest()) return;
   var res = await supabase.from('players').select('*').eq('player_id', state.user_id).maybeSingle();
@@ -521,13 +522,18 @@ async function buyMinerWithStars(tier) {
   toast('⛏ ' + t.name + ' куплен и уже майнит!');
 }
 
-// ============ ПОПОЛНЕНИЕ ============
+// ============ ПОПОЛНЕНИЕ (инвойс Telegram Stars) ============
 function updateTopup() {
   var input = document.getElementById('topup-input');
   var sum = document.getElementById('topup-sum');
   var stars = parseInt(input.value, 10);
   if (!stars || stars < MIN_TOPUP_STARS) {
     sum.textContent = 'Минимум ' + MIN_TOPUP_STARS + ' звёзд';
+    sum.style.color = '#8b8b9a';
+    return null;
+  }
+  if (stars > MAX_TOPUP_STARS) {
+    sum.textContent = 'Максимум ' + MAX_TOPUP_STARS + ' за раз';
     sum.style.color = '#8b8b9a';
     return null;
   }
@@ -539,9 +545,10 @@ function updateTopup() {
 async function topupSubmit() {
   if (isGuest()) { toast('Открой игру из Telegram, чтобы пополнять'); return; }
   var stars = updateTopup();
-  if (!stars) { toast('Минимум ' + MIN_TOPUP_STARS + ' звёзд'); return; }
+  if (!stars) { toast('Сумма: от ' + MIN_TOPUP_STARS + ' до ' + MAX_TOPUP_STARS + ' звёзд'); return; }
   var btn = document.getElementById('btn-topup');
   btn.disabled = true;
+  var credited = false;
   try {
     var res = await fetch(FN_BASE + '/' + PAYMENT_FN, {
       method: 'POST',
@@ -549,16 +556,41 @@ async function topupSubmit() {
       body: JSON.stringify({ action: 'topup', stars: stars, player_id: state.user_id })
     });
     var data = await res.json();
-    if (!data.url) throw new Error(data.error || 'no url');
-    if (tg && tg.openInvoice) tg.openInvoice(data.url);
-    else { toast('Оплата доступна только внутри Telegram'); return; }
+    if (!data.url) {
+      console.error('invoice error:', data);
+      toast('Ошибка: ' + (data.error || 'счёт не создан'));
+      btn.disabled = false;
+      return;
+    }
+    if (!tg || !tg.openInvoice) { toast('Оплата доступна только внутри Telegram'); btn.disabled = false; return; }
 
+    // открываем инвойс и ловим статус напрямую
     var before = state.stars_balance || 0;
+    tg.openInvoice(data.url, function(status) {
+      if (status === 'paid') {
+        credited = true;
+        setTimeout(async function() {
+          await loadRemote();
+          if ((state.stars_balance || 0) > before) toast('✅ Зачислено ' + stars + ' ⭐');
+          else toast('Оплата принята! Звёзды зачислятся за пару секунд');
+          loadWeekDeposit();
+        }, 1500);
+      } else if (status === 'failed') {
+        toast('Оплата не прошла');
+      } else if (status === 'pending') {
+        toast('Платёж обрабатывается…');
+      }
+    });
+
+    // запасной опрос базы, если колбэк не сработал
     for (var i = 0; i < 30; i++) {
       await new Promise(function(r){ setTimeout(r, 2000); });
       await loadRemote();
       if ((state.stars_balance || 0) > before) {
-        toast('✅ Зачислено ' + stars + ' ⭐');
+        if (!credited) {
+          credited = true;
+          toast('✅ Зачислено ' + stars + ' ⭐');
+        }
         loadWeekDeposit();
         break;
       }
