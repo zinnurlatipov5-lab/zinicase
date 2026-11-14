@@ -404,21 +404,10 @@
     <input class="acc-input" id="adm-search" placeholder="Имя игрока (можно пусто)">
     <button class="acc-btn new" onclick="adminSearch()">🔍 Найти</button>
     <div id="adm-results" style="text-align:left;margin-top:6px"></div>
-    <button class="acc-btn" style="background:#6b1a2c;color:#fff" onclick="async function globalReset() {
-  const inp = document.getElementById('adm-code');
-  const code = (inp.value || '').trim() || localStorage.getItem('zini_admin_code') || '';
-  if (!code) { popup('Сначала введи код админа в поле выше!'); return; }
-  localStorage.setItem('zini_admin_code', code);
-  if (!confirm('Точно обнулить ВСЕХ игроков и начать новый сезон?')) return;
-  try {
-    const res = await fetch(SYNC_WORKER_URL + '/admin', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: code, action: 'globalreset' })
-    });
-    if (res.ok) popup('🌍 Новый сезон запущен! Все игроки обнулятся при входе');
-    else popup('Ошибка: неверный код');
-  } catch (e) { popup('Ошибка связи'); }
-}
+    <button class="acc-btn" style="background:#6b1a2c;color:#fff" onclick="globalReset()">🌍 Обнулить ВСЕХ игроков (новый сезон)</button>
+    <button class="acc-btn" onclick="document.getElementById('admin-overlay').classList.remove('show')">Закрыть</button>
+  </div>
+</div>
 
 <div id="popup"></div>
 
@@ -532,7 +521,7 @@ function switchAccount() {
 let state = null, saveKey = null;
 function freshState() {
   return {
-    coins: 15, miners: {}, upgrades: {}, tapLvl: 0, prodLvl: 0,
+    coins: 0, miners: {}, upgrades: {}, tapLvl: 0, prodLvl: 0,
     totalMined: 0, taps: 0, streak: 0, lastDaily: 0, lastSpin: 0, lastSeen: Date.now(),
     weekMined: 0, weekKey: getWeekKey(),
     adsDay: 0, adsCount: 0, adsQuestDay: 0, adsQuestCount: 0,
@@ -1256,12 +1245,15 @@ async function adminAct(id, action) {
   } catch (e) { popup('Ошибка связи'); }
 }
 async function globalReset() {
+  const inp = document.getElementById('adm-code');
+  const code = (inp.value || '').trim() || localStorage.getItem('zini_admin_code') || '';
+  if (!code) { popup('Сначала введи код админа в поле выше!'); return; }
+  localStorage.setItem('zini_admin_code', code);
   if (!confirm('Точно обнулить ВСЕХ игроков и начать новый сезон?')) return;
-  const c = localStorage.getItem('zini_admin_code') || '';
   try {
     const res = await fetch(SYNC_WORKER_URL + '/admin', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ code: c, action: 'globalreset' })
+      body: JSON.stringify({ code: code, action: 'globalreset' })
     });
     if (res.ok) popup('🌍 Новый сезон запущен! Все игроки обнулятся при входе');
     else popup('Ошибка: неверный код');
