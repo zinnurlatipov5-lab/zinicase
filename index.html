@@ -179,7 +179,7 @@
 <div class="screen" id="screen-miners">
   <div class="card">
     <b>⭐ Пополнить звёзды</b>
-    <p class="muted">Оплата звёздами Telegram прямо в боте — зачисление автоматом за секунды. Выбери сумму или введи свою.</p>
+    <p class="muted">Оплата звёздами Telegram в один тап: счёт появится в чате бота — нажми «Pay» и всё. Выбери сумму или введи свою.</p>
     <input class="topup-input" id="topup-input" type="number" inputmode="numeric" min="15" max="2500" placeholder="Например: 15" value="15">
     <div class="pay-sum" id="topup-sum">15 звёзд</div>
     <div class="quick-grid">
@@ -189,7 +189,8 @@
       <button class="quick-btn" data-n="100">100 ⭐</button>
     </div>
     <button class="btn" id="btn-topup">⭐ Оплатить в Telegram</button>
-    <p class="muted" style="margin-top:8px">Бот откроется — нажми START (или отправь кнопку), и счёт появится в чате. Оплата — звёздами Telegram.</p>
+    <button class="btn ghost" id="btn-topup-rub">🇷🇺 Пополнить рублями</button>
+    <p class="muted" style="margin-top:8px">Звёзды: счёт в чате бота, оплата в один тап — без команд. Рублями: бот пришлёт реквизиты админа и инструкцию.</p>
   </div>
 
   <div class="card">
@@ -252,6 +253,7 @@ var FN_BASE = 'https://clxewmkuntmgtbovrgqk.supabase.co/functions/v1';
 var PAYMENT_FN = 'telegram-webhook';
 var ADSGRAM_ID = '59627';
 var BOT_USERNAME = 'zini_drop_bot';
+var RUB_PER_STAR = 10;
 
 // ============ ЭКОНОМИКА ============
 var TAP_REWARD = 100;
@@ -553,7 +555,7 @@ async function buyMinerWithStars(tier) {
   toast('⛏ ' + t.name + ' куплен и уже майнит!');
 }
 
-// ============ ПОПОЛНЕНИЕ ЗВЁЗДАМИ TG (оплата сразу) ============
+// ============ ПОПОЛНЕНИЕ ЗВЁЗДАМИ (счёт из игры, без команд) ============
 function updateTopup() {
   var input = document.getElementById('topup-input');
   var sum = document.getElementById('topup-sum');
@@ -577,10 +579,33 @@ async function topupPay() {
   if (isGuest()) { toast('Открой игру из Telegram, чтобы пополнять'); return; }
   var stars = updateTopup();
   if (!stars) { toast('Сумма: от ' + MIN_TOPUP_STARS + ' до ' + MAX_TOPUP_STARS + ' звёзд'); return; }
-  var cmd = '/buy ' + stars;
-  try { await navigator.clipboard.writeText(cmd); } catch (e) {}
-  openBot();
-  toast('Команда ' + cmd + ' скопирована — вставь её в чат бота и отправь');
+  var btn = document.getElementById('btn-topup');
+  btn.disabled = true;
+  var res = null;
+  try {
+    var r = await fetch(FN_BASE + '/' + PAYMENT_FN, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SB_KEY },
+      body: JSON.stringify({ action: 'topup', player_id: state.user_id, amount: stars })
+    });
+    res = await r.json();
+  } catch (e) { console.error(e); res = null; }
+  btn.disabled = false;
+  if (res && res.ok) {
+    toast('Счёт отправлен в чат бота — открываю…');
+    setTimeout(function(){ openBot(); }, 600);
+  } else {
+    toast('Не удалось создать счёт, попробуй ещё раз');
+  }
+}
+
+function topupRubs() {
+  if (isGuest()) { toast('Открой игру из Telegram, чтобы пополнять'); return; }
+  var stars = updateTopup() || MIN_TOPUP_STARS;
+  var rub = stars * RUB_PER_STAR;
+  var link = 'https://t.me/' + BOT_USERNAME + '?start=rubs_' + rub;
+  if (tg && tg.openTelegramLink) tg.openTelegramLink(link);
+  else window.open(link, '_blank');
 }
 
 // ============ ЗАЯВКА НА ВЫВОД ============
@@ -739,6 +764,7 @@ function bindUI() {
   document.getElementById('btn-boost').addEventListener('click', watchBoostAd);
   document.getElementById('btn-sell').addEventListener('click', sellCoins);
   document.getElementById('btn-topup').addEventListener('click', topupPay);
+  document.getElementById('btn-topup-rub').addEventListener('click', topupRubs);
   document.getElementById('topup-input').addEventListener('input', updateTopup);
   document.querySelectorAll('.quick-btn').forEach(function(b) {
     b.addEventListener('click', function() {
