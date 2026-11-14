@@ -108,18 +108,17 @@
 (function() {
 'use strict';
 
-// ============ НАСТРОЙКИ (замени anon key!) ============
+// ============ НАСТРОЙКИ ============
 var SB_URL = 'https://clxewmkuntmgtbovrgqk.supabase.co';
-var SB_KEY = 'ТВОЙ_ANON_KEY'; // ← Settings → API → anon public key
+var SB_KEY = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX';
 var FN_BASE = 'https://clxewmkuntmgtbovrgqk.supabase.co/functions/v1';
-var ADSGRAM_ID = ''; // ← ID рекламного блока с adsgram.com (оставь пустым, чтобы не было ошибок)
+var PAYMENT_FN = 'quick-function'; // реальный URL твоей функции оплаты
+var ADSGRAM_ID = '59627'; // ← твой ID рекламного блока
 
 var supabase = null;
 try {
-  if (SB_KEY && SB_KEY !== 'ТВОЙ_ANON_KEY' && window.supabase) {
+  if (window.supabase) {
     supabase = window.supabase.createClient(SB_URL, SB_KEY);
-  } else if (SB_KEY === 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX') {
-    console.warn('Не вставлен anon key — топ и майнеры работать не будут, тапы работают.');
   }
 } catch (e) { console.error('supabase init:', e); }
 
@@ -155,7 +154,7 @@ function initUser() {
     }
   } catch (e) {}
   state = saved || { user_id: uid, name: name, coins: 0, total_mined: 0, taps: 0, boostUntil: 0, boostAds: null };
-  if (!uid.startsWith('guest_') && state.user_id !== uid) { state.user_id = uid; state.name = name; save(); }
+  if (uid.indexOf('guest_') !== 0 && state.user_id !== uid) { state.user_id = uid; state.name = name; save(); }
 }
 
 function save() { try { localStorage.setItem('zini_state', JSON.stringify(state)); } catch (e) {} }
@@ -241,9 +240,12 @@ async function buyMiner(tier, ev) {
   var btn = ev.currentTarget;
   btn.disabled = true;
   try {
-    var res = await fetch(FN_BASE + '/quick-function', {
-
-      method:'POST', headers:{'Content-Type':'application/json'},
+    var res = await fetch(FN_BASE + '/' + PAYMENT_FN, {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':'Bearer ' + SB_KEY
+      },
       body: JSON.stringify({ player_id: state.user_id, tier: tier })
     });
     var data = await res.json();
@@ -325,7 +327,7 @@ function weekKey() {
 async function loadTop() {
   var list = document.getElementById('top-list');
   list.innerHTML = '<p class="muted">Загрузка…</p>';
-  if (!supabase) { list.innerHTML = '<p class="muted">База не подключена (проверь anon key)</p>'; return; }
+  if (!supabase) { list.innerHTML = '<p class="muted">База не подключена</p>'; return; }
   var res = await supabase
     .from('weekly_top')
     .select('name, mined')
