@@ -2,482 +2,485 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZINI DROP — Апгрейдер</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Ёлка Зини 🎄</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  :root {
-    --bg: #0d0f14; --panel: #161a22; --panel2: #1e2430; --line: #2a3242;
-    --accent: #ff8a00; --accent2: #ffb040; --text: #e8ebf2; --muted: #8b93a5;
-    --green: #3ddc84; --red: #ff5c6e; --star: #ffd54a;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: Arial, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; overflow-x: hidden; }
+:root{--bg:#0a0a10;--card:#16161f;--card2:#1e1e2a;--acc:#c6ff5e;--acc2:#4ade80;--mut:#8b8b9a;--red:#ff6b6b;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
+body{background:var(--bg);color:#fff;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;padding:12px 12px 100px;}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+#h-name{font-weight:800;font-size:17px;}
+#h-level{font-size:13px;color:var(--acc);}
 
-  .bg-fx {
-    position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background:
-      radial-gradient(600px 400px at 15% 10%, rgba(255,138,0,0.10), transparent 60%),
-      radial-gradient(700px 500px at 85% 25%, rgba(140,60,255,0.10), transparent 60%);
-  }
+/* ===== Бегущая строка: крупная, читаемая ===== */
+#ticker-bar{display:flex;align-items:center;border-radius:12px;background:rgba(198,255,94,.07);border:1px solid rgba(198,255,94,.3);overflow:hidden;height:46px;margin-bottom:12px;}
+.ticker-label{flex:none;background:var(--acc);color:#0a0a10;font-size:13px;font-weight:800;padding:0 12px;border-radius:9px;margin:4px;white-space:nowrap;}
+#ticker-track{white-space:nowrap;font-size:15px;font-weight:600;color:var(--acc);padding-right:20px;animation:ticker 30s linear infinite;will-change:transform;}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
-  .topbar {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(22,26,34,0.92); border-bottom: 1px solid var(--line);
-    padding: 10px 16px; display: flex; align-items: center; gap: 14px;
-  }
-  .logo { font-size: 20px; font-weight: bold; letter-spacing: 1px; }
-  .logo b { color: var(--accent); }
-  .top-balance {
-    margin-left: auto; background: var(--panel2); border: 1px solid var(--line);
-    border-radius: 10px; padding: 8px 14px; font-weight: bold;
-  }
-  .top-balance span { color: var(--star); }
-  .home-link {
-    color: var(--muted); text-decoration: none; font-size: 14px;
-    background: var(--panel2); border: 1px solid var(--line); border-radius: 8px; padding: 8px 14px;
-  }
-  .home-link:hover { color: var(--accent); }
+.screen{display:none;}
+.screen.active{display:block;}
 
-  .container { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 18px 16px 60px; }
-  .page-title { font-size: 20px; font-weight: bold; color: var(--accent); margin-bottom: 4px; }
-  .page-sub { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+.tree-stage{text-align:center;background:var(--card);border-radius:16px;padding:24px 12px;margin-bottom:12px;}
+#tree-emoji{font-size:76px;line-height:1;}
+#tree-title{margin-top:8px;font-weight:800;font-size:18px;color:var(--acc);}
+#tree-sub{font-size:13px;color:var(--mut);margin-top:4px;}
 
-  .game-wrap { display: flex; gap: 18px; flex-wrap: wrap; }
-  .game-col { flex: 1; min-width: 280px; }
-  .card {
-    background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
-    padding: 18px; margin-bottom: 16px;
-  }
-  .card h3 { font-size: 15px; margin-bottom: 12px; color: var(--text); }
+.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:14px;}
+.bar-row span{flex:none;width:110px;}
+.bar-bg{flex:1;height:12px;background:#2a2a38;border-radius:6px;overflow:hidden;}
+.bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--acc2),var(--acc));border-radius:6px;transition:width .4s ease;}
+.bar-fill.snow{background:linear-gradient(90deg,#8ecfff,#e0f4ff);}
 
-  .bet-row { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
-  .bet-input {
-    flex: 1; background: var(--panel2); border: 1px solid var(--line);
-    border-radius: 9px; color: var(--text); padding: 12px; font-size: 16px; font-weight: bold; text-align: center;
-  }
-  .qbtn {
-    background: var(--panel2); border: 1px solid var(--line); color: var(--muted);
-    border-radius: 8px; padding: 11px 12px; font-size: 13px; cursor: pointer; font-weight: bold;
-  }
-  .qbtn:hover { color: var(--accent); border-color: var(--accent); }
+.btn{display:block;width:100%;padding:14px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#0a0a10;font-weight:800;font-size:16px;cursor:pointer;font-family:inherit;}
+.btn:disabled{opacity:.45;}
+.btn.ghost{background:transparent;border:1px solid rgba(198,255,94,.4);color:var(--acc);}
+.btn-row{display:flex;gap:8px;}
+.btn-row .btn{flex:1;}
 
-  .mult-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 10px; }
-  .mult-btn {
-    background: var(--panel2); border: 1px solid var(--line); border-radius: 10px;
-    color: var(--text); padding: 10px 4px; cursor: pointer; text-align: center;
-  }
-  .mult-btn .mx { font-size: 15px; font-weight: bold; }
-  .mult-btn .ch { font-size: 10px; color: var(--muted); margin-top: 2px; }
-  .mult-btn.active { border-color: var(--accent); background: rgba(255,138,0,0.12); }
-  .mult-btn.active .mx { color: var(--accent); }
+.pinecone-card{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+#pinecone-count{font-size:24px;font-weight:800;color:var(--acc);}
+#btn-collect{width:auto;padding:12px 16px;font-size:14px;}
 
-  .chance-line { font-size: 13px; color: var(--muted); margin-bottom: 12px; }
-  .chance-line b { color: var(--green); }
+#xp-line{text-align:center;font-size:13px;color:var(--mut);margin-top:10px;}
+h3{margin:4px 0 12px;font-size:18px;}
+.muted{color:var(--mut);font-size:13px;}
 
-  .spin-btn {
-    width: 100%; background: linear-gradient(180deg, var(--accent2), var(--accent));
-    color: #1a1206; border: none; border-radius: 11px; padding: 15px;
-    font-size: 17px; font-weight: bold; cursor: pointer;
-  }
-  .spin-btn:disabled { background: #333; color: #777; cursor: not-allowed; }
+.top-row{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:12px;padding:12px;margin-bottom:8px;font-size:14px;}
+.top-row.me{border:1px solid var(--acc);}
+.top-rank{flex:none;width:28px;text-align:center;font-weight:800;}
+.top-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.top-val{color:var(--acc);font-weight:700;font-size:14px;flex:none;}
 
-  .bonus-note {
-    background: rgba(124,92,255,0.10); border: 1px solid rgba(124,92,255,0.35);
-    border-radius: 10px; padding: 10px 12px; font-size: 12px; margin-top: 12px; color: #c9baff;
-  }
+.inv-item{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:12px;padding:12px;margin-bottom:8px;}
+.inv-emoji{font-size:26px;flex:none;}
+.inv-name{flex:1;}
+.inv-name b{display:block;font-size:15px;}
+.inv-count{color:var(--mut);font-size:13px;}
+.r-common{color:#b8b8c4;} .r-rare{color:#4da3ff;} .r-epic{color:#b678ff;} .r-legendary{color:#ffd75e;} .r-mythic{color:#ff7ad9;}
 
-  /* Колесо */
-  .wheel-wrap { position: relative; width: 280px; height: 280px; margin: 6px auto; }
-  .wheel {
-    width: 100%; height: 100%; border-radius: 50%;
-    border: 4px solid var(--panel2);
-    box-shadow: 0 0 40px rgba(255,138,0,0.25);
-    transition: background 0.3s;
-  }
-  .wheel-arrow {
-    position: absolute; left: 50%; top: 50%; width: 6px; height: 140px;
-    margin-left: -3px; margin-top: -140px;
-    transform-origin: 50% 100%;
-    pointer-events: none;
-  }
-  .wheel-arrow::before {
-    content: ""; position: absolute; left: -8px; bottom: -4px;
-    border-left: 11px solid transparent; border-right: 11px solid transparent;
-    border-bottom: 26px solid var(--accent);
-    filter: drop-shadow(0 0 6px rgba(255,138,0,0.7));
-  }
-  .wheel-center {
-    position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);
-    width: 70px; height: 70px; border-radius: 50%;
-    background: var(--panel); border: 3px solid var(--line);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 22px; font-weight: bold; color: var(--accent);
-  }
+/* ===== Нижняя панель: крупная ===== */
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:#1a1a26;border-top:2px solid #333;padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:99;box-shadow:0 -4px 16px rgba(0,0,0,.35);}
+.tab{flex:1;background:none;border:0;color:#8b8b9a;font-size:13px;font-weight:700;padding:12px 0 10px;border-radius:16px;cursor:pointer;font-family:inherit;text-align:center;line-height:1.25;margin:0 3px;transition:all .2s ease;}
+.tab .tab-icon{display:block;font-size:22px;margin-bottom:2px;}
+.tab.active{color:var(--acc);background:rgba(198,255,94,.14);box-shadow:0 0 14px rgba(198,255,94,.3);}
 
-  .result { text-align: center; font-size: 20px; font-weight: bold; margin: 12px 0; min-height: 26px; }
-  .result.win { color: var(--green); }
-  .result.lose { color: var(--red); }
-  .result.bonus { color: #b9a4ff; }
-
-  .history div {
-    padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 13px;
-    display: flex; justify-content: space-between; gap: 8px;
-  }
-  .history .hwin { color: var(--green); font-weight: bold; }
-  .history .hlose { color: var(--red); font-weight: bold; }
-  .history .hbon { color: #b9a4ff; font-weight: bold; }
-
-  .auth-box {
-    max-width: 400px; margin: 60px auto; background: var(--panel);
-    border: 1px solid var(--line); border-radius: 14px; padding: 25px; text-align: center;
-    position: relative; z-index: 1;
-  }
-  .auth-box h2 { color: var(--accent); margin-bottom: 8px; }
-  .auth-box input {
-    width: 100%; background: var(--panel2); border: 1px solid var(--line);
-    border-radius: 8px; color: var(--text); padding: 12px; font-size: 15px; margin-bottom: 10px; text-align: center;
-  }
-  .auth-note { font-size: 12px; color: var(--muted); margin-top: 10px; }
-  .btn {
-    background: linear-gradient(180deg, var(--accent2), var(--accent)); color: #1a1206;
-    border: none; border-radius: 8px; padding: 11px 18px; font-size: 14px; font-weight: bold; cursor: pointer;
-  }
-
-  @media (max-width: 640px) {
-    .mult-grid { grid-template-columns: repeat(3, 1fr); }
-    .wheel-wrap { width: 240px; height: 240px; }
-    .wheel-arrow { height: 120px; margin-top: -120px; }
-  }
+#toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);background:#22223a;border:1px solid var(--acc);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;display:none;z-index:99;max-width:90%;text-align:center;}
+#guest-note{background:#3a2a12;border:1px solid #ffb020;color:#ffd75e;border-radius:10px;padding:10px;font-size:13px;margin-bottom:12px;display:none;}
 </style>
 </head>
 <body>
-<div class="bg-fx"></div>
 
-<div class="topbar">
-  <div class="logo">ZINI<b>DROP</b></div>
-  <div class="top-balance">⭐ <span id="balance">0</span></div>
-  <a class="home-link" href="index.html">← На сайт</a>
-</div>
+<header>
+  <div id="h-name">Игрок</div>
+  <div id="h-level">Уровень 1 🌱</div>
+</header>
 
-<!-- ===== Вход ===== -->
-<div id="authScreen">
-  <div class="auth-box">
-    <h2>Апгрейдер ZINI<b>DROP</b></h2>
-    <p style="font-size:13px; color:#8b93a5; margin-bottom:15px">Ставь звёзды, крути колесо, удваивай — и ловите подарки и Premium!</p>
-    <input type="tel" id="authPhone" placeholder="+7 (___) ___-__-__" maxlength="18">
-    <input type="text" id="authName" placeholder="Твоё имя" maxlength="25">
-    <button class="btn" style="width:100%" onclick="authSubmit()">Войти по номеру</button>
-    <div class="auth-note">Тот же аккаунт, что и на основном сайте. Баланс общий.</div>
-  </div>
-</div>
+<div id="guest-note">⚠️ Открой игру через Telegram — прогресс сохраняется только там.</div>
 
-<!-- ===== Игра ===== -->
-<div id="mainScreen" style="display:none">
-<div class="container">
-  <div class="page-title">🎰 Апгрейдер</div>
-  <div class="page-sub">Ставь звёзды → выбирай множитель → крути колесо. Победа умножает ставку. На высоких множителях — шанс поймать 🎁 подарок или 💎 Premium!</div>
+<div id="ticker-bar"><span class="ticker-label">ПРИЗЫ</span><div id="ticker-track">Шары ещё не выбиты — будь первым! 🎄</div></div>
 
-  <div class="game-wrap">
-
-    <div class="game-col">
-      <div class="card">
-        <h3>Твоя ставка</h3>
-        <div class="bet-row">
-          <button class="qbtn" onclick="betAdd(-10)">−10</button>
-          <input type="number" id="betInput" value="25" min="1" class="bet-input">
-          <button class="qbtn" onclick="betAdd(10)">+10</button>
-        </div>
-        <div class="bet-row">
-          <button class="qbtn" onclick="betSet(25)">25</button>
-          <button class="qbtn" onclick="betSet(50)">50</button>
-          <button class="qbtn" onclick="betSet(100)">100</button>
-          <button class="qbtn" onclick="betSet(balance)">ВСЁ</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Множитель</h3>
-        <div class="mult-grid" id="multGrid"></div>
-        <div class="chance-line" id="chanceLine"></div>
-        <button class="spin-btn" id="spinBtn" onclick="spin()">🎲 Крутить</button>
-        <div class="bonus-note">🎁 На ×3, ×5 и ×10 к выигрышу может добавить подарок. На ×10 — Корона или 💎 Premium!</div>
-      </div>
-
-      <div class="result" id="result"></div>
+<main>
+  <section id="screen-tree" class="screen active">
+    <div class="tree-stage">
+      <div id="tree-emoji">🌱</div>
+      <div id="tree-title">Росток</div>
+      <div id="tree-sub">Полей и стряхни снег, чтобы ёлка росла</div>
     </div>
-
-    <div class="game-col">
-      <div class="card" style="text-align:center">
-        <div class="wheel-wrap">
-          <div class="wheel" id="wheel"></div>
-          <div class="wheel-arrow" id="wheelArrow"></div>
-          <div class="wheel-center" id="wheelCenter">x1.5</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h3>Последние апгрейды</h3>
-        <div class="history" id="upHistory">Пока пусто — сделай первую крутку!</div>
-      </div>
+    <div class="card">
+      <div class="bar-row"><span>💧 Влажность</span><div class="bar-bg"><div id="bar-moist" class="bar-fill"></div></div></div>
+      <div class="bar-row"><span>❄️ Снег</span><div class="bar-bg"><div id="bar-snow" class="bar-fill snow"></div></div></div>
     </div>
+    <div class="card pinecone-card">
+      <div><div class="muted">🌰 Шишки</div><div id="pinecone-count">0</div></div>
+      <button id="btn-collect" class="btn">Забрать 0 🌰</button>
+    </div>
+    <div class="btn-row">
+      <button id="btn-water" class="btn">💧 Полить</button>
+      <button id="btn-shake" class="btn">❄️ Стряхнуть</button>
+    </div>
+    <div id="xp-line">Опыт: 0 / 200</div>
+  </section>
 
-  </div>
-</div>
-</div>
+  <section id="screen-inv" class="screen">
+    <h3>🎒 Инвентарь</h3>
+    <div id="inv-list" class="muted">Пока пусто — играй в мини-игры и ухаживай за ёлкой!</div>
+  </section>
 
+  <section id="screen-mini" class="screen">
+    <h3>🎮 Мини-игры</h3>
+    <div class="card">Пять мини-игр («Поймай подарок», «Снежный тир», «Снежный лабиринт», «Собери оленя», «Бой с Бабой-ягой») появятся в следующем обновлении — следи за каналом! 🎄</div>
+  </section>
+
+  <section id="screen-quest" class="screen">
+    <h3>📋 Задания</h3>
+    <div class="card">Ежедневные задания и особые награды появятся в следующем обновлении!</div>
+  </section>
+
+  <section id="screen-top" class="screen">
+    <h3>🏆 Топ недели</h3>
+    <div id="top-list" class="muted">Загрузка…</div>
+    <div class="muted" style="margin-top:8px;">Топ обнуляется каждый понедельник. Топ-3 получают призы!</div>
+  </section>
+
+  <section id="screen-pass" class="screen">
+    <h3>✨ Ноябрьский пропуск</h3>
+    <div class="card">Пропуск откроется после подключения платежей — очень скоро! ✨</div>
+  </section>
+</main>
+
+<nav class="tabs">
+  <button class="tab active" data-screen="tree"><span class="tab-icon">🎄</span>Ёлка</button>
+  <button class="tab" data-screen="inv"><span class="tab-icon">🎒</span>Инвентарь</button>
+  <button class="tab" data-screen="mini"><span class="tab-icon">🎮</span>Игры</button>
+  <button class="tab" data-screen="top"><span class="tab-icon">🏆</span>Топ</button>
+  <button class="tab" data-screen="pass"><span class="tab-icon">✨</span>Пропуск</button>
+</nav>
+
+<div id="toast"></div>
+
+<script src="levels.js"></script>
 <script>
-// ================== НАСТРОЙКИ ==================
-const MULTIPLIERS = [
-  { mult: 1.5, chance: 62, bonus: null },
-  { mult: 2.0, chance: 45, bonus: null },
-  { mult: 3.0, chance: 30, bonus: { chance: 8,  gifts: ["sticker", "teddy"] } },
-  { mult: 5.0, chance: 18, bonus: { chance: 10, gifts: ["bouquet", "rocket", "hamster"] } },
-  { mult: 10.0, chance: 8,  bonus: { chance: 15, gifts: ["crown"], premium: 1 } }
-];
+'use strict';
+// ===== НАСТРОЙКИ: впиши свои ключи из Supabase → Settings → API =====
+var SB_URL = 'https://https://clxewmkuntmgtbovrgqk.supabase.co/rest/v1/';
+var SB_KEY = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX';
 
-const GIFTS = {
-  sticker: { name: "Стикерпак",          emoji: "🎨", value: 10 },
-  teddy:   { name: "Плюшевый мишка",     emoji: "🧸", value: 25 },
-  bouquet: { name: "Букет роз",          emoji: "🌹", value: 40 },
-  rocket:  { name: "Космическая ракета", emoji: "🚀", value: 60 },
-  hamster: { name: "Золотой хомяк",      emoji: "🐹", value: 80 },
-  crown:   { name: "Корона",             emoji: "👑", value: 100 }
+var tg = window.Telegram.WebApp;
+try { tg.expand(); tg.setHeaderColor('#0a0a10'); tg.setBackgroundColor('#0a0a10'); } catch(e){}
+var me = (tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user : null;
+var isGuest = !me;
+var playerId = me ? String(me.id) : 'guest';
+var playerName = me ? (me.first_name || 'Игрок') : 'Игрок';
+
+var supabase = null;
+try { supabase = window.supabase.createClient(SB_URL, SB_KEY); } catch(e){ console.warn('Supabase не создан', e); }
+
+// ===== Константы =====
+var WATER_CD = 2 * 3600 * 1000;
+var SHAKE_CD = 4 * 3600 * 1000;
+var PASSIVE_CAP_H = 24;
+
+var ORNAMENTS = {
+  common:    ['Красный шар','Синий шар','Жёлтый шар','Снежинка','Колокольчик','Шишка-игрушка','Мандаринка','Конфета-тросточка'],
+  rare:      ['Ледяной шар','Звёздный шар','Золотой мандарин','Ватное облачко','Серебряная шишка','Посох Деда Мороза'],
+  epic:      ['Хрустальный шар','Огненный феникс','Северный олень','Золотая звезда','Шар «Млечный путь»'],
+  legendary: ['Северное сияние','Шар Снежной королевы','Рождественский колокол'],
+  mythic:    ['Легендарная звезда Зини']
 };
-// ================================================
+var RARITY_INFO = {
+  common:    {icon:'⚪', label:'Обычный'},
+  rare:      {icon:'🔵', label:'Редкий'},
+  epic:      {icon:'🟣', label:'Эпический'},
+  legendary: {icon:'🟡', label:'Легендарный'},
+  mythic:    {icon:'🌈', label:'Мифический'}
+};
 
-let user = null;
-let balance = 0, giftItems = [], premium = 0;
-let currentMultIndex = 0;
-let spinning = false;
-let arrowAngle = 0;
+// ===== Состояние =====
+var state = {
+  xp:0, level:1, pinecones:0,
+  moisture:0, snow:0,
+  last_watered:0, last_shake:0, last_collect:0,
+  weekly_pinecones:0, week_key:'', total_drops:0
+};
 
-const k = (name) => "zd_" + (user ? user.id : "x") + "_" + name;
-
-// ---------- авторизация (общая с сайтом) ----------
-function formatPhone(input) {
-  let digits = input.value.replace(/\D/g, "");
-  if (digits.startsWith("8")) digits = "7" + digits.slice(1);
-  if (!digits.startsWith("7")) digits = "7" + digits;
-  digits = digits.slice(0, 11);
-  let out = "+7";
-  if (digits.length > 1) out += " (" + digits.slice(1, 4);
-  if (digits.length >= 4) out += ")";
-  if (digits.length > 4) out += " " + digits.slice(4, 7);
-  if (digits.length > 7) out += "-" + digits.slice(7, 9);
-  if (digits.length > 9) out += "-" + digits.slice(9, 11);
-  input.value = out;
+// ===== Утилиты =====
+function fmt(n){ return String(Math.floor(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+function weekKey(){
+  var d = new Date();
+  var day = d.getUTCDay(); // 0=воскресенье
+  var monday = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() - ((day + 6) % 7));
+  return monday.getUTCFullYear() + '-' + (monday.getUTCMonth()+1) + '-' + monday.getUTCDate();
+}
+var toastTimer = 0;
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.style.display = 'none'; }, 2600);
 }
 
-function authSubmit() {
-  const phoneEl = document.getElementById("authPhone");
-  formatPhone(phoneEl);
-  const phone = phoneEl.value.replace(/\D/g, "");
-  const name = document.getElementById("authName").value.trim();
-  if (phone.length !== 11) { alert("Введи номер полностью: +7 (XXX) XXX-XX-XX"); return; }
-  if (name.length < 2) { alert("Введи имя (минимум 2 символа)"); return; }
-  const accKey = "zd_acc_" + phone;
-  const saved = localStorage.getItem(accKey);
-  if (saved) {
-    const acc = JSON.parse(saved);
-    login({ phone: phone, name: acc.name, id: phone });
+// ===== Кеш для слабых устройств =====
+function saveLocal(){ try { localStorage.setItem('zinixmas_' + playerId, JSON.stringify(state)); } catch(e){} }
+function loadLocal(){
+  try {
+    var raw = localStorage.getItem('zinixmas_' + playerId);
+    if (raw) { var s = JSON.parse(raw); for (var k in s) state[k] = s[k]; }
+  } catch(e){}
+}
+
+// ===== Загрузка из базы =====
+async function loadRemote(){
+  if (!supabase || isGuest) { renderAll(); return; }
+  var res = await supabase.from('players').select('*').eq('player_id', playerId).maybeSingle();
+  if (res.error) { toast('Ошибка базы: ' + res.error.message); renderAll(); return; }
+  if (!res.data) {
+    var ins = await supabase.from('players').insert({ player_id: playerId, name: playerName }).select().maybeSingle();
+    if (ins.data) applyPlayer(ins.data);
   } else {
-    localStorage.setItem(accKey, JSON.stringify({ name: name, created: new Date().toLocaleDateString("ru-RU") }));
-    login({ phone: phone, name: name, id: phone });
+    applyPlayer(res.data);
   }
+  renderAll();
+  loadTicker(); loadTop(); loadInventory();
+}
+function applyPlayer(p){
+  state.xp = p.xp || 0;
+  state.level = p.level || 1;
+  state.pinecones = p.pinecones || 0;
+  state.last_watered = p.last_watered ? new Date(p.last_watered).getTime() : 0;
+  state.last_shake = p.last_shake ? new Date(p.last_shake).getTime() : 0;
+  state.last_collect = p.last_collect ? new Date(p.last_collect).getTime() : 0;
+  state.weekly_pinecones = p.weekly_pinecones || 0;
+  state.week_key = p.week_key || '';
+  state.total_drops = p.total_drops || 0;
+  var wk = weekKey();
+  if (state.week_key !== wk) { state.weekly_pinecones = 0; state.week_key = wk; markDirty(); }
+  saveLocal();
 }
 
-function login(u) {
-  user = u;
-  localStorage.setItem("zd_current", JSON.stringify(user));
-  document.getElementById("authScreen").style.display = "none";
-  document.getElementById("mainScreen").style.display = "block";
-  loadState(); renderGame();
+// ===== Экономика =====
+function passiveRate(){ return 500 + state.level * 50; }
+function pendingPassive(){
+  var t = state.last_collect || Date.now();
+  var hours = Math.min(PASSIVE_CAP_H, (Date.now() - t) / 3600000);
+  if (hours < 0) hours = 0;
+  return Math.floor(passiveRate() * hours);
 }
+function waterReward(){ return 1500 + state.level * 150; }
+function shakeReward(){ return 1000 + state.level * 100; }
+function canWater(){ return Date.now() - state.last_watered >= WATER_CD; }
+function canShake(){ return Date.now() - state.last_shake >= SHAKE_CD; }
 
-// ---------- общее состояние (как на сайте) ----------
-function loadState() {
-  balance = parseInt(localStorage.getItem(k("balance"))) || 200;
-  premium = parseInt(localStorage.getItem(k("premium"))) || 0;
-  try { giftItems = JSON.parse(localStorage.getItem(k("giftItems"))) || []; } catch (e) { giftItems = []; }
-}
-function saveState() {
-  localStorage.setItem(k("balance"), balance);
-  localStorage.setItem(k("premium"), premium);
-  localStorage.setItem(k("giftItems"), JSON.stringify(giftItems));
-}
-
-// ---------- интерфейс ----------
-function renderGame() {
-  document.getElementById("balance").textContent = balance;
-  renderMultButtons();
-  updateChanceLine();
-  renderHistory();
-}
-
-function betAdd(d) {
-  const el = document.getElementById("betInput");
-  let v = Math.max(1, (parseInt(el.value) || 0) + d);
-  if (v > balance) v = balance;
-  el.value = v;
-}
-function betSet(v) {
-  const el = document.getElementById("betInput");
-  el.value = Math.max(1, Math.min(v, balance));
-}
-
-function renderMultButtons() {
-  const grid = document.getElementById("multGrid");
-  grid.innerHTML = MULTIPLIERS.map((m, i) => `
-    <button class="mult-btn${i === currentMultIndex ? " active" : ""}" onclick="pickMult(${i})">
-      <div class="mx">x${m.mult}</div>
-      <div class="ch">${m.chance}%</div>
-    </button>`).join("");
-}
-
-function pickMult(i) {
-  if (spinning) return;
-  currentMultIndex = i;
-  renderMultButtons();
-  updateChanceLine();
-}
-
-function updateChanceLine() {
-  const m = MULTIPLIERS[currentMultIndex];
-  const payout = m.mult === 1.5 ? Math.floor(m.mult * 10) / 10 : m.mult;
-  document.getElementById("wheelCenter").textContent = "x" + m.mult;
-  drawWheel(m.chance);
-  let txt = `Шанс победы: <b>${m.chance}%</b> · при победе получишь ставку × ${m.mult}`;
-  if (m.bonus) {
-    const parts = [];
-    if (m.bonus.gifts) parts.push(`🎁 подарок (${m.bonus.chance}%)`);
-    if (m.bonus.premium) parts.push(`или 💎 Premium ${m.bonus.premium} мес.`);
-    txt += ` · бонус: ${parts.join(" ")}`;
+// ===== Уровни =====
+function gainXp(n){
+  state.xp += n;
+  var ups = 0;
+  while (state.level < 100 && state.xp >= xpToNext(state.level)) {
+    state.xp -= xpToNext(state.level);
+    state.level++;
+    ups++;
+    state.pinecones += 2000 * state.level;
+    state.weekly_pinecones += 2000 * state.level;
+    if (state.level % 10 === 0) milestoneDrop('rare');
+    if (state.level % 25 === 0) milestoneDrop('epic');
+    if (state.level === 100) { milestoneDrop('mythic'); toast('👑 Ты — ЛЕГЕНДА ИГРЫ! Уровень 100!'); }
   }
-  document.getElementById("chanceLine").innerHTML = txt;
+  if (ups > 0 && state.level < 100) toast('🎉 Ёлка выросла до уровня ' + state.level + '!');
 }
 
-function drawWheel(chance) {
-  const green = chance * 3.6; // градусов
-  const half = green / 2;
-  const wheel = document.getElementById("wheel");
-  wheel.style.background = `conic-gradient(from -${half}deg, var(--green) 0deg ${green}deg, var(--red) ${green}deg 360deg)`;
+// ===== Дроп шаров =====
+function rollRarity(){
+  var r = Math.random() * 100;
+  if (r < 0.2) return 'mythic';
+  if (r < 2)   return 'legendary';
+  if (r < 10)  return 'epic';
+  if (r < 30)  return 'rare';
+  return 'common';
+}
+function milestoneDrop(rarity){ dropOrnament(rarity, 'level_up', true); }
+function dropOrnament(forcedRarity, source, forced){
+  var rarity = forcedRarity || rollRarity();
+  var pool = ORNAMENTS[rarity];
+  var idx = Math.floor(Math.random() * pool.length);
+  var itemName = pool[idx];
+  var itemId = rarity + '_' + idx;
+  state.total_drops++;
+  if (!isGuest && supabase) {
+    supabase.from('inventory').insert({ player_id: playerId, item_id: itemId, item_name: itemName, rarity: rarity, source: source || 'care' })
+      .then(function(){ return supabase.from('drop_log').insert({ player_id: playerId, player_name: playerName, item_id: itemId, item_name: itemName, rarity: rarity, source: source || 'care' }); })
+      .then(function(){ loadTicker(); loadInventory(); })
+      .catch(function(e){ console.warn('drop save error', e); });
+  }
+  var info = RARITY_INFO[rarity];
+  toast(info.icon + ' Выбит ' + info.label + ': «' + itemName + '»!');
 }
 
-// ---------- крутка ----------
-function getBet() {
-  const v = parseInt(document.getElementById("betInput").value);
-  return isNaN(v) ? 0 : Math.max(1, Math.min(v, balance));
+// ===== Действия игрока =====
+function doWater(){
+  if (!canWater()) { toast('Ёлку можно полить через ' + timeLeft(state.last_watered, WATER_CD)); return; }
+  state.last_watered = Date.now();
+  var rew = waterReward();
+  state.pinecones += rew;
+  state.weekly_pinecones += rew;
+  gainXp(60);
+  if (Math.random() < 0.2) dropOrnament(null, 'water');
+  markDirty(); renderAll();
+  toast('💧 Полил ёлку! +' + fmt(rew) + ' 🌰');
+}
+function doShake(){
+  if (!canShake()) { toast('Снег ещё не напрёсся — вернись через ' + timeLeft(state.last_shake, SHAKE_CD)); return; }
+  state.last_shake = Date.now();
+  var rew = shakeReward();
+  state.pinecones += rew;
+  state.weekly_pinecones += rew;
+  gainXp(40);
+  if (Math.random() < 0.15) dropOrnament(null, 'shake');
+  markDirty(); renderAll();
+  toast('❄️ Снег стряхнут! +' + fmt(rew) + ' 🌰');
+}
+function doCollect(){
+  var p = pendingPassive();
+  if (p <= 0) { toast('Ёлка пока ничего не накопила 🌰'); return; }
+  state.last_collect = Date.now();
+  state.pinecones += p;
+  state.weekly_pinecones += p;
+  markDirty(); renderAll();
+  toast('🌰 +' + fmt(p) + ' шишек!');
+}
+function timeLeft(fromTs, cd){
+  var ms = cd - (Date.now() - (fromTs || 0));
+  if (ms < 0) ms = 0;
+  var m = Math.floor(ms / 60000);
+  if (m < 60) return m + ' мин';
+  return Math.floor(m / 60) + ' ч ' + (m % 60) + ' мин';
 }
 
-function spin() {
-  if (spinning) return;
-  const bet = getBet();
-  if (bet < 1) { alert("Введи ставку от 1 ⭐"); return; }
-  if (balance < bet) { alert("Не хватает звёзд на балансе!"); return; }
+// ===== Рендер =====
+function stageFor(level){
+  if (level >= 100) return {e:'🌟🎄', t:'ЛЕГЕНДА ИГРЫ'};
+  if (level >= 86)  return {e:'🎄🌟', t:'Сияющая'};
+  if (level >= 61)  return {e:'🎄✨', t:'Величественная'};
+  if (level >= 31)  return {e:'🎄',   t:'Новогодняя'};
+  if (level >= 11)  return {e:'🌲',   t:'Наряженная'};
+  return {e:'🌱', t:'Росток'};
+}
+function renderAll(){
+  var st = stageFor(state.level);
+  document.getElementById('tree-emoji').textContent = st.e;
+  document.getElementById('tree-title').textContent = st.t;
+  document.getElementById('tree-sub').textContent = 'Доход: ' + fmt(passiveRate()) + ' 🌰/час';
+  document.getElementById('h-name').textContent = playerName;
+  document.getElementById('h-level').textContent = 'Уровень ' + state.level;
+  document.getElementById('pinecone-count').textContent = fmt(state.pinecones);
+  document.getElementById('btn-collect').textContent = 'Забрать ' + fmt(pendingPassive()) + ' 🌰';
 
-  const m = MULTIPLIERS[currentMultIndex];
-  balance -= bet;
-  saveState();
-  document.getElementById("balance").textContent = balance;
+  var bw = document.getElementById('btn-water'), bs = document.getElementById('btn-shake');
+  if (canWater()) { bw.disabled = false; bw.textContent = '💧 Полить'; }
+  else { bw.disabled = true; bw.textContent = '💧 ' + timeLeft(state.last_watered, WATER_CD); }
+  if (canShake()) { bs.disabled = false; bs.textContent = '❄️ Стряхнуть'; }
+  else { bs.disabled = true; bs.textContent = '❄️ ' + timeLeft(state.last_shake, SHAKE_CD); }
 
-  spinning = true;
-  const isWin = Math.random() * 100 < m.chance;
-  const r = document.getElementById("result");
-  r.className = "result";
-  r.textContent = "Крутим...";
-  document.getElementById("spinBtn").disabled = true;
+  var mh = (Date.now() - (state.last_watered || Date.now())) / 3600000;
+  var moist = Math.max(0, 100 - Math.floor(mh * 5));
+  var sh = (Date.now() - (state.last_shake || 0)) / 3600000;
+  var snow = Math.min(100, Math.floor(sh * 8));
+  document.getElementById('bar-moist').style.width = moist + '%';
+  document.getElementById('bar-snow').style.width = snow + '%';
 
-  // рисуем стрелку в нужный сектор
-  const green = m.chance * 3.6;
-  const half = green / 2;
-  let target;
-  if (isWin) {
-    target = -half + 4 + Math.random() * (green - 8); // внутри зелёной зоны
+  var need = xpToNext(state.level);
+  if (state.level >= 100) {
+    document.getElementById('xp-line').textContent = '👑 Максимальный уровень — ЛЕГЕНДА ИГРЫ!';
   } else {
-    const span = 360 - green - 8;
-    target = half + 4 + Math.random() * span; // в красной зоне
+    document.getElementById('xp-line').textContent = 'Опыт: ' + fmt(state.xp) + ' / ' + fmt(need);
   }
-  const finalAngle = arrowAngle - (arrowAngle % 360) + 360 * 4 + target;
-
-  const arrow = document.getElementById("wheelArrow");
-  arrow.style.transition = "none";
-  arrow.style.transform = `rotate(${arrowAngle}deg)`;
-  void arrow.offsetWidth;
-  arrow.style.transition = "transform 4s cubic-bezier(0.12, 0.8, 0.2, 1)";
-  arrow.style.transform = `rotate(${finalAngle}deg)`;
-  arrowAngle = finalAngle;
-
-  setTimeout(() => {
-    spinning = false;
-    document.getElementById("spinBtn").disabled = false;
-
-    if (isWin) {
-      const win = Math.floor(bet * m.mult);
-      balance += win;
-      let extra = "";
-      let bonusType = null, bonusName = "";
-
-      // бонус на высоких множителях
-      if (m.bonus && Math.random() * 100 < m.bonus.chance) {
-        if (m.bonus.gifts && (!m.bonus.premium || Math.random() < 0.5)) {
-          const g = m.bonus.gifts[Math.floor(Math.random() * m.bonus.gifts.length)];
-          giftItems.push(g);
-          bonusType = "gift";
-          bonusName = GIFTS[g].emoji + " " + GIFTS[g].name;
-          extra = ` + ${bonusName}!`;
-        } else if (m.bonus.premium) {
-          premium += m.bonus.premium;
-          bonusType = "premium";
-          bonusName = `💎 Premium ${m.bonus.premium} мес.`;
-          extra = ` + ${bonusName}!`;
-        }
-      }
-
-      saveState();
-      document.getElementById("balance").textContent = balance;
-      r.className = "result win" + (bonusType ? " bonus" : "");
-      r.textContent = `🎉 Победа! +${win} ⭐${extra}`;
-      addHistory(true, bet, win, bonusName);
-    } else {
-      r.className = "result lose";
-      r.textContent = `💨 Не повезло. −${bet} ⭐. Ещё попытку?`;
-      addHistory(false, bet, 0, "");
-    }
-  }, 4100);
 }
 
-// ---------- история апгрейдов ----------
-function addHistory(win, bet, payout, bonus) {
-  let h = JSON.parse(localStorage.getItem(k("upHistory")) || "[]");
-  h.unshift({
-    mult: MULTIPLIERS[currentMultIndex].mult,
-    bet: bet, payout: payout, win: win, bonus: bonus,
-    time: new Date().toLocaleTimeString("ru-RU", {hour: "2-digit", minute: "2-digit"})
+// ===== Бегущая строка =====
+async function loadTicker(){
+  if (!supabase || isGuest) return;
+  var res = await supabase.from('drop_log').select('player_name,item_name,rarity').order('created_at', {ascending:false}).limit(8);
+  var track = document.getElementById('ticker-track');
+  if (res.error || !res.data || !res.data.length) { track.textContent = 'Шары ещё не выбиты — будь первым! 🎄'; return; }
+  var items = res.data.map(function(w){
+    var info = RARITY_INFO[w.rarity] || RARITY_INFO.common;
+    return '👤 ' + (w.player_name || 'Игрок') + ' выбил ' + info.icon + ' ' + w.item_name;
   });
-  h = h.slice(0, 20);
-  localStorage.setItem(k("upHistory"), JSON.stringify(h));
-  renderHistory();
+  var line = items.join('   •   ') + '   •   ';
+  track.textContent = line + line;
+  track.style.animation = 'none'; void track.offsetWidth; track.style.animation = '';
 }
 
-function renderHistory() {
-  const h = JSON.parse(localStorage.getItem(k("upHistory")) || "[]");
-  const box = document.getElementById("upHistory");
-  if (!h.length) { box.textContent = "Пока пусто — сделай первую крутку!"; return; }
-  box.innerHTML = h.map(x => `
-    <div>
-      <span>${x.time} · x${x.mult} · ставка ${x.bet} ⭐${x.bonus ? " · " + x.bonus : ""}</span>
-      <span class="${x.win ? (x.bonus ? "hbon" : "hwin") : "hlose"}">${x.win ? "+" + x.payout + " ⭐" : "−" + x.bet + " ⭐"}</span>
-    </div>`).join("");
+// ===== Топ недели =====
+async function loadTop(){
+  if (!supabase || isGuest) { document.getElementById('top-list').textContent = 'Топ доступен только в Telegram.'; return; }
+  var res = await supabase.from('players').select('player_id,name,weekly_pinecones').order('weekly_pinecones', {ascending:false}).limit(10);
+  var el = document.getElementById('top-list');
+  if (res.error || !res.data || !res.data.length) { el.textContent = 'Пока никого — забирай шишки первым!'; return; }
+  var medals = ['🥇','🥈','🥉'];
+  var html = '';
+  for (var i = 0; i < res.data.length; i++) {
+    var row = res.data[i];
+    var isMe = row.player_id === playerId;
+    html += '<div class="top-row' + (isMe ? ' me' : '') + '">'
+      + '<div class="top-rank">' + (medals[i] || (i+1)) + '</div>'
+      + '<div class="top-name">' + (row.name || 'Игрок') + '</div>'
+      + '<div class="top-val">' + fmt(row.weekly_pinecones || 0) + ' 🌰</div></div>';
+  }
+  el.innerHTML = html;
 }
 
-// ---------- запуск ----------
-const savedUser = localStorage.getItem("zd_current");
-if (savedUser) {
-  try { login(JSON.parse(savedUser)); } catch (e) {}
+// ===== Инвентарь =====
+async function loadInventory(){
+  if (!supabase || isGuest) return;
+  var res = await supabase.from('inventory').select('item_name,rarity').eq('player_id', playerId).limit(200);
+  var el = document.getElementById('inv-list');
+  if (res.error || !res.data || !res.data.length) { el.textContent = 'Пока пусто — играй в мини-игры и ухаживай за ёлкой!'; return; }
+  var byId = {};
+  res.data.forEach(function(x){
+    var key = x.rarity + '|' + x.item_name;
+    byId[key] = (byId[key] || 0) + 1;
+  });
+  var order = ['mythic','legendary','epic','rare','common'];
+  var html = '';
+  order.forEach(function(r){
+    Object.keys(byId).forEach(function(k){
+      if (k.indexOf(r + '|') !== 0) return;
+      var info = RARITY_INFO[r];
+      html += '<div class="inv-item"><div class="inv-emoji">' + info.icon + '</div>'
+        + '<div class="inv-name"><b class="r-' + r + '">' + k.slice(r.length+1) + '</b><span class="inv-count">' + info.label + '</span></div>'
+        + '<div class="inv-count">×' + byId[k] + '</div></div>';
+    });
+  });
+  el.innerHTML = html;
 }
-const ph = document.getElementById("authPhone");
-ph.addEventListener("input", () => formatPhone(ph));
+
+// ===== Сохранение пачками =====
+var dirty = false;
+function markDirty(){ dirty = true; }
+async function saveRemote(){
+  saveLocal();
+  if (!supabase || isGuest) return;
+  await supabase.from('players').update({
+    xp: state.xp, level: state.level, pinecones: state.pinecones,
+    last_watered: state.last_watered ? new Date(state.last_watered).toISOString() : null,
+    last_shake: state.last_shake ? new Date(state.last_shake).toISOString() : null,
+    last_collect: state.last_collect ? new Date(state.last_collect).toISOString() : null,
+    weekly_pinecones: state.weekly_pinecones, week_key: state.week_key,
+    total_drops: state.total_drops, name: playerName
+  }).eq('player_id', playerId);
+}
+setInterval(function(){ if (dirty) { dirty = false; saveRemote(); } }, 8000);
+document.addEventListener('visibilitychange', function(){ if (document.hidden && dirty) { dirty = false; saveRemote(); } });
+
+// ===== Лёгкий таймер перерисовки =====
+setInterval(renderAll, 30000);
+
+// ===== Вкладки =====
+document.querySelectorAll('.tab').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('.tab').forEach(function(x){ x.classList.remove('active'); });
+    b.classList.add('active');
+    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+    var scr = document.getElementById('screen-' + b.dataset.screen);
+    if (scr) scr.classList.add('active');
+    if (b.dataset.screen === 'top') loadTop();
+    if (b.dataset.screen === 'inv') loadInventory();
+  });
+});
+
+// ===== Кнопки =====
+document.getElementById('btn-water').addEventListener('click', doWater);
+document.getElementById('btn-shake').addEventListener('click', doShake);
+document.getElementById('btn-collect').addEventListener('click', doCollect);
+
+// ===== Старт =====
+if (isGuest) document.getElementById('guest-note').style.display = 'block';
+loadLocal();
+renderAll();
+loadRemote();
 </script>
-
 </body>
 </html>
