@@ -15,7 +15,6 @@
   .bg::before { content:''; position:fixed; inset:-40%; z-index:-2;
     background:
       radial-gradient(circle at 25% 15%, rgba(110,170,255,.20), transparent 42%),
-      radial-gradient(circle at 25% 85%, rgba(110,170,255,.16), transparent 42%),
       radial-gradient(circle at 82% 10%, rgba(180,225,255,.14), transparent 40%),
       radial-gradient(circle at 55% 90%, rgba(140,190,255,.12), transparent 45%),
       radial-gradient(circle at 10% 65%, rgba(200,235,255,.08), transparent 40%);
@@ -273,7 +272,7 @@
     <button class="btn btn-purple" style="margin-top:8px" onclick="switchAccount()">🔄 Сменить аккаунт</button>
   </div>
   <div class="card">
-    <div class="row"><b>🤝 Друзья-рефералка</b><span class="muted" id="ref-pct"></span></div>
+    <div class="row"><b>🤝 Друзья-рефералы</b><span class="muted" id="ref-pct"></span></div>
     <p class="muted" style="margin-top:4px">Твой код — отправь другу:</p>
     <div class="acc-input" id="my-ref-code" style="margin-top:6px;font-weight:800;color:#bfe4ff;user-select:text;cursor:text"></div>
     <button class="btn btn-purple" onclick="shareRef()">📤 Поделиться кодом</button>
@@ -408,7 +407,7 @@ const MINERS = [
   { id:'basic',       name:'Старая видеокарта',      daily:1000,    color:'#9fd4ff', icon:iconGPU },
   { id:'pro',         name:'Майнинг-рам',            daily:2000,    color:'#7fe0a0', icon:iconRig },
   { id:'turbo',       name:'ASIC-майнер',            daily:4000,    color:'#ff9db4', icon:iconASIC },
-  { id:'quantum',     name:'Процессорная ферma',     daily:8000,    color:'#9fd4ff', icon:iconCPU },
+  { id:'quantum',     name:'Процессорная ферма',     daily:8000,    color:'#9fd4ff', icon:iconCPU },
   { id:'plasma',      name:'Водоблок-экстрим',       daily:16000,   color:'#cfe8ff', icon:iconWater },
   { id:'fusion',      name:'Серверная стойка',       daily:32000,   color:'#ffd84d', icon:iconRack },
   { id:'blackhole',   name:'Суперкомпьютер',         daily:64000,   color:'#b4c8ff', icon:iconCluster },
@@ -441,4 +440,731 @@ const TITLES = [
 
 function getWeekKey(offsetWeeks) {
   const d = new Date();
-  const day = (d.getDay() + 6) %  hořák
+  const day = (d.getDay() + 6) % 7;
+  const monday = new Date(d.getFullYear(), d.getMonth(), d.getDate() - day - (offsetWeeks || 0) * 7);
+  const p = n => String(n).padStart(2, '0');
+  return monday.getFullYear() + '-' + p(monday.getMonth() + 1) + '-' + p(monday.getDate());
+}
+
+// ================= АККАУНТЫ =================
+const tgUser = (window.Telegram && Telegram.WebApp && Telegram.WebApp.initDataUnsafe && Telegram.WebApp.initDataUnsafe.user) || null;
+function listAccounts() { return JSON.parse(localStorage.getItem('zini_accounts') || '{}'); }
+function saveAccounts(a) { localStorage.setItem('zini_accounts', JSON.stringify(a)); }
+let ACCOUNT_ID = null, ACCOUNT_NAME = 'Игрок', isTgAccount = !!tgUser;
+
+function pickAccountScreen() {
+  const overlay = document.getElementById('acc-overlay');
+  const listEl = document.getElementById('acc-list');
+  const accs = listAccounts();
+  listEl.innerHTML = '';
+  Object.keys(accs).forEach(id => {
+    const b = document.createElement('button');
+    b.className = 'acc-btn';
+    b.textContent = '👤 ' + accs[id];
+    b.onclick = () => startGame(id, accs[id]);
+    listEl.appendChild(b);
+  });
+  if (!Object.keys(accs).length) listEl.innerHTML = '<div class="muted" style="margin-bottom:6px">Аккаунтов пока нет — придумайте имя.</div>';
+  overlay.classList.add('show');
+}
+function createAccount() {
+  const inp = document.getElementById('acc-new-name');
+  const name = (inp.value.trim() || 'Игрок').slice(0, 20);
+  const id = 'acc_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+  const accs = listAccounts();
+  accs[id] = name; saveAccounts(accs); inp.value = '';
+  startGame(id, name);
+}
+function switchAccount() {
+  if (isTgAccount) { popup('Вы в Telegram — аккаунт привязан автоматически'); return; }
+  if (state) save();
+  pickAccountScreen();
+}
+
+// ================= СОСТОЯНИЕ =================
+let state = null, saveKey = null;
+function todayStamp() { return new Date().setHours(0,0,0,0); }
+function freshState() {
+  return {
+    coins: 0, miners: {}, upgrades: {}, tapLvl: 0,
+    totalMined: 0, taps: 0, streak: 0, lastDaily: 0, lastSeen: Date.now(),
+    weekMined: 0, weekKey: getWeekKey(),
+    adsDay: 0, adsCount: 0,
+    energy: ENERGY_DAILY, energyDay: todayStamp(),
+    lastMinerBuy: 0,
+    refOf: null, refSent: false,
+    refWeek: getWeekKey(), refCredited: 0,
+    lastReset: 0
+  };
+}
+function loadStateFor(accId) {
+  const raw = localStorage.getItem('zini_acc_' + accId);
+  let s = raw ? JSON.parse(raw) : null;
+  if (!s) s = freshState();
+  if (s.weekKey !== getWeekKey()) { s.weekMined = 0; s.weekKey = getWeekKey(); }
+  if (s.refWeek !== getWeekKey()) { s.refCredited = 0; s.refWeek = getWeekKey(); }
+  if (s.energy === undefined) s.energy = ENERGY_DAILY;
+  if (!s.energyDay) s.energyDay = todayStamp();
+  if (s.lastMinerBuy === undefined) s.lastMinerBuy = 0;
+  if (s.lastReset === undefined) s.lastReset = 0;
+  return s;
+}
+function save() {
+  if (!state) return;
+  state.lastSeen = Date.now();
+  localStorage.setItem(saveKey, JSON.stringify(state));
+}
+function fmt(n) { return n >= 1e12 ? (n/1e12).toFixed(2)+'T' : n >= 1e9 ? (n/1e9).toFixed(2)+'B' : n >= 1e6 ? (n/1e6).toFixed(1)+'M' : n >= 1e3 ? (n/1e3).toFixed(1)+'K' : Math.floor(n); }
+let popupTimer;
+function popup(text) {
+  const p = document.getElementById('popup');
+  p.textContent = text; p.classList.add('show');
+  clearTimeout(popupTimer); popupTimer = setTimeout(() => p.classList.remove('show'), 2600);
+}
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
+
+function applyGlobalReset(resetTs) {
+  state = freshState();
+  state.lastReset = resetTs;
+  save();
+  currentRigId = null;
+  applyRigLook();
+  render(); renderShop(); renderUpg(); renderProf();
+  updateEnergyAdUi();
+  buildLB(); updateLB();
+  popup('❄️ Новый сезон! Все балансы обнулены — стартуй заново!');
+}
+
+// ================= ЭНЕРГИЯ =================
+function ensureEnergyDay() {
+  if (!state) return;
+  if (state.energyDay !== todayStamp()) {
+    state.energyDay = todayStamp();
+    state.energy = ENERGY_DAILY;
+  }
+}
+
+// ================= ДОХОД =================
+function totalRate() {
+  return MINERS.reduce((s, m) => s + m.rate * (state.miners[m.id] || 0) * (1 + (state.upgrades[m.id] || 0) * 0.10), 0);
+}
+function tapIncome() { return 1 + state.tapLvl * 0.3; }
+function upgradeCost(id) { const m = MINERS.find(x => x.id === id); return Math.floor(m.cost * 0.6 * Math.pow(1.8, state.upgrades[id] || 0)); }
+function addMined(amount) { state.coins += amount; state.totalMined += amount; state.weekMined += amount; }
+
+// ================= ТИТУЛЫ И ВИД МАЙНЕРА =================
+function rankTitle(mined) { let t = TITLES[0].name; for (const x of TITLES) if (mined >= x.mined) t = x.name; return t; }
+function bestMiner() { let best = null; for (const m of MINERS) if (state.miners[m.id] > 0) best = m; return best || MINERS[0]; }
+let currentRigId = null;
+function applyRigLook() {
+  const m = bestMiner();
+  if (m.id === currentRigId) return;
+  currentRigId = m.id;
+  const rig = document.getElementById('rig');
+  rig.style.borderColor = m.color;
+  rig.style.boxShadow = `0 0 40px ${m.color}45, inset 0 0 30px ${m.color}22`;
+  document.getElementById('rig-icon').innerHTML = m.icon(m.color);
+  document.getElementById('rig-name').textContent = m.name;
+}
+function collectOffline() {
+  const secs = Math.min((Date.now() - state.lastSeen) / 1000, OFFLINE_CAP_HOURS * 3600);
+  const earned = Math.floor(totalRate() * secs);
+  if (earned >= 1) {
+    addMined(earned);
+    if (secs > 60 && earned >= 10) popup(`Пока вас не было: +${fmt(earned)} зт!`);
+  }
+}
+
+// ================= ТАПЫ + КОМБО + ЭНЕРГИЯ =================
+let combo = 0, lastTapTime = 0, comboTimer = null;
+function comboMult() { return 1 + Math.min(combo, 10) * 0.15; }
+function showCombo() {
+  const el = document.getElementById('combo-line');
+  if (combo >= 2) { el.textContent = '❄️ Комбо ×' + comboMult().toFixed(2).replace(/0$/, ''); el.style.transform = 'scale(1.15)'; setTimeout(() => el.style.transform = 'scale(1)', 100); }
+  else el.textContent = '';
+}
+const rigEl = document.getElementById('rig');
+rigEl.addEventListener('pointerdown', e => {
+  if (!state) return;
+  ensureEnergyDay();
+  if ((state.energy || 0) < 1) {
+    popup('⚡ Энергия кончилась! Смотри рекламу — +50 энергии');
+    updateEnergyAdUi();
+    return;
+  }
+  const now = Date.now();
+  combo = (now - lastTapTime < 700) ? Math.min(combo + 1, 10) : 0;
+  lastTapTime = now;
+  clearTimeout(comboTimer);
+  comboTimer = setTimeout(() => { combo = 0; showCombo(); }, 1400);
+  const gain = Math.ceil(tapIncome() * comboMult());
+  addMined(gain); state.taps++;
+  state.energy = Math.max(0, state.energy - 1);
+  const r = rigEl.getBoundingClientRect();
+  const c = document.createElement('div');
+  c.className = 'flycoin'; c.textContent = '+' + fmt(gain);
+  c.style.left = (e.clientX - r.left - 12) + 'px';
+  c.style.top = (e.clientY - r.top - 10) + 'px';
+  rigEl.appendChild(c);
+  setTimeout(() => c.remove(), 1050);
+  showCombo(); syncSoon(); render();
+  if (state.energy < 10) updateEnergyAdUi();
+});
+
+// ================= МАГАЗИН =================
+function minerCooldownLeft() { return Math.max(0, MINER_BUY_COOLDOWN - (Date.now() - (state.lastMinerBuy || 0))); }
+function buyMiner(id) {
+  const m = MINERS.find(x => x.id === id);
+  const cd = minerCooldownLeft();
+  if (cd > 0) { popup('Следующий майнер можно купить через ' + Math.ceil(cd / 60000) + ' мин'); return; }
+  if (state.coins < m.cost) { popup('Недостаточно зт!'); return; }
+  state.coins -= m.cost;
+  state.miners[id] = (state.miners[id] || 0) + 1;
+  state.lastMinerBuy = Date.now();
+  save(); applyRigLook(); render(); renderShop();
+  popup(`${m.name} куплен! +${fmt(m.daily)} зт/сутки`);
+}
+function renderShop() {
+  const cd = minerCooldownLeft();
+  const cdText = cd > 0 ? Math.ceil(cd / 60000) + ' мин' : '';
+  document.getElementById('shop-list').innerHTML = MINERS.map(m => {
+    const owned = state.miners[m.id] || 0;
+    const cooling = cd > 0;
+    return `<div class="card shop-card">
+      <div class="shop-ico" style="background:${m.color}1a; border-color:${m.color}59">${m.icon(m.color)}</div>
+      <div class="shop-info"><div class="shop-name" style="color:${m.color}">${m.name}</div>
+      <div class="shop-meta">даёт <b>${fmt(m.daily)} зт/сутки</b> • в наличии: ${owned}</div></div>
+      <button class="mini-btn buy" ${cooling || state.coins < m.cost ? 'disabled' : ''} onclick="buyMiner('${m.id}')">${cooling ? '⏳ ' + cdText : fmt(m.cost) + ' зт'}</button>
+    </div>`;
+  }).join('');
+}
+
+// ================= УЛУЧШЕНИЯ =================
+function buyUpgrade(id) {
+  const cost = upgradeCost(id), m = MINERS.find(x => x.id === id);
+  if (!(state.miners[id] > 0)) { popup('Сначала купите майнер!'); return; }
+  if (state.coins < cost) { popup('Недостаточно зт для улучшения!'); return; }
+  state.coins -= cost; state.upgrades[id] = (state.upgrades[id] || 0) + 1;
+  save(); render(); renderUpg();
+  popup(`${m.name}: скорость +10%!`);
+}
+function buyTapUpg() {
+  const cost = Math.floor(TAP_UPG_COST * Math.pow(TAP_UPG_MULT, state.tapLvl));
+  if (state.coins < cost) { popup('Недостаточно зт!'); return; }
+  state.coins -= cost; state.tapLvl++;
+  save(); render(); renderUpg();
+  popup('👆 Сила тапа увеличена!');
+}
+function renderUpg() {
+  const tapCost = Math.floor(TAP_UPG_COST * Math.pow(TAP_UPG_MULT, state.tapLvl));
+  const miners = MINERS.map(m => {
+    const owned = state.miners[m.id] || 0, lvl = state.upgrades[m.id] || 0, cost = upgradeCost(m.id);
+    return `<div class="card shop-card">
+      <div class="shop-ico" style="background:${m.color}1a; border-color:${m.color}59">${m.icon(m.color)}</div>
+      <div class="shop-info"><div class="shop-name" style="color:${m.color}">${m.name} <span class="muted">ур.${lvl}</span></div>
+      <div class="shop-meta">+10% за уровень • сейчас <b>${fmt(m.daily*(1+lvl*0.10))} зт/сутки</b></div></div>
+      <button class="mini-btn upg" ${owned === 0 || state.coins < cost ? 'disabled' : ''} onclick="buyUpgrade('${m.id}')">${fmt(cost)} зт</button>
+    </div>`;
+  }).join('');
+  document.getElementById('upg-list').innerHTML = `
+    <div class="card shop-card">
+      <div class="shop-ico" style="background:rgba(150,205,255,.1)">👆</div>
+      <div class="shop-info"><div class="shop-name">Сила тапа <span class="muted">ур.${state.tapLvl}</span></div>
+      <div class="shop-meta">+30% за уровень • сейчас <b>+${fmt(tapIncome())} зт/тап</b></div></div>
+      <button class="mini-btn upg" ${state.coins < tapCost ? 'disabled' : ''} onclick="buyTapUpg()">${fmt(tapCost)} зт</button>
+    </div>` + miners;
+}
+
+// ================= РЕЙТИНГ + КАРТОЧКИ ИГРОКОВ =================
+let lbBuilt = false, lbCache = [], lbRows = [], lbState = 'loading', crownIds = new Set(), syncTimer = null;
+
+function makeLbRow() { return `<div class="lb-row"><div class="lb-rank"></div><div class="lb-name"></div><div class="lb-val"><b></b><span class="muted"></span></div></div>`; }
+function cacheLbRows(listEl) {
+  return Array.from(listEl.children).map(row => {
+    row.addEventListener('click', () => {
+      const r = lbCache.find(x => x.row === row);
+      if (r && r.data) showPlayer(r.data);
+    });
+    return { row, rankEl: row.querySelector('.lb-rank'), nameEl: row.querySelector('.lb-name'), valEl: row.querySelector('.lb-val b'), rateEl: row.querySelector('.lb-val .muted'), data: null };
+  });
+}
+function buildLB() {
+  if (lbBuilt) return;
+  lbBuilt = true;
+  const listEl = document.getElementById('lb-list');
+  listEl.innerHTML = makeLbRow();
+  lbCache = cacheLbRows(listEl);
+}
+function showPlayer(p) {
+  document.getElementById('pl-box').innerHTML = `
+    <h3>${p.me ? '⭐ ' : ''}${escapeHtml(p.name)}</h3>
+    <p>${p.title ? escapeHtml(p.title) : 'Игрок'}${p.rig ? ' • ' + escapeHtml(p.rig) : ''}</p>
+    <div style="text-align:left">
+      <div class="adm-row"><div class="n">Добыто за неделю</div><div class="n" style="color:#ffd84d">${fmt(p.mined)} зт</div></div>
+      <div class="adm-row"><div class="n">Баланс</div><div class="n" style="color:#ffd84d">${fmt(p.coins || 0)} зт</div></div>
+      <div class="adm-row"><div class="n">Всего добыто</div><div class="n">${fmt(p.total_mined || 0)} зт</div></div>
+      <div class="adm-row"><div class="n">Лучший майнер</div><div class="b">${escapeHtml(p.rig || '—')}</div></div>
+    </div>
+    <button class="acc-btn" onclick="document.getElementById('pl-overlay').classList.remove('show')">Закрыть</button>`;
+  document.getElementById('pl-overlay').classList.add('show');
+}
+function updateLB() {
+  if (!lbBuilt || !state) return;
+  const mineRemote = lbRows.find(r => r.player_id === ACCOUNT_ID);
+  const rows = [{ player_id: ACCOUNT_ID, name: ACCOUNT_NAME, mined: mineRemote ? mineRemote.mined : Math.floor(state.weekMined), coins: state.coins, total_mined: state.totalMined, rig: bestMiner().name, title: rankTitle(state.totalMined), me: true }];
+  for (const r of lbRows) { if (r.player_id === ACCOUNT_ID || !(r.mined > 0)) continue; rows.push({ ...r, me: false }); }
+  rows.sort((a, b) => b.mined - a.mined);
+
+  const listEl = document.getElementById('lb-list');
+  if (listEl.children.length !== rows.length) { listEl.innerHTML = rows.map(makeLbRow).join(''); lbCache = cacheLbRows(listEl); }
+
+  const medals = ['🥇','🥈','🥉'];
+  let myIndex = 0;
+  for (let i = 0; i < rows.length; i++) {
+    const r = rows[i], el = lbCache[i];
+    el.data = r;
+    if (r.me) myIndex = i;
+    el.rankEl.textContent = medals[i] || (i + 1);
+    el.rankEl.style.color = i === 0 ? '#ffd84d' : i === 1 ? '#cfd6ff' : i === 2 ? '#ffb89a' : '';
+    const crown = crownIds.has(r.player_id) ? '<span class="crown">👑</span>' : '';
+    el.nameEl.innerHTML = (r.me ? '⭐ ' : '') + escapeHtml(r.name) + (r.me ? ' (вы)' : '') + crown;
+    el.nameEl.className = 'lb-name' + (r.me ? ' me' : '');
+    el.valEl.textContent = fmt(r.mined);
+    el.rateEl.textContent = r.me ? '+' + fmt(totalRate() * 86400) + ' зт/сут' : (r.rig ? r.rig : '');
+    el.row.classList.toggle('lb-me', r.me);
+    if (r.me) document.getElementById('st-rank').textContent = '#' + (i + 1);
+  }
+  const gapEl = document.getElementById('lb-gap');
+  if (gapEl) {
+    if (myIndex === 0) gapEl.textContent = rows.length > 1 ? '👑 Вы лидер! Не дайте себя обогнать!' : '';
+    else gapEl.textContent = `❄️ До места выше осталось ${fmt(rows[myIndex - 1].mined - rows[myIndex].mined + 1)} зт`;
+  }
+  const st = document.getElementById('lb-status');
+  if (lbState === 'ok') st.innerHTML = '<span class="live-dot"></span>Обновляется в реальном времени';
+  else if (lbState === 'err') st.innerHTML = '<span class="live-dot" style="background:#ff9db4"></span>Не удалось загрузить рейтинг';
+  else st.innerHTML = '<span class="live-dot"></span>Загрузка…';
+}
+
+async function sendToWorker() {
+  if (!SYNC_WORKER_URL.startsWith('http') || !state) return;
+  try {
+    const res = await fetch(SYNC_WORKER_URL + '/sync', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        player_id: ACCOUNT_ID, name: ACCOUNT_NAME, week_key: getWeekKey(),
+        mined: Math.floor(state.weekMined), coins: Math.floor(state.coins),
+        total_mined: Math.floor(state.totalMined), rig: bestMiner().name, title: rankTitle(state.totalMined),
+        taps: state.taps || 0, miners: JSON.stringify(state.miners || {}),
+        last_reset: state.lastReset || 0
+      })
+    });
+    const d = await res.json().catch(() => ({}));
+    if (d.reset) { applyGlobalReset(d.reset_ts || Date.now()); return; }
+    if (d.hidden) {
+      state.weekMined = 0;
+      if (d.resetCmd) { state.coins = 0; popup('Баланс обнулён админом'); }
+      save();
+    }
+  } catch (e) { console.error('sync:', e); }
+}
+function syncSoon() {
+  if (syncTimer || !SYNC_WORKER_URL.startsWith('http') || !state) return;
+  syncTimer = setTimeout(() => { syncTimer = null; sendToWorker(); }, 10000);
+}
+
+async function fetchLeaderboard() {
+  try {
+    const res = await fetch(
+      SUPABASE_URL + '/rest/v1/weekly_top?week_key=eq.' + getWeekKey() + '&select=player_id,name,mined,coins,total_mined,rig,title,taps,miners&order=mined.desc&limit=50',
+      { headers: API_HEADERS });
+    if (!res.ok) throw new Error('http ' + res.status);
+    lbRows = await res.json();
+    lbState = 'ok';
+  } catch (e) { lbState = 'err'; }
+  if (currentPage === 'rank') updateLB();
+}
+
+function renderWeekTopHTML(data) {
+  data = data.filter(p => p.mined > 0);
+  if (!data.length) return 'Пока никто не участвует — потапайте и станьте первым!';
+  const medals = ['🥇','🥈','🥉'];
+  return data.map((p, i) => {
+    const me = p.player_id === ACCOUNT_ID;
+    return `<div class="lb-row ${me ? 'lb-me' : ''}">
+      <div class="lb-rank">${medals[i] || (i + 1)}</div>
+      <div class="lb-name ${me ? 'me' : ''}">${me ? '⭐ ' : ''}${escapeHtml(p.name || 'Игрок')}${me ? ' (вы)' : ''}${crownIds.has(p.player_id) ? '<span class="crown">👑</span>' : ''}</div>
+      <div class="lb-val"><b>${fmt(p.mined)}</b></div>
+    </div>`;
+  }).join('');
+}
+async function fetchWeeklyTop() {
+  try {
+    const res = await fetch(
+      SUPABASE_URL + '/rest/v1/weekly_top?week_key=eq.' + getWeekKey(1) + '&order=mined.desc&limit=3',
+      { headers: API_HEADERS });
+    if (res.ok) crownIds = new Set((await res.json()).map(p => p.player_id));
+  } catch (e) {}
+  if (currentPage === 'rank') updateLB();
+  try {
+    const res = await fetch(
+      SUPABASE_URL + '/rest/v1/weekly_top?week_key=eq.' + getWeekKey() + '&order=mined.desc&limit=10',
+      { headers: API_HEADERS });
+    if (!res.ok) throw new Error('http ' + res.status);
+    const html = renderWeekTopHTML(await res.json());
+    const f = document.getElementById('farm-week-top');
+    if (f) f.innerHTML = html;
+  } catch (e) {
+    const f = document.getElementById('farm-week-top');
+    if (f) f.textContent = 'Не удалось загрузить топ';
+  }
+}
+
+// ================= РЕФЕРАЛКА =================
+function refPct(n) { return n >= 30 ? '45%' : n >= 11 ? '10%' : n >= 1 ? '5%' : '—'; }
+function showRefPrompt() {
+  if (!state || state.refSent || state.refOf || !SYNC_WORKER_URL.startsWith('http')) return;
+  document.getElementById('ref-overlay').classList.add('show');
+}
+function enterRefCode() {
+  if (!state) return;
+  if (state.refOf) { popup('Код друга уже введён'); return; }
+  document.getElementById('ref-overlay').classList.add('show');
+}
+async function submitRef() {
+  const code = document.getElementById('ref-input').value.trim();
+  document.getElementById('ref-overlay').classList.remove('show');
+  if (!code) return;
+  state.refSent = true; state.refOf = code; save();
+  try {
+    await fetch(SYNC_WORKER_URL + '/ref', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ player_id: ACCOUNT_ID, ref_code: code })
+    });
+    popup('Код принят! Приглашён к ' + code);
+  } catch (e) {}
+}
+function skipRef() { state.refSent = true; save(); document.getElementById('ref-overlay').classList.remove('show'); }
+async function refStats() {
+  if (!SYNC_WORKER_URL.startsWith('http') || !state) return;
+  try {
+    const res = await fetch(SYNC_WORKER_URL + '/refstats?player_id=' + encodeURIComponent(ACCOUNT_ID) + '&week_key=' + getWeekKey());
+    if (!res.ok) return;
+    const d = await res.json();
+    if (d.bonus > (state.refCredited || 0)) {
+      const diff = d.bonus - (state.refCredited || 0);
+      state.coins += diff; state.totalMined += diff;
+      state.refCredited = d.bonus;
+      popup('🤝 Реферальный доход: +' + fmt(diff) + ' зт!');
+    }
+    state._refCount = d.count; state._refBonus = d.bonus;
+    if (currentPage === 'prof') renderRef();
+  } catch (e) {}
+}
+function renderRef() {
+  const el = document.getElementById('ref-stats');
+  if (!el || !state) return;
+  const n = state._refCount || 0;
+  el.innerHTML = `Друзей: <b style="color:#7fe0a0">${n}</b> • твой процент: <b style="color:#bfe4ff">${refPct(n)}</b> • заработано за неделю: <b style="color:#ffd84d">${fmt(state._refBonus || 0)} зт</b><br><span class="muted">1–10 друзей → 5% • 11–30 → 10% • 30+ → 45% от их дохода</span>`;
+  const pc = document.getElementById('ref-pct');
+  if (pc) pc.textContent = refPct(n);
+  const mc = document.getElementById('my-ref-code');
+  if (mc) mc.textContent = ACCOUNT_ID;
+}
+function shareRef() {
+  const text = `Заходи в ZINI DROP по моему коду: ${ACCOUNT_ID}\nhttps://t.me/zini_drop_bot/zinidrop`;
+  if (window.Telegram && Telegram.WebApp) { Telegram.WebApp.openTelegramLink('https://t.me/share/url?url=' + encodeURIComponent(text)); }
+  else { navigator.clipboard && navigator.clipboard.writeText(text); popup('Код скопирован!'); }
+}
+
+// ================= МЕТЕОРИТЫ =================
+function scheduleAsteroid() { setTimeout(spawnAsteroid, 45000 + Math.random() * 90000); }
+function spawnAsteroid() {
+  if (!state || currentPage !== 'farm') { scheduleAsteroid(); return; }
+  const a = document.createElement('div');
+  a.className = 'asteroid';
+  a.textContent = ['☄️','❄️','💰'][Math.floor(Math.random() * 3)];
+  const y = window.innerHeight * (0.15 + Math.random() * 0.5);
+  a.style.left = '-60px'; a.style.top = y + 'px';
+  document.body.appendChild(a);
+  requestAnimationFrame(() => { a.style.transform = `translateX(${window.innerWidth + 140}px) translateY(${(Math.random()-0.5)*120}px) rotate(360deg)`; });
+  const gone = setTimeout(() => { a.remove(); scheduleAsteroid(); }, 7200);
+  a.addEventListener('pointerdown', () => {
+    clearTimeout(gone);
+    const bonus = Math.max(25, Math.floor(tapIncome() * 25));
+    addMined(bonus);
+    popup('❄️ Ледяная призма поймана: +' + fmt(bonus) + ' зт!');
+    a.remove(); render(); save(); scheduleAsteroid();
+  });
+}
+
+// ================= РЕКЛАМА: каждая даёт +50 энергии, лимит 3/день =================
+let adController = null;
+function initAds() {
+  if (!window.Adsgram) return;
+  try { adController = window.Adsgram.init({ blockId: ADSGRAM_BLOCK_ID }); } catch (e) {}
+}
+function adsLeft() { if (!state) return 0; if (state.adsDay !== todayStamp()) return ADS_PER_DAY; return ADS_PER_DAY - (state.adsCount || 0); }
+async function watchAd() {
+  if (!adController) { popup('Реклама ещё не настроена'); return; }
+  if (adsLeft() <= 0) { popup('Лимит рекламы на сегодня исчерпан!'); return; }
+  try {
+    await adController.show();
+    state.adsCount = (state.adsCount || 0) + 1;
+    state.adsDay = todayStamp();
+    state.energy = Math.min(500, (state.energy || 0) + ENERGY_PER_AD);
+    popup('⚡ +' + ENERGY_PER_AD + ' энергии! Осталось реклам: ' + adsLeft() + '/' + ADS_PER_DAY);
+    render(); updateEnergyAdUi(); save(); syncSoon();
+  } catch (e) { popup('Реклама не показалась, попробуйте позже'); }
+}
+function updateEnergyAdUi() {
+  const btn = document.getElementById('ad-btn'), left = document.getElementById('ad-left');
+  if (!btn || !state) return;
+  const l = adsLeft();
+  if (left) left.textContent = 'реклам сегодня: ' + l + '/' + ADS_PER_DAY;
+  if (l <= 0) { btn.disabled = true; btn.textContent = 'На сегодня всё! Энергия вернётся завтра'; return; }
+  btn.disabled = !adController;
+  btn.textContent = '⚡ +50 энергии за рекламу';
+}
+
+// ================= ЕЖЕДНЕВНЫЙ БОНУС =================
+function claimDaily() {
+  const today = todayStamp();
+  if (state.lastDaily === today) { popup('Бонус уже получен! Завтра 🔥'); return; }
+  state.streak = (state.lastDaily === today - 86400000) ? state.streak + 1 : 1;
+  const bonus = DAILY_REWARD * Math.min(state.streak, 7);
+  addMined(bonus); state.lastDaily = today;
+  save(); render(); renderProf();
+  popup(`🔥 Бонус +${bonus} зт (серия ${state.streak})!`);
+}
+function renderProf() {
+  document.getElementById('acc-name').textContent = '👤 ' + ACCOUNT_NAME;
+  document.getElementById('acc-type').textContent = isTgAccount ? 'аккаунт Telegram' : 'локальный аккаунт';
+  document.getElementById('acc-title').textContent = rankTitle(state.totalMined);
+  document.getElementById('st-total-mined').textContent = fmt(state.totalMined);
+  document.getElementById('st-taps').textContent = fmt(state.taps);
+  document.getElementById('st-miners').textContent = Object.values(state.miners).reduce((a,b)=>a+b,0);
+  const today = todayStamp();
+  const can = state.lastDaily !== today;
+  const streak = (state.lastDaily === today - 86400000) ? state.streak : (state.lastDaily === today ? state.streak : 0);
+  document.getElementById('daily-streak').textContent = 'серия: ' + streak + '/7';
+  document.getElementById('daily-bar').style.width = (streak/7*100) + '%';
+  const btn = document.getElementById('daily-btn');
+  btn.disabled = !can;
+  btn.textContent = can ? `Забрать ${DAILY_REWARD * Math.min(streak + 1, 7)} зт` : 'Уже получено ✓';
+}
+
+// ================= АДМИНКА (открытие: 5 тапов по логотипу) =================
+let adminTap = 0;
+function openAdmin() {
+  adminTap++;
+  setTimeout(() => adminTap = 0, 3000);
+  if (adminTap >= 5) { adminTap = 0; document.getElementById('admin-overlay').classList.add('show'); }
+}
+function minersBrief(jsonStr) {
+  try {
+    const m = JSON.parse(jsonStr || '{}');
+    const list = Object.entries(m).filter(([, v]) => v > 0)
+      .map(([k, v]) => (MINERS.find(x => x.id === k) || { name: k }).name + ' ×' + v);
+    return list.length ? list.join(', ') : 'нет майнеров';
+  } catch (e) { return 'нет майнеров'; }
+}
+async function adminSearch() {
+  const codeInput = document.getElementById('adm-code');
+  const code = (codeInput.value || '').trim();
+  if (code) localStorage.setItem('zini_admin_code', code);
+  const saved = code || localStorage.getItem('zini_admin_code') || '';
+  const q = document.getElementById('adm-search').value.trim();
+  const box = document.getElementById('adm-results');
+  box.innerHTML = '<div class="muted">Поиск…</div>';
+  try {
+    const res = await fetch(SYNC_WORKER_URL + '/admin?code=' + encodeURIComponent(saved) + '&q=' + encodeURIComponent(q));
+    const d = await res.json();
+    if (!d.ok) { box.innerHTML = '<div class="muted">Неверный код админа</div>'; return; }
+    let html = '';
+    if (!d.rows.length) html += '<div class="muted">Никого не найдено</div>';
+    html += d.rows.map(r => `
+      <div class="adm-row" style="flex-direction:column;align-items:stretch">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+          <div style="min-width:0">
+            <div class="n">${escapeHtml(r.name)}${r.blocked ? ' 🚫бан' : ''}${r.hidden ? ' 👻скрыт' : ''}</div>
+            <div class="b">нед: ${fmt(r.mined)} зт • баланс: ${fmt(r.coins || 0)} зт • всего: ${fmt(r.total_mined || 0)} зт</div>
+            <div class="b">тапов: ${fmt(r.taps || 0)} • титул: ${escapeHtml(r.title || '—')}</div>
+            <div class="b">майнеры: ${escapeHtml(minersBrief(r.miners))}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0">
+            <button class="adm-btn" style="background:#ff9db4;color:#3a0d18" onclick="adminAct('${r.player_id}','reset')">обнул</button>
+            ${r.hidden ? `<button class="adm-btn" style="background:#7fe0a0;color:#0c2a18" onclick="adminAct('${r.player_id}','unhide')">вернуть</button>` : ''}
+            <button class="adm-btn" style="background:${r.blocked ? '#7fe0a0' : '#22304e'};color:#fff" onclick="adminAct('${r.player_id}','${r.blocked ? 'unban' : 'ban'}')">${r.blocked ? 'разбан' : 'бан'}</button>
+          </div>
+        </div>
+      </div>`).join('');
+    box.innerHTML = html;
+  } catch (e) { box.innerHTML = '<div class="muted">Ошибка связи</div>'; }
+}
+async function adminAct(id, action) {
+  const c = localStorage.getItem('zini_admin_code') || '';
+  try {
+    const res = await fetch(SYNC_WORKER_URL + '/admin', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: c, action, target_id: id })
+    });
+    if (res.ok) {
+      const msgs = { reset: 'Обнулён и скрыт из топа', unhide: 'Снова виден в топе', ban: 'Игрок забанен', unban: 'Игрок разбанен' };
+      popup(msgs[action] || 'Готово');
+      adminSearch();
+    } else popup('Ошибка: неверный код');
+  } catch (e) { popup('Ошибка связи'); }
+}
+async function globalReset() {
+  const inp = document.getElementById('adm-code');
+  const code = (inp.value || '').trim() || localStorage.getItem('zini_admin_code') || '';
+  if (!code) { popup('Сначала введи код админа в поле выше!'); return; }
+  localStorage.setItem('zini_admin_code', code);
+  if (!confirm('Точно обнулить ВСЕХ игроков и начать новый сезон?')) return;
+  try {
+    const res = await fetch(SYNC_WORKER_URL + '/admin', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: code, action: 'globalreset' })
+    });
+    if (res.ok) popup('🌍 Новый сезон запущен! Все игроки обнулятся при входе');
+    else popup('Ошибка: неверный код');
+  } catch (e) { popup('Ошибка связи'); }
+}
+
+// ================= НАВИГАЦИЯ =================
+let currentPage = 'farm';
+let tick = 0;
+function go(page) {
+  if (!state) return;
+  currentPage = page;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active', b.dataset.page === page));
+  if (page === 'shop') renderShop();
+  if (page === 'upg') renderUpg();
+  if (page === 'prof') { renderProf(); renderRef(); }
+  if (page === 'rank') { buildLB(); updateLB(); }
+  window.scrollTo(0, 0);
+}
+
+// ================= ЛЁГКИЙ РЕНДЕР =================
+const elCoins = document.getElementById('coins');
+const elRate = document.getElementById('rate');
+const elEnergy = document.getElementById('energy');
+const elTap = document.getElementById('tap-income');
+const elSec = document.getElementById('sec-income');
+let lastCoinsText = '', lastRateText = '', lastEnergyText = '';
+function render() {
+  if (!state) return;
+  ensureEnergyDay();
+  const c = fmt(state.coins);
+  if (c !== lastCoinsText) { elCoins.textContent = c; lastCoinsText = c; }
+  const r = fmt(totalRate() * 86400);
+  if (r !== lastRateText) { elRate.textContent = r; lastRateText = r; }
+  const e = Math.floor(state.energy) + '/500';
+  if (e !== lastEnergyText) { elEnergy.textContent = e; lastEnergyText = e; }
+  elTap.textContent = '+' + fmt(tapIncome());
+  elSec.textContent = fmt(totalRate() * 86400);
+}
+
+// ================= ЗИМНИЙ ФОН =================
+const FLAKES = ['❄','❅','❆','❄'];
+for (let i = 0; i < 12; i++) {
+  const f = document.createElement('div');
+  f.className = 'snowflake';
+  f.textContent = FLAKES[Math.floor(Math.random() * FLAKES.length)];
+  f.style.left = Math.random() * 100 + 'vw';
+  f.style.fontSize = (10 + Math.random() * 10) + 'px';
+  f.style.opacity = (0.35 + Math.random() * 0.45).toFixed(2);
+  f.style.animationDuration = (8 + Math.random() * 10) + 's';
+  f.style.animationDelay = '-' + Math.random() * 18 + 's';
+  document.body.appendChild(f);
+}
+for (let i = 0; i < 14; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const sz = 1 + Math.random() * 2;
+  s.style.width = sz + 'px'; s.style.height = sz + 'px';
+  s.style.left = Math.random() * 100 + 'vw';
+  s.style.top = Math.random() * 100 + 'vh';
+  s.style.animationDuration = (3 + Math.random() * 5) + 's';
+  s.style.animationDelay = Math.random() * 5 + 's';
+  document.body.appendChild(s);
+}
+
+// ================= ЗАПУСК ИГРЫ =================
+let intervalsStarted = false;
+
+function startGame(accId, accName) {
+  ACCOUNT_ID = accId;
+  ACCOUNT_NAME = accName;
+  saveKey = 'zini_acc_' + accId;
+  state = loadStateFor(accId);
+
+  document.getElementById('acc-overlay').classList.remove('show');
+
+  ensureEnergyDay();
+  collectOffline();
+  currentRigId = null;
+  applyRigLook();
+  render(); renderShop(); renderUpg(); renderProf();
+  updateEnergyAdUi();
+  buildLB(); updateLB();
+  fetchLeaderboard(); fetchWeeklyTop(); refStats();
+  sendToWorker();
+  setTimeout(showRefPrompt, 2000);
+
+  if (!intervalsStarted) {
+    intervalsStarted = true;
+    scheduleAsteroid();
+    setInterval(() => {
+      if (!state) return;
+      ensureEnergyDay();
+      const inc = totalRate();
+      if (inc > 0) addMined(inc);
+      applyRigLook();
+      render();
+      tick++;
+      if (tick % 5 === 0) {
+        if (currentPage === 'shop') renderShop();
+        if (currentPage === 'upg') renderUpg();
+        updateEnergyAdUi();
+      }
+      if (currentPage === 'rank') updateLB();
+    }, 1000);
+    setInterval(save, 10000);
+    setInterval(sendToWorker, 60000);
+    setInterval(fetchLeaderboard, 15000);
+    setInterval(fetchWeeklyTop, 20000);
+    setInterval(refStats, 60000);
+  }
+}
+
+initAds();
+
+(function initAccounts() {
+  const accs = listAccounts();
+
+  if (tgUser) {
+    const id = 'tg_' + tgUser.id;
+    const name = (tgUser.first_name || 'Игрок').slice(0, 20);
+    if (!accs[id]) { accs[id] = name; saveAccounts(accs); }
+    startGame(id, accs[id]);
+    return;
+  }
+
+  if (!Object.keys(accs).length) {
+    const id = 'acc_' + Date.now().toString(36);
+    accs[id] = 'Мой аккаунт';
+    saveAccounts(accs);
+  }
+
+  pickAccountScreen();
+})();
+
+window.addEventListener('beforeunload', save);
+document.addEventListener('visibilitychange', () => { if (document.hidden) save(); });
+if (window.Telegram && Telegram.WebApp) { Telegram.WebApp.ready(); Telegram.WebApp.expand(); }
+</script>
+</body>
+</html>
