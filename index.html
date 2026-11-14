@@ -153,7 +153,7 @@
 <div class="screen active" id="screen-main">
   <div class="card">
     <div class="row"><b>⚡ Ускорение</b><span class="muted" id="boost-status"></span></div>
-    <p class="muted">Смотри рекламу — доход ×2 на 1 час. Максимум 3 просмотра в день, перерыв 10 минут.</p>
+    <p class="muted">Смотри рекламу — доход ×2 на 1 час. Максимум 3 просмотра в день, перерыв 10 минут. Просмотры также открывают вывод монет.</p>
     <button class="btn" id="btn-boost">🎬 Ускорить доход за рекламу</button>
   </div>
   <div class="card">
@@ -186,6 +186,11 @@
   <div class="card">
     <b>💰 Продажа монет</b>
     <p class="muted">Меняй монеты на звёзды по курсу <b style="color:var(--acc)">10 000 монет = 1 ⭐</b>. Минимальный вывод — <b style="color:var(--acc)">50 ⭐ (500 000 монет)</b>.</p>
+    <div class="card-box" style="margin-top:10px">
+      <div class="row"><b>🎬 Активность за сутки</b><span id="ads-progress" class="muted">0/3</span></div>
+      <div class="progress" style="margin-top:8px"><div class="progress-fill" id="ads-fill" style="width:0%"></div></div>
+      <p class="muted" id="ads-note" style="margin-top:8px">Посмотри минимум 3 рекламы на вкладке «Шахта», чтобы открыть вывод.</p>
+    </div>
     <p class="muted" id="sell-info" style="margin-top:8px">—</p>
     <button class="btn" id="btn-sell" disabled>Заявка на вывод — недостаточно монет</button>
   </div>
@@ -212,9 +217,9 @@
 var SB_URL = 'https://clxewmkuntmgtbovrgqk.supabase.co';
 var SB_KEY = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX';
 var FN_BASE = 'https://clxewmkuntmgtbovrgqk.supabase.co/functions/v1';
-var PAYMENT_FN = 'quick-function';
+var PAYMENT_FN = 'telegram-webhook';
 var ADSGRAM_ID = '59627';
-var BOT_USERNAME = 'ТВОЙ_БОТ_БЕЗ_СОБАКИ'; // ← ЗАМЕНИ на username бота
+var BOT_USERNAME = 'zini_drop_bot';
 
 // ============ ЭКОНОМИКА ============
 var TAP_REWARD = 100;
@@ -222,6 +227,9 @@ var COINS_PER_STAR = 10000;
 var MIN_WITHDRAW_STARS = 50;
 var MIN_WITHDRAW_COINS = MIN_WITHDRAW_STARS * COINS_PER_STAR;
 var MIN_TOPUP_STARS = 15;
+
+// Условие вывода: минимум столько рекламы за последние сутки
+var ADS_REQUIRED = 3;
 
 var TIERS = {
   0: { name:'Test',     stars:1,   perDay:6000,    emoji:'🧪' },
@@ -245,7 +253,7 @@ var myMiners = [];
 function isGuest() { return !state || String(state.user_id).indexOf('guest_') === 0; }
 function fmt(n) { return Math.floor(n).toLocaleString('ru-RU'); }
 function openBot() {
-  var link = 'https://t.me/' + BOT_USERNAME;
+  var link = 'https://t.me/zini_drop_bot';
   if (tg && tg.openTelegramLink) tg.openTelegramLink(link);
   else window.open(link, '_blank');
 }
@@ -261,7 +269,7 @@ function initUser() {
       name = tg.initDataUnsafe.user.first_name || 'Игрок';
     }
   } catch (e) {}
-  state = saved || { user_id: uid, name: name, coins: 0, total_mined: 0, taps: 0, stars_balance: 0, boostUntil: 0, boostAds: null };
+  state = saved || { user_id: uid, name: name, coins: 0, total_mined: 0, taps: 0, stars_balance: 0, boostUntil: 0, boostAds: null, adsCount: 0, adsDay: '' };
   if (uid.indexOf('guest_') !== 0 && state.user_id !== uid) { state.user_id = uid; state.name = name; saveLocal(); }
   var badge = document.getElementById('user-badge');
   if (badge) badge.textContent = isGuest() ? '👤 Гость' : '👤 ' + state.name;
@@ -275,6 +283,29 @@ function toast(text) {
   clearTimeout(t._h); t._h = setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 
+// ============ СЧЁТЧИК РЕКЛАМЫ ЗА СУТКИ ============
+function todayKey() { return new Date().toISOString().slice(0,10); }
+
+// возвращает количество просмотров за последние сутки (сброс по календарному дню)
+function adsToday() {
+  if (state.adsDay !== todayKey()) return 0;
+  return state.adsCount || 0;
+}
+
+async function addAdView() {
+  var t = todayKey();
+  if (state.adsDay !== t) { state.adsDay = t; state.adsCount = 0; }
+  state.adsCount = (state.adsCount || 0) + 1;
+  saveLocal();
+  // счётчик в базе, чтобы не терялся при чистке кэша
+  if (!isGuest() && supabase) {
+    await supabase.from('players')
+      .update({ ads_count: state.adsCount, ads_day: t })
+      .eq('player_id', state.user_id);
+  }
+  renderAll();
+}
+
 // ============ СИНХРОНИЗАЦИЯ С БАЗОЙ ============
 async function loadRemote() {
   if (!supabase || isGuest()) return;
@@ -286,12 +317,15 @@ async function loadRemote() {
     state.taps = res.data.taps || 0;
     state.stars_balance = res.data.stars_balance || 0;
     state.boostUntil = res.data.boost_until || 0;
+    state.adsCount = res.data.ads_count || 0;
+    state.adsDay = res.data.ads_day || '';
     saveLocal(); renderAll(); renderMiners();
   } else {
     await supabase.from('players').insert({
       player_id: state.user_id, name: state.name,
       coins: Math.floor(state.coins), total_mined: Math.floor(state.total_mined),
-      taps: state.taps, stars_balance: 0, boost_until: 0
+      taps: state.taps, stars_balance: 0, boost_until: 0,
+      ads_count: 0, ads_day: todayKey()
     });
   }
 }
@@ -302,6 +336,7 @@ async function pushRemote() {
     player_id: state.user_id, name: state.name,
     coins: Math.floor(state.coins), total_mined: Math.floor(state.total_mined),
     taps: state.taps, stars_balance: state.stars_balance, boost_until: state.boostUntil,
+    ads_count: state.adsCount || 0, ads_day: state.adsDay || '',
     updated_at: new Date().toISOString()
   }, { onConflict: 'player_id' });
 }
@@ -355,13 +390,33 @@ function renderAll() {
   document.getElementById('prog-left').textContent =
     state.coins >= MIN_WITHDRAW_COINS ? 'Вывод доступен!' : 'До вывода: ' + fmt(MIN_WITHDRAW_COINS - state.coins) + ' монет';
 
+  // прогресс рекламы за сутки
+  var views = adsToday();
+  var ap = document.getElementById('ads-progress');
+  var af = document.getElementById('ads-fill');
+  var an = document.getElementById('ads-note');
+  if (ap) {
+    ap.textContent = views + '/' + ADS_REQUIRED;
+    ap.style.color = views >= ADS_REQUIRED ? 'var(--acc)' : 'var(--mut)';
+  }
+  if (af) af.style.width = Math.min(100, Math.round(views / ADS_REQUIRED * 100)) + '%';
+  if (an) an.textContent = views >= ADS_REQUIRED
+    ? '✅ Активность выполнена — вывод открыт.'
+    : 'Посмотри ещё ' + (ADS_REQUIRED - views) + ' ' + (ADS_REQUIRED - views === 1 ? 'рекламу' : 'рекламы') + ' на вкладке «Шахта», чтобы открыть вывод.';
+
   var btn = document.getElementById('btn-sell');
   var info = document.getElementById('sell-info');
   if (state.coins >= MIN_WITHDRAW_COINS) {
     var stars = Math.floor(state.coins / COINS_PER_STAR);
-    btn.disabled = false;
-    btn.textContent = 'Продать ' + fmt(stars * COINS_PER_STAR) + ' монет за ' + stars + ' ⭐';
-    info.textContent = 'Готово к продаже: ' + fmt(stars * COINS_PER_STAR) + ' монет = ' + stars + ' ⭐';
+    if (views < ADS_REQUIRED) {
+      btn.disabled = true;
+      btn.textContent = 'Вывод закрыт — смотри ' + ADS_REQUIRED + ' рекламы в день';
+      info.textContent = 'Монет хватает (' + fmt(state.coins) + '), но нужно посмотреть ' + ADS_REQUIRED + ' рекламы за сутки: ' + views + '/' + ADS_REQUIRED;
+    } else {
+      btn.disabled = false;
+      btn.textContent = 'Продать ' + fmt(stars * COINS_PER_STAR) + ' монет за ' + stars + ' ⭐';
+      info.textContent = 'Готово к продаже: ' + fmt(stars * COINS_PER_STAR) + ' монет = ' + stars + ' ⭐';
+    }
   } else {
     btn.disabled = true;
     btn.textContent = 'Заявка на вывод — недостаточно монет';
@@ -462,6 +517,11 @@ async function sellCoins() {
   if (isGuest()) { toast('Открой игру из Telegram, чтобы продавать'); return; }
   var coins = Math.floor(state.coins);
   if (coins < MIN_WITHDRAW_COINS) { toast('Минимум ' + fmt(MIN_WITHDRAW_COINS) + ' монет'); return; }
+  var views = adsToday();
+  if (views < ADS_REQUIRED) {
+    toast('Нужно посмотреть ' + ADS_REQUIRED + ' рекламы за сутки (' + views + '/' + ADS_REQUIRED + ')');
+    return;
+  }
   var stars = Math.floor(coins / COINS_PER_STAR);
   var ins = await supabase.from('withdrawals').insert({
     player_id: state.user_id, name: state.name,
@@ -488,8 +548,6 @@ function initAds() {
   }, 500);
 }
 
-function todayKey() { return new Date().toISOString().slice(0,10); }
-
 function canWatchBoostAd() {
   var now = Date.now();
   state.boostAds = state.boostAds || { day: todayKey(), count:0, last:0 };
@@ -512,7 +570,9 @@ async function watchBoostAd() {
     state.boostAds.count++;
     state.boostAds.last = Date.now();
     state.boostUntil = Date.now() + BOOST_AD.boostMinutes * 60000;
-    saveLocal(); pushRemote(); renderAll();
+    saveLocal();
+    await addAdView();          // учитываем просмотр для условия вывода
+    pushRemote();
     toast('⚡ Доход ×2 на 1 час!');
   } catch (e) { toast('Реклама не показана, попробуйте позже'); }
   btn.disabled = false;
