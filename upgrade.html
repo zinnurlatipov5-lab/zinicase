@@ -9,15 +9,15 @@
 <style>
 :root{--bg:#0a0a10;--card:#16161f;--card2:#1e1e2a;--acc:#c6ff5e;--acc2:#4ade80;--mut:#8b8b9a;--red:#ff6b6b;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
-body{background:var(--bg);color:#fff;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;padding:12px 12px 100px;}
+body{background:var(--bg);color:#fff;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;padding:12px 12px 118px;}
 header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
 #h-name{font-weight:800;font-size:17px;}
 #h-level{font-size:13px;color:var(--acc);}
 
-/* ===== Бегущая строка: крупная, читаемая ===== */
-#ticker-bar{display:flex;align-items:center;border-radius:12px;background:rgba(198,255,94,.07);border:1px solid rgba(198,255,94,.3);overflow:hidden;height:46px;margin-bottom:12px;}
-.ticker-label{flex:none;background:var(--acc);color:#0a0a10;font-size:13px;font-weight:800;padding:0 12px;border-radius:9px;margin:4px;white-space:nowrap;}
-#ticker-track{white-space:nowrap;font-size:15px;font-weight:600;color:var(--acc);padding-right:20px;animation:ticker 30s linear infinite;will-change:transform;}
+/* ===== Бегущая строка ===== */
+#ticker-bar{display:flex;align-items:center;border-radius:12px;background:rgba(198,255,94,.07);border:1px solid rgba(198,255,94,.3);overflow:hidden;height:48px;margin-bottom:12px;}
+.ticker-label{flex:none;background:var(--acc);color:#0a0a10;font-size:14px;font-weight:800;padding:0 14px;border-radius:10px;margin:5px;white-space:nowrap;}
+#ticker-track{white-space:nowrap;font-size:16px;font-weight:600;color:var(--acc);padding-right:20px;animation:ticker 30s linear infinite;will-change:transform;}
 @keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
 .screen{display:none;}
@@ -62,14 +62,19 @@ h3{margin:4px 0 12px;font-size:18px;}
 .inv-count{color:var(--mut);font-size:13px;}
 .r-common{color:#b8b8c4;} .r-rare{color:#4da3ff;} .r-epic{color:#b678ff;} .r-legendary{color:#ffd75e;} .r-mythic{color:#ff7ad9;}
 
-/* ===== Нижняя панель: крупная ===== */
-.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:#1a1a26;border-top:2px solid #333;padding:8px 6px calc(8px + env(safe-area-inset-bottom));z-index:99;box-shadow:0 -4px 16px rgba(0,0,0,.35);}
-.tab{flex:1;background:none;border:0;color:#8b8b9a;font-size:13px;font-weight:700;padding:12px 0 10px;border-radius:16px;cursor:pointer;font-family:inherit;text-align:center;line-height:1.25;margin:0 3px;transition:all .2s ease;}
-.tab .tab-icon{display:block;font-size:22px;margin-bottom:2px;}
-.tab.active{color:var(--acc);background:rgba(198,255,94,.14);box-shadow:0 0 14px rgba(198,255,94,.3);}
+/* ===== Нижняя панель: максимально крупная ===== */
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:#1a1a26;border-top:3px solid #3a3a52;padding:10px 4px calc(10px + env(safe-area-inset-bottom));z-index:99;box-shadow:0 -6px 20px rgba(0,0,0,.45);}
+.tab{flex:1;background:none;border:0;color:#8b8b9a;font-size:15px;font-weight:800;padding:14px 0 12px;border-radius:16px;cursor:pointer;font-family:inherit;text-align:center;line-height:1.25;margin:0 3px;transition:all .2s ease;}
+.tab .tab-icon{display:block;font-size:28px;margin-bottom:4px;}
+.tab.active{color:var(--acc);background:rgba(198,255,94,.16);box-shadow:0 0 18px rgba(198,255,94,.35);border:1px solid rgba(198,255,94,.4);}
 
-#toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%);background:#22223a;border:1px solid var(--acc);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;display:none;z-index:99;max-width:90%;text-align:center;}
+#toast{position:fixed;left:50%;bottom:130px;transform:translateX(-50%);background:#22223a;border:1px solid var(--acc);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;display:none;z-index:99;max-width:90%;text-align:center;}
 #guest-note{background:#3a2a12;border:1px solid #ffb020;color:#ffd75e;border-radius:10px;padding:10px;font-size:13px;margin-bottom:12px;display:none;}
+
+/* ===== Мини-игра ===== */
+.gift{position:absolute;font-size:36px;cursor:pointer;z-index:2;will-change:transform;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));}
+#mg-score{position:absolute;top:8px;right:10px;font-size:15px;font-weight:800;color:var(--acc);z-index:3;}
+#mg-miss{position:absolute;top:8px;left:10px;font-size:15px;font-weight:800;color:var(--red);z-index:3;}
 </style>
 </head>
 <body>
@@ -111,13 +116,22 @@ h3{margin:4px 0 12px;font-size:18px;}
   </section>
 
   <section id="screen-mini" class="screen">
-    <h3>🎮 Мини-игры</h3>
-    <div class="card">Пять мини-игр («Поймай подарок», «Снежный тир», «Снежный лабиринт», «Собери оленя», «Бой с Бабой-ягой») появятся в следующем обновлении — следи за каналом! 🎄</div>
-  </section>
-
-  <section id="screen-quest" class="screen">
-    <h3>📋 Задания</h3>
-    <div class="card">Ежедневные задания и особые награды появятся в следующем обновлении!</div>
+    <h3>🎮 Поймай подарок</h3>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div><div class="muted">Попытки</div><div id="mg-attempts" style="font-size:20px;font-weight:800;color:var(--acc);">3</div></div>
+        <button id="mg-start" class="btn" style="width:auto;padding:12px 20px;">▶️ Играть</button>
+      </div>
+      <div class="muted" style="margin-top:10px;">Тапай по падающим подаркам. 3 промаха — конец. Очки = шишки и шанс выбить шар!</div>
+    </div>
+    <div id="mg-area" style="position:relative;height:340px;background:linear-gradient(180deg,#101018,#1a1a2e);border-radius:14px;overflow:hidden;margin-bottom:12px;">
+      <div id="mg-overlay" style="position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,10,16,.82);text-align:center;padding:16px;z-index:5;">
+        <div id="mg-title" style="font-weight:800;font-size:18px;margin-bottom:8px;">🎄 Готов?</div>
+        <div id="mg-sub" class="muted" style="margin-bottom:14px;">Нажми «Играть» и лови подарки</div>
+        <button id="mg-claim" class="btn" style="display:none;max-width:220px;">Забрать награду</button>
+      </div>
+    </div>
+    <button id="mg-ad" class="btn ghost">🎬 Ещё попытка за рекламу</button>
   </section>
 
   <section id="screen-top" class="screen">
@@ -163,6 +177,7 @@ try { supabase = window.supabase.createClient(SB_URL, SB_KEY); } catch(e){ conso
 var WATER_CD = 2 * 3600 * 1000;
 var SHAKE_CD = 4 * 3600 * 1000;
 var PASSIVE_CAP_H = 24;
+var ADS_TAG = null; // ID блока AdsGram — впиши, когда подключишь рекламу
 
 var ORNAMENTS = {
   common:    ['Красный шар','Синий шар','Жёлтый шар','Снежинка','Колокольчик','Шишка-игрушка','Мандаринка','Конфета-тросточка'],
@@ -191,7 +206,7 @@ var state = {
 function fmt(n){ return String(Math.floor(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
 function weekKey(){
   var d = new Date();
-  var day = d.getUTCDay(); // 0=воскресенье
+  var day = d.getUTCDay();
   var monday = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() - ((day + 6) % 7));
   return monday.getUTCFullYear() + '-' + (monday.getUTCMonth()+1) + '-' + monday.getUTCDate();
 }
@@ -455,7 +470,6 @@ async function saveRemote(){
 setInterval(function(){ if (dirty) { dirty = false; saveRemote(); } }, 8000);
 document.addEventListener('visibilitychange', function(){ if (document.hidden && dirty) { dirty = false; saveRemote(); } });
 
-// ===== Лёгкий таймер перерисовки =====
 setInterval(renderAll, 30000);
 
 // ===== Вкладки =====
@@ -471,10 +485,130 @@ document.querySelectorAll('.tab').forEach(function(b){
   });
 });
 
-// ===== Кнопки =====
+// ===== Кнопки ёлки =====
 document.getElementById('btn-water').addEventListener('click', doWater);
 document.getElementById('btn-shake').addEventListener('click', doShake);
 document.getElementById('btn-collect').addEventListener('click', doCollect);
+
+// ============================================================
+// МИНИ-ИГРА: ПОЙМАЙ ПОДАРОК
+// ============================================================
+var MG_KEY = 'zini_mini_' + playerId;
+var GIFT_EMOJI = ['🎁','🎀','🍬','🍭','🧸','⭐'];
+var mg = { active:false, score:0, misses:0, spawnT:0, timeout:0, pendReward:0, pendDrop:false };
+
+function mgAttempts(){
+  try {
+    var raw = JSON.parse(localStorage.getItem(MG_KEY) || '{}');
+    if (raw.day !== new Date().toDateString()) return 3;
+    return Math.max(0, 3 - (raw.used || 0));
+  } catch(e){ return 3; }
+}
+function mgUseAttempt(){
+  var raw = {};
+  try { raw = JSON.parse(localStorage.getItem(MG_KEY) || '{}'); } catch(e){}
+  if (raw.day !== new Date().toDateString()) raw = { day: new Date().toDateString(), used: 0 };
+  raw.used = (raw.used || 0) + 1;
+  try { localStorage.setItem(MG_KEY, JSON.stringify(raw)); } catch(e){}
+  renderMg();
+}
+function renderMg(){
+  document.getElementById('mg-attempts').textContent = mgAttempts();
+}
+function mgOverlay(title, sub, showClaim){
+  document.getElementById('mg-title').textContent = title;
+  document.getElementById('mg-sub').textContent = sub;
+  document.getElementById('mg-claim').style.display = showClaim ? 'block' : 'none';
+}
+
+function mgStart(){
+  if (mg.active) return;
+  if (mgAttempts() <= 0) { toast('Попытки на сегодня кончились. Вернись завтра или посмотри рекламу! 🎬'); return; }
+  mgUseAttempt();
+  mg.active = true; mg.score = 0; mg.misses = 0;
+  document.getElementById('mg-overlay').style.display = 'none';
+  mgUpdateHud();
+  mgSpawn();
+}
+function mgUpdateHud(){
+  document.getElementById('mg-score').textContent = '🎯 ' + mg.score;
+  document.getElementById('mg-miss').textContent = '💔 ' + mg.misses + '/3';
+}
+function mgSpawn(){
+  if (!mg.active) return;
+  var g = document.createElement('div');
+  g.className = 'gift';
+  g.textContent = GIFT_EMOJI[Math.floor(Math.random() * GIFT_EMOJI.length)];
+  g.style.left = (5 + Math.random() * 80) + '%';
+  g.style.top = '-40px';
+  var dur = Math.max(1800, 3200 - mg.score * 40);
+  g.style.transition = 'transform ' + dur + 'ms linear';
+  document.getElementById('mg-area').appendChild(g);
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ g.style.transform = 'translateY(' + (document.getElementById('mg-area').offsetHeight + 50) + 'px)'; }); });
+  g.addEventListener('pointerdown', function(e){
+    e.stopPropagation();
+    if (!mg.active || g.dataset.done) return;
+    g.dataset.done = '1';
+    mg.score++;
+    mgUpdateHud();
+    try { tg.HapticFeedback && tg.HapticFeedback.impactOccurred('light'); } catch(err){}
+    g.remove();
+  });
+  mg.timeout = setTimeout(function(){
+    if (!g.parentNode || g.dataset.done) return;
+    g.remove();
+    mg.misses++;
+    mgUpdateHud();
+    if (mg.misses >= 3) { mgEnd(); return; }
+    mgSpawn();
+  }, dur + 60);
+  mg.spawnT = setTimeout(mgSpawn, 750 + Math.random() * 500);
+}
+function mgEnd(){
+  mg.active = false;
+  clearTimeout(mg.spawnT); clearTimeout(mg.timeout);
+  document.querySelectorAll('#mg-area .gift').forEach(function(g){ g.remove(); });
+  var rew = 300 * mg.score + state.level * 100;
+  var dropChance = Math.min(0.5, 0.15 + mg.score * 0.02);
+  mgOverlay('Игра окончена!', 'Очки: ' + mg.score + ' • Награда: ' + fmt(rew) + ' 🌰', true);
+  mg.pendReward = rew;
+  mg.pendDrop = Math.random() < dropChance;
+}
+function mgClaim(){
+  var rew = mg.pendReward || 0;
+  state.pinecones += rew;
+  state.weekly_pinecones += rew;
+  markDirty(); renderAll(); saveLocal();
+  if (mg.pendDrop) dropOrnament(null, 'mini_game');
+  else if (rew > 0) toast('🌰 +' + fmt(rew) + ' шишек!');
+  mg.pendReward = 0; mg.pendDrop = false;
+  mgOverlay('🎄 Готов?', 'Нажми «Играть» и лови подарки', false);
+  renderMg();
+}
+function mgAd(){
+  if (mgAttempts() >= 3) { toast('У тебя ещё есть попытки — играй!'); return; }
+  if (ADS_TAG && window.AdsGram) {
+    try {
+      var ad = window.AdsGram.init({ blockId: ADS_TAG });
+      ad.show().then(function(){
+        var raw = {};
+        try { raw = JSON.parse(localStorage.getItem(MG_KEY) || '{}'); } catch(e){}
+        if (raw.day !== new Date().toDateString()) raw = { day: new Date().toDateString(), used: 0 };
+        raw.used = Math.max(0, (raw.used || 0) - 1);
+        localStorage.setItem(MG_KEY, JSON.stringify(raw));
+        renderMg(); toast('🎬 +1 попытка!');
+      }).catch(function(){ toast('Реклама недоступна, попробуй позже'); });
+    } catch(e){ toast('Реклама скоро подключится 🎬'); }
+  } else {
+    toast('Реклама скоро подключится 🎬');
+  }
+}
+
+document.getElementById('mg-start').addEventListener('click', mgStart);
+document.getElementById('mg-claim').addEventListener('click', mgClaim);
+document.getElementById('mg-ad').addEventListener('click', mgAd);
+mgOverlay('🎄 Готов?', 'Нажми «Играть» и лови подарки', false);
+renderMg();
 
 // ===== Старт =====
 if (isGuest) document.getElementById('guest-note').style.display = 'block';
