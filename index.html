@@ -241,7 +241,8 @@ async function buyMiner(tier, ev) {
   var btn = ev.currentTarget;
   btn.disabled = true;
   try {
-    var res = await fetch(FN_BASE + '/create-payment', {
+    var res = await fetch(FN_BASE + '/quick-function', {
+
       method:'POST', headers:{'Content-Type':'application/json'},
       body: JSON.stringify({ player_id: state.user_id, tier: tier })
     });
