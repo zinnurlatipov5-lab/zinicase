@@ -160,9 +160,10 @@ var SB_URL = 'https://clxewmkuntmgtbovrgqk.supabase.co';
 var SB_KEY = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX';
 // =========================================================================
 
-var tg = window.Telegram.WebApp;
-try { tg.expand(); tg.setHeaderColor('#0a0a10'); tg.setBackgroundColor('#0a0a10'); } catch(e){}
-var me = (tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user : null;
+// Безопасная инициализация Telegram: работает и в Telegram, и в обычном браузере
+var tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
+try { if (tg) { tg.expand(); tg.setHeaderColor('#0a0a10'); tg.setBackgroundColor('#0a0a10'); } } catch(e){}
+var me = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user : null;
 var isGuest = !me;
 var playerId = me ? String(me.id) : 'guest';
 var playerName = me ? (me.first_name || 'Игрок') : 'Игрок';
@@ -575,7 +576,7 @@ function mgSpawn(){
     g.dataset.done = '1';
     mg.score++;
     mgUpdateHud();
-    try { tg.HapticFeedback && tg.HapticFeedback.impactOccurred('light'); } catch(err){}
+    try { if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light'); } catch(err){}
     g.remove();
   });
   mg.timeout = setTimeout(function(){
