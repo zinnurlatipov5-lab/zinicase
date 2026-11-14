@@ -214,7 +214,7 @@ var SB_KEY = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX';
 var FN_BASE = 'https://clxewmkuntmgtbovrgqk.supabase.co/functions/v1';
 var PAYMENT_FN = 'quick-function';
 var ADSGRAM_ID = '59627';
-var BOT_USERNAME = 'ТВОЙ_БОТ_БЕЗ_СОБАКИ'; // ← username бота
+var BOT_USERNAME = 'ТВОЙ_БОТ_БЕЗ_СОБАКИ'; // ← ЗАМЕНИ на username бота
 
 // ============ ЭКОНОМИКА ============
 var TAP_REWARD = 100;
@@ -470,9 +470,6 @@ async function sellCoins() {
   if (ins.error) { console.error(ins.error); toast('Ошибка заявки, попробуй позже'); return; }
   state.coins -= stars * COINS_PER_STAR;
   saveLocal(); renderAll();
-  var text = '💸 Заявка на вывод\nИгрок: ' + state.name + '\nID: ' + state.user_id +
-    '\nК выплате: ' + stars + ' ⭐';
-  try { await navigator.clipboard.writeText(text); } catch (e) {}
   toast('Заявка отправлена! Ожидай звёзды от админа');
   openBot();
 }
