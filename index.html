@@ -2,906 +2,472 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
-<title>ZINI DROP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Ёлка Зини 🎄</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 <style>
-  :root {
-    --bg:#0a0a10; --card:rgba(255,255,255,.045); --line:rgba(255,255,255,.09);
-    --acc:#c6ff5e; --acc2:#4ade80; --txt:#f2f2f5; --mut:#8b8b9a;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  html, body {
-    height:100%; overflow-x:hidden; width:100%; max-width:100%;
-    background:radial-gradient(1200px 600px at 50% -10%, #1a2312, var(--bg));
-    color:var(--txt); font-family:-apple-system,'Segoe UI',Roboto,sans-serif;
-  }
-  body { overscroll-behavior-x:none; touch-action:pan-y; padding:16px; max-width:480px; margin:0 auto; padding-bottom:48px; }
-  button, .card, .tap-zone { -webkit-user-select:none; user-select:none; -webkit-touch-callout:none; }
-
-  header { display:flex; align-items:center; gap:10px; padding:14px 4px 4px; }
-  .logo {
-    width:38px; height:38px; border-radius:12px; flex:none;
-    background:linear-gradient(135deg,#c6ff5e,#4ade80);
-    display:flex; align-items:center; justify-content:center; font-size:20px;
-    box-shadow:0 4px 18px rgba(198,255,94,.35);
-  }
-  .logo-title { font-size:18px; font-weight:800; letter-spacing:.5px; }
-  .logo-sub { font-size:11px; color:var(--mut); }
-  .lvl-badge {
-    margin-left:auto; background:var(--card); border:1px solid var(--line);
-    padding:6px 10px; border-radius:20px; font-size:12px; color:var(--acc);
-  }
-
-  .balance-wrap { text-align:center; margin-top:14px; }
-  #balance {
-    font-size:40px; font-weight:900; letter-spacing:-1px;
-    background:linear-gradient(90deg,#eaffc0,#c6ff5e 40%,#4ade80);
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-  }
-  .per-day { color:var(--mut); font-size:13px; margin-top:2px; }
-  .per-day b { color:var(--acc); }
-  .stars-badge { text-align:center; font-size:15px; font-weight:800; color:var(--acc); margin-top:6px; }
-
-  .progress-wrap { margin:14px auto 0; max-width:340px; }
-  .progress-label { display:flex; justify-content:space-between; font-size:11px; color:var(--mut); margin-bottom:5px; }
-  .progress { height:8px; border-radius:8px; background:rgba(255,255,255,.07); overflow:hidden; }
-  .progress-fill { height:100%; border-radius:8px; width:0%; background:linear-gradient(90deg,#c6ff5e,#4ade80); transition:width .5s ease; }
-
-  .tap-zone {
-    width:210px; height:210px; margin:26px auto; border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, #eaffc0, #c6ff5e 45%, #5da422);
-    display:flex; align-items:center; justify-content:center;
-    font-size:46px; cursor:pointer; position:relative;
-    box-shadow:0 0 50px rgba(198,255,94,.28), inset 0 -8px 18px rgba(0,0,0,.25);
-    transition:transform .08s; animation:pulse 2.6s ease-in-out infinite;
-  }
-  @keyframes pulse { 0%,100% { box-shadow:0 0 34px rgba(198,255,94,.2), inset 0 -8px 18px rgba(0,0,0,.25); } 50% { box-shadow:0 0 60px rgba(198,255,94,.4), inset 0 -8px 18px rgba(0,0,0,.25); } }
-  .tap-zone:active { transform:scale(.93); }
-  .ring { position:absolute; inset:-8px; border-radius:50%; border:2px solid rgba(198,255,94,.25); }
-  .fly {
-    position:fixed; font-size:19px; font-weight:900; color:#c6ff5e;
-    text-shadow:0 2px 8px rgba(0,0,0,.5); pointer-events:none;
-    animation:fly .9s ease-out forwards; z-index:99;
-  }
-  @keyframes fly { to { transform:translateY(-90px) scale(1.2); opacity:0; } }
-
-  .tabs {
-    display:flex; gap:4px; margin-top:16px; padding:5px;
-    background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:14px;
-  }
-  .tab { flex:1; text-align:center; padding:10px 0; border-radius:10px; cursor:pointer; font-size:12px; color:var(--mut); transition:.2s; }
-  .tab.active { background:linear-gradient(135deg,#c6ff5e,#4ade80); color:#0a0a10; font-weight:800; }
-
-  .screen { display:none; } .screen.active { display:block; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:16px; padding:15px; margin-top:12px; backdrop-filter:blur(8px); }
-  .card p { margin-top:4px; font-size:13px; }
-  .row { display:flex; justify-content:space-between; align-items:center; gap:8px; }
-  .muted { color:var(--mut); font-size:13px; }
-
-  .btn {
-    display:block; width:100%; padding:13px; margin-top:11px;
-    background:linear-gradient(135deg,#c6ff5e,#4ade80); color:#0a0a10; border:none;
-    border-radius:12px; font-size:15px; font-weight:800; cursor:pointer; transition:.15s;
-  }
-  .btn:active { transform:scale(.98); }
-  .btn:disabled { opacity:.4; }
-  .btn.ghost { background:rgba(255,255,255,.06); color:var(--txt); border:1px solid var(--line); font-weight:600; }
-
-  .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:8px; }
-  .stat { background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:12px; padding:11px; }
-  .stat .v { font-size:17px; font-weight:800; color:var(--acc); }
-  .stat .k { font-size:11px; color:var(--mut); margin-top:2px; }
-
-  .miner-card { background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:14px; padding:13px; margin-top:10px; }
-  .miner-head { display:flex; align-items:center; gap:10px; }
-  .miner-emoji { width:40px; height:40px; border-radius:11px; flex:none; font-size:22px; background:rgba(255,255,255,.06); display:flex; align-items:center; justify-content:center; }
-
-  .cond-box { margin-top:10px; padding:11px; background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:12px; }
-
-  .top-row { display:flex; justify-content:space-between; padding:10px 2px; border-bottom:1px solid var(--line); font-size:14px; }
-  .top-row:last-child { border-bottom:none; }
-
-  .topup-input {
-    width:100%; padding:13px; margin-top:10px; border-radius:12px;
-    background:rgba(255,255,255,.06); border:1px solid var(--line);
-    color:var(--txt); font-size:18px; font-weight:800; text-align:center; outline:none;
-  }
-  .topup-input:focus { border-color:var(--acc); }
-  .pay-sum { font-size:24px; font-weight:900; color:var(--acc); margin-top:8px; }
-  .quick-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
-  .quick-btn {
-    padding:12px; border:none; border-radius:12px; cursor:pointer;
-    background:rgba(198,255,94,.12); border:1px solid rgba(198,255,94,.3);
-    color:var(--acc); font-size:15px; font-weight:800;
-  }
-  .quick-btn:active { transform:scale(.97); }
-  .gift-hint {
-    margin-top:10px; padding:12px; border-radius:12px;
-    background:rgba(198,255,94,.08); border:1px solid rgba(198,255,94,.25);
-    font-size:13px; color:var(--txt); line-height:1.6;
-  }
-  .gift-hint b { color:var(--acc); }
-  .gift-hint .adm { font-size:16px; font-weight:800; letter-spacing:.5px; }
-
-  #toast {
-    position:fixed; left:50%; bottom:32px; transform:translateX(-50%);
-    background:rgba(30,30,38,.95); color:#fff; padding:11px 18px; border-radius:12px;
-    font-size:14px; opacity:0; transition:opacity .3s; pointer-events:none; z-index:999;
-    max-width:90%; text-align:center; border:1px solid var(--line); backdrop-filter:blur(8px);
-  }
-  #toast.show { opacity:1; }
+:root{--bg:#0a0a10;--card:#16161f;--card2:#1e1e2a;--acc:#c6ff5e;--acc2:#4ade80;--mut:#8b8b9a;--red:#ff6b6b;}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
+body{background:var(--bg);color:#fff;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;padding:12px 12px 78px;}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+#h-name{font-weight:800;font-size:16px;}
+#h-level{font-size:12px;color:var(--acc);}
+#ticker-bar{display:flex;align-items:center;border-radius:10px;background:rgba(198,255,94,.07);border:1px solid rgba(198,255,94,.25);overflow:hidden;height:32px;margin-bottom:12px;}
+.ticker-label{flex:none;background:var(--acc);color:#0a0a10;font-size:10px;font-weight:800;padding:0 8px;border-radius:8px;margin:3px;}
+#ticker-track{white-space:nowrap;font-size:12px;color:var(--acc);padding-right:20px;animation:ticker 25s linear infinite;will-change:transform;}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+.screen{display:none;}
+.screen.active{display:block;}
+.tree-stage{text-align:center;background:var(--card);border-radius:16px;padding:22px 12px;margin-bottom:12px;}
+#tree-emoji{font-size:72px;line-height:1;}
+#tree-title{margin-top:8px;font-weight:800;color:var(--acc);}
+#tree-sub{font-size:12px;color:var(--mut);margin-top:4px;}
+.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:13px;}
+.bar-row span{flex:none;width:100px;}
+.bar-bg{flex:1;height:10px;background:#2a2a38;border-radius:5px;overflow:hidden;}
+.bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--acc2),var(--acc));border-radius:5px;transition:width .4s ease;}
+.bar-fill.snow{background:linear-gradient(90deg,#8ecfff,#e0f4ff);}
+.btn{display:block;width:100%;padding:13px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#0a0a10;font-weight:800;font-size:15px;cursor:pointer;font-family:inherit;}
+.btn:disabled{opacity:.45;}
+.btn.ghost{background:transparent;border:1px solid rgba(198,255,94,.4);color:var(--acc);}
+.btn-row{display:flex;gap:8px;}
+.btn-row .btn{flex:1;}
+.pinecone-card{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+#pinecone-count{font-size:22px;font-weight:800;color:var(--acc);}
+#btn-collect{width:auto;padding:10px 14px;font-size:13px;}
+#xp-line{text-align:center;font-size:12px;color:var(--mut);margin-top:10px;}
+h3{margin:4px 0 12px;font-size:16px;}
+.muted{color:var(--mut);font-size:13px;}
+.top-row{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:12px;padding:10px 12px;margin-bottom:8px;}
+.top-row.me{border:1px solid var(--acc);}
+.top-rank{flex:none;width:26px;text-align:center;font-weight:800;}
+.top-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.top-val{color:var(--acc);font-weight:700;font-size:13px;flex:none;}
+.inv-item{display:flex;align-items:center;gap:10px;background:var(--card);border-radius:12px;padding:10px 12px;margin-bottom:8px;}
+.inv-emoji{font-size:24px;flex:none;}
+.inv-name{flex:1;}
+.inv-name b{display:block;font-size:14px;}
+.inv-count{color:var(--mut);font-size:12px;}
+.r-common{color:#b8b8c4;} .r-rare{color:#4da3ff;} .r-epic{color:#b678ff;} .r-legendary{color:#ffd75e;} .r-mythic{color:#ff7ad9;}
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:#12121c;border-top:1px solid #26263a;padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:50;}
+.tab{flex:1;background:none;border:0;color:var(--mut);font-size:11px;padding:8px 0;border-radius:10px;cursor:pointer;font-family:inherit;}
+.tab.active{background:rgba(198,255,94,.12);color:var(--acc);font-weight:700;}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#22223a;border:1px solid var(--acc);color:#fff;padding:10px 16px;border-radius:12px;font-size:13px;display:none;z-index:99;max-width:90%;text-align:center;}
+#guest-note{background:#3a2a12;border:1px solid #ffb020;color:#ffd75e;border-radius:10px;padding:10px;font-size:12px;margin-bottom:12px;display:none;}
 </style>
 </head>
 <body>
 
 <header>
-  <div class="logo">⛏</div>
-  <div>
-    <div class="logo-title">ZINI DROP</div>
-    <div class="logo-sub">майнинг · реклама · вывод · v6</div>
-  </div>
-  <div class="lvl-badge" id="user-badge">👤</div>
+  <div id="h-name">Игрок</div>
+  <div id="h-level">Уровень 1 🌱</div>
 </header>
 
-<div class="balance-wrap">
-  <div id="balance">0</div>
-  <div class="per-day" id="per-day">пассив: <b>0</b>/сутки</div>
-  <div class="stars-badge" id="stars-badge">⭐ 0 звёзд</div>
-</div>
+<div id="guest-note">⚠️ Открой игру через Telegram — прогресс сохраняется только там.</div>
 
-<div class="progress-wrap">
-  <div class="progress-label"><span id="prog-left">До вывода: 500 000 монет</span><span id="prog-pct">0%</span></div>
-  <div class="progress"><div class="progress-fill" id="prog-fill"></div></div>
-</div>
+<div id="ticker-bar"><span class="ticker-label">ПРИЗЫ</span><div id="ticker-track">Шары ещё не выбиты — будь первым! 🎄</div></div>
 
-<div class="tap-zone" id="tap-zone"><div class="ring"></div>⛏</div>
-
-<div class="tabs">
-  <div class="tab active" data-screen="main">⚡ Шахта</div>
-  <div class="tab" data-screen="miners">⛏ Майнеры</div>
-  <div class="tab" data-screen="sell">💰 Продать</div>
-  <div class="tab" data-screen="top">🏆 Топ</div>
-</div>
-
-<div class="screen active" id="screen-main">
-  <div class="card">
-    <div class="row"><b>⚡ Ускорение</b><span class="muted" id="boost-status"></span></div>
-    <p class="muted">Смотри рекламу — доход ×2 на 1 час. Максимум 3 просмотра в день, перерыв 10 минут. Просмотры открывают вывод монет.</p>
-    <button class="btn" id="btn-boost">🎬 Ускорить доход за рекламу</button>
-  </div>
-  <div class="card">
-    <b>📊 Статистика</b>
-    <div class="stats-grid">
-      <div class="stat"><div class="v" id="stat-taps">0</div><div class="k">Тапов</div></div>
-      <div class="stat"><div class="v" id="stat-mined">0</div><div class="k">Всего намайнено</div></div>
-      <div class="stat"><div class="v" id="stat-miners">0</div><div class="k">Майнеров</div></div>
-      <div class="stat"><div class="v" id="stat-stars">0 ⭐</div><div class="k">Можно вывести</div></div>
+<main>
+  <section id="screen-tree" class="screen active">
+    <div class="tree-stage">
+      <div id="tree-emoji">🌱</div>
+      <div id="tree-title">Росток</div>
+      <div id="tree-sub">Полей и стряхни снег, чтобы ёлка росла</div>
     </div>
-  </div>
-</div>
-
-<div class="screen" id="screen-miners">
-  <div class="card">
-    <b>⭐ Пополнить звёзды</b>
-    <p class="muted">Введи сумму — покажем подарок, который нужно отправить админу в Telegram. После проверки админом звёзды придут на баланс. Депозит за неделю открывает вывод монет.</p>
-    <input class="topup-input" id="topup-input" type="number" inputmode="numeric" min="15" max="2500" placeholder="Например: 15" value="15">
-    <div class="pay-sum" id="topup-sum">15 звёзд</div>
-    <div class="gift-hint" id="gift-hint">—</div>
-    <div class="quick-grid">
-      <button class="quick-btn" data-n="15">15 ⭐</button>
-      <button class="quick-btn" data-n="30">30 ⭐</button>
-      <button class="quick-btn" data-n="50">50 ⭐</button>
-      <button class="quick-btn" data-n="100">100 ⭐</button>
+    <div class="card">
+      <div class="bar-row"><span>💧 Влажность</span><div class="bar-bg"><div id="bar-moist" class="bar-fill"></div></div></div>
+      <div class="bar-row"><span>❄️ Снег</span><div class="bar-bg"><div id="bar-snow" class="bar-fill snow"></div></div></div>
     </div>
-    <button class="btn" id="btn-topup">⭐ Подарить админу</button>
-    <button class="btn ghost" id="btn-topup-rub">🇷🇺 Пополнить рублями</button>
-    <p class="muted" style="margin-top:8px">Рублями курс: 1 ⭐ = 1,30 ₽. Нажми кнопку — откроется чат админа с готовым сообщением: переведи рубли и жди зачисления.</p>
-  </div>
-
-  <div class="card">
-    <b>👥 Приглашай друзей</b>
-    <p class="muted">За каждого друга — <b style="color:var(--acc)">+2 ⭐</b> на твой счёт сразу и <b style="color:var(--acc)">3%</b> с каждого его пополнения — пожизненно.</p>
-    <button class="btn" id="btn-ref" style="margin-top:10px">🔗 Скопировать ссылку-приглашение</button>
-    <p class="muted" id="ref-info" style="margin-top:8px">—</p>
-  </div>
-
-  <div class="card">
-    <div class="row"><b>⛏ Майнеры</b><span class="muted" id="miners-count"></span></div>
-    <p class="muted">Майнер добывает монеты каждый день. Покупается за звёзды с твоего баланса.</p>
-    <div id="miners-list"></div>
-  </div>
-</div>
-
-<div class="screen" id="screen-sell">
-  <div class="card">
-    <b>💰 Продажа монет</b>
-    <p class="muted">Меняй монеты на звёзды по курсу <b style="color:var(--acc)">10 000 монет = 1 ⭐</b>. Минимальный вывод — <b style="color:var(--acc)">50 ⭐ (500 000 монет)</b>.</p>
-
-    <div class="cond-box">
-      <div class="row"><b>🎬 Активность за сутки</b><span id="ads-progress" class="muted">0/3</span></div>
-      <div class="progress" style="margin-top:8px"><div class="progress-fill" id="ads-fill" style="width:0%"></div></div>
-      <p class="muted" id="ads-note" style="margin-top:8px">Посмотри минимум 3 рекламы на вкладке «Шахта».</p>
+    <div class="card pinecone-card">
+      <div><div class="muted">🌰 Шишки</div><div id="pinecone-count">0</div></div>
+      <button id="btn-collect" class="btn">Забрать 0 🌰</button>
     </div>
-
-    <div class="cond-box">
-      <div class="row"><b>💎 Депозит за неделю</b><span id="dep-progress" class="muted">0/15 ⭐</span></div>
-      <div class="progress" style="margin-top:8px"><div class="progress-fill" id="dep-fill" style="width:0%"></div></div>
-      <p class="muted" id="dep-note" style="margin-top:8px">Суммарное пополнение за последние 7 дней — минимум 15 ⭐.</p>
+    <div class="btn-row">
+      <button id="btn-water" class="btn">💧 Полить</button>
+      <button id="btn-shake" class="btn">❄️ Стряхнуть</button>
     </div>
+    <div id="xp-line">Опыт: 0 / 200</div>
+  </section>
 
-    <p class="muted" id="sell-info" style="margin-top:8px">—</p>
-    <button class="btn" id="btn-sell" disabled>Заявка на вывод — условия не выполнены</button>
-  </div>
-  <div class="card">
-    <b>📌 Как проходит выплата</b>
-    <p class="muted">1. Жмёшь кнопку — заявка уходит админу автоматически.<br>2. Админ проверяет заявку и отправляет тебе звёзды в Telegram.<br>3. Выплата приходит в течение 24 часов.</p>
-  </div>
-</div>
+  <section id="screen-inv" class="screen">
+    <h3>🎒 Инвентарь</h3>
+    <div id="inv-list" class="muted">Пока пусто — играй в мини-игры и ухаживай за ёлкой!</div>
+  </section>
 
-<div class="screen" id="screen-top">
-  <div class="card">
-    <div class="row"><b>🏆 Топ недели</b></div>
-    <div id="top-list" style="margin-top:8px;"><p class="muted">Загрузка…</p></div>
-  </div>
-</div>
+  <section id="screen-mini" class="screen">
+    <h3>🎮 Мини-игры</h3>
+    <div class="card">Пять мини-игр («Поймай подарок», «Снежный тир», «Снежный лабиринт», «Собери оленя», «Бой с Бабой-ягой») появятся в следующем обновлении — следи за каналом! 🎄</div>
+  </section>
+
+  <section id="screen-quest" class="screen">
+    <h3>📋 Задания</h3>
+    <div class="card">Ежедневные задания и особые награды появятся в следующем обновлении!</div>
+  </section>
+
+  <section id="screen-top" class="screen">
+    <h3>🏆 Топ недели</h3>
+    <div id="top-list" class="muted">Загрузка…</div>
+    <div class="muted" style="margin-top:8px;">Топ обнуляется каждый понедельник. Топ-3 получают призы!</div>
+  </section>
+
+  <section id="screen-pass" class="screen">
+    <h3>✨ Ноябрьский пропуск</h3>
+    <div class="card">Пропуск откроется после подключения платежей — очень скоро! ✨</div>
+  </section>
+</main>
+
+<nav class="tabs">
+  <button class="tab active" data-screen="tree">🎄 Ёлка</button>
+  <button class="tab" data-screen="inv">🎒</button>
+  <button class="tab" data-screen="mini">🎮</button>
+  <button class="tab" data-screen="top">🏆</button>
+  <button class="tab" data-screen="pass">✨</button>
+</nav>
 
 <div id="toast"></div>
 
+<script src="levels.js"></script>
 <script>
-(function() {
 'use strict';
-
-// ============ НАСТРОЙКИ ============
-var SB_URL = 'https://clxewmkuntmgtbovrgqk.supabase.co';
+// ===== НАСТРОЙКИ: впиши свои ключи из Supabase → Settings → API =====
+var SB_URL = 'https://https://clxewmkuntmgtbovrgqk.supabase.co/rest/v1/.supabase.co';
 var SB_KEY = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX';
-var FN_BASE = 'https://clxewmkuntmgtbovrgqk.supabase.co/functions/v1';
-var PAYMENT_FN = 'telegram-webhook';
-var ADSGRAM_ID = '59627';
-var BOT_USERNAME = 'zini_drop_bot';
-var ADMIN_CHAT = 'zinidropadmin';
-var RUB_PER_STAR = 1.3;
 
-// ============ ЭКОНОМИКА ============
-var TAP_REWARD = 100;
-var COINS_PER_STAR = 10000;
-var MIN_WITHDRAW_STARS = 50;
-var MIN_WITHDRAW_COINS = MIN_WITHDRAW_STARS * COINS_PER_STAR;
-var MIN_TOPUP_STARS = 15;
-var MAX_TOPUP_STARS = 2500;
-
-var ADS_REQUIRED = 3;
-var MIN_WEEK_DEPOSIT = 15;
-
-var TIERS = {
-  0: { name:'Test',     stars:1,   perDay:6000,    emoji:'🧪' },
-  1: { name:'Bronze',   stars:10,  perDay:60000,   emoji:'🥉' },
-  2: { name:'Silver',   stars:50,  perDay:260000,  emoji:'🥈' },
-  3: { name:'Gold',     stars:100, perDay:480000,  emoji:'🥇' },
-  4: { name:'Platinum', stars:500, perDay:2200000, emoji:'💎' }
-};
-var DAILY_BY_TIER = { 0:6000, 1:60000, 2:260000, 3:480000, 4:2200000 };
-var BOOST_AD = { maxPerDay:3, intervalMs:10*60*1000, boostMinutes:60 };
-
-// Официальные обычные подарки Telegram (цены фиксированы Telegram)
-var GIFTS = [
-  { name:'Love Heart',        price:15,  emoji:'❤️' },
-  { name:'Teddy Bear',        price:15,  emoji:'🧸' },
-  { name:'Gift Box',          price:25,  emoji:'🎁' },
-  { name:'Red Rose',          price:25,  emoji:'🌹' },
-  { name:'Birthday Cake',     price:50,  emoji:'🎂' },
-  { name:'Bouquet of Flowers',price:50,  emoji:'💐' },
-  { name:'Rocket',            price:50,  emoji:'🚀' },
-  { name:'Champagne Bottle',  price:50,  emoji:'🍾' },
-  { name:'Trophy',            price:100, emoji:'🏆' },
-  { name:'Diamond Ring',      price:100, emoji:'💍' },
-  { name:'Gem',               price:100, emoji:'💎' }
-];
-
-function chooseGift(amount) {
-  if (amount <= 100) {
-    var best = null;
-    GIFTS.forEach(function(g) {
-      if (!best) { best = g; return; }
-      var dG = Math.abs(g.price - amount), dB = Math.abs(best.price - amount);
-      if (dG < dB || (dG === dB && g.price > best.price)) best = g;
-    });
-    return { gift: best, count: 1, total: best.price };
-  }
-  var g100 = null;
-  GIFTS.forEach(function(g) { if (g.price === 100 && !g100) g100 = g; });
-  var cnt = Math.max(1, Math.round(amount / g100.price));
-  return { gift: g100, count: cnt, total: g100.price * cnt };
-}
+var tg = window.Telegram.WebApp;
+try { tg.expand(); tg.setHeaderColor('#0a0a10'); tg.setBackgroundColor('#0a0a10'); } catch(e){}
+var me = (tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user : null;
+var isGuest = !me;
+var playerId = me ? String(me.id) : 'guest';
+var playerName = me ? (me.first_name || 'Игрок') : 'Игрок';
 
 var supabase = null;
-try { if (window.supabase) supabase = window.supabase.createClient(SB_URL, SB_KEY); } catch (e) { console.error(e); }
+try { supabase = window.supabase.createClient(SB_URL, SB_KEY); } catch(e){ console.warn('Supabase не создан', e); }
 
-var tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
-try { if (tg) { tg.ready(); if (tg.disableVerticalSwipes) tg.disableVerticalSwipes(); tg.expand(); } } catch (e) {}
+// ===== Константы =====
+var WATER_CD = 2 * 3600 * 1000;   // полив раз в 2 часа
+var SHAKE_CD = 4 * 3600 * 1000;   // стряхивание раз в 4 часа
+var PASSIVE_CAP_H = 24;           // пассив копится максимум сутки
 
-var state = null;
-var myMiners = [];
-var weekDeposit = 0;
+var ORNAMENTS = {
+  common:    ['Красный шар','Синий шар','Жёлтый шар','Снежинка','Колокольчик','Шишка-игрушка','Мандаринка','Конфета-тросточка'],
+  rare:      ['Ледяной шар','Звёздный шар','Золотой мандарин','Ватное облачко','Серебряная шишка','Посох Деда Мороза'],
+  epic:      ['Хрустальный шар','Огненный феникс','Северный олень','Золотая звезда','Шар «Млечный путь»'],
+  legendary: ['Северное сияние','Шар Снежной королевы','Рождественский колокол'],
+  mythic:    ['Легендарная звезда Зини']
+};
+var RARITY_INFO = {
+  common:    {icon:'⚪', label:'Обычный'},
+  rare:      {icon:'🔵', label:'Редкий'},
+  epic:      {icon:'🟣', label:'Эпический'},
+  legendary: {icon:'🟡', label:'Легендарный'},
+  mythic:    {icon:'🌈', label:'Мифический'}
+};
 
-// ---- Защита от отката баланса ----
-var lastPushAt = 0;
-var localDirty = false;
-var pushTimer = null;
+// ===== Состояние =====
+var state = {
+  xp:0, level:1, pinecones:0,
+  moisture:0, snow:0,
+  last_watered:0, last_shake:0, last_collect:0,
+  weekly_pinecones:0, week_key:'', total_drops:0
+};
 
-function markDirty() {
-  localDirty = true;
-  if (pushTimer) clearTimeout(pushTimer);
-  pushTimer = setTimeout(function(){ pushRemote(); }, 2500);
-}
-
-function isGuest() { return !state || String(state.user_id).indexOf('guest_') === 0; }
-function fmt(n) { return Math.floor(n).toLocaleString('ru-RU'); }
-function openAdminChat() {
-  var link = 'https://t.me/' + ADMIN_CHAT;
-  if (tg && tg.openTelegramLink) tg.openTelegramLink(link);
-  else window.open(link, '_blank');
-}
-
-function initUser() {
-  var saved = null;
-  try { saved = JSON.parse(localStorage.getItem('zini_state')); } catch (e) {}
-  var uid = 'guest_' + Math.random().toString(36).slice(2);
-  var name = 'Игрок';
-  try {
-    if (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) {
-      uid = String(tg.initDataUnsafe.user.id);
-      name = tg.initDataUnsafe.user.first_name || 'Игрок';
-    }
-  } catch (e) {}
-  state = saved || { user_id: uid, name: name, coins: 0, total_mined: 0, taps: 0, stars_balance: 0, boostUntil: 0, boostAds: null, adsCount: 0, adsDay: '' };
-  if (uid.indexOf('guest_') !== 0 && state.user_id !== uid) { state.user_id = uid; state.name = name; saveLocal(); }
-  var badge = document.getElementById('user-badge');
-  if (badge) badge.textContent = isGuest() ? '👤 Гость' : '👤 ' + state.name;
-}
-
-function saveLocal() { try { localStorage.setItem('zini_state', JSON.stringify(state)); } catch (e) {} }
-
-function toast(text) {
-  var t = document.getElementById('toast');
-  t.textContent = text; t.classList.add('show');
-  clearTimeout(t._h); t._h = setTimeout(function(){ t.classList.remove('show'); }, 3000);
-}
-
-// ============ РЕКЛАМА ЗА СУТКИ ============
-function todayKey() { return new Date().toISOString().slice(0,10); }
-
-function adsToday() {
-  if (state.adsDay !== todayKey()) return 0;
-  return state.adsCount || 0;
-}
-
-async function addAdView() {
-  var t = todayKey();
-  if (state.adsDay !== t) { state.adsDay = t; state.adsCount = 0; }
-  state.adsCount = (state.adsCount || 0) + 1;
-  saveLocal();
-  if (!isGuest() && supabase) {
-    await supabase.from('players')
-      .update({ ads_count: state.adsCount, ads_day: t })
-      .eq('player_id', state.user_id);
-  }
-  renderAll();
-}
-
-// ============ ДЕПОЗИТ ЗА НЕДЕЛЮ ============
-async function loadWeekDeposit() {
-  if (!supabase || isGuest()) { weekDeposit = 0; renderAll(); return; }
-  var since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
-  var res = await supabase.from('topups').select('stars')
-    .eq('player_id', state.user_id)
-    .gte('created_at', since);
-  if (res.error) { console.error('topups:', res.error); return; }
-  weekDeposit = (res.data || []).reduce(function(s, r){ return s + (r.stars || 0); }, 0);
-  renderAll();
-}
-
-// ============ СИНХРОНИЗАЦИЯ ============
-async function loadRemote() {
-  if (!supabase || isGuest()) return;
-  var res = await supabase.from('players').select('*').eq('player_id', state.user_id).maybeSingle();
-  if (res.error) { console.error('load:', res.error); return; }
-  if (res.data) {
-    var remoteAt = res.data.updated_at ? new Date(res.data.updated_at).getTime() : 0;
-    var canApplyCoins = !localDirty && remoteAt >= (lastPushAt - 30000);
-    if (canApplyCoins) {
-      state.coins = Number(res.data.coins) || 0;
-      state.total_mined = Number(res.data.total_mined) || 0;
-      state.taps = res.data.taps || 0;
-      state.boostUntil = res.data.boost_until || 0;
-      state.adsCount = res.data.ads_count || 0;
-      state.adsDay = res.data.ads_day || '';
-    }
-    var remoteStars = res.data.stars_balance || 0;
-    if (remoteStars > (state.stars_balance || 0)) {
-      state.stars_balance = remoteStars;
-    }
-    saveLocal(); renderAll(); renderMiners();
-  } else {
-    await supabase.from('players').insert({
-      player_id: state.user_id, name: state.name,
-      coins: Math.floor(state.coins), total_mined: Math.floor(state.total_mined),
-      taps: state.taps, stars_balance: 0, boost_until: 0,
-      ads_count: 0, ads_day: todayKey()
-    });
-  }
-}
-
-async function pushRemote() {
-  if (!supabase || isGuest() || !state) return;
-  if (pushTimer) { clearTimeout(pushTimer); pushTimer = null; }
-  var res = await supabase.from('players').upsert({
-    player_id: state.user_id, name: state.name,
-    coins: Math.floor(state.coins), total_mined: Math.floor(state.total_mined),
-    taps: state.taps, stars_balance: state.stars_balance, boost_until: state.boostUntil,
-    ads_count: state.adsCount || 0, ads_day: state.adsDay || '',
-    updated_at: new Date().toISOString()
-  }, { onConflict: 'player_id' }).select('updated_at').maybeSingle();
-  if (!res.error) {
-    localDirty = false;
-    lastPushAt = Date.now();
-  }
-}
-
-setInterval(function(){ pushRemote(); }, 30000);
-setInterval(function(){ loadRemote(); }, 60000);
-
-// ============ ТАПЫ ============
-function tap(e) {
-  state.coins += TAP_REWARD;
-  state.taps++;
-  state.total_mined += TAP_REWARD;
-  saveLocal(); renderAll(); markDirty();
-  var fly = document.createElement('div');
-  fly.className = 'fly'; fly.textContent = '+' + TAP_REWARD;
-  fly.style.left = ((e.clientX || 150) - 10) + 'px';
-  fly.style.top = ((e.clientY || 300) - 30) + 'px';
-  document.body.appendChild(fly);
-  setTimeout(function(){ fly.remove(); }, 900);
-}
-
-// ============ ДОХОД ============
-function activeBoost() { return state && state.boostUntil && Date.now() < state.boostUntil ? 2 : 1; }
-function minersPerDay() { return myMiners.reduce(function(s, m){ return s + (DAILY_BY_TIER[m.tier] || 0); }, 0); }
-
-setInterval(function() {
-  if (!state) return;
-  var perTick = (minersPerDay() / 86400) * 10 * activeBoost();
-  if (perTick > 0) {
-    state.coins += perTick; state.total_mined += perTick;
-    saveLocal(); renderAll(); markDirty();
-  }
-  renderBoost();
-}, 10000);
-
-// ============ РЕНДЕР ============
-function withdrawBlockedReason() {
-  if (state.coins < MIN_WITHDRAW_COINS) return { ok:false, why:'монеты' };
-  if (adsToday() < ADS_REQUIRED) return { ok:false, why:'реклама' };
-  if (weekDeposit < MIN_WEEK_DEPOSIT) return { ok:false, why:'депозит' };
-  return { ok:true };
-}
-
-function renderAll() {
-  if (!state) return;
-  document.getElementById('balance').textContent = fmt(state.coins);
-  document.getElementById('stars-badge').textContent = '⭐ ' + (state.stars_balance || 0) + ' звёзд';
-  document.getElementById('per-day').innerHTML =
-    'пассив: <b>' + fmt(minersPerDay() * (activeBoost() ? 2 : 1)) + '</b>/сутки' + (activeBoost() ? ' · ⚡×2' : '');
-  document.getElementById('stat-taps').textContent = fmt(state.taps);
-  document.getElementById('stat-mined').textContent = fmt(state.total_mined);
-  document.getElementById('stat-miners').textContent = String(myMiners.length);
-  document.getElementById('stat-stars').textContent = Math.floor(state.coins / COINS_PER_STAR) + ' ⭐';
-
-  var pct = Math.min(100, Math.round(state.coins / MIN_WITHDRAW_COINS * 100));
-  document.getElementById('prog-fill').style.width = pct + '%';
-  document.getElementById('prog-pct').textContent = pct + '%';
-  document.getElementById('prog-left').textContent =
-    state.coins >= MIN_WITHDRAW_COINS ? 'Вывод доступен!' : 'До вывода: ' + fmt(MIN_WITHDRAW_COINS - state.coins) + ' монет';
-
-  var views = adsToday();
-  var ap = document.getElementById('ads-progress');
-  var af = document.getElementById('ads-fill');
-  var an = document.getElementById('ads-note');
-  if (ap) {
-    ap.textContent = views + '/' + ADS_REQUIRED;
-    ap.style.color = views >= ADS_REQUIRED ? 'var(--acc)' : 'var(--mut)';
-  }
-  if (af) af.style.width = Math.min(100, Math.round(views / ADS_REQUIRED * 100)) + '%';
-  if (an) an.textContent = views >= ADS_REQUIRED
-    ? '✅ Активность выполнена.'
-    : 'Посмотри ещё ' + (ADS_REQUIRED - views) + ' ' + (ADS_REQUIRED - views === 1 ? 'рекламу' : 'рекламы') + ' на вкладке «Шахта».';
-
-  var dp = document.getElementById('dep-progress');
-  var df = document.getElementById('dep-fill');
-  var dn = document.getElementById('dep-note');
-  if (dp) {
-    dp.textContent = weekDeposit + '/' + MIN_WEEK_DEPOSIT + ' ⭐';
-    dp.style.color = weekDeposit >= MIN_WEEK_DEPOSIT ? 'var(--acc)' : 'var(--mut)';
-  }
-  if (df) df.style.width = Math.min(100, Math.round(weekDeposit / MIN_WEEK_DEPOSIT * 100)) + '%';
-  if (dn) dn.textContent = weekDeposit >= MIN_WEEK_DEPOSIT
-    ? '✅ Депозит за неделю выполнен.'
-    : 'Пополнись ещё на ' + (MIN_WEEK_DEPOSIT - weekDeposit) + ' ⭐ за последние 7 дней.';
-
-  var btn = document.getElementById('btn-sell');
-  var info = document.getElementById('sell-info');
-  var w = withdrawBlockedReason();
-  if (!w.ok) {
-    btn.disabled = true;
-    var texts = {
-      'монеты': 'Заявка на вывод — накопи ' + fmt(MIN_WITHDRAW_COINS) + ' монет',
-      'реклама': 'Вывод закрыт — посмотри ' + ADS_REQUIRED + ' рекламы за сутки',
-      'депозит': 'Вывод закрыт — пополнись на ' + MIN_WEEK_DEPOSIT + ' ⭐ за неделю'
-    };
-    btn.textContent = texts[w.why] || 'Условия вывода не выполнены';
-    if (state.coins >= MIN_WITHDRAW_COINS) {
-      info.textContent = 'Монет хватает (' + fmt(state.coins) + '), но нужно: реклама ' + views + '/' + ADS_REQUIRED + ', депозит за неделю ' + weekDeposit + '/' + MIN_WEEK_DEPOSIT + ' ⭐';
-    } else {
-      info.textContent = 'Накоплено: ' + fmt(state.coins) + ' из ' + fmt(MIN_WITHDRAW_COINS) + ' монет';
-    }
-  } else {
-    btn.disabled = false;
-    var stars = Math.floor(state.coins / COINS_PER_STAR);
-    btn.textContent = 'Продать ' + fmt(stars * COINS_PER_STAR) + ' монет за ' + stars + ' ⭐';
-    info.textContent = 'Все условия выполнены ✅ Готово к продаже: ' + fmt(stars * COINS_PER_STAR) + ' монет = ' + stars + ' ⭐';
-  }
-}
-
-function renderMiners() {
-  var list = document.getElementById('miners-list');
-  if (!list || !state) return;
-  list.innerHTML = '';
-  Object.keys(TIERS).forEach(function(tier) {
-    var t = TIERS[tier];
-    var cnt = myMiners.filter(function(m){ return m.tier == tier; }).length;
-    var card = document.createElement('div');
-    card.className = 'miner-card';
-    card.innerHTML =
-      '<div class="miner-head"><div class="miner-emoji">' + t.emoji + '</div><div style="flex:1">' +
-      '<b>' + t.name + (cnt ? ' ×' + cnt : '') + '</b>' +
-      '<div class="muted">' + fmt(t.perDay) + ' монет/сутки · окупаемость ~' + Math.ceil(t.stars * COINS_PER_STAR / t.perDay) + ' дн.</div></div>' +
-      '<div style="font-size:15px;font-weight:800;color:var(--acc)">' + t.stars + ' ⭐</div></div>' +
-      '<button class="btn ghost">Купить за ' + t.stars + ' ⭐</button>';
-    card.querySelector('button').addEventListener('click', function(){ buyMinerWithStars(tier); });
-    list.appendChild(card);
-  });
-  var c = document.getElementById('miners-count');
-  if (c) c.textContent = myMiners.length ? myMiners.length + ' активных' : '';
-}
-
-// ============ ПОДСКАЗКА ПОДАРКА ============
-function renderGiftHint() {
-  var hint = document.getElementById('gift-hint');
-  if (!hint) return;
-  var stars = parseInt(document.getElementById('topup-input').value, 10);
-  if (!stars || stars < MIN_TOPUP_STARS) {
-    hint.textContent = 'Введи сумму от ' + MIN_TOPUP_STARS + ' звёзд';
-    return;
-  }
-  var pick = chooseGift(stars);
-  var line = pick.gift.emoji + ' ' + pick.gift.name + ' (' + pick.gift.price + ' ⭐)';
-  if (pick.count > 1) line += ' × ' + pick.count;
-  var rub = Math.round(stars * RUB_PER_STAR * 100) / 100;
-  hint.innerHTML =
-    'Подарок: <b>' + line + '</b>' +
-    (pick.total !== stars ? '<br><span class="muted">Ближайший доступный: ' + pick.total + ' ⭐ всего</span>' : '') +
-    '<br>Кому: <span class="adm">@' + ADMIN_CHAT + '</span>' +
-    '<br>Или рублями: <b>' + rub + ' ₽</b> за ' + stars + ' ⭐ (1 ⭐ = 1,30 ₽)' +
-    '<br>Твой ID для админа: <b>' + (isGuest() ? '—' : state.user_id) + '</b>';
-}
-
-// ============ ПОКУПКА МАЙНЕРА (через сервер) ============
-async function buyMinerWithStars(tier) {
-  if (isGuest()) { toast('Открой игру из Telegram, чтобы покупать'); return; }
-  var t = TIERS[tier];
-  if (!state.stars_balance || state.stars_balance < t.stars) {
-    toast('Не хватает звёзд — пополни баланс');
-    return;
-  }
-  var res = null;
-  try {
-    var r = await fetch(FN_BASE + '/' + PAYMENT_FN, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SB_KEY },
-      body: JSON.stringify({ action: 'buy_miner', tier: tier, player_id: state.user_id })
-    });
-    res = await r.json();
-  } catch (e) {
-    console.error('buy network:', e);
-    toast('ОШИБКА СЕТИ: ' + (e && e.message ? e.message : e));
-    return;
-  }
-  if (res && res.ok) {
-    state.stars_balance = (state.stars_balance || 0) - t.stars;
-    saveLocal();
-    myMiners.push({ tier: tier, created_at: new Date().toISOString() });
-    renderAll(); renderMiners();
-    toast('⛏ ' + t.name + ' куплен и уже майнит!');
-    try { await loadMyMiners(); } catch (e) {}
-    renderMiners();
-    return;
-  }
-  if (res && res.error === 'not_enough_stars') { toast('На сервере не хватает звёзд — обнови игру (закрой и открой)'); return; }
-  if (res && res.error === 'bad_tier') { toast('ОШИБКА: неверный тариф'); return; }
-  toast('ОШИБКА СЕРВЕРА: ' + JSON.stringify(res));
-}
-
-// ============ ПОПОЛНЕНИЕ (подарок админу) ============
-function updateTopup() {
-  var input = document.getElementById('topup-input');
-  var sum = document.getElementById('topup-sum');
-  var stars = parseInt(input.value, 10);
-  if (!stars || stars < MIN_TOPUP_STARS) {
-    sum.textContent = 'Минимум ' + MIN_TOPUP_STARS + ' звёзд';
-    sum.style.color = '#8b8b9a';
-    renderGiftHint();
-    return null;
-  }
-  if (stars > MAX_TOPUP_STARS) {
-    sum.textContent = 'Максимум ' + MAX_TOPUP_STARS + ' за раз';
-    sum.style.color = '#8b8b9a';
-    renderGiftHint();
-    return null;
-  }
-  sum.textContent = stars + ' звёзд';
-  sum.style.color = 'var(--acc)';
-  renderGiftHint();
-  return stars;
-}
-
-async function topupSubmit() {
-  if (isGuest()) { toast('Открой игру из Telegram, чтобы пополнять'); return; }
-  var stars = updateTopup();
-  if (!stars) { toast('Сумма: от ' + MIN_TOPUP_STARS + ' до ' + MAX_TOPUP_STARS + ' звёзд'); return; }
-  var pick = chooseGift(stars);
-  var giftLine = pick.gift.emoji + ' ' + pick.gift.name + ' (' + pick.gift.price + ' ⭐)' + (pick.count > 1 ? ' × ' + pick.count : '');
-  var text =
-    '💎 Пополнение ZINI DROP\n' +
-    'Ник: ' + state.name + '\n' +
-    'Мой ID: ' + state.user_id + '\n' +
-    'Подарю: ' + giftLine + ' = ' + pick.total + ' ⭐\n\n' +
-    'Админ, зачисли, пожалуйста: /add ' + state.user_id + ' ' + pick.total;
-  try { await navigator.clipboard.writeText(text); toast('Инструкция скопирована — отправь подарок и это сообщение'); }
-  catch (e) { toast('Скопируй инструкцию и отправь админу'); }
-  openAdminChat();
-}
-
-function topupRubs() {
-  if (isGuest()) { toast('Открой игру из Telegram, чтобы пополнять'); return; }
-  var stars = updateTopup() || MIN_TOPUP_STARS;
-  var rub = Math.round(stars * RUB_PER_STAR * 100) / 100;
-  var text =
-    '🇷🇺 Пополнение ZINI DROP рублями\n' +
-    'Ник: ' + state.name + '\n' +
-    'Мой ID: ' + state.user_id + '\n' +
-    'Куплю: ' + stars + ' ⭐ за ' + rub + ' ₽ (1 ⭐ = 1,30 ₽)\n\n' +
-    'Админ, зачисли после перевода: /add ' + state.user_id + ' ' + stars;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(text).then(function(){
-      toast('Сообщение скопировано — переведи ' + rub + ' ₽ и отправь админу');
-      openAdminChat();
-    }).catch(function(){ toast('Не удалось скопировать'); openAdminChat(); });
-  } else {
-    openAdminChat();
-  }
-}
-
-// ============ ЗАЯВКА НА ВЫВОД ============
-async function sellCoins() {
-  if (isGuest()) { toast('Открой игру из Telegram, чтобы продавать'); return; }
-  await loadWeekDeposit();
-  var coins = Math.floor(state.coins);
-  if (coins < MIN_WITHDRAW_COINS) { toast('Минимум ' + fmt(MIN_WITHDRAW_COINS) + ' монет'); return; }
-  if (adsToday() < ADS_REQUIRED) { toast('Нужно посмотреть ' + ADS_REQUIRED + ' рекламы за сутки'); return; }
-  if (weekDeposit < MIN_WEEK_DEPOSIT) {
-    toast('Депозит за неделю: ' + weekDeposit + '/' + MIN_WEEK_DEPOSIT + ' ⭐ — пополни баланс');
-    return;
-  }
-  var stars = Math.floor(coins / COINS_PER_STAR);
-  var btn = document.getElementById('btn-sell');
-  btn.disabled = true;
-
-  var res = null;
-  try {
-    var r = await fetch(FN_BASE + '/' + PAYMENT_FN, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SB_KEY },
-      body: JSON.stringify({
-        action: 'withdraw', stars: stars, coins: stars * COINS_PER_STAR,
-        player_id: state.user_id, name: state.name
-      })
-    });
-    res = await r.json();
-  } catch (e) { console.error(e); res = null; }
-
-  if (res && res.ok) {
-    state.coins -= stars * COINS_PER_STAR;
-    saveLocal(); renderAll(); markDirty();
-    toast('Заявка #' + res.id + ' отправлена админу! Ждите зачисления звёзд 🎁');
-  } else {
-    if (res && res.error === 'not_enough_coins') {
-      toast('Баланс на сервере меньше — обнови игру и попробуй снова');
-    } else {
-      toast('Ошибка заявки, попробуй позже');
-    }
-  }
-  btn.disabled = false;
-}
-
-// ============ РЕКЛАМА ×2 ============
-var Adg = null;
-function initAds() {
-  if (!ADSGRAM_ID) return;
-  var tries = 0;
-  var timer = setInterval(function() {
-    tries++;
-    if (window.Adsgram) {
-      clearInterval(timer);
-      try { Adg = window.Adsgram.init({ blockId: ADSGRAM_ID }); } catch (e) { console.error('ads init:', e); }
-    } else if (tries > 20) { clearInterval(timer); console.error('AdsGram SDK не загрузился'); }
-  }, 500);
-}
-
-function canWatchBoostAd() {
-  var now = Date.now();
-  state.boostAds = state.boostAds || { day: todayKey(), count:0, last:0 };
-  if (state.boostAds.day !== todayKey()) state.boostAds = { day: todayKey(), count:0, last:0 };
-  if (state.boostAds.count >= BOOST_AD.maxPerDay) return { ok:false, why:'Лимит 3 просмотра на сегодня израсходован' };
-  var wait = state.boostAds.last + BOOST_AD.intervalMs - now;
-  if (wait > 0) return { ok:false, why:'Следующая реклама через ' + Math.ceil(wait/60000) + ' мин' };
-  return { ok:true };
-}
-
-async function watchBoostAd() {
-  if (!state) return;
-  if (!Adg) { toast('Реклама ещё не подключена'); return; }
-  var check = canWatchBoostAd();
-  if (!check.ok) { toast(check.why); return; }
-  var btn = document.getElementById('btn-boost');
-  btn.disabled = true;
-  try {
-    await Adg.show();
-    state.boostAds.count++;
-    state.boostAds.last = Date.now();
-    state.boostUntil = Date.now() + BOOST_AD.boostMinutes * 60000;
-    saveLocal();
-    await addAdView();
-    pushRemote();
-    toast('⚡ Доход ×2 на 1 час!');
-  } catch (e) { toast('Реклама не показана, попробуйте позже'); }
-  btn.disabled = false;
-}
-
-function renderBoost() {
-  var st = document.getElementById('boost-status');
-  if (!st || !state) return;
-  if (activeBoost()) st.textContent = '×2 ещё ' + Math.ceil((state.boostUntil - Date.now())/60000) + ' мин';
-  else st.textContent = '';
-}
-
-// ============ РЕФЕРАЛКА ============
-async function loadReferrals() {
-  if (isGuest() || !supabase) return;
-  var el = document.getElementById('ref-info');
-  if (!el) return;
-  el.textContent = 'Загрузка…';
-  var r1 = await supabase.from('players').select('player_id', { count: 'exact' }).eq('referrer_id', state.user_id);
-  var r2 = await supabase.from('ref_earnings').select('stars').eq('referrer_id', state.user_id);
-  var cnt = r1.count || 0;
-  var earned = (r2.data || []).reduce(function(s, x){ return s + (x.stars || 0); }, 0);
-  el.textContent = 'Друзей: ' + cnt + ' · Заработано с рефералок: ' + earned + ' ⭐';
-}
-
-// ============ ТОП НЕДЕЛИ ============
-function weekKey() {
+// ===== Утилиты =====
+function fmt(n){ return String(Math.floor(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+function todayKey(){
   var d = new Date();
-  d.setUTCHours(0,0,0,0);
-  var day = d.getUTCDay() === 0 ? 7 : d.getUTCDay();
-  d.setUTCDate(d.getUTCDate() - day + 1);
-  return d.toISOString().slice(0,10);
+  var day = d.getUTCFullYear() + '-' + (d.getUTCMonth()+1) + '-' + d.getUTCDate();
+  return 'w' + Math.floor((d.getTime() - 3*d.getTime()) / (7*86400000)); // номер недели от эпохи
+}
+var toastTimer = 0;
+function toast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.style.display = 'block';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.style.display = 'none'; }, 2600);
 }
 
-async function loadTop() {
-  var list = document.getElementById('top-list');
-  list.innerHTML = '<p class="muted">Загрузка…</p>';
-  if (!supabase) { list.innerHTML = '<p class="muted">База не подключена</p>'; return; }
-  var res = await supabase.from('weekly_top').select('name, mined')
-    .eq('week_key', weekKey()).order('mined', { ascending:false }).limit(10);
-  list.innerHTML = '';
-  if (res.error) { list.innerHTML = '<p class="muted">Ошибка загрузки топа</p>'; return; }
-  if (!res.data || !res.data.length) { list.innerHTML = '<p class="muted">Пока нет игроков в топе недели</p>'; return; }
+// ===== Кеш для слабых устройств =====
+function saveLocal(){ try { localStorage.setItem('zinixmas_' + playerId, JSON.stringify(state)); } catch(e){} }
+function loadLocal(){
+  try {
+    var raw = localStorage.getItem('zinixmas_' + playerId);
+    if (raw) { var s = JSON.parse(raw); for (var k in s) state[k] = s[k]; }
+  } catch(e){}
+}
+
+// ===== Загрузка из базы =====
+async function loadRemote(){
+  if (!supabase || isGuest) { renderAll(); return; }
+  var res = await supabase.from('players').select('*').eq('player_id', playerId).maybeSingle();
+  if (res.error) { toast('Ошибка базы: ' + res.error.message); renderAll(); return; }
+  if (!res.data) {
+    var ins = await supabase.from('players').insert({ player_id: playerId, name: playerName }).select().maybeSingle();
+    if (ins.data) applyPlayer(ins.data);
+  } else {
+    applyPlayer(res.data);
+  }
+  renderAll();
+  loadTicker(); loadTop(); loadInventory();
+}
+function applyPlayer(p){
+  state.xp = p.xp || 0;
+  state.level = p.level || 1;
+  state.pinecones = p.pinecones || 0;
+  state.last_watered = p.last_watered ? new Date(p.last_watered).getTime() : 0;
+  state.last_shake = p.last_shake ? new Date(p.last_shake).getTime() : 0;
+  state.last_collect = p.last_collect ? new Date(p.last_collect).getTime() : 0;
+  state.weekly_pinecones = p.weekly_pinecones || 0;
+  state.week_key = p.week_key || '';
+  state.total_drops = p.total_drops || 0;
+  // Сброс недельного топа
+  var wk = todayKey();
+  if (state.week_key !== wk) {
+    state.weekly_pinecones = 0; state.week_key = wk; markDirty();
+  }
+  saveLocal();
+}
+
+// ===== Экономика =====
+function passiveRate(){ return 500 + state.level * 50; } // шишек в час
+function pendingPassive(){
+  var t = state.last_collect || Date.now();
+  var hours = Math.min(PASSIVE_CAP_H, (Date.now() - t) / 3600000);
+  if (hours < 0) hours = 0;
+  return Math.floor(passiveRate() * hours);
+}
+function waterReward(){ return 1500 + state.level * 150; }
+function shakeReward(){ return 1000 + state.level * 100; }
+function canWater(){ return Date.now() - state.last_watered >= WATER_CD; }
+function canShake(){ return Date.now() - state.last_shake >= SHAKE_CD; }
+
+// ===== Уровни =====
+function gainXp(n){
+  state.xp += n;
+  var ups = 0;
+  while (state.level < 100 && state.xp >= xpToNext(state.level)) {
+    state.xp -= xpToNext(state.level);
+    state.level++;
+    ups++;
+    state.pinecones += 2000 * state.level;
+    state.weekly_pinecones += 2000 * state.level;
+    if (state.level % 10 === 0) milestoneDrop('rare');
+    if (state.level % 25 === 0) milestoneDrop('epic');
+    if (state.level === 100) { milestoneDrop('mythic'); toast('👑 Ты — ЛЕГЕНДА ИГРЫ! Уровень 100!'); }
+  }
+  if (ups > 0 && state.level < 100) toast('🎉 Ёлка выросла до уровня ' + state.level + '!');
+}
+
+// ===== Дроп шаров =====
+function rollRarity(){
+  var r = Math.random() * 100;
+  if (r < 0.2) return 'mythic';
+  if (r < 2)   return 'legendary';
+  if (r < 10)  return 'epic';
+  if (r < 30)  return 'rare';
+  return 'common';
+}
+function milestoneDrop(rarity){ dropOrnament(rarity, 'level_up', true); }
+function dropOrnament(forcedRarity, source, forced){
+  var rarity = forcedRarity || rollRarity();
+  var pool = ORNAMENTS[rarity];
+  var idx = Math.floor(Math.random() * pool.length);
+  var itemName = pool[idx];
+  var itemId = rarity + '_' + idx;
+  state.total_drops++;
+  if (!isGuest && supabase) {
+    supabase.from('inventory').insert({ player_id: playerId, item_id: itemId, item_name: itemName, rarity: rarity, source: source || 'care' })
+      .then(function(){ return supabase.from('drop_log').insert({ player_id: playerId, player_name: playerName, item_id: itemId, item_name: itemName, rarity: rarity, source: source || 'care' }); })
+      .then(function(){ loadTicker(); loadInventory(); })
+      .catch(function(e){ console.warn('drop save error', e); });
+  }
+  var info = RARITY_INFO[rarity];
+  toast(info.icon + ' Выбит ' + info.label + ': «' + itemName + '»!');
+}
+
+// ===== Действия игрока =====
+function doWater(){
+  if (!canWater()) { toast('Ёлку можно полить через ' + timeLeft(state.last_watered, WATER_CD)); return; }
+  state.last_watered = Date.now();
+  state.pinecones += waterReward();
+  state.weekly_pinecones += waterReward();
+  gainXp(60);
+  if (Math.random() < 0.2) dropOrnament(null, 'water');
+  markDirty(); renderAll();
+}
+function doShake(){
+  if (!canShake()) { toast('Снег ещё не напрёсся — вернись через ' + timeLeft(state.last_shake, SHAKE_CD)); return; }
+  state.last_shake = Date.now();
+  state.pinecones += shakeReward();
+  state.weekly_pinecones += shakeReward();
+  gainXp(40);
+  if (Math.random() < 0.15) dropOrnament(null, 'shake');
+  markDirty(); renderAll();
+}
+function doCollect(){
+  var p = pendingPassive();
+  if (p <= 0) { toast('Ёлка пока ничего не накопила 🌰'); return; }
+  state.last_collect = Date.now();
+  state.pinecones += p;
+  state.weekly_pinecones += p;
+  markDirty(); renderAll();
+  toast('🌰 +' + fmt(p) + ' шишек!');
+}
+function timeLeft(fromTs, cd){
+  var ms = cd - (Date.now() - (fromTs || 0));
+  if (ms < 0) ms = 0;
+  var m = Math.floor(ms / 60000);
+  if (m < 60) return m + ' мин';
+  return Math.floor(m / 60) + ' ч ' + (m % 60) + ' мин';
+}
+
+// ===== Рендер =====
+function stageFor(level){
+  if (level >= 100) return {e:'🌟🎄', t:'ЛЕГЕНДА ИГРЫ'};
+  if (level >= 86)  return {e:'🎄🌟', t:'Сияющая'};
+  if (level >= 61)  return {e:'🎄✨', t:'Величественная'};
+  if (level >= 31)  return {e:'🎄',   t:'Новогодняя'};
+  if (level >= 11)  return {e:'🌲',   t:'Наряженная'};
+  return {e:'🌱', t:'Росток'};
+}
+function renderAll(){
+  var st = stageFor(state.level);
+  document.getElementById('tree-emoji').textContent = st.e;
+  document.getElementById('tree-title').textContent = st.t;
+  document.getElementById('tree-sub').textContent = 'Доход: ' + fmt(passiveRate()) + ' 🌰/час';
+  document.getElementById('h-name').textContent = playerName;
+  document.getElementById('h-level').textContent = 'Уровень ' + state.level;
+  document.getElementById('pinecone-count').textContent = fmt(state.pinecones);
+  document.getElementById('btn-collect').textContent = 'Забрать ' + fmt(pendingPassive()) + ' 🌰';
+
+  // Полив/стряхивание: текст и доступность
+  var bw = document.getElementById('btn-water'), bs = document.getElementById('btn-shake');
+  if (canWater()) { bw.disabled = false; bw.textContent = '💧 Полить'; }
+  else { bw.disabled = true; bw.textContent = '💧 ' + timeLeft(state.last_watered, WATER_CD); }
+  if (canShake()) { bs.disabled = false; bs.textContent = '❄️ Стряхнуть'; }
+  else { bs.disabled = true; bs.textContent = '❄️ ' + timeLeft(state.last_shake, SHAKE_CD); }
+
+  // Полоски (декоративные: влажность падает 5%/час, снег растёт 8%/час)
+  var mh = (Date.now() - (state.last_watered || Date.now())) / 3600000;
+  var moist = Math.max(0, 100 - Math.floor(mh * 5));
+  var sh = (Date.now() - (state.last_shake || 0)) / 3600000;
+  var snow = Math.min(100, Math.floor(sh * 8));
+  document.getElementById('bar-moist').style.width = moist + '%';
+  document.getElementById('bar-snow').style.width = snow + '%';
+
+  // Опыт
+  var need = xpToNext(state.level);
+  if (state.level >= 100) {
+    document.getElementById('xp-line').textContent = '👑 Максимальный уровень — ЛЕГЕНДА ИГРЫ!';
+  } else {
+    document.getElementById('xp-line').textContent = 'Опыт: ' + fmt(state.xp) + ' / ' + fmt(need);
+  }
+}
+
+// ===== Бегущая строка (реальные данные из drop_log) =====
+async function loadTicker(){
+  if (!supabase || isGuest) return;
+  var res = await supabase.from('drop_log').select('player_name,item_name,rarity').order('created_at', {ascending:false}).limit(8);
+  var track = document.getElementById('ticker-track');
+  if (res.error || !res.data || !res.data.length) { track.textContent = 'Шары ещё не выбиты — будь первым! 🎄'; return; }
+  var items = res.data.map(function(w){
+    var info = RARITY_INFO[w.rarity] || RARITY_INFO.common;
+    return '👤 ' + (w.player_name || 'Игрок') + ' выбил ' + info.icon + ' ' + w.item_name;
+  });
+  var line = items.join('   •   ') + '   •   ';
+  track.textContent = line + line; // дубль для бесшовной прокрутки
+  track.style.animation = 'none'; void track.offsetWidth; track.style.animation = ''; // перезапуск анимации
+}
+
+// ===== Топ недели =====
+async function loadTop(){
+  if (!supabase || isGuest) { document.getElementById('top-list').textContent = 'Топ доступен только в Telegram.'; return; }
+  var res = await supabase.from('players').select('player_id,name,weekly_pinecones').order('weekly_pinecones', {ascending:false}).limit(10);
+  var el = document.getElementById('top-list');
+  if (res.error || !res.data || !res.data.length) { el.textContent = 'Пока никого — забирай шишки первым!'; return; }
   var medals = ['🥇','🥈','🥉'];
-  res.data.forEach(function(r, i) {
-    var row = document.createElement('div');
-    row.className = 'top-row';
-    row.innerHTML = '<b>' + (medals[i] || (i+1) + '.') + ' ' + (r.name || 'Игрок') + '</b><span class="muted">' + fmt(r.mined||0) + '</span>';
-    list.appendChild(row);
+  var html = '';
+  for (var i = 0; i < res.data.length; i++) {
+    var row = res.data[i];
+    var isMe = row.player_id === playerId;
+    html += '<div class="top-row' + (isMe ? ' me' : '') + '">'
+      + '<div class="top-rank">' + (medals[i] || (i+1)) + '</div>'
+      + '<div class="top-name">' + (row.name || 'Игрок') + '</div>'
+      + '<div class="top-val">' + fmt(row.weekly_pinecones || 0) + ' 🌰</div></div>';
+  }
+  el.innerHTML = html;
+}
+
+// ===== Инвентарь =====
+async function loadInventory(){
+  if (!supabase || isGuest) return;
+  var res = await supabase.from('inventory').select('item_name,rarity').eq('player_id', playerId).limit(200);
+  var el = document.getElementById('inv-list');
+  if (res.error || !res.data || !res.data.length) { el.textContent = 'Пока пусто — играй в мини-игры и ухаживай за ёлкой!'; return; }
+  var byId = {};
+  res.data.forEach(function(x){
+    var key = x.rarity + '|' + x.item_name;
+    byId[key] = (byId[key] || 0) + 1;
   });
-}
-
-async function pushMyScore() {
-  if (!supabase || isGuest()) return;
-  await supabase.from('weekly_top').upsert({
-    player_id: state.user_id, week_key: weekKey(), name: state.name,
-    mined: Math.floor(state.total_mined), coins: Math.floor(state.coins), taps: state.taps,
-    updated_at: new Date().toISOString()
-  }, { onConflict: 'player_id,week_key' });
-}
-
-async function loadMyMiners() {
-  if (!supabase || isGuest()) return [];
-  var res = await supabase.from('miners').select('tier, created_at').eq('player_id', state.user_id);
-  if (res.error) { console.error('miners:', res.error); return []; }
-  myMiners = res.data || [];
-  return myMiners;
-}
-
-// ============ UI ============
-function bindUI() {
-  document.getElementById('tap-zone').addEventListener('click', tap);
-  document.getElementById('btn-boost').addEventListener('click', watchBoostAd);
-  document.getElementById('btn-sell').addEventListener('click', sellCoins);
-  document.getElementById('btn-topup').addEventListener('click', topupSubmit);
-  document.getElementById('btn-topup-rub').addEventListener('click', topupRubs);
-  document.getElementById('topup-input').addEventListener('input', updateTopup);
-  document.querySelectorAll('.quick-btn').forEach(function(b) {
-    b.addEventListener('click', function() {
-      document.getElementById('topup-input').value = b.dataset.n;
-      updateTopup();
+  var order = ['mythic','legendary','epic','rare','common'];
+  var html = '';
+  order.forEach(function(r){
+    Object.keys(byId).forEach(function(k){
+      if (k.indexOf(r + '|') !== 0) return;
+      var info = RARITY_INFO[r];
+      html += '<div class="inv-item"><div class="inv-emoji">' + info.icon + '</div>'
+        + '<div class="inv-name"><b class="r-' + r + '">' + k.slice(r.length+1) + '</b><span class="inv-count">' + info.label + '</span></div>'
+        + '<div class="inv-count">×' + byId[k] + '</div></div>';
     });
   });
-  document.getElementById('btn-ref').addEventListener('click', async function() {
-    var link = 'https://t.me/' + BOT_USERNAME + '?start=ref_' + state.user_id;
-    try { await navigator.clipboard.writeText(link); toast('Ссылка скопирована!'); }
-    catch (e) { toast(link); }
-    loadReferrals();
-  });
-
-  document.querySelectorAll('.tab').forEach(function(t) {
-    t.addEventListener('click', function() {
-      document.querySelectorAll('.tab').forEach(function(x){ x.classList.remove('active'); });
-      document.querySelectorAll('.screen').forEach(function(x){ x.classList.remove('active'); });
-      t.classList.add('active');
-      var scr = document.getElementById('screen-' + t.dataset.screen);
-      if (scr) scr.classList.add('active');
-      if (t.dataset.screen === 'top') loadTop();
-      if (t.dataset.screen === 'miners') loadReferrals();
-    });
-  });
+  el.innerHTML = html;
 }
 
-// ============ ЗАПУСК ============
-initUser();
-bindUI();
-initAds();
-renderMiners();
-updateTopup();
+// ===== Сохранение (пачками, для слабых устройств) =====
+var dirty = false;
+function markDirty(){ dirty = true; }
+async function saveRemote(){
+  saveLocal();
+  if (!supabase || isGuest) return;
+  await supabase.from('players').update({
+    xp: state.xp, level: state.level, pinecones: state.pinecones,
+    last_watered: state.last_watered ? new Date(state.last_watered).toISOString() : null,
+    last_shake: state.last_shake ? new Date(state.last_shake).toISOString() : null,
+    last_collect: state.last_collect ? new Date(state.last_collect).toISOString() : null,
+    weekly_pinecones: state.weekly_pinecones, week_key: state.week_key,
+    total_drops: state.total_drops, name: playerName
+  }).eq('player_id', playerId);
+}
+setInterval(function(){ if (dirty) { dirty = false; saveRemote(); } }, 8000);
+document.addEventListener('visibilitychange', function(){ if (document.hidden && dirty) { dirty = false; saveRemote(); } });
+
+// ===== Обновление кнопок каждые 30 сек (лёгкий таймер) =====
+setInterval(renderAll, 30000);
+
+// ===== Вкладки =====
+document.querySelectorAll('.tab').forEach(function(b){
+  b.addEventListener('click', function(){
+    document.querySelectorAll('.tab').forEach(function(x){ x.classList.remove('active'); });
+    b.classList.add('active');
+    document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+    var scr = document.getElementById('screen-' + b.dataset.screen);
+    if (scr) scr.classList.add('active');
+    if (b.dataset.screen === 'top') loadTop();
+    if (b.dataset.screen === 'inv') loadInventory();
+  });
+});
+
+// ===== Кнопки =====
+document.getElementById('btn-water').addEventListener('click', doWater);
+document.getElementById('btn-shake').addEventListener('click', doShake);
+document.getElementById('btn-collect').addEventListener('click', doCollect);
+
+// ===== Старт =====
+if (isGuest) document.getElementById('guest-note').style.display = 'block';
+loadLocal();
 renderAll();
-renderBoost();
-
-(async function start() {
-  try { await loadRemote(); } catch (e) { console.error(e); }
-  try { await loadMyMiners(); } catch (e) {}
-  try { await loadWeekDeposit(); } catch (e) {}
-  try { await loadReferrals(); } catch (e) {}
-  renderMiners(); renderAll();
-  try { await pushMyScore(); } catch (e) {}
-  setInterval(pushMyScore, 5 * 60 * 1000);
-  setInterval(loadWeekDeposit, 60 * 1000);
-})();
-
-})();
+loadRemote();
 </script>
 </body>
 </html>
