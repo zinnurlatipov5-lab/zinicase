@@ -99,6 +99,8 @@
   .miner-head { display:flex; align-items:center; gap:10px; }
   .miner-emoji { width:40px; height:40px; border-radius:11px; flex:none; font-size:22px; background:rgba(255,255,255,.06); display:flex; align-items:center; justify-content:center; }
 
+  .cond-box { margin-top:10px; padding:11px; background:rgba(255,255,255,.04); border:1px solid var(--line); border-radius:12px; }
+
   .top-row { display:flex; justify-content:space-between; padding:10px 2px; border-bottom:1px solid var(--line); font-size:14px; }
   .top-row:last-child { border-bottom:none; }
 
@@ -153,7 +155,7 @@
 <div class="screen active" id="screen-main">
   <div class="card">
     <div class="row"><b>⚡ Ускорение</b><span class="muted" id="boost-status"></span></div>
-    <p class="muted">Смотри рекламу — доход ×2 на 1 час. Максимум 3 просмотра в день, перерыв 10 минут. Просмотры также открывают вывод монет.</p>
+    <p class="muted">Смотри рекламу — доход ×2 на 1 час. Максимум 3 просмотра в день, перерыв 10 минут. Просмотры открывают вывод монет.</p>
     <button class="btn" id="btn-boost">🎬 Ускорить доход за рекламу</button>
   </div>
   <div class="card">
@@ -170,11 +172,19 @@
 <div class="screen" id="screen-miners">
   <div class="card">
     <b>⭐ Пополнить звёзды</b>
-    <p class="muted">Введи количество звёзд (минимум 15) и оплати — звёзды можно купить прямо в окне оплаты картой. Зачисление автоматическое.</p>
+    <p class="muted">Введи количество звёзд (минимум 15) и оплати — звёзды можно купить прямо в окне оплаты картой. Зачисление автоматическое. Депозит за неделю открывает вывод монет.</p>
     <input class="topup-input" id="topup-input" type="number" inputmode="numeric" min="15" placeholder="Например: 15" value="15">
     <div class="pay-sum" id="topup-sum">15 звёзд</div>
     <button class="btn" id="btn-topup">⭐ Пополнить</button>
   </div>
+
+  <div class="card">
+    <b>👥 Приглашай друзей</b>
+    <p class="muted">За каждого друга — <b style="color:var(--acc)">+2 ⭐</b> на твой счёт сразу и <b style="color:var(--acc)">3%</b> с каждого его пополнения — пожизненно.</p>
+    <button class="btn" id="btn-ref" style="margin-top:10px">🔗 Скопировать ссылку-приглашение</button>
+    <p class="muted" id="ref-info" style="margin-top:8px">—</p>
+  </div>
+
   <div class="card">
     <div class="row"><b>⛏ Майнеры</b><span class="muted" id="miners-count"></span></div>
     <p class="muted">Майнер добывает монеты каждый день. Покупается за звёзды с твоего баланса.</p>
@@ -186,13 +196,21 @@
   <div class="card">
     <b>💰 Продажа монет</b>
     <p class="muted">Меняй монеты на звёзды по курсу <b style="color:var(--acc)">10 000 монет = 1 ⭐</b>. Минимальный вывод — <b style="color:var(--acc)">50 ⭐ (500 000 монет)</b>.</p>
-    <div class="card-box" style="margin-top:10px">
+
+    <div class="cond-box">
       <div class="row"><b>🎬 Активность за сутки</b><span id="ads-progress" class="muted">0/3</span></div>
       <div class="progress" style="margin-top:8px"><div class="progress-fill" id="ads-fill" style="width:0%"></div></div>
-      <p class="muted" id="ads-note" style="margin-top:8px">Посмотри минимум 3 рекламы на вкладке «Шахта», чтобы открыть вывод.</p>
+      <p class="muted" id="ads-note" style="margin-top:8px">Посмотри минимум 3 рекламы на вкладке «Шахта».</p>
     </div>
+
+    <div class="cond-box">
+      <div class="row"><b>💎 Депозит за неделю</b><span id="dep-progress" class="muted">0/15 ⭐</span></div>
+      <div class="progress" style="margin-top:8px"><div class="progress-fill" id="dep-fill" style="width:0%"></div></div>
+      <p class="muted" id="dep-note" style="margin-top:8px">Суммарное пополнение за последние 7 дней — минимум 15 ⭐.</p>
+    </div>
+
     <p class="muted" id="sell-info" style="margin-top:8px">—</p>
-    <button class="btn" id="btn-sell" disabled>Заявка на вывод — недостаточно монет</button>
+    <button class="btn" id="btn-sell" disabled>Заявка на вывод — условия не выполнены</button>
   </div>
   <div class="card">
     <b>📌 Как проходит выплата</b>
@@ -228,8 +246,9 @@ var MIN_WITHDRAW_STARS = 50;
 var MIN_WITHDRAW_COINS = MIN_WITHDRAW_STARS * COINS_PER_STAR;
 var MIN_TOPUP_STARS = 15;
 
-// Условие вывода: минимум столько рекламы за последние сутки
-var ADS_REQUIRED = 3;
+// Условия вывода
+var ADS_REQUIRED = 3;        // минимум 3 рекламы за последние сутки
+var MIN_WEEK_DEPOSIT = 15;   // минимум 15 ⭐ депозитов за последние 7 дней
 
 var TIERS = {
   0: { name:'Test',     stars:1,   perDay:6000,    emoji:'🧪' },
@@ -249,11 +268,12 @@ try { if (tg) { tg.ready(); if (tg.disableVerticalSwipes) tg.disableVerticalSwip
 
 var state = null;
 var myMiners = [];
+var weekDeposit = 0;
 
 function isGuest() { return !state || String(state.user_id).indexOf('guest_') === 0; }
 function fmt(n) { return Math.floor(n).toLocaleString('ru-RU'); }
 function openBot() {
-  var link = 'https://t.me/zini_drop_bot';
+  var link = 'https://t.me/' + BOT_USERNAME;
   if (tg && tg.openTelegramLink) tg.openTelegramLink(link);
   else window.open(link, '_blank');
 }
@@ -283,10 +303,9 @@ function toast(text) {
   clearTimeout(t._h); t._h = setTimeout(function(){ t.classList.remove('show'); }, 3000);
 }
 
-// ============ СЧЁТЧИК РЕКЛАМЫ ЗА СУТКИ ============
+// ============ РЕКЛАМА ЗА СУТКИ ============
 function todayKey() { return new Date().toISOString().slice(0,10); }
 
-// возвращает количество просмотров за последние сутки (сброс по календарному дню)
 function adsToday() {
   if (state.adsDay !== todayKey()) return 0;
   return state.adsCount || 0;
@@ -297,12 +316,23 @@ async function addAdView() {
   if (state.adsDay !== t) { state.adsDay = t; state.adsCount = 0; }
   state.adsCount = (state.adsCount || 0) + 1;
   saveLocal();
-  // счётчик в базе, чтобы не терялся при чистке кэша
   if (!isGuest() && supabase) {
     await supabase.from('players')
       .update({ ads_count: state.adsCount, ads_day: t })
       .eq('player_id', state.user_id);
   }
+  renderAll();
+}
+
+// ============ ДЕПОЗИТ ЗА НЕДЕЛЮ (из таблицы topups) ============
+async function loadWeekDeposit() {
+  if (!supabase || isGuest()) { weekDeposit = 0; renderAll(); return; }
+  var since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString();
+  var res = await supabase.from('topups').select('stars')
+    .eq('player_id', state.user_id)
+    .gte('created_at', since);
+  if (res.error) { console.error('topups:', res.error); return; }
+  weekDeposit = (res.data || []).reduce(function(s, r){ return s + (r.stars || 0); }, 0);
   renderAll();
 }
 
@@ -373,6 +403,13 @@ setInterval(function() {
 }, 10000);
 
 // ============ РЕНДЕР ============
+function withdrawBlockedReason() {
+  if (state.coins < MIN_WITHDRAW_COINS) return { ok:false, why:'монеты' };
+  if (adsToday() < ADS_REQUIRED) return { ok:false, why:'реклама' };
+  if (weekDeposit < MIN_WEEK_DEPOSIT) return { ok:false, why:'депозит' };
+  return { ok:true };
+}
+
 function renderAll() {
   if (!state) return;
   document.getElementById('balance').textContent = fmt(state.coins);
@@ -401,26 +438,43 @@ function renderAll() {
   }
   if (af) af.style.width = Math.min(100, Math.round(views / ADS_REQUIRED * 100)) + '%';
   if (an) an.textContent = views >= ADS_REQUIRED
-    ? '✅ Активность выполнена — вывод открыт.'
-    : 'Посмотри ещё ' + (ADS_REQUIRED - views) + ' ' + (ADS_REQUIRED - views === 1 ? 'рекламу' : 'рекламы') + ' на вкладке «Шахта», чтобы открыть вывод.';
+    ? '✅ Активность выполнена.'
+    : 'Посмотри ещё ' + (ADS_REQUIRED - views) + ' ' + (ADS_REQUIRED - views === 1 ? 'рекламу' : 'рекламы') + ' на вкладке «Шахта».';
+
+  // прогресс депозита за неделю
+  var dp = document.getElementById('dep-progress');
+  var df = document.getElementById('dep-fill');
+  var dn = document.getElementById('dep-note');
+  if (dp) {
+    dp.textContent = weekDeposit + '/' + MIN_WEEK_DEPOSIT + ' ⭐';
+    dp.style.color = weekDeposit >= MIN_WEEK_DEPOSIT ? 'var(--acc)' : 'var(--mut)';
+  }
+  if (df) df.style.width = Math.min(100, Math.round(weekDeposit / MIN_WEEK_DEPOSIT * 100)) + '%';
+  if (dn) dn.textContent = weekDeposit >= MIN_WEEK_DEPOSIT
+    ? '✅ Депозит за неделю выполнен.'
+    : 'Пополнись ещё на ' + (MIN_WEEK_DEPOSIT - weekDeposit) + ' ⭐ за последние 7 дней.';
 
   var btn = document.getElementById('btn-sell');
   var info = document.getElementById('sell-info');
-  if (state.coins >= MIN_WITHDRAW_COINS) {
-    var stars = Math.floor(state.coins / COINS_PER_STAR);
-    if (views < ADS_REQUIRED) {
-      btn.disabled = true;
-      btn.textContent = 'Вывод закрыт — смотри ' + ADS_REQUIRED + ' рекламы в день';
-      info.textContent = 'Монет хватает (' + fmt(state.coins) + '), но нужно посмотреть ' + ADS_REQUIRED + ' рекламы за сутки: ' + views + '/' + ADS_REQUIRED;
+  var w = withdrawBlockedReason();
+  if (!w.ok) {
+    btn.disabled = true;
+    var texts = {
+      'монеты': 'Заявка на вывод — накопи ' + fmt(MIN_WITHDRAW_COINS) + ' монет',
+      'реклама': 'Вывод закрыт — посмотри ' + ADS_REQUIRED + ' рекламы за сутки',
+      'депозит': 'Вывод закрыт — пополнись на ' + MIN_WEEK_DEPOSIT + ' ⭐ за неделю'
+    };
+    btn.textContent = texts[w.why] || 'Условия вывода не выполнены';
+    if (state.coins >= MIN_WITHDRAW_COINS) {
+      info.textContent = 'Монет хватает (' + fmt(state.coins) + '), но нужно: реклама ' + views + '/' + ADS_REQUIRED + ', депозит за неделю ' + weekDeposit + '/' + MIN_WEEK_DEPOSIT + ' ⭐';
     } else {
-      btn.disabled = false;
-      btn.textContent = 'Продать ' + fmt(stars * COINS_PER_STAR) + ' монет за ' + stars + ' ⭐';
-      info.textContent = 'Готово к продаже: ' + fmt(stars * COINS_PER_STAR) + ' монет = ' + stars + ' ⭐';
+      info.textContent = 'Накоплено: ' + fmt(state.coins) + ' из ' + fmt(MIN_WITHDRAW_COINS) + ' монет';
     }
   } else {
-    btn.disabled = true;
-    btn.textContent = 'Заявка на вывод — недостаточно монет';
-    info.textContent = 'Накоплено: ' + fmt(state.coins) + ' из ' + fmt(MIN_WITHDRAW_COINS) + ' монет';
+    btn.disabled = false;
+    var stars = Math.floor(state.coins / COINS_PER_STAR);
+    btn.textContent = 'Продать ' + fmt(stars * COINS_PER_STAR) + ' монет за ' + stars + ' ⭐';
+    info.textContent = 'Все условия выполнены ✅ Готово к продаже: ' + fmt(stars * COINS_PER_STAR) + ' монет = ' + stars + ' ⭐';
   }
 }
 
@@ -502,6 +556,7 @@ async function topupSubmit() {
       await loadRemote();
       if ((state.stars_balance || 0) > before) {
         toast('✅ Зачислено ' + stars + ' ⭐');
+        loadWeekDeposit();
         break;
       }
     }
@@ -515,11 +570,12 @@ async function topupSubmit() {
 // ============ ЗАЯВКА НА ВЫВОД (монеты → звёзды) ============
 async function sellCoins() {
   if (isGuest()) { toast('Открой игру из Telegram, чтобы продавать'); return; }
+  await loadWeekDeposit();
   var coins = Math.floor(state.coins);
   if (coins < MIN_WITHDRAW_COINS) { toast('Минимум ' + fmt(MIN_WITHDRAW_COINS) + ' монет'); return; }
-  var views = adsToday();
-  if (views < ADS_REQUIRED) {
-    toast('Нужно посмотреть ' + ADS_REQUIRED + ' рекламы за сутки (' + views + '/' + ADS_REQUIRED + ')');
+  if (adsToday() < ADS_REQUIRED) { toast('Нужно посмотреть ' + ADS_REQUIRED + ' рекламы за сутки'); return; }
+  if (weekDeposit < MIN_WEEK_DEPOSIT) {
+    toast('Депозит за неделю: ' + weekDeposit + '/' + MIN_WEEK_DEPOSIT + ' ⭐ — пополни баланс');
     return;
   }
   var stars = Math.floor(coins / COINS_PER_STAR);
@@ -571,7 +627,7 @@ async function watchBoostAd() {
     state.boostAds.last = Date.now();
     state.boostUntil = Date.now() + BOOST_AD.boostMinutes * 60000;
     saveLocal();
-    await addAdView();          // учитываем просмотр для условия вывода
+    await addAdView();
     pushRemote();
     toast('⚡ Доход ×2 на 1 час!');
   } catch (e) { toast('Реклама не показана, попробуйте позже'); }
@@ -583,6 +639,19 @@ function renderBoost() {
   if (!st || !state) return;
   if (activeBoost()) st.textContent = '×2 ещё ' + Math.ceil((state.boostUntil - Date.now())/60000) + ' мин';
   else st.textContent = '';
+}
+
+// ============ РЕФЕРАЛКА ============
+async function loadReferrals() {
+  if (isGuest() || !supabase) return;
+  var el = document.getElementById('ref-info');
+  if (!el) return;
+  el.textContent = 'Загрузка…';
+  var r1 = await supabase.from('players').select('player_id', { count: 'exact' }).eq('referrer_id', state.user_id);
+  var r2 = await supabase.from('ref_earnings').select('stars').eq('referrer_id', state.user_id);
+  var cnt = r1.count || 0;
+  var earned = (r2.data || []).reduce(function(s, x){ return s + (x.stars || 0); }, 0);
+  el.textContent = 'Друзей: ' + cnt + ' · Заработано с рефералок: ' + earned + ' ⭐';
 }
 
 // ============ ТОП НЕДЕЛИ ============
@@ -636,6 +705,12 @@ function bindUI() {
   document.getElementById('btn-sell').addEventListener('click', sellCoins);
   document.getElementById('btn-topup').addEventListener('click', topupSubmit);
   document.getElementById('topup-input').addEventListener('input', updateTopup);
+  document.getElementById('btn-ref').addEventListener('click', async function() {
+    var link = 'https://t.me/' + BOT_USERNAME + '?start=ref_' + state.user_id;
+    try { await navigator.clipboard.writeText(link); toast('Ссылка скопирована!'); }
+    catch (e) { toast(link); }
+    loadReferrals();
+  });
 
   document.querySelectorAll('.tab').forEach(function(t) {
     t.addEventListener('click', function() {
@@ -645,6 +720,7 @@ function bindUI() {
       var scr = document.getElementById('screen-' + t.dataset.screen);
       if (scr) scr.classList.add('active');
       if (t.dataset.screen === 'top') loadTop();
+      if (t.dataset.screen === 'miners') loadReferrals();
     });
   });
 }
@@ -661,9 +737,12 @@ renderBoost();
 (async function start() {
   try { await loadRemote(); } catch (e) { console.error(e); }
   try { await loadMyMiners(); } catch (e) {}
+  try { await loadWeekDeposit(); } catch (e) {}
+  try { await loadReferrals(); } catch (e) {}
   renderMiners(); renderAll();
   try { await pushMyScore(); } catch (e) {}
   setInterval(pushMyScore, 5 * 60 * 1000);
+  setInterval(loadWeekDeposit, 60 * 1000);
 })();
 
 })();
