@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>ZINI DROP</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -141,7 +144,7 @@
   <div class="logo">⛏</div>
   <div>
     <div class="logo-title">ZINI DROP</div>
-    <div class="logo-sub">майнинг · реклама · вывод</div>
+    <div class="logo-sub">майнинг · реклама · вывод · v6</div>
   </div>
   <div class="lvl-badge" id="user-badge">👤</div>
 </header>
@@ -598,7 +601,7 @@ function renderGiftHint() {
     '<br>Твой ID для админа: <b>' + (isGuest() ? '—' : state.user_id) + '</b>';
 }
 
-// ============ ПОКУПКА МАЙНЕРА ============
+// ============ ПОКУПКА МАЙНЕРА (через сервер) ============
 async function buyMinerWithStars(tier) {
   if (isGuest()) { toast('Открой игру из Telegram, чтобы покупать'); return; }
   var t = TIERS[tier];
@@ -606,14 +609,32 @@ async function buyMinerWithStars(tier) {
     toast('Не хватает звёзд — пополни баланс');
     return;
   }
-  var newBal = state.stars_balance - t.stars;
-  var upd = await supabase.from('players').update({ stars_balance: newBal }).eq('player_id', state.user_id);
-  if (upd.error) { console.error(upd.error); toast('Ошибка покупки, попробуй позже'); return; }
-  state.stars_balance = newBal;
-  var ins = await supabase.from('miners').insert({ player_id: state.user_id, tier: tier, created_at: new Date().toISOString() });
-  if (ins.error) { console.error(ins.error); toast('Ошибка активации майнера'); return; }
-  saveLocal(); renderAll(); renderMiners();
-  toast('⛏ ' + t.name + ' куплен и уже майнит!');
+  var res = null;
+  try {
+    var r = await fetch(FN_BASE + '/' + PAYMENT_FN, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + SB_KEY },
+      body: JSON.stringify({ action: 'buy_miner', tier: tier, player_id: state.user_id })
+    });
+    res = await r.json();
+  } catch (e) {
+    console.error('buy network:', e);
+    toast('ОШИБКА СЕТИ: ' + (e && e.message ? e.message : e));
+    return;
+  }
+  if (res && res.ok) {
+    state.stars_balance = (state.stars_balance || 0) - t.stars;
+    saveLocal();
+    myMiners.push({ tier: tier, created_at: new Date().toISOString() });
+    renderAll(); renderMiners();
+    toast('⛏ ' + t.name + ' куплен и уже майнит!');
+    try { await loadMyMiners(); } catch (e) {}
+    renderMiners();
+    return;
+  }
+  if (res && res.error === 'not_enough_stars') { toast('На сервере не хватает звёзд — обнови игру (закрой и открой)'); return; }
+  if (res && res.error === 'bad_tier') { toast('ОШИБКА: неверный тариф'); return; }
+  toast('ОШИБКА СЕРВЕРА: ' + JSON.stringify(res));
 }
 
 // ============ ПОПОЛНЕНИЕ (подарок админу) ============
