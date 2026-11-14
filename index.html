@@ -233,11 +233,6 @@
     </div>
   </div>
 
-  <div class="card" style="margin-top:18px">
-    <div class="row"><b>🎬 Рекламный бонус</b><span class="muted" id="farm-ad-cd"></span></div>
-    <button class="btn" id="farm-ad-btn" onclick="farmAd()">Получить бонус монет</button>
-  </div>
-
   <div class="card" style="text-align:left">
     <div class="row"><b>🏆 Топ недели</b><span class="muted">итоги в воскресенье</span></div>
     <div id="farm-week-top" class="muted" style="text-align:center;padding:6px">Загрузка…</div>
@@ -304,7 +299,6 @@
     <div class="cups">
       <div onclick="pickCup(0)">🧰</div><div onclick="pickCup(1)">🧰</div><div onclick="pickCup(2)">🧰</div>
     </div>
-    <button class="btn btn-purple" id="cup-ad-btn" style="display:none" onclick="cupAdRevive()">🎬 Вернуть ставку за рекламу</button>
   </div>
 
   <div class="card" style="text-align:center">
@@ -536,7 +530,7 @@ function freshState() {
     refWeek: getWeekKey(), refCredited: 0,
     stars: 0, starsSent: 0,
     promoCodes: [], usedPromos: {},
-    lastFarmAd: 0, crownUntil: 0,
+    crownUntil: 0,
     lastReset: 0
   };
 }
@@ -575,7 +569,7 @@ function applyGlobalReset(resetTs) {
   currentRigId = null;
   applyRigLook();
   render(); renderShop(); renderMarket(); renderUpg(); renderProf();
-  updateAdUi(); renderBoost(); renderStars(); renderPromos(); renderFarmAd();
+  updateAdUi(); renderBoost(); renderStars(); renderPromos();
   buildLB(); updateLB();
   popup('❄️ Новый сезон! Все балансы обнулены — стартуй заново!');
 }
@@ -1047,25 +1041,6 @@ function updateAdUi() {
     txt.textContent = cnt >= ADS_QUEST_GOAL ? '✅ Задание дня выполнено!' : `📅 Задание дня: ещё ${ADS_QUEST_GOAL - cnt} реклам(ы) — случайный приз!`;
   }
 }
-function renderFarmAd() {
-  const btn = document.getElementById('farm-ad-btn'), cd = document.getElementById('farm-ad-cd');
-  if (!btn || !state) return;
-  const left = 5 * 60000 - (Date.now() - (state.lastFarmAd || 0));
-  if (left > 0) { btn.disabled = true; btn.textContent = 'Бонус через ' + Math.ceil(left / 60000) + ' мин'; }
-  else { btn.disabled = !adController; btn.textContent = 'Получить бонус'; if (cd) cd.textContent = 'доступно'; }
-}
-async function farmAd() {
-  if (!adController) { popup('Реклама ещё не настроена'); return; }
-  if (Date.now() - (state.lastFarmAd || 0) < 5 * 60000) return;
-  try {
-    await adController.show();
-    state.lastFarmAd = Date.now();
-    const bonus = Math.max(500, Math.floor(Math.max(tapIncome(), totalRate()) * 30));
-    addMined(bonus);
-    popup('🎬 +' + fmt(bonus) + ' монет!');
-    render(); renderFarmAd(); save(); syncSoon();
-  } catch (e) { popup('Реклама не показалась'); }
-}
 
 // ================= ПРОМОКОДЫ (живут 24 часа) =================
 function fmtLeft(ms) { const h = Math.floor(ms / 3600000), m = Math.floor(ms % 3600000 / 60000); return h ? h + ' ч ' + m + ' мин' : m + ' мин'; }
@@ -1111,23 +1086,11 @@ function pickCup(i) {
     addMined(win);
     cups[i].textContent = '💰';
     document.getElementById('cup-status').textContent = `Выигрыш: +${fmt(win)} монет!`;
-    document.getElementById('cup-ad-btn').style.display = 'none';
   } else {
     cups[winIdx].textContent = '💰';
     document.getElementById('cup-status').textContent = 'Мимо! Золото было в другом сундуке';
-    document.getElementById('cup-ad-btn').style.display = 'block';
   }
   render(); save();
-}
-async function cupAdRevive() {
-  if (!adController) { popup('Реклама ещё не настроена'); return; }
-  try {
-    await adController.show();
-    addMined(cupBet);
-    popup('Ставка возвращена!');
-    document.getElementById('cup-ad-btn').style.display = 'none';
-    render(); save();
-  } catch (e) { popup('Реклама не показалась'); }
 }
 
 // ================= КОЛЕСО =================
@@ -1171,7 +1134,14 @@ function spinWheel() {
 }
 async function spinForAd() {
   if (!adController) { popup('Реклама ещё не настроена'); return; }
-  try { await adController.show(); doSpin(Math.floor(Math.random() * WHEEL_PRIZES.length)); }
+  if (adsLeft() <= 0) { popup('Лимит на сегодня исчерпан!'); return; }
+  try {
+    await adController.show();
+    state.adsCount = (state.adsCount || 0) + 1;
+    state.adsDay = todayStamp();
+    doSpin(Math.floor(Math.random() * WHEEL_PRIZES.length));
+    updateAdUi();
+  }
   catch (e) { popup('Реклама не показалась'); }
 }
 
@@ -1361,7 +1331,7 @@ function startGame(accId, accName) {
   currentRigId = null;
   applyRigLook();
   render(); renderShop(); renderMarket(); renderUpg(); renderProf();
-  updateAdUi(); renderBoost(); renderStars(); renderPromos(); renderFarmAd();
+  updateAdUi(); renderBoost(); renderStars(); renderPromos();
   buildLB(); updateLB();
   fetchLeaderboard(); fetchWeeklyTop(); refStats();
   sendToWorker();
@@ -1377,7 +1347,6 @@ function startGame(accId, accName) {
       applyRigLook();
       render();
       renderBoost();
-      renderFarmAd();
       tick++;
       if (tick % 5 === 0) {
         if (currentPage === 'shop') { renderShop(); renderMarket(); }
