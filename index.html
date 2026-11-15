@@ -164,7 +164,7 @@ window.addEventListener('error',function(e){try{toast('⚠️ '+e.message+' — 
 
 /* ===================== НАСТРОЙКИ ===================== */
 const AG_CFG={blockId:'59627',taskBlockId:'task-59804',debug:false};
-const EARN_CFG={perViewUsd:0.01,perTaskUsd:0.01,baseUsd:0.50,currency:'$'};
+const EARN_CFG={perViewUsd:0.01,perTaskUsd:0.01,baseUsd:0.50,rateRub:82};
 const SUPA_CFG={url:'https://clxewmkuntmgtbovrgqk.supabase.co',key:'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX'};
 const PRIZES_TEXT='🎁 РЕАЛЬНЫЕ ПРИЗЫ уже в ноябре и декабре: деньги на карту, подарочные сертификаты, настоящие ёлочные игрушки, сладкие наборы и ещё много чего — для самых активных игроков! Играйте каждый день — активность решает.';
 let _taskClaimed=false;
@@ -604,7 +604,6 @@ function renderQuests(){
   +'<button class="btn gold" style="margin-top:8px" onclick="claimPig()">🐷 Вскрыть копилку</button></div>';
  return h;
 }
-
 /* ===================== СЮЖЕТ: персонажи, голос во тьме, главы, загадки ===================== */
 function npcFace(k){
  const bg='<defs><linearGradient id="ng_'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#123067"/><stop offset="1" stop-color="#0a1740"/></linearGradient><radialGradient id="ngG_'+k+'" cx="30%" cy="25%" r="80%"><stop offset="0" stop-color="rgba(120,200,255,.35)"/><stop offset="1" stop-color="rgba(120,200,255,0)"/></radialGradient></defs><rect width="64" height="64" rx="14" fill="url(#ng_'+k+')"/><circle cx="20" cy="14" r="14" fill="url(#ngG_'+k+')"/>';
@@ -1099,24 +1098,8 @@ function renderHeader(){
  $('gbtn').disabled=Date.now()<voiceReady;
  $('mbtn').textContent=musOn?'♫ ✓':'♫';
 }
-
-/* ===================== ВКЛАДКИ ===================== */
-let CUR='tree';
-let earnIv=null;
-const TABS=[['tree','🎄 Ёлка'],['shop','🛍 Витрина'],['games','🎮 Игры'],['story','📖 История'],['pass','🎟 Пропуск'],['earn','💸 Заработок'],['inv','🧺 Инвентарь']];
-function switchTab(t){
- CUR=t;stopBalls();stopSled();stopBoss();
- if(earnIv){clearInterval(earnIv);earnIv=null;}
- document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
- const views={tree:renderTree,shop:renderShop,games:renderGames,story:renderStory,pass:renderPass,earn:renderEarn,inv:renderInv};
- try{(views[t]||renderTree)();}
- catch(e){$('main').innerHTML='<div class="card"><h3>Ой, что-то сломалось</h3><div class="small">'+e.message+'</div></div>';}
-}
-function renderTabs(){
- $('tabs').innerHTML=TABS.map(([k,l])=>'<button class="tab'+(k===CUR?' on':'')+'" data-t="'+k+'" onclick="switchTab(\''+k+'\')">'+l+'</button>').join('');
-}
-
-/* ===================== ЁЛКА (как на картинке: ярусы, красная звезда, банты, золотая лента) ===================== */
+/* ===================== ЁЛКА (как на картинке: ярусы, красная звезда, банты, золотая лента, подарки) ===================== */
+function sr(seed){let s=(seed>>>0)||1;return function(){s=(s*1664525+1013904223)>>>0;return s/4294967296}}
 function tierPath(cx,yT,yB,w){
  const dy=yB-yT,n=Math.max(4,Math.round(w/13));
  let p='M '+cx+' '+yT
@@ -1179,7 +1162,6 @@ function ribbonSvg(rich){
  });
  return h;
 }
-  
 function giftsSvg(){
  const boxes=[
   [118,442,44,34,'#e8c46a','#d03a3a'],[162,448,52,40,'#d03a3a','#e8c46a'],
@@ -1203,16 +1185,21 @@ function giftsSvg(){
   +'<path d="M238,454 L258,462 M238,462 L258,454" stroke="#d03a3a" stroke-width="2"/></g>';
  return h;
 }
- const n=Math.min(8,1+Math.floor(S.level/8));
+function garlandSvg(type){
+ const cols=GCOLORS[type]||GCOLORS.classic;
  let h='';
- const gs=[[70,442,26,22,'#d03a3a','#e8c46a'],[112,448,20,18,'#e8c46a','#d03a3a'],[152,444,30,24,'#4da6ff','#e8c46a'],[248,446,22,20,'#ff6b6b','#e8c46a'],[286,440,28,26,'#e8c46a','#d03a3a'],[330,446,18,16,'#7ee8a2','#e8c46a'],[196,450,16,14,'#d03a3a','#fff'],[356,450,14,12,'#b03570','#e8c46a']];
- for(let i=0;i<n;i++){
-  const g=gs[i],x=g[0],y=g[1],w=g[2],hh=g[3],c1=g[4],c2=g[5];
-  h+='<g><rect x="'+(x-w/2)+'" y="'+(y-hh)+'" width="'+w+'" height="'+hh+'" rx="3" fill="'+c1+'" stroke="rgba(0,0,0,.25)"/>'
-   +'<rect x="'+(x-w/2)+'" y="'+(y-hh)+'" width="'+w+'" height="'+(hh/3.2)+'" rx="3" fill="'+c2+'" opacity=".9"/>'
-   +'<rect x="'+(x-2.5)+'" y="'+(y-hh)+'" width="5" height="'+hh+'" fill="'+c2+'" opacity=".9"/>'
-   +'<circle cx="'+x+'" cy="'+(y-hh-3)+'" r="3.5" fill="'+c2+'"/></g>';
- }
+ TIER_GEO.slice(1,7).forEach((g,si)=>{
+  const x1=200-(g.w-6),x2=200+(g.w-6),y=g.yB-16,mx=200,my=y+10,n=8;
+  h+='<path d="M '+x1+' '+y+' Q '+mx+' '+my+' '+x2+' '+y+'" fill="none" stroke="rgba(20,30,20,.55)" stroke-width="2"/>';
+  for(let i=0;i<n;i++){
+   const t=(i+0.5)/n;
+   const qx=(1-t)*(1-t)*x1+2*(1-t)*t*mx+t*t*x2;
+   const qy=(1-t)*(1-t)*y+2*(1-t)*t*my+t*t*y;
+   const c=cols[(i+si)%cols.length];
+   h+='<circle cx="'+qx.toFixed(1)+'" cy="'+qy.toFixed(1)+'" r="4.5" fill="'+c+'" opacity=".25"/>'
+    +'<circle class="gcore" style="animation-delay:'+((i*0.22+si*0.31)%1.8).toFixed(2)+'s" cx="'+qx.toFixed(1)+'" cy="'+qy.toFixed(1)+'" r="2.6" fill="'+c+'"/>';
+  }
+ });
  return h;
 }
 function renderTree(){
@@ -1275,23 +1262,6 @@ function renderTree(){
  renderHeader();
  if(Date.now()>S.sparkAt&&Date.now()<S.sparkAt+90000)spawnSpark();
 }
-function garlandSvg(type){
- const cols=GCOLORS[type]||GCOLORS.classic;
- let h='';
- TIER_GEO.slice(1,7).forEach((g,si)=>{
-  const x1=200-(g.w-6),x2=200+(g.w-6),y=g.yB-16,mx=200,my=y+10,n=8;
-  h+='<path d="M '+x1+' '+y+' Q '+mx+' '+my+' '+x2+' '+y+'" fill="none" stroke="rgba(20,30,20,.55)" stroke-width="2"/>';
-  for(let i=0;i<n;i++){
-   const t=(i+0.5)/n;
-   const qx=(1-t)*(1-t)*x1+2*(1-t)*t*mx+t*t*x2;
-   const qy=(1-t)*(1-t)*y+2*(1-t)*t*my+t*t*y;
-   const c=cols[(i+si)%cols.length];
-   h+='<circle cx="'+qx.toFixed(1)+'" cy="'+qy.toFixed(1)+'" r="4.5" fill="'+c+'" opacity=".25"/>'
-    +'<circle class="gcore" style="animation-delay:'+((i*0.22+si*0.31)%1.8).toFixed(2)+'s" cx="'+qx.toFixed(1)+'" cy="'+qy.toFixed(1)+'" r="2.6" fill="'+c+'"/>';
-  }
- });
- return h;
-}
 function claimPassive(){
  const mins=Math.min((Date.now()-S.passiveLast)/60000,1440);
  if(mins<1){toast('⏳ Доход копится, зайдите позже');return}
@@ -1308,7 +1278,7 @@ function claimDaily(){
 
 /* ===================== ВИТРИНА ===================== */
 function renderShop(){
- let html='<div class="card"><h3>🛍 Витрина Зини</h3><div class="small">Игрушки и гирлянды. Нажмите на карточку, чтобы купить.</div></div>';
+ let html='<div class="card"><h3>🛍 Витрина Зини</h3><div class="small">Нажмите на карточку, чтобы купить. Игрушка попадёт в Мешок (вкладка 🧺), потом повесите на ёлку.</div></div>';
  ['common','rare','epic','legend'].forEach(rar=>{
   html+='<div class="shopSec"><h4><span class="rbadge '+RAR[rar].rb+'">'+RAR[rar].n+'</span></h4><div class="grid">';
   CATALOG[rar].forEach(it=>{
@@ -1331,7 +1301,7 @@ function renderShop(){
 /* ===================== ИГРЫ ===================== */
 function renderGames(){
  stopBalls();stopBoss();
- let html='<div class="card"><h3>🎮 Игры</h3><div class="small">Босс и мини-игры.</div></div>';
+ let html='<div class="card"><h3>🎮 Игры</h3><div class="small">Босс и мини-игры. Награды идут в задания дня и сюжет.</div></div>';
  html+='<div class="card"><h3>❄️ Снежный босс</h3><div class="small">Побед: '+S.bossWins+' · Награда: '+(600+S.level*25)+' 🌰 · Тапайте босса, ловите криты 💥, сбивайте 🧊!</div>'
   +'<div class="hpbar"><div class="hpfill" id="bossHp" style="width:100%"></div></div>'
   +'<div class="hpbar"><div class="hpfill" id="bossPhp" style="width:100%;background:linear-gradient(90deg,#2ee38b,#8fe3b0)"></div></div>'
@@ -1418,7 +1388,7 @@ function renderPass(){
  attachAdsgramTask();
 }
 
-/* ===================== ЗАРАБОТОК (общий) ===================== */
+/* ===================== ЗАРАБОТОК (общий: $, курс 82 ₽, обновление каждую секунду) ===================== */
 function renderEarn(){
  if(earnIv){clearInterval(earnIv);earnIv=null}
  let html='<div class="card"><h3>💸 Общий заработок игры</h3>'
@@ -1427,18 +1397,19 @@ function renderEarn(){
   +'<div class="earnRow">'
   +'<div class="earnCell"><b id="earnViews">'+S.adViews+'</b>📺 ваших показов</div>'
   +'<div class="earnCell"><b id="earnTasks">'+S.adTasks+'</b>📌 ваших заданий</div>'
-  +'</div></div>';
+  +'</div>'
+  +'<div class="small" style="margin-top:8px">Тарифы: 📺 показ — $'+EARN_CFG.perViewUsd.toFixed(2)+' · 📌 задание — $'+EARN_CFG.perTaskUsd.toFixed(2)+' · стартовый баланс — $'+EARN_CFG.baseUsd.toFixed(2)+'</div></div>';
  html+='<div class="card prize"><h3>🎁 Реальные призы уже в ноябре!</h3><div class="small" style="color:#ffe9a8">'+PRIZES_TEXT+'</div><div class="small" style="margin-top:6px">Ваш вклад: 📺 '+S.adViews+' показов · 📌 '+S.adTasks+' заданий · 🔥 '+S.streak+' дней подряд · Ур. '+S.level+'</div></div>';
  html+='<div class="card"><h3>📺 Поддержать игру рекламой</h3>'
   +'<div class="small">Смотрите ролик — общий заработок растёт для всех, вам +300 🌰.</div>'
   +'<button class="btn gold" style="margin-top:10px" onclick="sponsorTask()">📺 Смотреть и получить +300 🌰</button></div>';
- html+='<div class="card"><div class="small">💡 Один счётчик на всех игроков. Точная сумма — в кабинете partner.adsgram.ai.</div></div>';
+ html+='<div class="card"><div class="small">💡 Один счётчик на всех игроков · обновление каждую секунду, пока открыта вкладка · точная сумма — в кабинете partner.adsgram.ai.</div></div>';
  $('main').innerHTML=html;
  updateEarn();
  earnIv=setInterval(function(){
   if(!$('earnGlobal')){clearInterval(earnIv);earnIv=null;return}
   updateEarn();
- },5000);
+ },1000);
 }
 function updateEarn(){
  const el=$('earnGlobal');if(!el)return;
@@ -1448,11 +1419,11 @@ function updateEarn(){
  fetchGlobalEarn().then(g=>{
   const sub=$('earnSub');if(!sub)return;
   let usd;
-  if(g&&g.err){usd=EARN_CFG.baseUsd;sub.textContent='⚠️ '+g.err+' · базовый баланс уже активен';}
+  if(g&&g.err){usd=EARN_CFG.baseUsd;sub.textContent='⚠️ '+g.err+' · базовый баланс активен';}
   else if(!g){usd=EARN_CFG.baseUsd;sub.textContent='⚠️ Общий счётчик недоступен';}
   else{
    usd=EARN_CFG.baseUsd+earnEstimateUsd(g.views,g.tasks);
-   sub.textContent='👁 '+g.views+' показов · 📌 '+g.tasks+' заданий от всех игроков · старт: $0.50';
+   sub.textContent='👁 '+g.views+' показов · 📌 '+g.tasks+' заданий от всех игроков · ≈'+(usd*EARN_CFG.rateRub).toFixed(2)+' ₽ по курсу '+EARN_CFG.rateRub+' ₽/$';
   }
   el.textContent=usd.toFixed(2)+' $';
  });
@@ -1483,7 +1454,23 @@ function renderInv(){
  $('main').innerHTML=html;
 }
 
-/* ===================== ГИРЛЯНДА ШАПКИ, СНЕГ, СТРОКА ===================== */
+/* ===================== ВКЛАДКИ ===================== */
+let CUR='tree';
+let earnIv=null;
+const TABS=[['tree','🎄 Ёлка'],['shop','🛍 Витрина'],['games','🎮 Игры'],['story','📖 История'],['pass','🎟 Пропуск'],['earn','💸 Заработок'],['inv','🧺 Инвентарь']];
+function switchTab(t){
+ CUR=t;stopBalls();stopSled();stopBoss();
+ if(earnIv){clearInterval(earnIv);earnIv=null;}
+ document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+ const views={tree:renderTree,shop:renderShop,games:renderGames,story:renderStory,pass:renderPass,earn:renderEarn,inv:renderInv};
+ try{(views[t]||renderTree)();}
+ catch(e){$('main').innerHTML='<div class="card"><h3>Ой, что-то сломалось</h3><div class="small">'+e.message+'</div></div>';}
+}
+function renderTabs(){
+ $('tabs').innerHTML=TABS.map(([k,l])=>'<button class="tab'+(k===CUR?' on':'')+'" data-t="'+k+'" onclick="switchTab(\''+k+'\')">'+l+'</button>').join('');
+}
+
+/* ===================== ГИРЛЯНДА ШАПКИ, СНЕГ ===================== */
 function garlandTop(){
  const cols=['#ff4d4d','#ffd24d','#4dff88','#4da6ff','#ff4de0','#4de1ff','#ff8c4d'];
  const pts=[[28,10],[72,19],[116,26],[158,30],[200,25],[242,15],[284,11],[326,14],[368,23],[410,30],[452,25],[494,14],[536,8],[572,6]];
