@@ -1937,65 +1937,11 @@ stBuild();
 stOverlay('Лопни снежки', 'Нажми «Играть» — у тебя 25 секунд', false, '⛄');
 renderSt();
 
-// ============================================================
-// МУЗЫКА: «JINGLE BELLS» + бас, голос «Зини дроп!» каждые 5 минут
-// ============================================================
+// ===== Голос «Зини дроп!» каждые 5 минут (мелодии больше нет) =====
 var musicOn = false;
 try { musicOn = localStorage.getItem('zini_music_' + playerId) === 'on'; } catch(e){}
+var ziniVoiceTimer = null;
 
-var musicTimer = null, ziniVoiceTimer = null;
-
-var MELODY = [
-  [659,1],[659,1],[659,2],
-  [659,1],[659,1],[659,2],
-  [659,1],[784,1],[523,1],[587,1],[659,3],
-  [698,1],[698,1],[698,1],[698,2],
-  [698,1],[659,1],[659,1],[659,2],
-  [659,1],[587,1],[587,1],[659,1],[587,2],[392,2],
-  [659,1],[659,1],[659,2],
-  [659,1],[659,1],[659,2],
-  [659,1],[784,1],[523,1],[587,1],[659,3],
-  [698,1],[698,1],[698,1],[698,2],
-  [698,1],[659,1],[659,1],[659,2],
-  [784,1],[784,1],[698,1],[587,1],[523,3]
-];
-var BASS = [131, 196, 165, 196];
-var BEAT = 0.36;
-
-function playNote(freq, dur, vol, type){
-  try {
-    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-    var o = audioCtx.createOscillator(), g = audioCtx.createGain();
-    o.type = type || 'triangle'; o.frequency.value = freq;
-    g.gain.value = 0;
-    o.connect(g); g.connect(audioCtx.destination);
-    var t = audioCtx.currentTime;
-    g.gain.linearRampToValueAtTime(vol || 0.055, t + 0.04);
-    g.gain.exponentialRampToValueAtTime(0.001, t + dur * BEAT * 0.92);
-    o.start(t); o.stop(t + dur * BEAT);
-  } catch(e){}
-}
-function musicLoop(){
-  if (!musicOn) return;
-  var totalMs = 0;
-  MELODY.forEach(function(n, i){
-    var ms = i * BEAT * 1000;
-    totalMs = ms + n[1] * BEAT * 1000;
-    setTimeout(function(){ if (musicOn) playNote(n[0], n[1], 0.055, 'triangle'); }, ms);
-  });
-  var beats = MELODY.reduce(function(a, n){ return a + n[1]; }, 0);
-  var bassCount = Math.ceil(beats / 2);
-  for (var b = 0; b < bassCount; b++) {
-    (function(bb){
-      setTimeout(function(){
-        if (musicOn) playNote(BASS[bb % BASS.length], 2, 0.045, 'sine');
-      }, bb * 2 * BEAT * 1000);
-    })(b);
-  }
-  musicTimer = setTimeout(musicLoop, totalMs + 900);
-}
-
-// --- Голос «Зини дроп!» каждые 5 минут ---
 function speakZiniDrop(){
   if (!musicOn || document.hidden) return;
   sfx(880, .1); setTimeout(function(){ sfx(1174, .1); }, 120); setTimeout(function(){ sfx(1568, .18); }, 240);
@@ -2010,10 +1956,9 @@ function speakZiniDrop(){
     } catch(e){}
   }, 420);
 }
-
 function musicStop(){
   musicOn = false;
-  clearTimeout(musicTimer); clearTimeout(ziniVoiceTimer);
+  clearTimeout(ziniVoiceTimer);
   try { speechSynthesis && speechSynthesis.cancel(); } catch(e){}
   try { localStorage.setItem('zini_music_' + playerId, 'off'); } catch(e){}
   document.getElementById('btn-music').textContent = '🎵';
@@ -2024,7 +1969,6 @@ function musicStart(){
   document.getElementById('btn-music').textContent = '🔇';
   audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
   if (audioCtx.state === 'suspended') audioCtx.resume();
-  musicLoop();
   clearTimeout(ziniVoiceTimer);
   ziniVoiceTimer = setTimeout(function tick(){
     speakZiniDrop();
@@ -2032,8 +1976,8 @@ function musicStart(){
   }, 60 * 1000);
 }
 document.getElementById('btn-music').addEventListener('click', function(){
-  if (musicOn) { musicStop(); toast('🎵 Музыка выключена'); }
-  else { musicStart(); toast('🔇 Музыка включена!'); }
+  if (musicOn) { musicStop(); toast('Голос «Зини дроп» выключен'); }
+  else { musicStart(); toast('Голос «Зини дроп» включён: будет звучать каждые 5 минут'); }
 });
 
 // ===== Старт =====
