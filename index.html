@@ -142,6 +142,10 @@ adsgram-task{--adsgram-task-bg:rgba(255,255,255,.1);--adsgram-task-color:#eef3ff
 </div>
 <div id="toast"></div>
 <script>
+window.addEventListener('error',function(e){
+ try{toast('⚠️ '+e.message+' — строка '+e.lineno);}catch(_){}
+ console.error(e.error||e.message);
+});
 /* ===================== НАСТРОЙКИ ===================== */
 const AG_CFG={blockId:'59627',taskBlockId:'task-59804',debug:false};
 const EARN_CFG={perViewUsd:0.01,perTaskUsd:0.01,fallbackRate:80,currency:'₽'};
