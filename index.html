@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>🎄 Ёлка Зини v14.1</title>
+<title>🎄 Ёлка Зини v14.2</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script>try{Telegram.WebApp.ready();Telegram.WebApp.expand();}catch(e){}</script>
 <style>
@@ -21,7 +21,6 @@ body{background:#060d24;overflow-x:hidden}
 #snow{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
 #snow span{position:absolute;top:-5%;opacity:.4;will-change:transform;animation:fall linear infinite}
 @keyframes fall{to{transform:translate3d(0,108vh,0)}}
-
 header{position:sticky;top:0;z-index:30;background:rgba(10,20,50,.95);padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.12)}
 .hrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .logo{font-size:20px;font-weight:800;color:#ffd86b}
@@ -31,12 +30,10 @@ header{position:sticky;top:0;z-index:30;background:rgba(10,20,50,.95);padding:8p
 .xplabel{font-size:11px;opacity:.85;min-width:64px;text-align:right}
 #gbtn{background:linear-gradient(135deg,#ffd86b,#ff9a3d);border:none;border-radius:14px;color:#402a00;font-weight:800;font-size:15px;padding:6px 12px;cursor:pointer}
 #gbtn:disabled{filter:grayscale(.7);opacity:.55}
-
 #garland{position:sticky;top:0;z-index:29;background:rgba(8,16,44,.4);line-height:0}
 #garland svg{width:100%;height:40px;display:block}
 .gcore{animation:blink 1.8s ease-in-out infinite alternate}
 @keyframes blink{from{opacity:.35}to{opacity:1}}
-
 .ticker{position:relative;z-index:5;overflow:hidden;background:rgba(8,16,44,.75);border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);white-space:nowrap}
 .ticker-inner{display:inline-block;padding:5px 0;font-size:12.5px;color:#aee6ff;animation:tick 50s linear infinite;will-change:transform}
 @keyframes tick{from{transform:translate3d(100vw,0,0)}to{transform:translate3d(-100%,0,0)}}
@@ -55,8 +52,6 @@ main{position:relative;z-index:5;max-width:720px;margin:0 auto;padding:10px 10px
 .btn:disabled{filter:grayscale(.75);opacity:.55}
 .small{font-size:12px;opacity:.8}
 .row{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
-
-/* ==== ЁЛКА ==== */
 #treeScene{position:relative;height:min(80vh,760px);border-radius:20px;overflow:hidden;background:radial-gradient(ellipse at 50% 25%,rgba(90,140,255,.14),transparent 55%),linear-gradient(180deg,#0a1740,#0e2352)}
 #treeSway{transform-box:view-box;transform-origin:200px 26px;animation:tSway 8s ease-in-out infinite alternate}
 @keyframes tSway{from{transform:rotate(-.7deg)}to{transform:rotate(.7deg)}}
@@ -65,18 +60,15 @@ main{position:relative;z-index:5;max-width:720px;margin:0 auto;padding:10px 10px
 @keyframes ornSwing{from{transform:rotate(-2.5deg)}to{transform:rotate(2.5deg)}}
 .tstarG{animation:tw2 2.6s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:center}
 @keyframes tw2{from{transform:scale(.92);opacity:.9}to{transform:scale(1.08);opacity:1}}
-
 .bauble{position:relative;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.85),rgba(255,255,255,0) 40%),radial-gradient(circle at 50% 40%,var(--c1),var(--c2));box-shadow:0 0 10px var(--glow);display:flex;align-items:center;justify-content:center;font-size:13px}
 .r-common{--c1:#7ee8a2;--c2:#1c7a44;--glow:rgba(80,220,140,.5)}
 .r-rare{--c1:#8fc4ff;--c2:#1d4fc0;--glow:rgba(90,160,255,.55)}
 .r-epic{--c1:#d9a0ff;--c2:#7b2fc0;--glow:rgba(190,100,255,.55)}
 .r-legend{--c1:#ffe9a8;--c2:#d08a1a;--glow:rgba(255,200,80,.65)}
 .r-garland{--c1:#ffb0d0;--c2:#c04070;--glow:rgba(255,140,200,.55)}
-
 .treebar{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:8px}
 .chip{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);border-radius:12px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
 .chip.gold{background:linear-gradient(135deg,#ffd86b,#ff9a3d);color:#402a00;border:none}
-
 .rbadge{font-size:10px;font-weight:800;padding:2px 7px;border-radius:8px;display:inline-block}
 .rb-common{background:#2f6b46;color:#dfffe6}.rb-rare{background:#2450b8;color:#dfeaff}
 .rb-epic{background:#6d2bb0;color:#f3dfff}.rb-legend{background:linear-gradient(90deg,#ff9a3d,#ffd86b);color:#402a00}
@@ -87,7 +79,6 @@ main{position:relative;z-index:5;max-width:720px;margin:0 auto;padding:10px 10px
 .oitem .nm{font-size:10.5px;line-height:1.15;margin:5px 0 3px;min-height:24px}
 .oitem .pr{font-size:11px;font-weight:800;color:#ffd86b}
 .shopSec h4{margin:12px 0 8px;font-size:14px}
-
 canvas{display:block;width:100%;border-radius:14px;background:#0b1c44;touch-action:none}
 #ballField{position:relative;height:320px;border-radius:14px;background:#0b1c44;overflow:hidden;border:1px solid rgba(255,255,255,.15)}
 #ballField .pop{position:absolute;font-size:32px;cursor:pointer;user-select:none}
@@ -100,11 +91,9 @@ canvas{display:block;width:100%;border-radius:14px;background:#0b1c44;touch-acti
 .icicle{position:absolute;font-size:24px;cursor:pointer;z-index:5;transition:top 1.8s linear;user-select:none}
 .hpbar{height:14px;background:rgba(255,255,255,.15);border-radius:8px;overflow:hidden;margin:6px 0}
 .hpfill{height:100%;background:linear-gradient(90deg,#ff5f5f,#ffb03d)}
-
 .wheelWrap{position:relative;text-align:center}
 #wheelCv{width:280px;height:280px;margin:0 auto}
 .wheelPtr{position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-size:28px;z-index:2}
-
 .modal{position:fixed;inset:0;z-index:60;background:rgba(2,6,20,.86);display:none;align-items:center;justify-content:center;padding:16px}
 .modal.show{display:flex}
 .mbox{background:linear-gradient(180deg,#16264f,#0d1b3e);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:16px;max-width:420px;width:100%;max-height:80vh;overflow-y:auto}
@@ -127,7 +116,6 @@ adsgram-task{--adsgram-task-bg:rgba(255,255,255,.1);--adsgram-task-color:#eef3ff
 <body>
 <div id="aurora"><i></i><i></i><i></i></div>
 <div id="snow"></div>
-
 <header>
   <div class="hrow">
     <div class="logo">🎄 Ёлка Зини</div>
@@ -143,10 +131,8 @@ adsgram-task{--adsgram-task-bg:rgba(255,255,255,.1);--adsgram-task-color:#eef3ff
 </header>
 <div id="garland"></div>
 <div class="ticker"><div class="ticker-inner" id="tickerInner"></div></div>
-
 <nav id="tabs"></nav>
 <main id="main"></main>
-
 <div class="modal" id="modal"><div class="mbox" id="mbox"></div></div>
 <div class="adsOv" id="adsOv">
   <div style="font-size:44px">📺</div>
@@ -155,12 +141,13 @@ adsgram-task{--adsgram-task-bg:rgba(255,255,255,.1);--adsgram-task-color:#eef3ff
   <div id="adsBar"><div id="adsFill"></div></div>
 </div>
 <div id="toast"></div>
-
 <script>
 /* ===================== НАСТРОЙКИ ===================== */
 const AG_CFG={blockId:'59627',taskBlockId:'task-59804',debug:false};
 const EARN_CFG={perViewUsd:0.01,perTaskUsd:0.01,fallbackRate:80,currency:'₽'};
 let USD_RATE=EARN_CFG.fallbackRate;
+/* Вставь сюда свои данные из Supabase (Project Settings → API) */
+const SUPA_CFG={https://clxewmkuntmgtbovrgqk.supabase.co/rest/v1/:'',sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX:''};
 
 /* ===================== СРЕДА ===================== */
 const IS_TG=!!(window.Telegram&&window.Telegram.WebApp&&window.Telegram.WebApp.initData!=='');
@@ -219,7 +206,6 @@ async function showAdRewarded(onReward){
 }
 function simulateAd(onReward){
  const ov=$('adsOv');ov.classList.add('show');
- $('adsTitle').textContent='Тестовый показ';
  let c=3;const el=$('adsCnt'),fill=$('adsFill');
  el.textContent=c;fill.style.width='0%';
  requestAnimationFrame(()=>fill.style.width='100%');
@@ -275,27 +261,76 @@ TIER_GEO.forEach((g,ti)=>{
 function defState(){return{cones:200,xp:0,level:1,name:'',bag:[],tree:Array(25).fill(null),treeGarland:null,
  wheelFree:3,wheelDay:'',streak:0,streakDay:'',wishDay:'',dailyDay:'',treeBonusDay:'',
  ghUntil:0,stormUntil:0,sparkAt:0,passiveLast:Date.now(),claimed:[],order:null,vidNext:0,taskDoneDay:'',
- adViews:0,adTasks:0,seq:1,catchBest:0,bossWins:0}}
+ adViews:0,adTasks:0,seq:1,catchBest:0,bossWins:0,
+ pig:{saved:0,last:Date.now()},dqDay:'',dqPicks:[],dqP:{},dqDone:{}}}
 let S=defState();
 try{
  let raw=localStorage.getItem('zini_v14_state')||localStorage.getItem('zini_v13_state');
  if(raw)S=Object.assign(defState(),JSON.parse(raw));
 }catch(e){}
-while(S.tree.length<25)S.tree.push(null);
+function normalizeState(){
+ const flat={};
+ Object.keys(CATALOG).forEach(r=>CATALOG[r].forEach(([n,e])=>{flat[n]={e,r}}));
+ if(!Array.isArray(S.bag))S.bag=[];
+ S.bag=S.bag.filter(Boolean).map((o,i)=>{
+  const name=o.name||o.n||'Игрушка';
+  let rar=o.rar||o.r||'common';if(!RAR[rar])rar='common';
+  return{uid:o.uid||('o'+i),name:name,emoji:o.emoji||(flat[name]?flat[name].e:'🔔'),rar:rar,garland:!!o.garland,type:o.type};
+ });
+ if(!Array.isArray(S.tree)||S.tree.length<25)S.tree=(S.tree||[]).slice(0,25);
+ while(S.tree.length<25)S.tree.push(null);
+ S.tree=S.tree.map((o,i)=>{
+  if(!o)return null;
+  let rar=o.rar||o.r||'common';if(!RAR[rar])rar='common';
+  return{uid:o.uid||('t'+i),name:o.name||o.n||'Игрушка',emoji:o.emoji||(flat[o.name||o.n]?flat[o.name||o.n].e:'🔔'),rar:rar};
+ });
+ if(!Array.isArray(S.claimed))S.claimed=[];
+ if(!S.pig||typeof S.pig!=='object')S.pig={saved:0,last:Date.now()};
+ if(!S.seq)S.seq=S.bag.length+1;
+}
+normalizeState();
 if(!S.name&&TG_USER&&(TG_USER.first_name||TG_USER.username)){S.name=(TG_USER.first_name||TG_USER.username).slice(0,16);}
 function save(){localStorage.setItem('zini_v14_state',JSON.stringify(S));}
 const today=()=>new Date().toISOString().slice(0,10);
 
-function registerAdView(){S.adViews++;save();}
-function registerTask(){S.adTasks++;save();}
-function earnEstimateUsd(){return S.adViews*EARN_CFG.perViewUsd+S.adTasks*EARN_CFG.perTaskUsd;}
-function earnEstimateRub(){return earnEstimateUsd()*USD_RATE;}
-
+/* ===================== ОБЩИЙ ЗАРАБОТОК (Supabase) ===================== */
+let supa=null,supaTried=false;
+const globalEarn={views:null,tasks:null};
+function ensureSupa(){
+ if(supa||supaTried)return Promise.resolve(supa);
+ supaTried=true;
+ if(!SUPA_CFG.url||!SUPA_CFG.key)return Promise.resolve(null);
+ return new Promise(res=>{
+  const sc=document.createElement('script');
+  sc.src='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+  sc.onload=()=>{try{supa=window.supabase.createClient(SUPA_CFG.url,SUPA_CFG.key);}catch(e){supa=null;}res(supa);};
+  sc.onerror=()=>res(null);
+  document.head.appendChild(sc);
+ });
+}
+function fetchGlobalEarn(){
+ return ensureSupa().then(cl=>{
+  if(!cl)return null;
+  return cl.from('global_stats').select('ad_views,ad_tasks').eq('id',1).single()
+   .then(r=>{if(r&&r.data){globalEarn.views=r.data.ad_views||0;globalEarn.tasks=r.data.ad_tasks||0;return globalEarn;}return null;})
+   .catch(()=>null);
+ });
+}
+function bumpGlobal(field){
+ return ensureSupa().then(cl=>{
+  if(!cl)return;
+  cl.rpc('bump_stat',{field:field,by:1}).then(()=>{if(CUR==='earn')updateEarn();}).catch(()=>{});
+ });
+}
+function registerAdView(){S.adViews++;save();bumpGlobal('views');}
+function registerTask(){S.adTasks++;save();bumpGlobal('tasks');}
+function earnEstimateUsd(v,t){return (v!==undefined?v:S.adViews)*EARN_CFG.perViewUsd+(t!==undefined?t:S.adTasks)*EARN_CFG.perTaskUsd;}
+function earnEstimateRub(v,t){return earnEstimateUsd(v,t)*USD_RATE;}
 function fetchUsdRate(){
  try{
   fetch('https://www.cbr-xml-daily.ru/daily_json.js')
    .then(r=>r.json())
-   .then(d=>{if(d&&d.Valute&&d.Valute.USD&&d.Valute.USD.Value>0){USD_RATE=d.Valute.USD.Value;if(CUR==='earn')renderEarn();}})
+   .then(d=>{if(d&&d.Valute&&d.Valute.USD&&d.Valute.USD.Value>0){USD_RATE=d.Valute.USD.Value;if(CUR==='earn')updateEarn();}})
    .catch(()=>{});
  }catch(e){}
 }
@@ -309,7 +344,7 @@ function pick(a){return a[rand(0,a.length-1)]}
 function xpNeed(l){return 100+l*50}
 function mult(){let m=1;if(Date.now()<S.ghUntil)m*=2;if(Date.now()<S.stormUntil)m*=2;return m}
 function gain(n,src){
- const m=mult();S.cones+=n*m;
+ const m=mult()*collMult();S.cones+=n*m;
  if(S.order&&S.order.t==='earn')progOrder(n*m);
  addXp(Math.round(n*m/12));
  save();renderHeader();
@@ -320,25 +355,9 @@ function addXp(n){S.xp+=n;
  renderHeader();save();}
 function mmss(ms){const s=Math.ceil(ms/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
 
-/* ===================== КНОПКА «НАЗАД» ДЛЯ МОДАЛКИ ===================== */
-function showBackBtn(){
- try{
-  const bb=Telegram.WebApp.BackButton;
-  bb.onClick(closeModal);bb.show();
- }catch(e){}
- try{
-  document.addEventListener('keydown',escClose);
- }catch(e){}
-}
-function hideBackBtn(){
- try{
-  const bb=Telegram.WebApp.BackButton;
-  bb.offClick(closeModal);bb.hide();
- }catch(e){}
- try{
-  document.removeEventListener('keydown',escClose);
- }catch(e){}
-}
+/* ===================== КНОПКА «НАЗАД» ===================== */
+function showBackBtn(){try{const bb=Telegram.WebApp.BackButton;bb.onClick(closeModal);bb.show();}catch(e){}try{document.addEventListener('keydown',escClose);}catch(e){}}
+function hideBackBtn(){try{const bb=Telegram.WebApp.BackButton;bb.offClick(closeModal);bb.hide();}catch(e){}try{document.removeEventListener('keydown',escClose);}catch(e){}}
 function escClose(e){if(e.key==='Escape')closeModal();}
 
 /* ===================== ГОЛОС ===================== */
@@ -389,16 +408,13 @@ function openBagPicker(slotIdx,garl){
 function doHang(si,bi){
  const o=S.bag[bi];if(!o)return;
  if(si===null){S.treeGarland={name:o.name,type:o.type};}
- else{S.tree[si]=o;if(S.order&&S.order.t==='hang'&&o.rar===S.order.rar)progOrder(1);}
+ else{S.tree[si]=o;dqProg('hang',1);if(S.order&&S.order.t==='hang'&&o.rar===S.order.rar)progOrder(1);}
  S.bag.splice(bi,1);
  save();closeModal();renderTree();
  toast('🎄 «'+o.name+'» — на ёлке!');
  if(!S.tree.some(x=>!x))checkFullTree();
 }
-function closeModal(){
- $('modal').classList.remove('show');
- hideBackBtn();
-}
+function closeModal(){$('modal').classList.remove('show');hideBackBtn();}
 function unhang(si){
  const o=S.tree[si];if(!o)return;
  S.tree[si]=null;S.bag.push(o);save();renderTree();toast('✂️ «'+o.name+'» вернулась в мешок');
@@ -432,6 +448,63 @@ function progOrder(n){
   S.order=null;setTimeout(genOrder,3000);
  }
  save();
+}
+
+/* ===================== КОПИЛКА, ЗАДАНИЯ ДНЯ, КОЛЛЕКЦИИ ===================== */
+function pigTick(){if(!S.pig)S.pig={saved:0,last:Date.now()};const mins=(Date.now()-S.pig.last)/60000;S.pig.saved=Math.min(500,Math.floor(S.pig.saved+mins*S.level));S.pig.last=Date.now();}
+function claimPig(){
+ pigTick();
+ if(S.pig.saved<50){toast('🐷 В копилке '+S.pig.saved+'/500 — копится со временем');return}
+ const c=S.pig.saved;S.pig.saved=0;S.pig.last=Date.now();
+ gain(c,'pig');toast('🐷 Копилка вскрыта: +'+c+' 🌰');
+ if(CUR==='tree')renderTree();
+}
+const DQ=[
+ {id:'ads',n:'Посмотреть 3 видео',need:3,rw:400},
+ {id:'sled',n:'Собрать 20 подарков в санях',need:20,rw:350},
+ {id:'balls',n:'Лопнуть 15 снежков',need:15,rw:350},
+ {id:'hang',n:'Повесить 3 игрушки',need:3,rw:250},
+ {id:'boss',n:'Победить снежного босса',need:1,rw:500}
+];
+function dqEnsure(){
+ if(S.dqDay!==today()){
+  S.dqDay=today();
+  S.dqPicks=[...Array(DQ.length).keys()].sort(()=>Math.random()-0.5).slice(0,3);
+  S.dqP={};S.dqDone={};save();
+ }
+}
+function dqProg(id,n){
+ dqEnsure();
+ const idx=DQ.findIndex(d=>d.id===id);
+ if(idx<0||!S.dqPicks.includes(idx))return;
+ const d=DQ[idx];
+ if(S.dqDone[id])return;
+ S.dqP[id]=(S.dqP[id]||0)+n;
+ if(S.dqP[id]>=d.need){
+  S.dqDone[id]=true;gain(d.rw,'quest');addXp(40);
+  toast('✅ Задание дня «'+d.n+'»: +'+d.rw+' 🌰');
+ }
+ save();
+}
+const SETS=[
+ {n:'Зимний сад',items:['Снежинка','Колокольчик','Свечка'],bonus:0.05},
+ {n:'Лесные друзья',items:['Белка','Олень','Медвежонок'],bonus:0.08},
+ {n:'Звёздный час',items:['Серебристая звезда','Комета','Звезда желания'],bonus:0.12}
+];
+function ownedNames(){const s=new Set();S.bag.concat(S.tree.filter(Boolean)).forEach(o=>s.add(o.name));return s}
+function collMult(){const on=ownedNames();let m=1;SETS.forEach(st=>{if(st.items.every(i=>on.has(i)))m+=st.bonus});return m}
+function renderQuests(){
+ dqEnsure();pigTick();
+ let h='<div class="card"><h3>📋 Задания дня <span class="small">(обновятся завтра)</span></h3>';
+ S.dqPicks.forEach(ix=>{
+  const d=DQ[ix],p=Math.min(S.dqP[d.id]||0,d.need),done=!!S.dqDone[d.id];
+  h+='<div class="small" style="margin:6px 0">'+(done?'✅':'▫️')+' '+d.n+' — '+p+'/'+d.need+' · <b style="color:#ffd86b">+'+d.rw+' 🌰</b>'
+   +'<div class="passbar" style="margin:4px 0 0"><div class="passfill" style="width:'+Math.min(100,100*p/d.need)+'%"></div></div></div>';
+ });
+ h+='</div>';
+ h+='<div class="card"><h3>🐷 Копилка</h3><div class="small">Копит шишки, пока вы спите: '+S.pig.saved+'/500 · темп '+S.level+' 🌰/мин</div>'
+  +'<button class="btn gold" style="margin-top:8px" onclick="claimPig()">🐷 Вскрыть копилку</button></div>';
+ return h;
 }
 
 /* ===================== ЗВЕЗДА ЖЕЛАНИЯ ===================== */
@@ -518,6 +591,7 @@ function startSled(){
   const rw=score*4;gain(rw,'sled');addXp(score*2);
   if(score>S.catchBest)S.catchBest=score;
   if(S.order&&S.order.t==='catch')progOrder(score);
+  dqProg('sled',score);
   toast('🛷 Итог: '+score+' → +'+rw+' 🌰');
   renderGames();
  }
@@ -607,6 +681,7 @@ function startBalls(){
  ballTimer=setInterval(()=>{time--;upd();
   if(time<=0){stopBalls();
    const rw=score*3;gain(rw,'balls');addXp(score*2);
+   dqProg('balls',score);
    toast('⛄ Итог: '+score+' → +'+rw+' 🌰');
    renderGames();
   }},1000);
@@ -680,6 +755,7 @@ function bossEnd(win){
  const box=$('bossBox');if(box)box.querySelectorAll('.icicle').forEach(e=>e.remove());
  if(win){
   const rw=600+S.level*25;gain(rw,'boss');addXp(130);S.bossWins++;
+  dqProg('boss',1);
   toast('🏆 Босс повержен! +'+rw+' 🌰');
  }else toast('❄️ Босс выдержал… Тапайте быстрее и сбивайте 🧊!');
  renderGames();
@@ -727,7 +803,7 @@ function renderTabs(){
  $('tabs').innerHTML=TABS.map(([k,l])=>'<button class="tab'+(k===CUR?' on':'')+'" data-t="'+k+'" onclick="switchTab(\''+k+'\')">'+l+'</button>').join('');
 }
 
-/* ===================== ЁЛКА: реалистичная ель ===================== */
+/* ===================== ЁЛКА: игольчатая ель ===================== */
 function tierPath(cx,yT,yB,w){
  const teeth=6,step=w/teeth,dy=yB-yT;
  let p='M '+cx+' '+yT
@@ -748,12 +824,38 @@ function tierSnowR(cx,yT,yB,w){
 function tierSnowL(cx,yT,yB,w){
  return 'M '+cx+' '+(yT+3)+' Q '+(cx-w*0.5).toFixed(1)+' '+(yT+(yB-yT)*0.12+4).toFixed(1)+' '+(cx-w).toFixed(1)+' '+(yB-2).toFixed(1);
 }
+function sr(seed){let s=(seed>>>0)||1;return function(){s=(s*1664525+1013904223)>>>0;return s/4294967296}}
+function needleTier(cx,yT,yB,w,si){
+ const R=sr(si*7349+11);
+ const base=si%2?'#0c5230':'#0f6038';
+ let h='<path d="'+tierPath(cx,yT,yB,w)+'" fill="'+base+'"/>';
+ [-1,1].forEach(sd=>{
+  const fr=Math.max(4,Math.round(w/14));
+  for(let f=0;f<fr;f++){
+   const t=(f+0.4)/(fr+0.2);
+   const bx=cx+sd*w*t,by=yT+(yB-yT)*t*0.9;
+   const tw=7+R()*7;
+   const ex=bx+sd*tw*0.8,ey=by+tw*0.45;
+   h+='<line x1="'+bx.toFixed(1)+'" y1="'+by.toFixed(1)+'" x2="'+ex.toFixed(1)+'" y2="'+ey.toFixed(1)+'" stroke="#1a6f40" stroke-width="1.4"/>';
+   const nn=4+Math.floor(R()*3);
+   for(let k=0;k<nn;k++){
+    const tt=0.25+0.75*(k/(nn-1||1));
+    const px=bx+sd*tw*0.8*tt,py=by+tw*0.45*tt;
+    const nl=4+R()*4;
+    const nx=px+sd*nl*(0.5+R()*0.5),ny=py+nl;
+    h+='<line x1="'+px.toFixed(1)+'" y1="'+py.toFixed(1)+'" x2="'+nx.toFixed(1)+'" y2="'+ny.toFixed(1)+'" stroke="'+['#2fa763','#38b96f','#2c9a5a','#48c77e'][Math.floor(R()*4)]+'" stroke-width="1.1" opacity="0.9"/>';
+   }
+   if(R()<0.4)h+='<circle cx="'+ex.toFixed(1)+'" cy="'+(ey+1).toFixed(1)+'" r="1.6" fill="rgba(240,248,255,.85)"/>';
+  }
+ });
+ h+='<path d="'+tierSnowR(cx,yT,yB,w)+'" stroke="rgba(240,248,255,.8)" stroke-width="3" fill="none" stroke-linecap="round"/>'
+  +'<path d="'+tierSnowL(cx,yT,yB,w)+'" stroke="rgba(240,248,255,.8)" stroke-width="3" fill="none" stroke-linecap="round"/>';
+ return h;
+}
 const BGLOW={common:'#3fd97e',rare:'#5f9dff',epic:'#c07bff',legend:'#ffcf5e'};
-
 function renderTree(){
  const defs='<defs>'
   +'<linearGradient id="tg0" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1f9254"/><stop offset="1" stop-color="#0b5230"/></linearGradient>'
-  +'<linearGradient id="tg1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#27a462"/><stop offset="1" stop-color="#094726"/></linearGradient>'
   +'<linearGradient id="trunkG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5d3a17"/><stop offset=".5" stop-color="#8a5a2b"/><stop offset="1" stop-color="#4d2f12"/></linearGradient>'
   +'<radialGradient id="bg-common" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#d9ffe9"/><stop offset=".45" stop-color="#4fd98a"/><stop offset="1" stop-color="#136b3d"/></radialGradient>'
   +'<radialGradient id="bg-rare" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#e2f2ff"/><stop offset=".45" stop-color="#5f9dff"/><stop offset="1" stop-color="#1c3f9e"/></radialGradient>'
@@ -765,12 +867,7 @@ function renderTree(){
  for(let i=0;i<14;i++)sky+='<circle cx="'+rand(8,392)+'" cy="'+rand(6,110)+'" r="'+(rand(6,13)/10).toFixed(1)+'" fill="#fff" opacity="'+(0.25+Math.random()*0.5).toFixed(2)+'"/>';
  sky+='</g>';
  let tiers='';
- TIER_GEO.forEach((g,i)=>{
-  const d=tierPath(200,g.yT,g.yB,g.w);
-  tiers+='<path d="'+d+'" fill="url(#tg'+(i%2)+')" stroke="rgba(0,0,0,.28)" stroke-width="2"/>'
-   +'<path d="'+tierSnowR(200,g.yT,g.yB,g.w)+'" stroke="rgba(240,248,255,.8)" stroke-width="3.5" fill="none" stroke-linecap="round"/>'
-   +'<path d="'+tierSnowL(200,g.yT,g.yB,g.w)+'" stroke="rgba(240,248,255,.8)" stroke-width="3.5" fill="none" stroke-linecap="round"/>';
- });
+ TIER_GEO.forEach((g,i)=>{tiers+=needleTier(200,g.yT,g.yB,g.w,i);});
  let gar=S.treeGarland?garlandSvg(S.treeGarland.type):'';
  let orns='';
  SLOTS.forEach((p,i)=>{
@@ -811,7 +908,8 @@ function renderTree(){
   +'<span class="chip" onclick="claimPassive()">🌱 Пассивный доход</span>'
   +'<span class="chip gold" onclick="claimDaily()">'+(S.dailyDay===today()?'🎁 Сундук забран ✓':'🎁 Сундук дня')+'</span>'
   +garChip+'</div>';
- html+='<div class="card"><div class="small">🌟 Золотой час ×2 · ❄️ Буря ×2 · ✨ Ловите искру · 🔥 Огонь подряд: день '+S.streak+' · 🎄 На ёлке: '+S.tree.filter(Boolean).length+'/25 игрушек'+(S.treeGarland?' + гирлянда':'')+'</div></div>';
+ html+=renderQuests();
+ html+='<div class="card"><div class="small">🌟 Золотой час ×2 · ❄️ Буря ×2 · ✨ Ловите искру · 🔥 Огонь подряд: день '+S.streak+' · 🎄 На ёлке: '+S.tree.filter(Boolean).length+'/25 игрушек'+(S.treeGarland?' + гирлянда':'')+' · Коллекции: ×'+collMult().toFixed(2)+'</div></div>';
  $('main').innerHTML=html;
  renderHeader();
  if(Date.now()>S.sparkAt&&Date.now()<S.sparkAt+90000)spawnSpark();
@@ -895,9 +993,10 @@ function renderGames(){
 /* ===================== ПРОПУСК ===================== */
 function sponsorTask(){
  showAdRewarded(()=>{
-  gain(300,'sponsor');addXp(40);
+  gain(300,'sponsor');addXp(40);dqProg('ads',1);
   toast('✨ Видео просмотрено! +300 🌰');
   if(CUR==='pass')renderPass();
+  if(CUR==='earn')updateEarn();
  });
 }
 function vidBonus(){
@@ -939,7 +1038,7 @@ function renderPass(){
   +'<button class="btn blue" style="margin-top:10px" onclick="vidBonus()">📺 Смотреть и получить</button></div>';
  if(AG_CFG.taskBlockId){
   html+='<div class="card"><h3>📌 Задание на подписку (Task)</h3>'
-   +'<div class="small">Подпишитесь на канал рекламодателя — получите +'+TASK_REWARD+' 🌰 (раз в день). Это отдельный блок task-59804.</div>'
+   +'<div class="small">Подпишитесь на канал рекламодателя — получите +'+TASK_REWARD+' 🌰 (раз в день). Блок '+AG_CFG.taskBlockId+'.</div>'
    +'<adsgram-task id="agTask" block-id="'+AG_CFG.taskBlockId+'" data-block-id="'+AG_CFG.taskBlockId+'"'+(AG_CFG.debug?' debug="true"':'')+'></adsgram-task>';
   if(S.taskDoneDay===today())html+='<div class="small" style="margin-top:6px">✔ Задание на сегодня выполнено — приходите завтра</div>';
   html+='</div>';
@@ -954,28 +1053,38 @@ function renderPass(){
  attachAdsgramTask();
 }
 
-/* ===================== ЗАРАБОТОК ===================== */
+/* ===================== ЗАРАБОТОК (общий) ===================== */
 let earnIv=null;
 function renderEarn(){
  if(earnIv){clearInterval(earnIv);earnIv=null}
- const est=earnEstimateRub();
- let html='<div class="card"><h3>💸 Игра заработала на вашей активности</h3>'
-  +'<div class="bigNum" id="earnNum">'+est.toFixed(2)+' '+EARN_CFG.currency+'</div>'
-  +'<div class="small" style="margin-top:4px">обновляется каждую секунду · оценка · курс ЦБ: $1 = '+USD_RATE.toFixed(2)+' ₽</div>'
+ let html='<div class="card"><h3>💸 Общий заработок игры</h3>'
+  +'<div class="bigNum" id="earnGlobal">…</div>'
+  +'<div class="small" id="earnSub" style="margin-top:4px">загрузка общего счётчика…</div>'
   +'<div class="earnRow">'
-  +'<div class="earnCell"><b>'+S.adViews+'</b>📺 показов рекламы</div>'
-  +'<div class="earnCell"><b>'+S.adTasks+'</b>📌 заданий выполнено</div>'
-  +'</div>'
-  +'<div class="small" style="margin-top:10px">Ставка: $0.01 за просмотр и $0.01 за задание. В рублях — по актуальному курсу ЦБ РФ.</div></div>';
+  +'<div class="earnCell"><b id="earnViews">'+S.adViews+'</b>📺 ваших показов</div>'
+  +'<div class="earnCell"><b id="earnTasks">'+S.adTasks+'</b>📌 ваших заданий</div>'
+  +'</div></div>';
  html+='<div class="card"><h3>📺 Поддержать игру рекламой</h3>'
-  +'<div class="small">Смотрите ролик — игра зарабатывает, вы получаете шишки.</div>'
+  +'<div class="small">Смотрите ролик — общий заработок растёт для всех, вам +300 🌰.</div>'
   +'<button class="btn gold" style="margin-top:10px" onclick="sponsorTask()">📺 Смотреть и получить +300 🌰</button></div>';
- html+='<div class="card"><div class="small">💡 Точная сумма дохода — в кабинете partner.adsgram.ai. В игре показывается оценка.</div></div>';
+ html+='<div class="card"><div class="small">💡 Один счётчик на всех игроков. Точная сумма — в кабинете partner.adsgram.ai.</div></div>';
  $('main').innerHTML=html;
- earnIv=setInterval(()=>{
-  const el=$('earnNum');if(!el){clearInterval(earnIv);earnIv=null;return}
-  el.textContent=earnEstimateRub().toFixed(2)+' '+EARN_CFG.currency;
- },1000);
+ updateEarn();
+ earnIv=setInterval(updateEarn,5000);
+}
+function updateEarn(){
+ const el=$('earnGlobal');if(!el)return;
+ el.textContent=earnEstimateRub().toFixed(2)+' '+EARN_CFG.currency;
+ const ev=$('earnViews'),et=$('earnTasks');
+ if(ev)ev.textContent=S.adViews;
+ if(et)et.textContent=S.adTasks;
+ fetchGlobalEarn().then(g=>{
+  const sub=$('earnSub');if(!sub)return;
+  if(!g){sub.textContent=SUPA_CFG.url?'Не удалось получить общий счётчик':'⚠️ Заполните SUPA_CFG в коде — и счётчик станет общим для всех';return;}
+  const usd=earnEstimateUsd(g.views,g.tasks);
+  el.textContent=(usd*USD_RATE).toFixed(2)+' '+EARN_CFG.currency;
+  sub.textContent='👁 '+g.views+' показов · 📌 '+g.tasks+' заданий от всех игроков · курс ЦБ: $1 = '+USD_RATE.toFixed(2)+' ₽';
+ });
 }
 
 /* ===================== ИНВЕНТАРЬ ===================== */
@@ -984,6 +1093,7 @@ function renderInv(){
  if(!S.bag.length)html+='<div class="small">Пусто. Купите игрушки в Витрине!</div>';
  html+='<div class="grid">';
  S.bag.forEach(o=>{
+  const R=RAR[o.rar]||RAR.common;
   if(o.garland){
    const cols=GCOLORS[o.type]||GCOLORS.classic;
    let mini='<div style="display:flex;gap:3px;justify-content:center;margin:6px 0">';
@@ -991,24 +1101,22 @@ function renderInv(){
    mini+='</div>';
    html+='<div class="oitem">'+mini+'<div class="nm">'+o.name+'</div><span class="rbadge rb-garland">Гирлянда</span></div>';
   }else{
-   html+='<div class="oitem"><div class="bauble '+RAR[o.rar].cls+'" style="margin:0 auto;width:42px;height:42px;font-size:19px">'+o.emoji+'</div><div class="nm">'+o.name+'</div><span class="rbadge '+RAR[o.rar].rb+'">'+RAR[o.rar].n+'</span></div>';
+   html+='<div class="oitem"><div class="bauble '+R.cls+'" style="margin:0 auto;width:42px;height:42px;font-size:19px">'+o.emoji+'</div><div class="nm">'+o.name+'</div><span class="rbadge '+R.rb+'">'+R.n+'</span></div>';
   }
  });
  html+='</div></div>';
  if(S.order){
-  const txt={hang:'Повесьте '+Math.min(S.order.done,S.order.n)+'/'+S.order.n+' игрушек редкости «'+RAR[S.order.rar].n+'»',
+  const otxt={hang:'Повесьте '+Math.min(S.order.done,S.order.n)+'/'+S.order.n+' игрушек редкости «'+(RAR[S.order.rar]?RAR[S.order.rar].n:'любые')+'»',
    earn:'Заработайте '+Math.min(S.order.done,S.order.n)+'/'+S.order.n+' 🌰',
-   catch:'Поймайте '+Math.min(S.order.done,S.order.n)+'/'+S.order.n+' предметов в «Поймай в сани»'}[S.order.t];
-  html+='<div class="card"><h3>🎅 Дед Мороз с заказом</h3><div class="small">«'+txt+'»</div>'
+   catch:'Поймайте '+Math.min(S.order.done,S.order.n)+'/'+S.order.n+' предметов в «Поймай в сани»'}[S.order.t]||'Выполняйте заказ';
+  html+='<div class="card"><h3>🎅 Дед Мороз с заказом</h3><div class="small">«'+otxt+'»</div>'
    +'<div class="passbar"><div class="passfill" style="width:'+Math.min(100,100*S.order.done/S.order.n)+'%"></div></div>'
    +'<div class="row"><div class="small">Награда: <b>'+S.order.reward+' 🌰</b></div><button class="btn" style="width:auto" onclick="genOrder();renderInv()">Другой заказ</button></div></div>';
- }else{
-  html+='<div class="card"><h3>🎅 Дед Мороз с заказом</h3><div class="small">Заказ уже в пути…</div><button class="btn" onclick="genOrder();renderInv()">Получить заказ</button></div>';
  }
  const canWish=S.wishDay!==today()&&hasWishStar();
  html+='<div class="card"><h3>💫 Звезда желания</h3><div class="small">'+(hasWishStar()?'Звезда у вас! Раз в день исполняет желание.':'Купите «Звезду желания» в Витрине.')+'</div>'
   +'<button class="btn'+(canWish?' gold':'')+'" '+(canWish?'':'disabled')+' style="margin-top:8px" onclick="makeWish()">Загадать желание</button></div>';
- html+='<div class="card"><h3>📈 Статистика</h3><div class="small">Уровень: '+S.level+'/100 · 🔥 '+S.streak+' · Побед над боссом: '+S.bossWins+' · Рекорд саней: '+S.catchBest+' · 📺 Реклам: '+S.adViews+'</div></div>';
+ html+='<div class="card"><h3>📈 Статистика</h3><div class="small">Уровень: '+S.level+'/100 · 🔥 '+S.streak+' · Побед над боссом: '+S.bossWins+' · Рекорд саней: '+S.catchBest+' · 📺 Реклам: '+S.adViews+' · Коллекции: ×'+collMult().toFixed(2)+'</div></div>';
  $('main').innerHTML=html;
 }
 
@@ -1046,12 +1154,13 @@ const TICKER_MSGS=[
  '🧊 Тапайте льдинки в бою с боссом — это +2 секунды',
  '🧲 Магнит притянет подарки прямо к санкам',
  '💰 Каждое видео — +300 🌰 по заданию спонсора, без лимита',
+ '🐷 Копилка копит шишки, пока вы спите',
+ '📋 Три задания дня — каждый день новые',
+ '🏆 Собирайте коллекции — постоянный бонус к наградам',
+ '💸 Общий заработок игры растёт от каждого видео',
  '💫 Звезда желания исполняет желание раз в день',
- '📌 Подпишитесь на канал — +500 🌰 от рекламодателя',
  '🌰 Пассивный доход копится даже пока вы спите',
- '🏆 Нарядите все 25 веток — бонус 500 🌰',
- '❄️ Снежная буря — награды ×2, успевайте зарабатывать!',
- '🌟 Чем больше вашей активности — тем скорее настоящие призы!'
+ '❄️ Снежная буря — награды ×2, успевайте!'
 ];
 
 /* ===================== ТИК ===================== */
@@ -1066,6 +1175,7 @@ setInterval(()=>{
  garlandTop();snowfall();renderTabs();
  $('tickerInner').textContent=TICKER_MSGS.join('   ✦   ')+'   ✦   ';
  fetchUsdRate();
+ fetchGlobalEarn();
  if(S.streakDay!==today()){
   const yest=new Date(Date.now()-86400000).toISOString().slice(0,10);
   if(S.streakDay===yest){S.streak++;gain(50+S.streak*25,'streak');toast('🔥 Огонь подряд: день '+S.streak+'! +'+(50+S.streak*25)+' 🌰');}
