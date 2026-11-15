@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Ёлка Зини 🎄 v6.5</title>
+<title>Ёлка Зини 🎄 v6.6</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://sad.adsgram.ai/js/sad.min.js"></script>
 <style>
 :root{--bg:#0b1224;--card:rgba(22,30,55,.75);--card2:rgba(35,45,80,.7);--acc:#c6ff5e;--acc2:#4ade80;--mut:#9aa7c7;--red:#ff6b6b;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
@@ -113,6 +114,28 @@ h3{margin:4px 0 12px;font-size:18px;}
 .pass-done{opacity:.55;}
 .price-big{font-size:32px;font-weight:800;color:#fff;}
 #pass-code-input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(198,255,94,.4);background:rgba(10,16,34,.8);color:#fff;font-size:14px;box-sizing:border-box;margin-bottom:8px;}
+
+/* ===== Карточка задания спонсора (AdsGram Task) ===== */
+.task{
+  --adsgram-task-font-size:16px;
+  --adsgram-task-icon-size:50px;
+  --adsgram-task-button-width:74px;
+  --adsgram-task-icon-border-radius:10px;
+  display:block;
+  width:100%;
+  max-width:360px;
+  margin:0 auto 12px;
+  padding:10px 14px 10px 10px;
+  border-radius:14px;
+  background:var(--card);
+  border:1px solid rgba(198,255,94,.3);
+  color:#fff;
+  backdrop-filter:blur(6px);
+}
+.task__reward{margin:5px 0 0 0;font-size:14px;color:var(--acc);font-weight:700;}
+.task__button{margin-left:0;border-radius:10px;font-weight:800;}
+.task__button_claim{background-color:var(--acc);color:#0a0a10;}
+.task__button_done{background-color:var(--acc2);color:#0a0a10;}
 </style>
 </head>
 <body>
@@ -163,6 +186,13 @@ h3{margin:4px 0 12px;font-size:18px;}
   </section>
 
   <section id="screen-mini" class="screen">
+    <h3>📋 Задание спонсора</h3>
+    <adsgram-task data-block-id='task-59804' class='task'>
+      <p slot='reward' class='task__reward'>🌰 300</p>
+      <div slot='button' class='task__button'>выполнить</div>
+      <div slot='claim' class='task__button task__button_claim'>получить</div>
+      <div slot='done' class='task__button task__button_done'>готово</div>
+    </adsgram-task>
     <h3>🎮 Поймай подарок</h3>
     <div id="mg-host"></div>
     <h3>🎯 Снежный тир</h3>
@@ -280,7 +310,11 @@ try { supabase = window.supabase.createClient(SB_URL, SB_KEY); } catch(e){ conso
 var WATER_CD = 2 * 3600 * 1000;
 var SHAKE_CD = 4 * 3600 * 1000;
 var PASSIVE_CAP_H = 24;
-var ADS_TAG = null;
+
+// ===== AdsGram =====
+var ADS_TAG = '59627';        // rewarded-блок: бонус за рекламу
+var TASK_BLOCK_ID = 'task-59804'; // блок «Задание»: подписка/переход у спонсора
+var TASK_REWARD = 300;        // награда игроку за задание
 var AD_BONUS = 500;
 
 var ORNAMENTS = {
@@ -694,7 +728,12 @@ function doAdBonus(){
   if (ADS_TAG && window.AdsGram) {
     try {
       var ad = window.AdsGram.init({ blockId: ADS_TAG });
-      ad.show().then(function(){ grantAdBonus(); }).catch(function(){ toast('Реклама недоступна, попробуй позже'); });
+      ad.show()
+        .then(function(result){
+          if (result && result.done === false) { toast('Досмотри рекламу до конца, чтобы получить бонус 🎁'); return; }
+          grantAdBonus();
+        })
+        .catch(function(){ grantAdBonus(); }); // рекламы не нашлось — игрока не злим, награду всё равно выдаём
     } catch(e){ grantAdBonus(); }
   } else {
     grantAdBonus();
@@ -707,6 +746,20 @@ function grantAdBonus(){
   markDirty(); renderAll(); renderPass();
   toast('🎁 Бонус получен: +' + fmt(AD_BONUS) + ' 🌰');
 }
+
+// ===== Награда за задание спонсора (AdsGram Task) =====
+function grantTaskReward(){
+  state.pinecones += TASK_REWARD;
+  state.weekly_pinecones += TASK_REWARD;
+  markDirty(); renderAll(); renderPass();
+  toast('✅ Задание спонсора выполнено: +' + fmt(TASK_REWARD) + ' 🌰');
+}
+(function initTask(){
+  var taskEl = document.querySelector('adsgram-task');
+  if (!taskEl) return;
+  taskEl.addEventListener('reward', function(){ grantTaskReward(); });
+  taskEl.addEventListener('onError', function(){ console.warn('AdsGram task: ошибка загрузки'); });
+})();
 
 // ============================================================
 // НОЯБРЬСКИЙ ПРОПУСК: СБП через админа, активация кодом, задания
