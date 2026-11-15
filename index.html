@@ -398,6 +398,22 @@ var WATER_CD = 30 * 60 * 1000;
 var SHAKE_CD = 60 * 60 * 1000;
 var KNOCK_CD = 10 * 60 * 1000;
 var PASSIVE_CAP_H = 24;
+function loadAdsSdk(){
+  return new Promise(function(res, rej){
+    if (window.AdsGram) return res();
+    var s = document.createElement('script');
+    s.src = 'https://sad.adsgram.ai/js/sad.min.js';
+    s.onload = res;
+    s.onerror = function(){ rej(new Error('AdsGram не загрузился')); };
+    document.head.appendChild(s);
+  });
+}
+function showAdRewarded(){
+  return loadAdsSdk().then(function(){
+    if (!adController) adController = window.AdsGram.init({ blockId: REWARD_BLOCK, debug: false });
+    return adController.show();
+  });
+}
 
 // ===== AdsGram =====
 var REWARD_BLOCK = '59627';
@@ -1205,10 +1221,19 @@ function adBonusTaken(){
   } catch(e){ return false; }
 }
 function doAdBonus(){
-  var btn = document.getElementById('btn-ad-bonus');
-  if (adBonusTaken()) { toast('Бонус уже забран сегодня — приходи завтра! 🎁'); return; }
-  if (!adController) { grantAdBonus(); return; }
-  btn.disabled = true; btn.innerHTML = '📺 Загружаю рекламу…';
+    btn.disabled = true; btn.innerHTML = '📺 Загружаю рекламу…';
+  showAdRewarded()
+    .then(function(result){
+      btn.disabled = false; btn.innerHTML = '🎁 Бонус за рекламу: +500 ' + PINE + ' (раз в день)';
+      if (result && result.done === false) { toast('Досмотри рекламу до конца 🎁'); return; }
+      grantAdBonus();
+    })
+    .catch(function(err){
+      btn.disabled = false; btn.innerHTML = '🎁 Бонус за рекламу: +500 ' + PINE + ' (раз в день)';
+      console.warn('AdsGram:', err && err.message);
+      toast('Реклама пока недоступна — попробуй через минуту 🎁');
+    });
+
   adController.show()
     .then(function(result){
       btn.disabled = false; btn.innerHTML = '🎁 Бонус за рекламу: +500 ' + PINE + ' (раз в день)';
