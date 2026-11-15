@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Ёлка Зини 🎄 v6.4</title>
+<title>Ёлка Зини 🎄 v6.5</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -28,10 +28,17 @@ header{display:flex;justify-content:space-between;align-items:center;margin-bott
 .screen{display:none;}
 .screen.active{display:block;}
 
-.tree-stage{text-align:center;background:var(--card);border-radius:16px;padding:24px 12px;margin-bottom:12px;backdrop-filter:blur(6px);}
-#tree-emoji{font-size:76px;line-height:1;}
+.tree-stage{text-align:center;background:var(--card);border-radius:16px;padding:24px 12px 16px;margin-bottom:12px;backdrop-filter:blur(6px);position:relative;overflow:hidden;}
+.tree-glow{position:absolute;left:50%;top:44%;width:180px;height:180px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(198,255,94,.18),transparent 70%);pointer-events:none;}
+#tree-emoji{font-size:76px;line-height:1;display:inline-block;animation:sway 4s ease-in-out infinite;position:relative;}
+@keyframes sway{0%,100%{transform:rotate(-3deg);}50%{transform:rotate(3deg);}}
 #tree-title{margin-top:8px;font-weight:800;font-size:18px;color:var(--acc);}
 #tree-sub{font-size:13px;color:var(--mut);margin-top:4px;}
+.ornament-row{display:flex;justify-content:center;gap:8px;min-height:26px;margin-top:10px;flex-wrap:wrap;}
+.orn-dot{text-align:center;font-size:18px;}
+.orn-dot span{display:block;font-size:9px;color:var(--mut);max-width:64px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.gifts-line{font-size:12px;color:var(--mut);margin-top:8px;}
+.streak-line{font-size:13px;color:#ffd75e;text-align:center;margin-top:6px;font-weight:700;}
 
 .card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;backdrop-filter:blur(6px);}
 .bar-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:14px;}
@@ -83,6 +90,8 @@ h3{margin:4px 0 12px;font-size:18px;}
 .hud-l{position:absolute;top:8px;left:10px;font-size:15px;font-weight:800;color:var(--red);z-index:3;}
 .hud-c{position:absolute;top:8px;left:50%;transform:translateX(-50%);font-size:15px;font-weight:800;color:#e0f4ff;z-index:3;}
 .overlay{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,14,30,.85);text-align:center;padding:16px;z-index:5;}
+.game-avatar{width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:44px;margin-bottom:14px;background:linear-gradient(135deg,#38bdf8,#c084fc);box-shadow:0 0 24px rgba(125,211,252,.4);animation:apulse 2s ease-in-out infinite;}
+@keyframes apulse{0%,100%{transform:scale(1);box-shadow:0 0 20px rgba(125,211,252,.35);}50%{transform:scale(1.07);box-shadow:0 0 36px rgba(192,132,252,.55);}}
 .st-target{position:absolute;font-size:34px;cursor:pointer;z-index:2;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));animation:pop .3s ease;}
 @keyframes pop{from{transform:scale(.3);}to{transform:scale(1);}}
 
@@ -125,9 +134,13 @@ h3{margin:4px 0 12px;font-size:18px;}
 <main>
   <section id="screen-tree" class="screen active">
     <div class="tree-stage">
+      <div class="tree-glow"></div>
       <div id="tree-emoji">🌱</div>
       <div id="tree-title">Росток</div>
       <div id="tree-sub">Полей и стряхни снег, чтобы ёлка росла</div>
+      <div id="ornament-row" class="ornament-row"></div>
+      <div id="gifts-line" class="gifts-line"></div>
+      <div id="streak-line" class="streak-line"></div>
     </div>
     <div class="card">
       <div class="bar-row"><span>💧 Влажность</span><div class="bar-bg"><div id="bar-moist" class="bar-fill"></div></div></div>
@@ -232,10 +245,8 @@ var SB_KEY = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX';
 // =========================================================
 
 // ===== НАСТРОЙКИ ПРОПУСКА =====
-var ADMIN_CONTACT = 'zinidropadmin'; // юз админа в Telegram — реквизиты СБП берут у него
+var ADMIN_CONTACT = 'zinidropadmin';
 
-// 10 кодов на первое время. Продал пропуск — выдал игроку один код.
-// Коды закончатся — впиши новые через запятую.
 var PASS_CODES = [
   'ZINI-7K2M-NOV1',
   'ZINI-9XQ4-NOV2',
@@ -249,10 +260,10 @@ var PASS_CODES = [
   'ZINI-1CXN-NOV10'
 ];
 
-var PASS_BASE_PRICE = 199;            // стартовая цена, ₽
-var PASS_WEEKLY_INCREASE = 100;       // насколько дорожает каждую неделю, ₽
-var PASS_START_STR = '2026-11-16';    // старт продаж: 16 ноября
-var PASS_END_STR = '2026-12-01';      // действует до 30 ноября включительно
+var PASS_BASE_PRICE = 199;
+var PASS_WEEKLY_INCREASE = 100;
+var PASS_START_STR = '2026-11-16';
+var PASS_END_STR = '2026-12-01';
 var PASS_SEASON_NAME = 'Ноябрьский пропуск · 16–30 ноября';
 var PASS_PAYMENT_NOTE = 'Оплата — только переводом по СБП. Реквизиты выдаёт админ @' + ADMIN_CONTACT + '.';
 
@@ -269,7 +280,7 @@ try { supabase = window.supabase.createClient(SB_URL, SB_KEY); } catch(e){ conso
 var WATER_CD = 2 * 3600 * 1000;
 var SHAKE_CD = 4 * 3600 * 1000;
 var PASSIVE_CAP_H = 24;
-var ADS_TAG = null; // ID блока AdsGram — впиши, когда подключишь рекламу
+var ADS_TAG = null;
 var AD_BONUS = 500;
 
 var ORNAMENTS = {
@@ -304,7 +315,8 @@ var state = {
   moisture:0, snow:0,
   last_watered:0, last_shake:0, last_collect:0,
   weekly_pinecones:0, week_key:'', total_drops:0,
-  pass_active:false, pass_until:0
+  pass_active:false, pass_until:0,
+  streak:0, last_visit:'', recent_drops:[]
 };
 
 function fmt(n){ return String(Math.floor(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
@@ -333,7 +345,7 @@ function getCurrentPassPrice(){
   var now = new Date();
   if (now < start) now = start;
   var daysPassed = Math.ceil((now - start) / 86400000);
-  var weeksPassed = Math.floor((daysPassed - 1) / 7); // неделя 1 = базовая цена
+  var weeksPassed = Math.floor((daysPassed - 1) / 7);
   if (weeksPassed < 0) weeksPassed = 0;
   return PASS_BASE_PRICE + weeksPassed * PASS_WEEKLY_INCREASE;
 }
@@ -380,6 +392,20 @@ function loadLocal(){
   } catch(e){}
 }
 
+// ===== Огонь за ежедневные входы =====
+function handleStreak(){
+  var today = new Date().toDateString();
+  if (state.last_visit === today) return;
+  var yesterday = new Date(Date.now() - 86400000).toDateString();
+  state.streak = (state.last_visit === yesterday) ? (state.streak || 0) + 1 : 1;
+  state.last_visit = today;
+  var bonus = 300 * Math.min(state.streak, 10);
+  state.pinecones += bonus;
+  state.weekly_pinecones += bonus;
+  markDirty();
+  toast('🔥 Огонь ' + state.streak + ' ' + (state.streak === 1 ? 'день' : 'дн.') + ' подряд! +' + fmt(bonus) + ' 🌰');
+}
+
 async function loadRemote(){
   if (!supabase || isGuest) { renderAll(); renderPass(); return; }
   var res = await supabase.from('players').select('*').eq('player_id', playerId).maybeSingle();
@@ -390,6 +416,7 @@ async function loadRemote(){
   } else {
     applyPlayer(res.data);
   }
+  handleStreak();
   renderAll(); renderPass();
   loadTicker(); loadTop(); loadInventory();
 }
@@ -456,14 +483,18 @@ function dropOrnament(forcedRarity, source, forced){
   var itemName = pool[idx];
   var itemId = rarity + '_' + idx;
   state.total_drops++;
+  var info = RARITY_INFO[rarity];
+  state.recent_drops = state.recent_drops || [];
+  state.recent_drops.unshift({ i: info.icon, n: itemName });
+  state.recent_drops = state.recent_drops.slice(0, 5);
   if (!isGuest && supabase) {
     supabase.from('inventory').insert({ player_id: playerId, item_id: itemId, item_name: itemName, rarity: rarity, source: source || 'care' })
       .then(function(){ return supabase.from('drop_log').insert({ player_id: playerId, player_name: playerName, item_id: itemId, item_name: itemName, rarity: rarity, source: source || 'care' }); })
       .then(function(){ loadTicker(); loadInventory(); })
       .catch(function(e){ console.warn('drop save error', e); });
   }
-  var info = RARITY_INFO[rarity];
   toast(info.icon + ' Выбит ' + info.label + ': «' + itemName + '»!');
+  renderAll();
 }
 
 function doWater(){
@@ -519,12 +550,28 @@ function renderAll(){
   var st = stageFor(state.level);
   document.getElementById('tree-emoji').textContent = st.e;
   document.getElementById('tree-title').textContent = st.t;
-  document.getElementById('tree-sub').textContent = 'Доход: ' + fmt(passiveRate()) + ' 🌰/час';
+  document.getElementById('tree-sub').textContent = 'Доход: ' + fmt(passiveRate()) + ' 🌰/час · огонь ' + (state.streak || 1) + ' дн. 🔥';
   document.getElementById('h-name').textContent = playerName;
   document.getElementById('h-level').textContent = 'Уровень ' + state.level;
   document.getElementById('h-pass').style.display = passActive() ? 'inline-block' : 'none';
   document.getElementById('pinecone-count').textContent = fmt(state.pinecones);
   document.getElementById('btn-collect').textContent = 'Забрать ' + fmt(pendingPassive()) + ' 🌰';
+
+  var ornEl = document.getElementById('ornament-row');
+  var drops = state.recent_drops || [];
+  if (drops.length) {
+    ornEl.innerHTML = drops.map(function(d){
+      return '<div class="orn-dot">' + d.i + '<span>' + d.n + '</span></div>';
+    }).join('');
+  } else {
+    ornEl.innerHTML = '<span class="muted" style="font-size:12px;">Твои первые шары появятся здесь 🎄</span>';
+  }
+
+  document.getElementById('gifts-line').textContent = state.total_drops > 0
+    ? '🎁 Подарков под ёлкой: ' + fmt(state.total_drops)
+    : '🎁 Под ёлкой пока пусто — выигрывай шары в играх!';
+
+  document.getElementById('streak-line').textContent = '🔥 Заходи каждый день — бонус растёт до 10 дней!';
 
   var bw = document.getElementById('btn-water'), bs = document.getElementById('btn-shake');
   if (canWater()) { bw.disabled = false; bw.textContent = '💧 Полить'; }
@@ -668,7 +715,6 @@ function renderPass(){
   var el = document.getElementById('pass-content');
   if (!el) return;
 
-  // --- Сезон закончился (с 1 декабря) ---
   if (passEnded() && !passActive()) {
     el.innerHTML =
       '<div class="card" style="text-align:center;">' +
@@ -679,7 +725,6 @@ function renderPass(){
     return;
   }
 
-  // --- Пропуск активен: показываем задания ---
   if (passActive()) {
     var leftDays = Math.max(1, Math.ceil((state.pass_until - Date.now()) / 86400000));
     var html = '<div class="card">' +
@@ -717,7 +762,6 @@ function renderPass(){
     return;
   }
 
-  // --- Сезон ещё не начался (до 16 ноября) ---
   if (passNotStarted()) {
     el.innerHTML =
       '<div class="card" style="text-align:center;">' +
@@ -728,7 +772,6 @@ function renderPass(){
     return;
   }
 
-  // --- Пропуск не куплен: карточка продажи ---
   var price = getCurrentPassPrice();
   var wk = currentWeekNumber();
   var html =
@@ -792,7 +835,7 @@ function activatePass(){
   if (passEnded()) { toast('Ноябрьский пропуск завершён — жди новый в декабре ❄️'); return; }
   if (PASS_CODES.indexOf(code) === -1) { toast('Код неверный — проверь написание'); return; }
   state.pass_active = true;
-  state.pass_until = passEndDate().getTime() - 1; // до 30 ноября включительно
+  state.pass_until = passEndDate().getTime() - 1;
   state.quest_claimed = {};
   try { localStorage.setItem('zini_claimed_' + playerId, JSON.stringify({})); } catch(e){}
   markDirty(); renderAll(); renderPass();
@@ -894,7 +937,8 @@ function mgBuild(){
       '<div id="mg-score" class="hud-r"></div>' +
       '<div id="mg-miss" class="hud-l"></div>' +
       '<div id="mg-overlay" class="overlay">' +
-        '<div id="mg-title" style="font-weight:800;font-size:18px;margin-bottom:8px;">🎄 Готов?</div>' +
+        '<div class="game-avatar" id="mg-avatar">🎁</div>' +
+        '<div id="mg-title" style="font-weight:800;font-size:18px;margin-bottom:8px;">Поймай подарок</div>' +
         '<div id="mg-sub" class="muted" style="margin-bottom:14px;">Нажми «Играть» и лови подарки</div>' +
         '<button id="mg-claim" class="btn" style="display:none;max-width:220px;">Забрать награду</button>' +
       '</div>' +
@@ -905,6 +949,7 @@ function mgBuild(){
   mgEl.sub = document.getElementById('mg-sub');
   mgEl.score = document.getElementById('mg-score');
   mgEl.miss = document.getElementById('mg-miss');
+  mgEl.avatar = document.getElementById('mg-avatar');
   document.getElementById('mg-start').addEventListener('click', mgStart);
   document.getElementById('mg-claim').addEventListener('click', mgClaim);
 }
@@ -912,9 +957,10 @@ function renderMg(){
   var el = document.getElementById('mg-attempts');
   if (el) el.textContent = dayAttempts(MG_KEY);
 }
-function mgOverlay(title, sub, showClaim){
+function mgOverlay(title, sub, showClaim, avatar){
   mgEl.title.textContent = title;
   mgEl.sub.textContent = sub;
+  if (avatar) mgEl.avatar.textContent = avatar;
   mgEl.claimBtn = mgEl.claimBtn || document.getElementById('mg-claim');
   mgEl.claimBtn.style.display = showClaim ? 'block' : 'none';
 }
@@ -970,15 +1016,15 @@ function mgEnd(){
   mg.pendReward = rew;
   mg.pendDrop = Math.random() < Math.min(0.5, 0.15 + mg.score * 0.02);
   bumpQuest('mini_score', mg.score);
-  mgOverlay('Игра окончена!', 'Очки: ' + mg.score + ' • Награда: ' + fmt(rew) + ' 🌰', true);
+  mgOverlay('Игра окончена!', 'Очки: ' + mg.score + ' • Награда: ' + fmt(rew) + ' 🌰', true, '🏆');
 }
 function mgClaim(){
   finishGame({ reward: mg.pendReward || 0, drop: mg.pendDrop, source: 'mini_game' });
   mg.pendReward = 0; mg.pendDrop = false;
-  mgOverlay('🎄 Готов?', 'Нажми «Играть» и лови подарки', false);
+  mgOverlay('Поймай подарок', 'Нажми «Играть» и лови подарки', false, '🎁');
 }
 mgBuild();
-mgOverlay('🎄 Готов?', 'Нажми «Играть» и лови подарки', false);
+mgOverlay('Поймай подарок', 'Нажми «Играть» и лови подарки', false, '🎁');
 renderMg();
 
 // ============================================================
@@ -1005,7 +1051,8 @@ function stBuild(){
       '<div id="st-score" class="hud-r"></div>' +
       '<div id="st-time" class="hud-c"></div>' +
       '<div id="st-overlay" class="overlay">' +
-        '<div id="st-title" style="font-weight:800;font-size:18px;margin-bottom:8px;">🎯 Готов?</div>' +
+        '<div class="game-avatar" id="st-avatar">🎯</div>' +
+        '<div id="st-title" style="font-weight:800;font-size:18px;margin-bottom:8px;">Снежный тир</div>' +
         '<div id="st-sub" class="muted" style="margin-bottom:14px;">Нажми «Играть» — у тебя 30 секунд</div>' +
         '<button id="st-claim" class="btn" style="display:none;max-width:220px;">Забрать награду</button>' +
       '</div>' +
@@ -1016,6 +1063,7 @@ function stBuild(){
   stEl.sub = document.getElementById('st-sub');
   stEl.score = document.getElementById('st-score');
   stEl.time = document.getElementById('st-time');
+  stEl.avatar = document.getElementById('st-avatar');
   document.getElementById('st-start').addEventListener('click', stStart);
   document.getElementById('st-claim').addEventListener('click', stClaim);
 }
@@ -1023,9 +1071,10 @@ function renderSt(){
   var el = document.getElementById('st-attempts');
   if (el) el.textContent = dayAttempts(ST_KEY);
 }
-function stOverlay(title, sub, showClaim){
+function stOverlay(title, sub, showClaim, avatar){
   stEl.title.textContent = title;
   stEl.sub.textContent = sub;
+  if (avatar) stEl.avatar.textContent = avatar;
   stEl.claimBtn = stEl.claimBtn || document.getElementById('st-claim');
   stEl.claimBtn.style.display = showClaim ? 'block' : 'none';
 }
@@ -1074,15 +1123,15 @@ function stEnd(){
   st.pendReward = rew;
   st.pendDrop = Math.random() < Math.min(0.5, 0.15 + st.score * 0.02);
   bumpQuest('tir_hits', st.score);
-  stOverlay('Время вышло!', 'Попаданий: ' + st.score + ' • Награда: ' + fmt(rew) + ' 🌰', true);
+  stOverlay('Время вышло!', 'Попаданий: ' + st.score + ' • Награда: ' + fmt(rew) + ' 🌰', true, '🏆');
 }
 function stClaim(){
   finishGame({ reward: st.pendReward || 0, drop: st.pendDrop, source: 'snow_shooter' });
   st.pendReward = 0; st.pendDrop = false;
-  stOverlay('🎯 Готов?', 'Нажми «Играть» — у тебя 30 секунд', false);
+  stOverlay('Снежный тир', 'Нажми «Играть» — у тебя 30 секунд', false, '🎯');
 }
 stBuild();
-stOverlay('🎯 Готов?', 'Нажми «Играть» — у тебя 30 секунд', false);
+stOverlay('Снежный тир', 'Нажми «Играть» — у тебя 30 секунд', false, '🎯');
 renderSt();
 
 // ===== Старт =====
