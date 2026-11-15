@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Ёлка Зини 🎄 v6.3</title>
+<title>Ёлка Зини 🎄 v6.4</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -102,6 +102,8 @@ h3{margin:4px 0 12px;font-size:18px;}
 .quest-btn{width:100%;padding:10px;font-size:14px;}
 .pass-badge{display:inline-block;background:linear-gradient(135deg,#38bdf8,#c084fc);color:#0a0a10;font-weight:800;font-size:12px;border-radius:8px;padding:2px 8px;margin-left:6px;}
 .pass-done{opacity:.55;}
+.price-big{font-size:32px;font-weight:800;color:#fff;}
+#pass-code-input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(198,255,94,.4);background:rgba(10,16,34,.8);color:#fff;font-size:14px;box-sizing:border-box;margin-bottom:8px;}
 </style>
 </head>
 <body>
@@ -156,7 +158,7 @@ h3{margin:4px 0 12px;font-size:18px;}
   </section>
 
   <section id="screen-pass" class="screen">
-    <h3>✨ Зимний пропуск</h3>
+    <h3>✨ Ноябрьский пропуск</h3>
     <div id="pass-content"></div>
   </section>
 
@@ -228,11 +230,31 @@ window.addEventListener('error', function (e) {
 var SB_URL = 'https://clxewmkuntmgtbovrgqk.supabase.co';
 var SB_KEY = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX';
 // =========================================================
-// НАСТРОЙКИ ПРОПУСКА: впиши свой бот и свои коды активации
-var BOT_USERNAME = 'zini_xmas_bot'; // имя твоего бота без @
-var PASS_CODES = ['ZINI2026', 'WINTER-PASS']; // коды активации пропуска — меняй как хочешь
-var PASS_PRICE_LABEL = '250 ⭐ Telegram Stars';
-var PASS_DAYS = 30;
+
+// ===== НАСТРОЙКИ ПРОПУСКА =====
+var ADMIN_CONTACT = 'zinidropadmin'; // юз админа в Telegram — реквизиты СБП берут у него
+
+// 10 кодов на первое время. Продал пропуск — выдал игроку один код.
+// Коды закончатся — впиши новые через запятую.
+var PASS_CODES = [
+  'ZINI-7K2M-NOV1',
+  'ZINI-9XQ4-NOV2',
+  'ZINI-3PDL-NOV3',
+  'ZINI-8TFR-NOV4',
+  'ZINI-5WBN-NOV5',
+  'ZINI-2HKG-NOV6',
+  'ZINI-6MJY-NOV7',
+  'ZINI-4QZT-NOV8',
+  'ZINI-7VDL-NOV9',
+  'ZINI-1CXN-NOV10'
+];
+
+var PASS_BASE_PRICE = 199;            // стартовая цена, ₽
+var PASS_WEEKLY_INCREASE = 100;       // насколько дорожает каждую неделю, ₽
+var PASS_START_STR = '2026-11-16';    // старт продаж: 16 ноября
+var PASS_END_STR = '2026-12-01';      // действует до 30 ноября включительно
+var PASS_SEASON_NAME = 'Ноябрьский пропуск · 16–30 ноября';
+var PASS_PAYMENT_NOTE = 'Оплата — только переводом по СБП. Реквизиты выдаёт админ @' + ADMIN_CONTACT + '.';
 
 var tg = (window.Telegram && window.Telegram.WebApp) ? window.Telegram.WebApp : null;
 try { if (tg) { tg.expand(); tg.setHeaderColor('#0b1224'); tg.setBackgroundColor('#0b1224'); } } catch(e){}
@@ -247,7 +269,7 @@ try { supabase = window.supabase.createClient(SB_URL, SB_KEY); } catch(e){ conso
 var WATER_CD = 2 * 3600 * 1000;
 var SHAKE_CD = 4 * 3600 * 1000;
 var PASSIVE_CAP_H = 24;
-var ADS_TAG = null;
+var ADS_TAG = null; // ID блока AdsGram — впиши, когда подключишь рекламу
 var AD_BONUS = 500;
 
 var ORNAMENTS = {
@@ -282,8 +304,7 @@ var state = {
   moisture:0, snow:0,
   last_watered:0, last_shake:0, last_collect:0,
   weekly_pinecones:0, week_key:'', total_drops:0,
-  pass_active:false, pass_until:0,
-  quests:{}, quest_claimed:{}
+  pass_active:false, pass_until:0
 };
 
 function fmt(n){ return String(Math.floor(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
@@ -301,6 +322,36 @@ function toast(msg){
   toastTimer = setTimeout(function(){ t.style.display = 'none'; }, 2600);
 }
 
+// ===== Пропуск: цена и сроки =====
+function passStartDate(){ return new Date(PASS_START_STR + 'T00:00:00'); }
+function passEndDate(){ return new Date(PASS_END_STR + 'T00:00:00'); }
+function passNotStarted(){ return Date.now() < passStartDate().getTime(); }
+function passEnded(){ return Date.now() >= passEndDate().getTime(); }
+function passActive(){ return state.pass_active && state.pass_until > Date.now(); }
+function getCurrentPassPrice(){
+  var start = passStartDate();
+  var now = new Date();
+  if (now < start) now = start;
+  var daysPassed = Math.ceil((now - start) / 86400000);
+  var weeksPassed = Math.floor((daysPassed - 1) / 7); // неделя 1 = базовая цена
+  if (weeksPassed < 0) weeksPassed = 0;
+  return PASS_BASE_PRICE + weeksPassed * PASS_WEEKLY_INCREASE;
+}
+function currentWeekNumber(){
+  var start = passStartDate();
+  var now = new Date();
+  if (now < start) return 1;
+  var daysPassed = Math.ceil((now - start) / 86400000);
+  return Math.floor((daysPassed - 1) / 7) + 1;
+}
+function daysToEnd(){
+  return Math.max(0, Math.ceil((passEndDate().getTime() - Date.now()) / 86400000));
+}
+function daysToStart(){
+  return Math.max(0, Math.ceil((passStartDate().getTime() - Date.now()) / 86400000));
+}
+
+// ===== Задания =====
 function questsKey(){ return 'zini_quests_' + playerId; }
 function saveQuests(){ try { localStorage.setItem(questsKey(), JSON.stringify(state.quests)); } catch(e){} }
 function loadQuests(){
@@ -312,14 +363,14 @@ function loadQuests(){
 }
 function questProg(key){
   if (key === 'weekly_goal') return state.weekly_pinecones || 0;
-  return state.quests[key] || 0;
+  return (state.quests && state.quests[key]) || 0;
 }
 function bumpQuest(key, amount){
-  if (key === 'weekly_goal') return; // считается из weekly_pinecones
+  if (key === 'weekly_goal') return;
+  if (!state.quests) state.quests = { week_key: weekKey() };
   state.quests[key] = (state.quests[key] || 0) + amount;
   saveQuests();
 }
-function passActive(){ return state.pass_active && state.pass_until > Date.now(); }
 
 function saveLocal(){ try { localStorage.setItem('zinixmas_' + playerId, JSON.stringify(state)); } catch(e){} }
 function loadLocal(){
@@ -400,8 +451,7 @@ function milestoneDrop(rarity){ dropOrnament(rarity, 'level_up', true); }
 function dropOrnament(forcedRarity, source, forced){
   var rarity = forcedRarity || rollRarity();
   var pool = ORNAMENTS[rarity];
-  if (!pool || !pool.length) rarity = 'common';
-  pool = ORNAMENTS[rarity];
+  if (!pool || !pool.length) { rarity = 'common'; pool = ORNAMENTS[rarity]; }
   var idx = Math.floor(Math.random() * pool.length);
   var itemName = pool[idx];
   var itemId = rarity + '_' + idx;
@@ -612,84 +662,117 @@ function grantAdBonus(){
 }
 
 // ============================================================
-// ЗИМНИЙ ПРОПУСК: задания и покупка
+// НОЯБРЬСКИЙ ПРОПУСК: СБП через админа, активация кодом, задания
 // ============================================================
 function renderPass(){
   var el = document.getElementById('pass-content');
   if (!el) return;
-  if (!passActive()) {
+
+  // --- Сезон закончился (с 1 декабря) ---
+  if (passEnded() && !passActive()) {
     el.innerHTML =
-      '<div class="card">' +
-        '<div style="font-size:34px;text-align:center;">💠</div>' +
-        '<div style="text-align:center;font-weight:800;font-size:16px;margin:8px 0;">Зимний пропуск</div>' +
-        '<div class="muted" style="margin-bottom:10px;">Открывает 6 заданий с уникальными наградами, включая пасс-эксклюзивные шары (💠), которых нет в витрине. Действует ' + PASS_DAYS + ' дней с активации.</div>' +
-        '<button id="btn-buy-pass" class="btn blue">⭐ Купить за ' + PASS_PRICE_LABEL + '</button>' +
-      '</div>' +
-      '<div class="card">' +
-        '<div style="font-weight:700;font-size:14px;margin-bottom:8px;">Уже купил или получил код?</div>' +
-        '<input id="pass-code-input" placeholder="Введи код активации" style="width:100%;padding:12px;border-radius:10px;border:1px solid rgba(198,255,94,.4);background:rgba(10,16,34,.8);color:#fff;font-size:14px;box-sizing:border-box;margin-bottom:8px;">' +
-        '<button id="btn-activate-pass" class="btn ghost">Активировать код</button>' +
-      '</div>' +
-      '<div class="card"><div class="muted">Задания пропуска будут доступны после покупки 💠</div></div>';
-    var bb = document.getElementById('btn-buy-pass');
-    if (bb) bb.addEventListener('click', function(){
-      if (tg && tg.openTelegramLink) {
-        tg.openTelegramLink('https://t.me/' + BOT_USERNAME + '?start=buy_pass_' + playerId);
-        toast('Напиши боту «Купить пропуск» — после оплаты пришли код!');
-      } else {
-        toast('Покупка через бота @' + BOT_USERNAME + ' — открой игру в Telegram');
-      }
-    });
-    var ab = document.getElementById('btn-activate-pass');
-    if (ab) ab.addEventListener('click', activatePass);
+      '<div class="card" style="text-align:center;">' +
+        '<div style="font-size:34px;">❄️</div>' +
+        '<div style="font-weight:800;font-size:16px;margin:8px 0;">Ноябрьский пропуск завершён</div>' +
+        '<div class="muted">В декабре стартует новый пропуск со свежими заданиями и наградами. Следи за новостями!</div>' +
+      '</div>';
     return;
   }
-  // Пасс активен — показываем задания
-  var leftDays = Math.max(1, Math.ceil((state.pass_until - Date.now()) / 86400000));
-  var html = '<div class="card">' +
-    '<div style="font-weight:800;font-size:15px;">💠 Пропуск активен<span class="pass-badge">осталось ' + leftDays + ' дн.</span></div>' +
-    '<div class="muted" style="margin-top:6px;">Выполняй задания — забирай награды. Все задания обнуляются каждый понедельник вместе с топом.</div>' +
-    '</div>';
-  var allDone = true;
-  QUESTS.forEach(function(q){
-    var prog = Math.min(questProg(q.key), q.need);
-    var claimed = !!state.quest_claimed[q.id];
-    var done = prog >= q.need;
-    if (!done) allDone = false;
-    var pct = Math.floor((prog / q.need) * 100);
-    var rewParts = [];
-    if (q.reward.pinecones) rewParts.push(fmt(q.reward.pinecones) + ' 🌰');
-    if (q.reward.drop) {
-      var info = RARITY_INFO[q.reward.drop];
-      rewParts.push(info.icon + ' ' + info.label + ' шар');
-    }
-    html += '<div class="quest-row' + (claimed ? ' pass-done' : '') + '">' +
-      '<div class="quest-top">' +
-        '<div class="quest-icon">' + q.icon + '</div>' +
-        '<div class="quest-name">' + q.name + '</div>' +
-        '<div class="quest-prog">' + (claimed ? '✅' : fmt(prog) + ' / ' + fmt(q.need)) + '</div>' +
-      '</div>' +
-      '<div class="quest-bar"><div class="quest-bar-fill" style="width:' + pct + '%;"></div></div>' +
-      '<div class="quest-reward">Награда: ' + rewParts.join(' + ') + '</div>' +
-      '<button class="btn quest-btn" data-qid="' + q.id + '"' + (done && !claimed ? '' : ' disabled') + '>' +
-        (claimed ? 'Награда получена' : (done ? 'Забрать награду' : 'Выполни задание')) +
-      '</button>' +
-    '</div>';
-  });
-  if (allDone) {
-    html += '<div class="card" style="border:1px solid var(--acc);"><div style="text-align:center;">🏆 <b>Все задания выполнены!</b><br><span class="muted">Ты забрал максимум из пропуска этой недели — легенда 💠</span></div></div>';
+
+  // --- Пропуск активен: показываем задания ---
+  if (passActive()) {
+    var leftDays = Math.max(1, Math.ceil((state.pass_until - Date.now()) / 86400000));
+    var html = '<div class="card">' +
+      '<div style="font-weight:800;font-size:15px;">💠 ' + PASS_SEASON_NAME + '<span class="pass-badge">осталось ' + leftDays + ' дн.</span></div>' +
+      '<div class="muted" style="margin-top:6px;">Выполняй задания — забирай награды. Задания обновляются каждый понедельник.</div>' +
+      '</div>';
+    QUESTS.forEach(function(q){
+      var prog = Math.min(questProg(q.key), q.need);
+      var claimed = !!(state.quest_claimed && state.quest_claimed[q.id]);
+      var done = prog >= q.need;
+      var pct = Math.floor((prog / q.need) * 100);
+      var rewParts = [];
+      if (q.reward.pinecones) rewParts.push(fmt(q.reward.pinecones) + ' 🌰');
+      if (q.reward.drop) {
+        var info = RARITY_INFO[q.reward.drop];
+        rewParts.push(info.icon + ' ' + info.label + ' шар');
+      }
+      html += '<div class="quest-row' + (claimed ? ' pass-done' : '') + '">' +
+        '<div class="quest-top">' +
+          '<div class="quest-icon">' + q.icon + '</div>' +
+          '<div class="quest-name">' + q.name + '</div>' +
+          '<div class="quest-prog">' + (claimed ? '✅' : fmt(prog) + ' / ' + fmt(q.need)) + '</div>' +
+        '</div>' +
+        '<div class="quest-bar"><div class="quest-bar-fill" style="width:' + pct + '%;"></div></div>' +
+        '<div class="quest-reward">Награда: ' + rewParts.join(' + ') + '</div>' +
+        '<button class="btn quest-btn" data-qid="' + q.id + '"' + (done && !claimed ? '' : ' disabled') + '>' +
+          (claimed ? 'Награда получена' : (done ? 'Забрать награду' : 'Выполни задание')) +
+        '</button>' +
+      '</div>';
+    });
+    el.innerHTML = html;
+    el.querySelectorAll('button[data-qid]').forEach(function(b){
+      b.addEventListener('click', function(){ claimQuest(b.dataset.qid); });
+    });
+    return;
   }
+
+  // --- Сезон ещё не начался (до 16 ноября) ---
+  if (passNotStarted()) {
+    el.innerHTML =
+      '<div class="card" style="text-align:center;">' +
+        '<div style="font-size:34px;">💠</div>' +
+        '<div style="font-weight:800;font-size:16px;margin:8px 0;">' + PASS_SEASON_NAME + '</div>' +
+        '<div class="muted">Продажи откроются 16 ноября. Осталось: ' + daysToStart() + ' дн.<br>Не пропусти — с каждой неделей пропуск дорожает!</div>' +
+      '</div>';
+    return;
+  }
+
+  // --- Пропуск не куплен: карточка продажи ---
+  var price = getCurrentPassPrice();
+  var wk = currentWeekNumber();
+  var html =
+    '<div class="card" style="text-align:center;">' +
+      '<div style="font-size:34px;">💠</div>' +
+      '<div style="font-weight:800;font-size:16px;margin:8px 0;">' + PASS_SEASON_NAME + '</div>' +
+      '<div class="muted" style="margin-bottom:10px;">6 заданий с наградами, включая пасс-эксклюзивные шары (💠), которых нет в витрине. Действует до 30 ноября включительно (' + daysToEnd() + ' дн.).</div>' +
+      '<div class="price-big">' + price + ' ₽</div>' +
+      '<div class="muted" style="margin:4px 0 12px;">Неделя ' + wk + ' · +100 ₽ каждую неделю</div>' +
+      '<button id="btn-buy-pass" class="btn blue">💳 Оплатить ' + price + ' ₽ по СБП</button>' +
+    '</div>' +
+    '<div class="card">' +
+      '<div style="font-weight:700;font-size:14px;margin-bottom:6px;">Как купить:</div>' +
+      '<div class="muted" style="margin-bottom:10px;">' +
+        '1. Нажми «Оплатить» — откроется чат с админом @' + ADMIN_CONTACT + '.<br>' +
+        '2. Возьми у админа реквизиты СБП и переведи ' + price + ' ₽.<br>' +
+        '3. Админ выдаст тебе код активации.<br>' +
+        '4. Введи код ниже — пропуск активен до 30 ноября.' +
+      '</div>' +
+      '<input id="pass-code-input" placeholder="Введи код активации">' +
+      '<button id="btn-activate-pass" class="btn ghost">🔑 Активировать код</button>' +
+    '</div>' +
+    '<div class="card"><div class="muted">' + PASS_PAYMENT_NOTE + '</div></div>';
+
   el.innerHTML = html;
-  el.querySelectorAll('button[data-qid]').forEach(function(b){
-    b.addEventListener('click', function(){ claimQuest(b.dataset.qid); });
+  var bb = document.getElementById('btn-buy-pass');
+  if (bb) bb.addEventListener('click', function(){
+    if (tg && tg.openTelegramLink) {
+      tg.openTelegramLink('https://t.me/' + ADMIN_CONTACT + '?text=' + encodeURIComponent('Здравствуйте! Хочу купить «' + PASS_SEASON_NAME + '» за ' + price + ' ₽. Пришлите, пожалуйста, реквизиты СБП. Мой ID: ' + playerId));
+      toast('Открыл чат с админом — запроси реквизиты СБП 💠');
+    } else {
+      toast('Напиши админу @' + ADMIN_CONTACT + ' за реквизитами СБП');
+    }
   });
+  var ab = document.getElementById('btn-activate-pass');
+  if (ab) ab.addEventListener('click', activatePass);
 }
 function claimQuest(qid){
   var q = QUESTS.find(function(x){ return x.id === qid; });
   if (!q) return;
   if (!passActive()) { toast('Нужен активный пропуск 💠'); return; }
-  if (state.quest_claimed[qid]) return;
+  if (state.quest_claimed && state.quest_claimed[qid]) return;
   if (questProg(q.key) < q.need) { toast('Задание ещё не выполнено'); return; }
+  if (!state.quest_claimed) state.quest_claimed = {};
   state.quest_claimed[qid] = true;
   try { localStorage.setItem('zini_claimed_' + playerId, JSON.stringify(state.quest_claimed)); } catch(e){}
   if (q.reward.pinecones) {
@@ -705,19 +788,16 @@ function activatePass(){
   if (!input) return;
   var code = (input.value || '').trim().toUpperCase();
   if (!code) { toast('Введи код активации'); return; }
+  if (passNotStarted()) { toast('Продажи стартуют 16 ноября — жди! 💠'); return; }
+  if (passEnded()) { toast('Ноябрьский пропуск завершён — жди новый в декабре ❄️'); return; }
   if (PASS_CODES.indexOf(code) === -1) { toast('Код неверный — проверь написание'); return; }
   state.pass_active = true;
-  state.pass_until = Date.now() + PASS_DAYS * 86400000;
+  state.pass_until = passEndDate().getTime() - 1; // до 30 ноября включительно
   state.quest_claimed = {};
   try { localStorage.setItem('zini_claimed_' + playerId, JSON.stringify({})); } catch(e){}
   markDirty(); renderAll(); renderPass();
-  toast('💠 Пропуск активирован на ' + PASS_DAYS + ' дней!');
-  if (supabase && !isGuest) {
-    supabase.from('players').update({
-      pass_active: true,
-      pass_until: new Date(state.pass_until).toISOString()
-    }).eq('player_id', playerId);
-  }
+  toast('💠 Ноябрьский пропуск активирован до 30 ноября!');
+  saveLocal();
 }
 
 var dirty = false;
@@ -731,7 +811,9 @@ async function saveRemote(){
     last_shake: state.last_shake ? new Date(state.last_shake).toISOString() : null,
     last_collect: state.last_collect ? new Date(state.last_collect).toISOString() : null,
     weekly_pinecones: state.weekly_pinecones, week_key: state.week_key,
-    total_drops: state.total_drops, name: playerName
+    total_drops: state.total_drops, name: playerName,
+    pass_active: state.pass_active,
+    pass_until: state.pass_until ? new Date(state.pass_until).toISOString() : null
   }).eq('player_id', playerId);
 }
 setInterval(function(){ if (dirty) { dirty = false; saveRemote(); } }, 8000);
@@ -917,7 +999,7 @@ function stBuild(){
         '<div><div class="muted">Попытки</div><div id="st-attempts" style="font-size:20px;font-weight:800;color:var(--acc);">3</div></div>' +
         '<button id="st-start" class="btn" style="width:auto;padding:12px 20px;">▶️ Играть</button>' +
       '</div>' +
-      '<div class="muted" style="margin-top:10px;">30 секунд. Тапай по мишеням — попадание это очко и шишки в конце.</div>' +
+      '<div class="muted" style="margin-top:10px;">30 секунд. Тапай по мишеням — каждое попадание это очко и шишки в конце.</div>' +
     '</div>' +
     '<div id="st-area" class="game-area">' +
       '<div id="st-score" class="hud-r"></div>' +
