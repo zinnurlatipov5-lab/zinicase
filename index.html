@@ -21,11 +21,9 @@ body{background:#060d24;overflow-x:hidden}
 #snow{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
 #snow span{position:absolute;top:-5%;opacity:.4;will-change:transform;animation:fall linear infinite}
 @keyframes fall{to{transform:translate3d(0,108vh,0)}}
-#edgeWrap{position:fixed;inset:0;z-index:2;pointer-events:none}
-#frostOv{position:absolute;inset:0;box-shadow:inset 0 0 90px 24px rgba(190,225,255,.30),inset 0 0 34px 10px rgba(215,240,255,.18)}
-#frostOv::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 0% 0%,rgba(255,255,255,.24),transparent 24%),radial-gradient(circle at 100% 0%,rgba(255,255,255,.24),transparent 24%),radial-gradient(circle at 0% 100%,rgba(220,240,255,.18),transparent 28%),radial-gradient(circle at 100% 100%,rgba(220,240,255,.18),transparent 28%)}
-.ice{animation:icicleGlow 3.2s ease-in-out infinite alternate}
-@keyframes icicleGlow{from{opacity:.45}to{opacity:1}}
+#atm{position:fixed;inset:0;z-index:2;pointer-events:none}
+#frostOv{position:absolute;inset:0;box-shadow:inset 0 0 90px 24px rgba(190,225,255,.28),inset 0 0 34px 10px rgba(215,240,255,.16)}
+#frostOv::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 0% 0%,rgba(255,255,255,.22),transparent 24%),radial-gradient(circle at 100% 0%,rgba(255,255,255,.22),transparent 24%),radial-gradient(circle at 0% 100%,rgba(220,240,255,.16),transparent 28%),radial-gradient(circle at 100% 100%,rgba(220,240,255,.16),transparent 28%)}
 header{position:sticky;top:0;z-index:30;background:rgba(10,20,50,.95);padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.12)}
 .hrow{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .logo{font-size:20px;font-weight:800;color:#ffd86b}
@@ -36,14 +34,10 @@ header{position:sticky;top:0;z-index:30;background:rgba(10,20,50,.95);padding:8p
 #gbtn,#mbtn{background:linear-gradient(135deg,#ffd86b,#ff9a3d);border:none;border-radius:14px;color:#402a00;font-weight:800;font-size:15px;padding:6px 12px;cursor:pointer}
 #mbtn{background:linear-gradient(135deg,#8fc4ff,#2f5fe0);color:#eaf3ff}
 #gbtn:disabled{filter:grayscale(.7);opacity:.55}
-#garland{position:sticky;top:0;z-index:29;background:rgba(8,16,44,.4);line-height:0}
-#garland svg{width:100%;height:40px;display:block}
-.gcore{animation:blink 1.8s ease-in-out infinite alternate}
-@keyframes blink{from{opacity:.35}to{opacity:1}}
 .ticker{position:relative;z-index:5;overflow:hidden;background:rgba(8,16,44,.75);border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);white-space:nowrap}
 .ticker-inner{display:inline-block;padding:5px 0;font-size:12.5px;color:#aee6ff;animation:tick 50s linear infinite;will-change:transform}
 @keyframes tick{from{transform:translate3d(100vw,0,0)}to{transform:translate3d(-100%,0,0)}}
-nav{position:sticky;top:40px;z-index:31;display:flex;gap:4px;padding:8px;overflow-x:auto;background:rgba(5,11,35,.95)}
+nav{position:sticky;top:36px;z-index:31;display:flex;gap:4px;padding:8px;overflow-x:auto;background:rgba(5,11,35,.95)}
 nav::-webkit-scrollbar{display:none}
 .tab{flex:0 0 auto;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);color:#dfe8ff;border-radius:16px;padding:8px 14px;font-size:14px;font-weight:700;cursor:pointer}
 .tab.on{background:linear-gradient(135deg,#2ee38b,#12a06a);color:#032015;border-color:transparent}
@@ -59,7 +53,7 @@ main{position:relative;z-index:5;max-width:720px;margin:0 auto;padding:10px 10px
 .small{font-size:12px;opacity:.8}
 .row{display:flex;gap:8px;align-items:center;justify-content:space-between;flex-wrap:wrap}
 .prize{background:linear-gradient(135deg,rgba(255,216,107,.18),rgba(255,140,60,.14));border:1px solid rgba(255,200,90,.55)}
-#treeScene{position:relative;height:min(80vh,760px);border-radius:20px;overflow:hidden;background:radial-gradient(ellipse at 50% 20%,rgba(120,170,255,.16),transparent 55%),linear-gradient(180deg,#0a1740,#0e2352)}
+#treeScene{position:relative;height:min(78vh,740px);border-radius:20px;overflow:hidden;background:radial-gradient(ellipse at 50% 20%,rgba(120,170,255,.16),transparent 55%),linear-gradient(180deg,#0a1740,#0e2352)}
 #treeSway{transform-box:view-box;transform-origin:200px 26px;animation:tSway 8s ease-in-out infinite alternate}
 @keyframes tSway{from{transform:rotate(-.5deg)}to{transform:rotate(.5deg)}}
 .tstarG{transform-box:fill-box;transform-origin:center;animation:tw2 2.6s ease-in-out infinite alternate}
@@ -81,40 +75,66 @@ main{position:relative;z-index:5;max-width:720px;margin:0 auto;padding:10px 10px
 .rb-epic{background:#6d2bb0;color:#f3dfff}.rb-legend{background:linear-gradient(90deg,#ff9a3d,#ffd86b);color:#402a00}
 .rb-garland{background:#b03570;color:#ffe0f0}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
-.npcGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(86px,1fr));gap:8px}
-.npcB{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:10px 6px;text-align:center;cursor:pointer}
-.npcB .nm{font-size:10.5px;font-weight:700;margin-top:4px;line-height:1.15}
-.npcFace{width:72px;height:72px;display:block;margin:0 auto}
-.npcB .npcFace{width:52px;height:52px}
-.npcB.evil{border-color:rgba(140,190,255,.5);background:linear-gradient(135deg,rgba(60,110,200,.18),rgba(20,40,90,.2))}
+.npcGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:8px}
+.npcB{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:10px 6px;text-align:center;cursor:pointer}
+.npcB .nm{font-size:10.5px;font-weight:700;margin-top:5px;line-height:1.15}
+.npcB.evil{border-color:rgba(140,200,255,.5);background:linear-gradient(135deg,rgba(60,110,200,.2),rgba(20,40,90,.25))}
+.portrait{width:64px;height:64px;margin:0 auto;border-radius:50%;background:linear-gradient(135deg,var(--g1),var(--g2));box-shadow:0 0 14px var(--gl),inset 0 0 12px rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.portrait::after{content:'';position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,255,255,.35)}
+.portrait img{width:78%;height:78%;object-fit:contain;filter:drop-shadow(0 2px 3px rgba(0,0,0,.45))}
+.portrait .em{font-size:30px}
+.npcB .portrait{width:48px;height:48px}
 .dlgFace{text-align:center}
-.dlgFace .npcFace{width:84px;height:84px}
-.dlgName{text-align:center;font-weight:800;margin-top:2px}
+.dlgFace .portrait{width:86px;height:86px}
+.dlgFace .portrait img{width:72%;height:72%}
+.dlgName{text-align:center;font-weight:800;margin-top:4px}
 .dlgTitle{text-align:center;font-size:11px;opacity:.7;margin:2px 0 10px}
 .dlgVoice{text-align:center;font-weight:800;letter-spacing:3px;color:#b79aff;margin:6px 0 10px}
-.dlgMyst{background:linear-gradient(180deg,rgba(12,6,32,.92),rgba(34,12,64,.92));border:1px solid rgba(160,120,255,.45);border-radius:14px;padding:12px;font-style:italic;color:#d9ccff;line-height:1.45;margin-bottom:10px}
+.dlgMyst{background:linear-gradient(180deg,rgba(12,6,32,.92),rgba(34,12,64,.92));border:1px solid rgba(160,120,255,.45);border-radius:14px;padding:12px;font-style:italic;color:#d9ccff;line-height:1.5;margin-bottom:10px}
 .rbtn2{display:flex;flex-direction:column;gap:6px;margin-top:8px}
 .oitem{background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:8px 6px;text-align:center;cursor:pointer}
 .oitem .bauble{margin:0 auto;width:42px;height:42px;font-size:19px}
 .oitem .nm{font-size:10.5px;line-height:1.15;margin:5px 0 3px;min-height:24px}
 .oitem .pr{font-size:11px;font-weight:800;color:#ffd86b}
 .oic{min-height:42px;display:flex;align-items:center;justify-content:center}
+.giftIco{font-size:40px;line-height:1}
+.giftCard{background:linear-gradient(150deg,rgba(255,120,180,.16),rgba(120,80,255,.14));border:1px solid rgba(255,170,220,.4);border-radius:16px;padding:12px;text-align:center;cursor:pointer}
+.giftCard .nm{font-size:11px;font-weight:700;margin:6px 0 3px;line-height:1.2}
+.giftCard .pr{font-size:11px;font-weight:800;color:#ffd86b}
+.giftCard .joke{font-size:10px;opacity:.75;font-style:italic;min-height:26px}
 .shopSec h4{margin:12px 0 8px;font-size:14px}
-canvas{display:block;width:100%;border-radius:14px;background:#0b1c44;touch-action:none}
+.rateRow{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:8px 10px;margin-bottom:6px}
+.rateRow.me{border-color:#ffd86b;background:rgba(255,216,107,.12)}
+.rateRow .rk{font-weight:800;min-width:34px;color:#ffd86b}
+.rateRow .rn{flex:1;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rateRow .rv{font-size:12px;opacity:.85;white-space:nowrap}
+.achRow{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:9px 10px;margin-bottom:6px}
+.achRow .ic{font-size:26px}
+.achRow.done{border-color:rgba(120,230,150,.5);background:rgba(60,200,120,.1)}
+.gbox{background:linear-gradient(150deg,rgba(255,130,190,.2),rgba(110,90,255,.18));border:1.5px solid rgba(255,190,225,.55);border-radius:20px;padding:18px;text-align:center}
+.gbox .who{font-size:13px;font-weight:800;color:#ffb0d0;letter-spacing:.5px}
+.gbox .gtxt{font-size:15px;line-height:1.5;margin:10px 0;font-style:italic;color:#ffe6f2}
+.gbox .gico{font-size:64px;filter:drop-shadow(0 0 18px rgba(255,140,200,.6));animation:gpop 1.2s ease}
+@keyframes gpop{from{transform:scale(.4);opacity:0}to{transform:scale(1);opacity:1}}
+.gmsg{width:100%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#eef3ff;border-radius:12px;padding:10px;font-size:14px;font-family:inherit;resize:none;min-height:64px}
+.gname{width:100%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);color:#eef3ff;border-radius:12px;padding:10px;font-size:14px;font-family:inherit}
+.pbar{height:10px;background:rgba(255,255,255,.14);border-radius:6px;overflow:hidden;margin-top:5px}
+.pfill{height:100%;background:linear-gradient(90deg,#ffd86b,#ff5ce0)}
+/* ФУЛЛСКРИН МИНИ-ИГРЫ */
+#gameFs{position:fixed;inset:0;z-index:80;background:#071228;display:none;flex-direction:column}
+#gameFs.show{display:flex}
+#gameTop{display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(0,0,0,.4);z-index:5}
+#gameTop .gt{font-weight:800;font-size:16px;color:#ffd86b;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#gameTop .hud{font-weight:800;font-size:14px;white-space:nowrap}
+#gameClose{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);border-radius:12px;color:#fff;font-weight:800;padding:6px 12px;cursor:pointer}
+#gameCv{flex:1;width:100%;min-height:0;touch-action:none}
+#gameHint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;text-align:center;background:rgba(4,10,30,.7);z-index:6;padding:20px}
+#gameHint .big{font-size:56px}
+#gameHint h2{margin:0;color:#ffd86b}
+canvas{display:block;touch-action:none}
 #ballField{position:relative;height:320px;border-radius:14px;background:#0b1c44;overflow:hidden;border:1px solid rgba(255,255,255,.15)}
 #ballField .pop{position:absolute;font-size:32px;cursor:pointer;user-select:none}
 #ballInfo{position:absolute;top:8px;left:10px;font-weight:800;font-size:15px;color:#ffd86b;z-index:2;text-shadow:0 1px 4px #000}
-#bossBox{position:relative;height:250px;border-radius:14px;background:#0a1838;overflow:hidden;border:1px solid rgba(255,255,255,.12)}
-#bossEmoji{font-size:76px;cursor:pointer;user-select:none;position:absolute;left:50%;top:44%;transform:translate(-50%,-50%)}
-#bossShield{position:absolute;left:50%;top:44%;transform:translate(-50%,-50%);font-size:100px;opacity:.5;pointer-events:none;display:none}
-.dmg{position:absolute;font-weight:800;pointer-events:none;animation:dmgUp .8s ease forwards;z-index:6;text-shadow:0 2px 6px #000}
-@keyframes dmgUp{to{transform:translateY(-40px);opacity:0}}
-.icicle{position:absolute;font-size:24px;cursor:pointer;z-index:5;transition:top 1.8s linear;user-select:none}
-.hpbar{height:14px;background:rgba(255,255,255,.15);border-radius:8px;overflow:hidden;margin:6px 0}
-.hpfill{height:100%;background:linear-gradient(90deg,#ff5f5f,#ffb03d)}
-.wheelWrap{position:relative;text-align:center}
-#wheelCv{width:280px;height:280px;margin:0 auto}
-.wheelPtr{position:absolute;top:-4px;left:50%;transform:translateX(-50%);font-size:28px;z-index:2}
 .modal{position:fixed;inset:0;z-index:60;background:rgba(2,6,20,.86);display:none;align-items:center;justify-content:center;padding:16px}
 .modal.show{display:flex}
 .mbox{background:linear-gradient(180deg,#16264f,#0d1b3e);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:16px;max-width:420px;width:100%;max-height:80vh;overflow-y:auto}
@@ -137,6 +157,7 @@ adsgram-task{--adsgram-task-bg:rgba(255,255,255,.1);--adsgram-task-color:#eef3ff
 <body>
 <div id="aurora"><i></i><i></i><i></i></div>
 <div id="snow"></div>
+<div id="atm"><div id="frostOv"></div></div>
 <header>
   <div class="hrow">
     <div class="logo">🎄 Ёлка Зини</div>
@@ -151,11 +172,15 @@ adsgram-task{--adsgram-task-bg:rgba(255,255,255,.1);--adsgram-task-color:#eef3ff
     <div class="xplabel" id="xplabel">0 / 150</div>
   </div>
 </header>
-<div id="garland"></div>
 <div class="ticker"><div class="ticker-inner" id="tickerInner"></div></div>
 <nav id="tabs"></nav>
 <main id="main"></main>
 <div class="modal" id="modal"><div class="mbox" id="mbox"></div></div>
+<div id="gameFs">
+  <div id="gameTop"><div class="gt" id="gameTitle">Игра</div><div class="hud" id="gameHud"></div><button id="gameClose" onclick="closeGame()">✕ Выйти</button></div>
+  <canvas id="gameCv"></canvas>
+  <div id="gameHint"><div class="big" id="ghIco">🎮</div><h2 id="ghTitle">Игра</h2><div class="small" id="ghText"></div><button class="btn gold" id="ghStart" style="max-width:260px">Начать</button></div>
+</div>
 <div class="adsOv" id="adsOv">
   <div style="font-size:44px">📺</div>
   <div style="font-weight:800;font-size:18px">Тестовый показ</div>
@@ -171,6 +196,8 @@ window.addEventListener('error',function(e){try{toast('⚠️ '+e.message+' — 
 const AG_CFG={blockId:'59627',taskBlockId:'task-59804',debug:false};
 const EARN_CFG={perViewUsd:0.01,perTaskUsd:0.01,baseUsd:0.50,rateRub:82};
 const SUPA_CFG={url:'https://clxewmkuntmgtbovrgqk.supabase.co',key:'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX'};
+const BOT_CFG={notifyUrl:''}; /* сюда потом вставим адрес скрипта уведомлений */
+const TW_URL='https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/svg/';
 const PRIZES_TEXT='🎁 РЕАЛЬНЫЕ ПРИЗЫ уже в ноябре и декабре: деньги на карту, подарочные сертификаты, настоящие ёлочные игрушки, сладкие наборы и ещё много чего — для самых активных игроков! Играйте каждый день — активность решает.';
 let _taskClaimed=false;
 
@@ -226,7 +253,7 @@ function simulateAd(onReward){
  },1000);
 }
 
-/* ===================== КАТАЛОГ ===================== */
+/* ===================== КАТАЛОГ ИГРУШЕК ===================== */
 const RAR={common:{n:'Обычные',cls:'r-common',rb:'rb-common'},rare:{n:'Редкие',cls:'r-rare',rb:'rb-rare'},epic:{n:'Эпические',cls:'r-epic',rb:'rb-epic'},legend:{n:'Легендарные',cls:'r-legend',rb:'rb-legend'},garland:{n:'Гирлянды',cls:'r-garland',rb:'rb-garland'}};
 const BGLOW={common:'#3fd97e',rare:'#5f9dff',epic:'#c07bff',legend:'#ffcf5e'};
 const CATALOG={
@@ -243,9 +270,65 @@ const GCOLORS={
  rainbow:['#ff4d4d','#ffb03d','#ffe94d','#4dff88','#4de1ff','#6a5cff','#ff4de0']
 };
 
-/* ===================== ГЕОМЕТРИЯ ЁЛКИ ===================== */
+/* ===================== КАТАЛОГ ПОДАРКОВ (плюшевые, юморные, открытки) ===================== */
+const GIFTS_PLUSH=[
+ {k:'bear',n:'Плюшевый мишка',e:'🧸',pr:400,joke:'Мягче подушки, вернее друга.'},
+ {k:'bunny',n:'Зайка с морковкой',e:'🐰',pr:350,joke:'Морковка входит в комплект.'},
+ {k:'penguin',n:'Пингвинчик в шарфике',e:'🐧',pr:380,joke:'Не мёрзнет никогда.'},
+ {k:'kitten',n:'Кот в варежках',e:'🐱',pr:420,joke:'Мурлыкает даже во льду.'},
+ {k:'foxplush',n:'Плюшевая лисичка',e:'🦊',pr:400,joke:'Хитрить не обучена.'},
+ {k:'unicorn',n:'Плюшевый единорог',e:'🦄',pr:700,joke:'Исполняет мечты тихих людей.'},
+ {k:'snowman',n:'Плюшевый снеговик',e:'⛄',pr:450,joke:'Не тает. Проверено дважды.'},
+ {k:'cactus',n:'Кактус-обнимашка',e:'🌵',pr:300,joke:'Обнимает осторожно.'}
+];
+const GIFTS_HUMOR=[
+ {k:'lemonade',n:'Ящик лимонада',e:'🧃',pr:150,joke:'Для суровой зимы.'},
+ {k:'sushki',n:'Пачка сушек',e:'🥨',pr:120,joke:'Баранки — к баранам.'},
+ {k:'socks',n:'Носки с оленями',e:'🧦',pr:140,joke:'Олени бегут прямо к сердцу.'},
+ {k:'broom',n:'Веник Деда Мороза',e:'🧹',pr:180,joke:'Чтобы вымел невезение.'},
+ {k:'hanky',n:'Платок Снегурочки',e:'🧣',pr:160,joke:'Тёплый, как её улыбка.'},
+ {k:'bark',n:'Кора дубовая',e:'🪵',pr:100,joke:'«Зая, я на нудач».'},
+ {k:'herring',n:'Селёдка под шубой',e:'🐟',pr:200,joke:'Греться нельзя. Есть — можно.'},
+ {k:'balloon',n:'Дирижабль «Настроение»',e:'🎈',pr:130,joke:'Поднимает. Иногда буквально.'}
+];
+const GIFTS_CARD=[
+ {k:'card_z',n:'Открытка «Зимняя»',e:'💌',pr:80,joke:'Снежинки вшиты в бумагу.'},
+ {k:'card_l',n:'Открытка «С любовью»',e:'💝',pr:120,joke:'Говорит то, что стесняешься.'},
+ {k:'card_h',n:'Открытка «С приколом»',e:'🤪',pr:90,joke:'Дед Мороз одобряет стёб.'}
+];
+const GIFT_KINDS={plush:GIFTS_PLUSH,humor:GIFTS_HUMOR,card:GIFTS_CARD};
+const EXPRESS_COST=250;
+
+/* ===================== АЧИВКИ ===================== */
+const ACHS=[
+ {id:'first_boss',ic:'🥊',n:'Первый снег',d:'Победить снежного босса',chk:s=>s.bossWins>=1},
+ {id:'boss10',ic:'🛡️',n:'Гроза стражей',d:'10 побед над боссами',chk:s=>s.bossWins>=10},
+ {id:'boss25',ic:'⚔️',n:'Снежный легион',d:'25 побед над боссами',chk:s=>s.bossWins>=25},
+ {id:'full_tree',ic:'🎄',n:'Полная ёлка',d:'Нарядить все 25 мест',chk:s=>s.tree.every(o=>o)},
+ {id:'ads100',ic:'📺',n:'Меценат',d:'100 просмотров рекламы',chk:s=>s.adViews>=100},
+ {id:'task10',ic:'📌',n:'Верный друг',d:'10 заданий от партнёров',chk:s=>s.adTasks>=10},
+ {id:'coll',ic:'🏆',n:'Коллекционер',d:'Собрать коллекцию',chk:s=>collMult()>1.01},
+ {id:'lvl10',ic:'⭐',n:'Уверенный рост',d:'Достичь 10 уровня',chk:s=>s.level>=10},
+ {id:'lvl25',ic:'🌟',n:'Опытный хранитель',d:'Достичь 25 уровня',chk:s=>s.level>=25},
+ {id:'lvl50',ic:'👑',n:'Легенда леса',d:'Достичь 50 уровня',chk:s=>s.level>=50},
+ {id:'streak7',ic:'🔥',n:'Огонь недели',d:'7 дней подряд',chk:s=>s.streak>=7},
+ {id:'streak30',ic:'☄️',n:'Месяц чудес',d:'30 дней подряд',chk:s=>s.streak>=30},
+ {id:'gift1',ic:'🎁',n:'Первый дар',d:'Отправить подарок другу',chk:s=>s.giftsSent>=1},
+ {id:'gift10',ic:'💝',n:'Дед Мороз с клабе',d:'Отправить 10 подарков',chk:s=>s.giftsSent>=10},
+ {id:'sled50',ic:'🛷',n:'Ас саней',d:'50 предметов за спуск',chk:s=>s.catchBest>=50},
+ {id:'rich',ic:'💰',n:'Шишечный магнат',d:'Накопить 10 000 🌰',chk:s=>s.conesPeak>=10000}
+];
+function checkAchs(){
+ ACHS.forEach(a=>{
+  if(S.ach[a.id])return;
+  let ok=false;try{ok=a.chk(S)}catch(e){}
+  if(ok){S.ach[a.id]=1;toast('🎖 Ачивка: '+a.n+'!');addXp(50);save();}
+ });
+}
+
+/* ===================== ГЕОМЕТРИЯ ЁЛКИ (слоты по ширине яруса) ===================== */
 const TIER_GEO=[{yT:28,yB:66,w:26},{yT:60,yB:104,w:40},{yT:96,yB:142,w:54},{yT:132,yB:180,w:66},{yT:168,yB:218,w:78},{yT:204,yB:256,w:90},{yT:240,yB:294,w:100},{yT:276,yB:330,w:108}];
-const ORN_PER_TIER=[1,2,3,3,4,4,4,4];
+const ORN_PER_TIER=[1,2,2,3,3,4,5,5];
 const SLOTS=[];
 TIER_GEO.forEach((g,ti)=>{
  const n=ORN_PER_TIER[ti],spread=g.w*0.72;
@@ -257,14 +340,15 @@ TIER_GEO.forEach((g,ti)=>{
 });
 
 /* ===================== СОСТОЯНИЕ ===================== */
-function defState(){return{cones:200,xp:0,level:1,name:'',bag:[],tree:Array(25).fill(null),treeGarland:null,
- wheelFree:3,wheelDay:'',streak:0,streakDay:'',wishDay:'',dailyDay:'',treeBonusDay:'',
+function defState(){return{pid:'',cones:200,xp:0,level:1,name:'',bag:[],tree:Array(25).fill(null),treeGarland:null,
+ wheelFree:3,wheelDay:'',streak:0,streakDay:'',wishDay:'',dailyDay:'',treeBonusDay:'',conesPeak:200,
  ghUntil:0,stormUntil:0,sparkAt:0,passiveLast:Date.now(),claimed:[],order:null,vidNext:0,taskDoneDay:'',
- adViews:0,adTasks:0,seq:1,catchBest:0,bossWins:0,musOn:false,
+ adViews:0,adTasks:0,seq:1,catchBest:0,bossWins:0,musOn:false,pet:null,
  pig:{saved:0,last:Date.now()},dqDay:'',dqPicks:[],dqPrev:[],dqP:{},dqDone:{},
- st:{ch:1,phase:'intro',q:0,seen:false},chatDay:'',chatGifts:{}}}
+ st:{ch:1,phase:'intro',q:0,seen:false},chatDay:'',chatGifts:{},giftsSent:0,giftsGot:0,
+ seasonBalls:0,cupPts:0,cupWeek:'',gread:{}}}
 let S=defState();
-try{let raw=localStorage.getItem('zini_v15_state');if(raw)S=Object.assign(defState(),JSON.parse(raw));}catch(e){}
+try{let raw=localStorage.getItem('zini_v16_state');if(raw)S=Object.assign(defState(),JSON.parse(raw));}catch(e){}
 function normalizeState(){
  const flat={};
  Object.keys(CATALOG).forEach(r=>CATALOG[r].forEach(it=>{flat[it[0]]={e:it[1],r:r}}));
@@ -283,31 +367,36 @@ function normalizeState(){
  while(S.tree.length<25)S.tree.push(null);
  if(!Array.isArray(S.claimed))S.claimed=[];
  if(!S.pig||typeof S.pig!=='object')S.pig={saved:0,last:Date.now()};
- if(typeof S.pig.saved!=='number')S.pig.saved=0;
- if(typeof S.pig.last!=='number')S.pig.last=Date.now();
  if(!Array.isArray(S.dqPicks))S.dqPicks=[];
  if(!Array.isArray(S.dqPrev))S.dqPrev=[];
  if(!S.dqP||typeof S.dqP!=='object')S.dqP={};
  if(!S.dqDone||typeof S.dqDone!=='object')S.dqDone={};
  if(!S.st||typeof S.st!=='object')S.st={ch:1,phase:'intro',q:0,seen:false};
- if(typeof S.st.ch!=='number'||S.st.ch<1)S.st.ch=1;
  if(['intro','quest','reward','final'].indexOf(S.st.phase)<0)S.st.phase='intro';
- if(typeof S.st.q!=='number')S.st.q=0;
  if(!S.chatGifts||typeof S.chatGifts!=='object')S.chatGifts={};
+ if(!S.ach||typeof S.ach!=='object')S.ach={};
+ if(!S.gread||typeof S.gread!=='object')S.gread={};
+ if(!S.pid)S.pid=TG_USER&&TG_USER.id?('tg'+TG_USER.id):('anon_'+Math.random().toString(36).slice(2,10));
+ if(typeof S.conesPeak!=='number')S.conesPeak=S.cones;
  if(!S.seq)S.seq=S.bag.length+1;
 }
 normalizeState();
 if(!S.name&&TG_USER&&(TG_USER.first_name||TG_USER.username)){S.name=(TG_USER.first_name||TG_USER.username).slice(0,16);}
-function save(){try{localStorage.setItem('zini_v15_state',JSON.stringify(S));}catch(e){}}
+if(!S.name)S.name='Хранитель';
+function save(){
+ if(S.cones>S.conesPeak)S.conesPeak=S.cones;
+ try{localStorage.setItem('zini_v16_state',JSON.stringify(S));}catch(e){}
+}
 const today=()=>new Date().toISOString().slice(0,10);
+const weekKey=()=>{const d=new Date();const on=new Date(d.getFullYear(),0,1);return d.getFullYear()+'w'+Math.ceil(((d-on)/86400000+on.getDay()+1)/7);};
 
-/* ===================== ОБЩИЙ ЗАРАБОТОК (Supabase REST) ===================== */
+/* ===================== SUPABASE: рейтинг, подарки, мир ===================== */
 function supaHeaders(){return{'apikey':SUPA_CFG.key,'Authorization':'Bearer '+SUPA_CFG.key,'Content-Type':'application/json'};}
 function seedStatsRow(){
  if(!SUPA_CFG.url||!SUPA_CFG.key)return;
  fetch(SUPA_CFG.url+'/rest/v1/global_stats',{
   method:'POST',headers:Object.assign(supaHeaders(),{'Prefer':'resolution=merge-duplicates'}),
-  body:JSON.stringify([{id:1,ad_views:0,ad_tasks:0}])
+  body:JSON.stringify([{id:1,ad_views:0,ad_tasks:0,total_hung:0,total_gifts:0}])
  }).catch(function(){});
 }
 function fetchGlobalEarn(){
@@ -325,31 +414,60 @@ function fetchGlobalEarn(){
 }
 function bumpGlobal(field){
  if(!SUPA_CFG.url||!SUPA_CFG.key)return;
- fetch(SUPA_CFG.url+'/rest/v1/rpc/bump_stat',{method:'POST',headers:supaHeaders(),body:JSON.stringify({field:field,by:1})})
-  .then(function(r){if(r.ok){if(CUR==='earn')updateEarn();return;}fallbackBump(field);})
-  .catch(function(){fallbackBump(field);});
-}
-function fallbackBump(field){
- fetch(SUPA_CFG.url+'/rest/v1/global_stats?select=id,ad_views,ad_tasks&id=eq.1',{headers:supaHeaders()})
-  .then(function(r){return r.ok?r.json():null;})
-  .then(function(d){
-   if(!d||!d.length)return;
-   const patch={};
-   if(field==='views')patch.ad_views=(d[0].ad_views||0)+1;
-   else patch.ad_tasks=(d[0].ad_tasks||0)+1;
-   return fetch(SUPA_CFG.url+'/rest/v1/global_stats?id=eq.1',{method:'PATCH',headers:supaHeaders(),body:JSON.stringify(patch)});
-  })
-  .then(function(){if(CUR==='earn')updateEarn();})
+ const patch={};patch[field]=1;
+ fetch(SUPA_CFG.url+'/rest/v1/global_stats?id=eq.1',{method:'PATCH',headers:supaHeaders(),body:JSON.stringify(patch)})
   .catch(function(){});
 }
-function registerAdView(){S.adViews++;save();bumpGlobal('views');}
-function registerTask(){S.adTasks++;save();bumpGlobal('tasks');}
+function ensurePlayer(){
+ if(!SUPA_CFG.url||!SUPA_CFG.key)return Promise.resolve(false);
+ const row={id:S.pid,name:S.name,level:S.level,cones:Math.round(S.cones),boss_wins:S.bossWins,season_balls:S.seasonBalls,hung:S.tree.filter(Boolean).length};
+ return fetch(SUPA_CFG.url+'/rest/v1/players?on_conflict=id',{
+  method:'POST',headers:supaHeaders(),body:JSON.stringify([row])
+ }).then(r=>r.ok).catch(()=>false);
+}
+function syncPlayer(){ensurePlayer().then(function(ok){if(CUR==='rate')renderRate();});}
+function fetchRating(){
+ if(!SUPA_CFG.url||!SUPA_CFG.key)return Promise.resolve({err:'SUPA_CFG не заполнен'});
+ return fetch(SUPA_CFG.url+'/rest/v1/players?select=id,name,level,cones,boss_wins&order=level.desc,cones.desc&limit=50',{headers:supaHeaders()})
+  .then(function(r){if(!r.ok)return{err:'HTTP '+r.status};return r.json().then(d=>({rows:d||[]}))})
+  .catch(function(){return {err:'сеть недоступна'};});
+}
+function findFriend(nm){
+ if(!SUPA_CFG.url||!SUPA_CFG.key)return Promise.resolve(null);
+ return fetch(SUPA_CFG.url+'/rest/v1/players?select=id,name&name=ilike.'+encodeURIComponent(nm)+'&limit=1',{headers:supaHeaders()})
+  .then(function(r){if(!r.ok)return null;return r.json().then(d=>(d&&d.length)?d[0]:null)})
+  .catch(function(){return null;});
+}
+function fetchNewGifts(){
+ if(!SUPA_CFG.url||!SUPA_CFG.key)return Promise.resolve([]);
+ return fetch(SUPA_CFG.url+'/rest/v1/gifts?select=*&to_id=eq.'+encodeURIComponent(S.pid)+'&read=eq.false&order=id.desc&limit=20',{headers:supaHeaders()})
+  .then(function(r){if(!r.ok)return[];return r.json().then(d=>d||[]);})
+  .catch(function(){return [];});
+}
+function markGiftRead(id){
+ fetch(SUPA_CFG.url+'/rest/v1/gifts?id=eq.'+id,{method:'PATCH',headers:supaHeaders(),body:JSON.stringify({read:true})}).catch(function(){});
+}
+function sendGiftRow(friend,kind,name,msg,secret){
+ if(!SUPA_CFG.url||!SUPA_CFG.key)return Promise.resolve(false);
+ const row={from_id:S.pid,from_name:S.name,to_id:friend.id,kind:kind,name:name,msg:msg,secret:!!secret};
+ return fetch(SUPA_CFG.url+'/rest/v1/gifts',{method:'POST',headers:supaHeaders(),body:JSON.stringify([row])})
+  .then(function(r){
+   if(!r.ok)return false;
+   bumpGlobal('total_gifts');
+   if(BOT_CFG.notifyUrl&&friend.id)fetch(BOT_CFG.notifyUrl,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({to:friend.id,text:'🎁 Вам пришёл новый подарок от '+S.name+'! Заберите в игре'})}).catch(function(){});
+   return true;
+  })
+  .catch(function(){return false;});
+}
+function registerAdView(){S.adViews++;save();bumpGlobal('ad_views');}
+function registerTask(){S.adTasks++;save();bumpGlobal('ad_tasks');}
 function earnEstimateUsd(v,t){return (v!==undefined?v:S.adViews)*EARN_CFG.perViewUsd+(t!==undefined?t:S.adTasks)*EARN_CFG.perTaskUsd;}
 
 /* ===================== УТИЛИТЫ ===================== */
 const $=id=>document.getElementById(id);
 function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;const h=$('toast');if(!h)return;h.appendChild(d);setTimeout(()=>d.remove(),2200);}
 function fmt(n){return n>=1000?(n/1000).toFixed(n%1000?1:0).replace('.0','')+'к':''+n}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function rand(a,b){return Math.floor(a+Math.random()*(b-a+1))}
 function pick(a){return a[rand(0,a.length-1)]}
 function xpNeed(l){return 100+l*50}
@@ -359,7 +477,7 @@ function gain(n,src){
  if(S.order&&S.order.t==='earn')progOrder(n*m);
  storyProg('earn',n*m);
  addXp(Math.round(n*m/12));
- save();renderHeader();
+ checkAchs();save();renderHeader();
 }
 function spend(n){if(S.cones<n){toast('Не хватает шишек 🌰');return false}S.cones-=n;save();renderHeader();return true}
 function addXp(n){S.xp+=n;while(S.xp>=xpNeed(S.level)&&S.level<100){S.xp-=xpNeed(S.level);S.level++;toast('🎉 Уровень '+S.level+'!');}renderHeader();save();}
@@ -379,28 +497,7 @@ function voiceDrop(){
  S.cones+=25;save();renderHeader();toast('🔊 «Зини дроп!» +25 🌰');
 }
 
-/* ===================== ГОЛОСА НПС (синтез речи) ===================== */
-const VOICE={
- santa:{p:0.6,r:0.85},sneg:{p:1.4,r:1.0},lopa:{p:0.85,r:0.95},
- fox:{p:1.15,r:1.15},hedge:{p:0.9,r:1.05},gram:{p:0.55,r:0.78},
- morana:{p:0.9,r:0.8},zini:{p:1.25,r:0.9}
-};
-function speakLine(text,npc){
- try{
-  if(!('speechSynthesis' in window))return;
-  const clean=text.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}]/gu,'').replace(/«|»/g,'"');
-  if(!clean.trim())return;
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(clean);
-  u.lang='ru-RU';
-  const v=VOICE[npc]||{p:1,r:1};
-  u.pitch=v.p;u.rate=v.r;u.volume=0.9;
-  speechSynthesis.speak(u);
- }catch(e){}
-}
-function stopSpeech(){try{if('speechSynthesis' in window)speechSynthesis.cancel();}catch(e){}}
-
-/* ===================== МУЗЫКА: полная «Jingle Bells» с басом ===================== */
+/* ===================== МУЗЫКА: «Jingle Bells» с басом ===================== */
 let musCtx=null,musTimer=null,musOn=false,musMode='ambient',musIdx=0,musBeat=0;
 const NOTE={C3:130.8,D3:146.8,F3:174.6,G3:196,C4:261.6,D4:293.7,E4:329.6,F4:349.2,G4:392,A4:440,B4:493.9,C5:523.3,D5:587.3,E5:659.3,F5:698.5,G5:784};
 const MELODY=[
@@ -460,8 +557,599 @@ function toggleMusic(){
  musLoop();renderHeader();
  toast('♫ «Jingle Bells» — полная версия с басом!');
 }
+/* ===================== КОЛЛЕКЦИИ, КОПИЛКА, ЗАДАНИЯ ДНЯ ===================== */
+const SETS=[
+ {n:'Зимний сад',items:['Снежинка','Колокольчик','Свечка'],bonus:0.05},
+ {n:'Лесные друзья',items:['Белка','Олень','Медвежонок'],bonus:0.08},
+ {n:'Звёздный час',items:['Серебристая звезда','Комета','Звезда желания'],bonus:0.12}
+];
+function ownedNames(){const s=new Set();S.bag.concat(S.tree.filter(Boolean)).forEach(o=>s.add(o.name));return s}
+function collMult(){const on=ownedNames();let m=1;SETS.forEach(st=>{if(st.items.every(i=>on.has(i)))m+=st.bonus});return m}
+function pigTick(){if(!S.pig)S.pig={saved:0,last:Date.now()};const mins=(Date.now()-S.pig.last)/60000;S.pig.saved=Math.min(500,Math.floor(S.pig.saved+mins*S.level));S.pig.last=Date.now();}
+function claimPig(){
+ pigTick();
+ if(S.pig.saved<50){toast('🐷 В копилке '+S.pig.saved+'/500 — копится со временем');return}
+ const c=S.pig.saved;S.pig.saved=0;S.pig.last=Date.now();
+ gain(c,'pig');toast('🐷 Копилка вскрыта: +'+c+' 🌰');
+ if(CUR==='tree')renderTree();
+}
+const DQ=[
+ {id:'ads',n:'Посмотреть 3 видео',need:3,rw:400},
+ {id:'sled',n:'Собрать 20 предметов в санях',need:20,rw:350},
+ {id:'balls',n:'Лопнуть 15 снежков',need:15,rw:350},
+ {id:'hang',n:'Повесить 3 игрушки',need:3,rw:250},
+ {id:'boss',n:'Победить снежного босса',need:1,rw:500}
+];
+function dqEnsure(){
+ if(S.dqDay!==today()){
+  let tries=0,picks;
+  do{
+   picks=[0,1,2,3,4].sort(()=>Math.random()-0.5).slice(0,3);
+   tries++;
+  }while(S.dqPrev&&picks.every(i=>(S.dqPrev||[]).includes(i))&&tries<5);
+  S.dqDay=today();S.dqPicks=picks;S.dqPrev=picks;
+  S.dqP={};S.dqDone={};save();
+ }
+}
+function dqProg(id,n){
+ dqEnsure();
+ const idx=DQ.findIndex(d=>d.id===id);
+ if(idx<0||!S.dqPicks.includes(idx))return;
+ const d=DQ[idx];
+ if(S.dqDone[id])return;
+ S.dqP[id]=(S.dqP[id]||0)+n;
+ if(S.dqP[id]>=d.need){
+  S.dqDone[id]=true;gain(d.rw,'quest');addXp(40);
+  toast('✅ Задание дня «'+d.n+'»: +'+d.rw+' 🌰');
+ }
+ save();
+}
 
-/* ===================== ИГРУШКИ И ГИРЛЯНДЫ ===================== */
+/* ===================== ДЕД-КВЕСТ: игрушка дня ===================== */
+function allItemNames(){
+ const a=[];Object.keys(CATALOG).forEach(r=>CATALOG[r].forEach(it=>a.push(it[0])));return a;
+}
+function dedqEnsure(){
+ if(S.dedqDay!==today()){
+  S.dedqDay=today();S.dedqItem=pick(allItemNames());S.dedqDone=false;save();
+ }
+}
+function dedqHas(){return S.bag.some(o=>!o.garland&&o.name===S.dedqItem)}
+function dedqGive(){
+ dedqEnsure();
+ if(S.dedqDone){toast('⏳ Заказ Деда уже выполнен — приходите завтра');return}
+ const bi=S.bag.findIndex(o=>!o.garland&&o.name===S.dedqItem);
+ if(bi<0){toast('🎅 «'+S.dedqItem+'» нет в мешке — купите в Витрине');return}
+ S.bag.splice(bi,1);S.dedqDone=true;
+ gain(1000,'dedq');addXp(80);
+ toast('🎅 Дед Мороз счастлив! Двойная награда: +1000 🌰');
+ save();if(CUR==='tree')renderTree();if(CUR==='inv')renderInv();
+}
+
+/* ===================== ГОЛОСА НПС ===================== */
+const VOICE={
+ santa:{p:0.6,r:0.85},sneg:{p:1.4,r:1.0},lopa:{p:0.85,r:0.95},
+ fox:{p:1.15,r:1.15},hedge:{p:0.9,r:1.05},gram:{p:0.55,r:0.78},
+ morana:{p:0.9,r:0.8},zini:{p:1.25,r:0.9}
+};
+function speakLine(text,npc){
+ try{
+  if(!('speechSynthesis' in window))return;
+  const clean=text.replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}]/gu,'').replace(/«|»/g,'"');
+  if(!clean.trim())return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(clean);
+  u.lang='ru-RU';
+  const v=VOICE[npc]||{p:1,r:1};
+  u.pitch=v.p;u.rate=v.r;u.volume=0.9;
+  speechSynthesis.speak(u);
+ }catch(e){}
+}
+function stopSpeech(){try{if('speechSynthesis' in window)speechSynthesis.cancel();}catch(e){}}
+
+/* ===================== НПС: ПОРТРЕТЫ С КАРТИНКАМИ ===================== */
+function twSrc(e){return TW_URL+[...e].map(c=>c.codePointAt(0).toString(16)).join('-')+'.svg'}
+const NPCS={
+ santa:{n:'Дед Мороз',e:'🎅',g1:'#c23a3a',g2:'#5a1010',gl:'rgba(255,120,100,.5)'},
+ sneg:{n:'Снегурочка',e:'🤶',g1:'#7fc4ff',g2:'#1d4fc0',gl:'rgba(120,200,255,.55)'},
+ lopa:{n:'Снеговик Лёпа',e:'⛄',g1:'#a8d8ff',g2:'#2f6fa0',gl:'rgba(160,220,255,.5)'},
+ fox:{n:'Лиса Рыжуля',e:'🦊',g1:'#ffb066',g2:'#b04a10',gl:'rgba(255,170,90,.55)'},
+ hedge:{n:'Ёжик Тёпа',e:'🦔',g1:'#d9b585',g2:'#6a4a28',gl:'rgba(220,180,130,.5)'},
+ gram:{n:'Ворон Грам',e:'🐦',g1:'#6a5a9e',g2:'#1d1440',gl:'rgba(150,120,220,.5)'},
+ morana:{n:'Морана, Ледяная Королева',e:'👸',g1:'#bfe8ff',g2:'#1a4a70',gl:'rgba(150,230,255,.6)',evil:true},
+ zini:{n:'Дух Ёлки Зини',e:'🎄',g1:'#7ee8a2',g2:'#136b3d',gl:'rgba(120,255,180,.6)'}
+};
+function portraitHTML(k){
+ const n=NPCS[k];
+ return '<div class="portrait" style="--g1:'+n.g1+';--g2:'+n.g2+';--gl:'+n.gl+'">'
+  +'<img src="'+twSrc(n.e)+'" alt="" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'block\'">'
+  +'<span class="em" style="display:none">'+n.e+'</span></div>';
+}
+
+/* ===================== СЮЖЕТ (переписан) ===================== */
+const STORY=[
+ {ch:1,npc:'santa',title:'Сердце под снегом',
+  myst:['Тише. Слышишь, как скрипит иней?','Под тремя снегами спит сердце. Оно бьётся раз в год.','В этот раз оно бьётся слабо. Очень слабо.'],
+  lines:['Ёлка Зини — не просто дерево. Тысячу лет она держала зиму доброй: пока её сердце стучит, метели не выходят из берегов.',
+   'А этой ночью сердце сбилось с ритма. Морана — та, что правит льдом, — снова не позвана на праздник. И зима обиделась.',
+   'Нам нужны три игрушки. Не золотые — тёплые. Ёлка чувствует заботу, а не цену. Повесь любые три, и она приоткроет глаз.',
+   'И слушай: над снегами уже кружит тень. Услышишь шёпот — не отвечай сразу. Сначала подумай, чей это голос.'],
+  quest:{t:'hang',n:3,rw:300,label:'Повесьте 3 игрушки на ёлку'},
+  out:'Огоньки! Слышишь? Сердце стучит ровнее. Но это только первый вздох…',
+  reward:{cones:300,item:'rare'}},
+ {ch:2,npc:'sneg',title:'Искристый настой',
+  myst:['Настой не варят. Настой ждут.','Пока ждут — собирают искры. Каждую.','Дедушка стар. Ты — его руки.'],
+  lines:['Дедушке уже легче, спасибо. Но ёлке — нет: огоньки горят, а сердце всё ещё холодное.',
+   'Есть старинный рецепт — искристый настой. Варится из пятисот шишек и одного терпения. Проверено бабушкой лично.',
+   'Собери 500 🌰 как умеешь: мини-игры, колесо, копилка. Настой любит тех, кто не суетится.',
+   'И ещё. Пока варится настой, из леса крадут искры. Я видела тень — она летела против ветра. Против ветра, понимаешь?'],
+  quest:{t:'earn',n:500,rw:400,label:'Заработайте 500 🌰'},
+  out:'Настой готов и пахнет праздником! Держи гирлянду — она сплетена из первых огоньков ёлки.',
+  reward:{cones:400,garland:true}},
+ {ch:3,npc:'lopa',title:'Тропа подарков',
+  myst:['Следы ведут к обрыву. И обрываются.','Подарки падают. Все сразу.','Ловить нужно быстро. И элегантно.'],
+  lines:['Катастрофа эстетического масштаба: мешок Деда Мороза порвался на склоне, и подарки рассыпались по всему склону!',
+   'Спасение одно — сани. Собери двадцать подарков за спуск, а я буду координировать операцию снизу. Морально.',
+   'Магнит притянет подарки, щит спасёт от льда, а лёд… лёд — это драма. Избегай драмы.',
+   'Если соберёшь много — под ёлкой будет гора. Если мало — у меня будет повод для грусти. Выбирай, что тебе ближе.'],
+  quest:{t:'sled',n:20,rw:450,label:'Соберите 20 предметов в «Поймай в сани»'},
+  out:'Гора подарков под ёлкой! Даже мандарины не помялись. Я гений логистики.',
+  reward:{cones:450}},
+ {ch:4,npc:'fox',title:'Зов Рыжули',
+  lines:['Слышишь вой на вершине? Это Снежный страж. Морана послала его посмотреть, кто шумит под ёлкой.',
+   'Страж не злодей. Он как большой лохматый будильник: если его не усыпить — разбудит всю зиму.',
+   'Тапай быстро, держи комбо и сбивай льдинки — они отматывают время. У нас сорок пять секунд, чтобы усыпить стража.',
+   'И вот что странно: перед боем страж шептал «простите». Кому? Мне? Тебе? Или той, что осталась наверху одна?'],
+  quest:{t:'boss',n:1,rw:600,label:'Победите снежного босса'},
+  out:'Страж уснул с улыбкой. Держи эпическую игрушку — нашла её в его снежной гриве. Честно-честно!',
+  reward:{cones:600,item:'epic'}},
+ {ch:5,npc:'gram',title:'Шёпот снежков',
+  myst:['Крак. Крак. Это не иней.','Это я пересчитываю снежинки.','Их стало больше на сорок. Сорок лишних.'],
+  lines:['Я ворон. Я считаю всё: снежинки, ворон, обиды. Сегодня на поляне сорок снежков чужой воли.',
+   'Лопни их — и тень отступит. Это не просьба. Это экзамен. Я экзаменую каждого, кто хочет знать правду о зиме.',
+   'Правда проста: Морана не злодейка. Она — гостья, которую тысячу лет не звали на праздник. Обиженная гостья страшнее врага.',
+   'Лопни сорок. И мы пойдём дальше. Я уже вижу вершину Бурой горы. И звезду во льду.'],
+  quest:{t:'balls',n:40,rw:650,label:'Лопните 40 снежков в «Лопни снежки»'},
+  out:'Сорок. Я считал. Тень отступила к ледяным вершинам. Так я и думал.',
+  reward:{cones:650}},
+ {ch:6,npc:'gram',title:'Колесо судьбы',
+  myst:['Колесо скрипит. Оно скрипело и тысячу лет назад.','Тогда тоже ждали гостью.','Её так и не позвали. Помни это, когда крутишь.'],
+  lines:['Судьба — это колесо, которое крутят не ради призов, а ради знаков. Крути пять раз. Считай знаки.',
+   'Я летал до Бурой горы. Звезда Духа — во льду. Вокруг льда — вехи. Вехи помнят: каждый год Морана смотрела на праздник снизу вверх.',
+   'Тысяча лет никто не сказал ей «заходи». Понимаешь? Не боялись. Просто не сказали.',
+   'Крути колесо. Потом пойдём наверх. Не сражаться. Говорить.'],
+  quest:{t:'wheel',n:5,rw:700,label:'Крутаните Колесо Зини 5 раз'},
+  out:'Пять знаков. Ясно. Теперь — наверх. Возьми с собой не меч, а доброе слово.',
+  reward:{cones:700}},
+ {ch:7,npc:'morana',title:'Гостья без приглашения',evil:true,
+  myst:['Ты поднялся высоко. Холод здесь честный.','Я не прячу лицо. Оно просто в инее.','Сядь. Поговорим. Или стой. Как хочешь.'],
+  lines:['Значит, ты. Хранитель с тёплыми руками. Ёлка светится, лес поёт, все довольны. Кроме меня. Всегда — кроме меня.',
+   'Звезду я взяла. Не из злобы — из боли: раз праздник без меня, пусть у праздника не будет звезды. Честно? Честно.',
+   'Стража не победить силой. Он сдаётся, когда слышит смех. Тапай бодро — он услышит и уснёт. Забирай звезду.',
+   'И… если когда-нибудь праздник будет и для меня — я верну все метели в берега. Все. До одной.'],
+  quest:{t:'boss',n:1,rw:900,label:'Усыпите снежного стража Мораны'},
+  out:'Страж уснул. Забирай звезду. И… спасибо, что поднялся без меча. Это давно никто не делал.',
+  reward:{cones:900,item:'epic'}},
+ {ch:8,npc:'zini',title:'Праздник всех',
+  myst:['Я — Древо. Я — Зини. Я всё видела.','Тысячу лет я ждала, кто наведёт порядок в сердцах.','Ты навёл. Осталась последняя ветвь — общая.'],
+  lines:['Морана вернула звезду — и впервые за тысячу лет просидела у огня со всеми. Дед Мороз налил ей какао. Она плакала инеем.',
+   'Осталась последняя ветвь: наряди меня полностью. Двадцать пять игрушек — двадцать пять подарков всему лесу.',
+   'Когда встанет последняя — небо вспыхнет твоим именем, и зима станет доброй ещё на целый год.',
+   'А потом — праздник. Все. Даже Грам. Даже Морана. Особенно Морана.'],
+  quest:{t:'hang_all',n:1,rw:2000,label:'Нарядите ёлку полностью: 25 игрушек'},
+  out:'СИЯЮ! Ты — Хранитель Ёлки. Небо над лесом горит твоим именем. С праздником, друг!',
+  reward:{cones:2000,item:'legend'}}
+];
+const NPC_CHAT={
+ santa:['Каша в печи, снег на ветках — жизнь удалась. Главное — сердце ёлки стучит.','Знаешь, олени тоже просят игрушки. Но им я говорю: трудитесь, как этот хранитель!','С ноября уже настоящие призы — деньги, сертификаты! Так что шишки копи усерднее.','Морана сидела у огня молча. Но молчала она тепло. Такого я не видел тысячу лет.'],
+ sneg:['Хочешь секрет? Снежинки падают ровно тогда, когда ты заботишься о ёлке.','Я коллекционирую морозные узоры. Каждая ветка — как новый витраж.','Не забывай копилку! Она копит даже пока ты спишь.','Морана… она не чудовище. Просто её никто никогда не звал на праздник. Мы исправляем это.'],
+ lopa:['Меня назвали Лёпа, потому что я элегантный. Логично же!','Морковка у меня премиальная. Из самого оранжевого снега.','На ярмарке меняются игрушками. Я бы поменял свою морковку на цилиндр. Но она невоспроизводима.'],
+ fox:['Бегаю быстрее ветра. Ну, почти. Ветер просто тренированнее.','Если найдёшь золотую искру — она моя!.. Ладно, твоя. Но я завидую.','Страж перед сном пробормотал «передайте королеве». Что передать — не успел. Интригующая птица. Вернее, сугроб.'],
+ hedge:['Коллекции — это мой конёк. Точнее, иголки. Собери набор — получишь вечный бонус!','Я считаю шишки быстрее всех. Один раз насчитал двести. Врут ли мои иголки — не знаю.','Тишина в лесу бывает только когда Буря спит. Пусть спит подольше!'],
+ gram:['Крак. Вопрос на засыпку: что тяжелее — снег или молчание? Отвечу: молчание.','Я вижу то, что скрыто под снегом. Иногда жалею об этом.','Морана? Хм. Я ворон, я не даю советов. Я даю загадки. Но скажу одно: какао ей понравилось.'],
+ morana:['Ты снова здесь? Смело. Или глупо. Впрочем, в зимнем лесу это одно и то же.','Какао было… тёплым. Я забыла, что бывает тёплое. Спасибо деду. Не говори ему.','Праздник теперь у меня в памяти. Храню бережно. Как первую сосульку.'],
+ zini:['Я помню каждую руку, что вешала на меня игрушки. Тысячи зим, тысячи детей.','Когда ты рядом, мои ветви теплее. Это не поэзия — это физиология древа.','Морана улыбнулась. Я почувствовала это всеми иголками. Впервые за тысячу лет.']
+};
+const RIDDLES={
+ santa:{q:'Что растёт вниз головой и тает от тепла?',o:['Сосулька','Морковка','Шапка'],a:0},
+ sneg:{q:'Что белое падает с неба и не тает в руках у Мороза?',o:['Снежинка','Каша','Луна'],a:0},
+ lopa:{q:'Что я ношу на голове и потерял в прошлой главе?',o:['Цилиндр','Морковку','Улыбку'],a:0},
+ fox:{q:'Чем больше из неё берёшь, тем больше она становится. Что это?',o:['Яма','Норка','Клубок'],a:0},
+ hedge:{q:'Сколько иголок у ёжика в полночь?',o:['Все','Ни одной','Ровно двести'],a:0},
+ gram:{q:'Что можно поймать, но нельзя удержать в руках?',o:['Мгновение','Снежинку','Эхо'],a:0},
+ morana:{q:'Что сильнее льда?',o:['Тепло','Камень','Ветер'],a:0},
+ zini:{q:'Я светлю, но не огонь. Я падаю, но не снег. Кто я?',o:['Звезда','Лампа','Комета'],a:0}
+};
+
+/* ===================== ДИАЛОГИ ===================== */
+let DLG=null;
+function showDlg(npc,title,lines,endLabel,endFn,myst){
+ DLG={npc:npc,title:title,lines:Array.isArray(lines)?lines:[lines],i:0,endLabel:endLabel||'Далее ▸',endFn:endFn||null,myst:!!myst};
+ paintDlg();
+}
+function paintDlg(){
+ const box=$('mbox');if(!box||!DLG)return;
+ const npc=NPCS[DLG.npc]||{n:'???'};
+ let h='';
+ if(DLG.myst)h='<div class="dlgVoice">✦ ГОЛОС ВО ТЬМЕ ✦</div><div class="dlgMyst">'+DLG.lines[DLG.i]+'</div>';
+ else h='<div class="dlgFace">'+portraitHTML(DLG.npc)+'</div><div class="dlgName">'+npc.n+'</div><div class="dlgTitle">'+DLG.title+'</div>'
+  +'<div class="card" style="margin-bottom:10px">'+DLG.lines[DLG.i]+'</div>';
+ h+='<button class="btn" id="dlgNext">'+(DLG.i<DLG.lines.length-1?'Далее ▸':DLG.endLabel)+'</button>';
+ box.innerHTML=h;
+ $('modal').classList.add('show');showBackBtn();setMusicMode('story');
+ if(!DLG.myst)speakLine(DLG.lines[DLG.i],DLG.npc);
+ $('dlgNext').onclick=function(){
+  DLG.i++;
+  if(DLG.i<DLG.lines.length)paintDlg();
+  else{const f=DLG.endFn;DLG=null;closeModal();if(f)f();}
+ };
+}
+function showRiddle(k){
+ const r=RIDDLES[k];if(!r)return;
+ const box=$('mbox');
+ let h='<div class="dlgFace">'+portraitHTML(k)+'</div><div class="dlgName">'+NPCS[k].n+'</div><div class="dlgTitle">Загадка от '+NPCS[k].n+'</div>'
+  +'<div class="card" style="margin-bottom:10px">«'+r.q+'»</div><div class="small" style="margin-bottom:6px">Верно: +80 🌰 · Смелая попытка: +30 🌰</div><div class="rbtn2">';
+ r.o.forEach((opt,oi)=>{h+='<button class="btn blue" onclick="answerRiddle(\''+k+'\','+oi+')">'+opt+'</button>';});
+ h+='</div>';
+ box.innerHTML=h;$('modal').classList.add('show');showBackBtn();setMusicMode('story');
+ speakLine(r.q,k);
+}
+function answerRiddle(k,oi){
+ const r=RIDDLES[k];
+ const ok=oi===r.a;
+ if(!S.chatGifts[k])S.chatGifts[k]=1;
+ gain(ok?80:30,'riddle');addXp(ok?25:8);
+ toast(ok?'🧩 Верно! +80 🌰':'🧩 Ответ: «'+r.o[r.a]+'». Но +30 🌰 за смелость!');
+ DLG=null;closeModal();
+}
+function openStoryDlg(){
+ const st=STORY[S.st.ch-1];if(!st)return;
+ if(S.st.phase==='intro'){
+  const f=function(){S.st.phase='quest';S.st.q=0;save();renderStory();toast('🎯 Задание: '+st.quest.label);};
+  if(st.myst&&st.myst.length){
+   showDlg(st.npc,'Глава '+S.st.ch+': '+st.title,st.myst,'Слышать дальше…',function(){
+    showDlg(st.npc,'Глава '+S.st.ch+': '+st.title,st.lines,'Взять задание 🎯',f,st.evil);
+   },true);
+  }else showDlg(st.npc,'Глава '+S.st.ch+': '+st.title,st.lines,'Взять задание 🎯',f,st.evil);
+ }
+ else if(S.st.phase==='quest')showDlg(st.npc,'Глава '+S.st.ch,st.quest.label+' — '+Math.min(S.st.q,st.quest.n)+'/'+st.quest.n,'Понятно ✔',null,st.evil);
+ else if(S.st.phase==='reward')claimChapter();
+ else showDlg(st.npc,'Воспоминания',['История пройдена! Но заходи поболтать — между праздниками мне одиноко.'],'Пока! 👋',null,false);
+}
+function claimChapter(){
+ const st=STORY[S.st.ch-1];if(!st)return;
+ const rtxt='Награда: +'+st.reward.cones+' 🌰'+(st.reward.item?' и подарок от героя истории!':'')+(st.reward.garland?' и гирлянда!':'');
+ showDlg(st.npc,'Глава '+S.st.ch+' завершена!',[st.out,rtxt],'Забрать награду 🎁',function(){
+  gain(st.reward.cones,'story');addXp(60);
+  if(st.reward.item){const o=mkOrn(st.reward.item);S.bag.push(o);toast('🎁 Получено: '+o.emoji+' '+o.name);}
+  if(st.reward.garland){S.bag.push({uid:'g'+(S.seq++),name:'Классическая гирлянда',emoji:'💡',rar:'garland',type:'classic',garland:true});toast('💡 Гирлянда в мешке!');}
+  S.st.ch++;S.st.q=0;S.st.phase=S.st.ch<=STORY.length?'intro':'final';S.st.seen=true;
+  save();renderStory();if(CUR==='tree')renderTree();
+ },st.evil);
+}
+function storyProg(t,n){
+ if(!S.st||S.st.phase!=='quest')return;
+ const st=STORY[S.st.ch-1];if(!st||st.quest.t!==t)return;
+ S.st.q=Math.min(st.quest.n,S.st.q+n);
+ save();
+ if(S.st.q>=st.quest.n){S.st.phase='reward';save();claimChapter();}
+}
+function chatWith(k){
+ if(S.chatDay!==today()){S.chatDay=today();S.chatGifts={};}
+ const st=STORY[S.st.ch-1];
+ if(st&&st.npc===k&&S.st.phase!=='final'){openStoryDlg();return}
+ if(!S.chatGifts[k]&&RIDDLES[k]){showRiddle(k);return}
+ if(!S.chatGifts[k]){S.chatGifts[k]=1;gain(30,'chat');toast('💬 '+NPCS[k].n+': +30 🌰 за разговор');}
+ showDlg(k,'Разговор по душам',[pick(NPC_CHAT[k])],'Пока! 👋',null,NPCS[k].evil);
+}
+function storyCard(){
+ const st=STORY[S.st.ch-1];
+ if(!st)return '<div class="card"><h3>📖 История пройдена!</h3><div class="small">Ты — Хранитель Ёлки! Морана сидит у огня. Грам всё ещё пересчитывает снежинки.</div></div>';
+ const evl=st.evil?' <span class="rbadge rb-epic">⚠️ холодный персонаж</span>':'';
+ if(S.st.phase==='intro')return '<div class="card"><h3>📖 Глава '+S.st.ch+': '+st.title+evl+'</h3><div class="small">Начинается глава… Голос во тьме уже ждёт.</div><button class="btn gold" style="margin-top:8px" onclick="openStoryDlg()">💬 Продолжить историю</button></div>';
+ if(S.st.phase==='quest'){const p=Math.min(S.st.q,st.quest.n);return '<div class="card"><h3>🎯 Глава '+S.st.ch+': '+st.title+evl+'</h3><div class="small">'+st.quest.label+' — '+p+'/'+st.quest.n+'</div><div class="passbar"><div class="passfill" style="width:'+Math.min(100,100*p/st.quest.n)+'%"></div></div><button class="btn" style="margin-top:6px" onclick="openStoryDlg()">💬 К '+NPCS[st.npc].n+'</button></div>';}
+ return '<div class="card"><h3>🎁 Глава '+S.st.ch+' завершена!</h3><div class="small">Награда ждёт!</div><button class="btn gold" style="margin-top:8px" onclick="openStoryDlg()">Забрать награду</button></div>';
+}
+function renderStory(){
+ let html='<div class="card"><h3>📖 История Ёлки Зини</h3><div class="small">Глава '+Math.min(S.st.ch,STORY.length)+' из '+STORY.length+' · голос во тьме и одна очень холодная гостья</div></div>';
+ html+=storyCard();
+ html+='<div class="card prize"><div class="small" style="color:#ffe9a8">'+PRIZES_TEXT+'</div></div>';
+ html+='<div class="card"><h3>🧑‍🤝‍🧑 Жители леса</h3><div class="npcGrid">';
+ Object.keys(NPCS).forEach(k=>{
+  html+='<div class="npcB'+(NPCS[k].evil?' evil':'')+'" onclick="chatWith(\''+k+'\')">'+portraitHTML(k)+'<div class="nm">'+NPCS[k].n+'</div></div>';
+ });
+ html+='</div><div class="small" style="margin-top:6px">Раз в день у каждого — загадка (+80 🌰 за верный ответ). Морана подсвечена льдом — но теперь она своя.</div></div>';
+ if(S.st.ch>1){
+  let done='<div class="card"><h3>📜 Пройденные главы</h3>';
+  for(let i=1;i<S.st.ch&&i<=STORY.length;i++)done+='<div class="small">✅ Глава '+i+': '+STORY[i-1].title+'</div>';
+  html+=done+'</div>';
+ }
+ $('main').innerHTML=html;
+}
+
+/* ===================== ЗВЕЗДА ЖЕЛАНИЯ ===================== */
+function hasWishStar(){return S.bag.some(o=>o.name==='Звезда желания')||S.tree.some(o=>o&&o.name==='Звезда желания')}
+function makeWish(){
+ if(S.wishDay===today()){toast('⏳ Желание — раз в день');return}
+ if(!hasWishStar()){toast('💫 Нужна «Звезда желания»');return}
+ S.wishDay=today();
+ if(Math.random()<0.5){const c=rand(200,1000);gain(c,'wish');toast('💫 Сбылось! +'+c+' 🌰');}
+ else{const o=mkOrn('epic');S.bag.push(o);toast('💫 Звезда дарит: '+o.emoji+' '+o.name+'!');}
+ addXp(50);save();renderInv();
+}
+
+/* ===================== ЗАКАЗЫ ДЕДА МОРОЗА ===================== */
+function genOrder(){
+ const r=rand(0,2);let o;
+ if(r===0){const rar=pick(['common','rare','epic']);o={t:'hang',rar:rar,n:rand(2,3),done:0,reward:rar==='epic'?900:rar==='rare'?600:400};}
+ else if(r===1){o={t:'earn',n:400,done:0,reward:300};}
+ else{o={t:'sled',n:15,done:0,reward:350};}
+ S.order=o;save();
+}
+function progOrder(n){
+ if(!S.order)return;S.order.done+=n;
+ if(S.order.done>=S.order.n){
+  const rw=S.order.reward;gain(rw,'order');addXp(60);
+  toast('🎅 Дед Мороз: заказ выполнен! +'+rw+' 🌰');
+  S.order=null;setTimeout(genOrder,3000);
+ }
+ save();
+}
+function checkFullTree(){
+ if(S.treeBonusDay===today())return;
+ if(S.tree.every(o=>o)){S.treeBonusDay=today();gain(500,'tree');toast('🌟 Ёлка наряжена полностью! +500 🌰');}
+}
+
+/* ===================== ЗВОНАРИ + КУБОК + СЕЗОН ===================== */
+function bumpHung(){bumpGlobal('total_hung');checkBells();}
+function checkBells(){
+ if(S.goldenDay===today())return;
+ fetch(SUPA_CFG.url+'/rest/v1/global_stats?select=total_hung&id=eq.1',{headers:supaHeaders()})
+  .then(r=>r.ok?r.json():null)
+  .then(d=>{
+   if(d&&d.length&&(d[0].total_hung||0)>=10000){
+    S.goldenDay=today();S.ghUntil=Date.now()+3600000;save();
+    toast('🔔 ЁЛОЧНЫЕ ЗВОНАРИ! Мир повесил 10 000 игрушек — Золотой праздник на час, награды ×2!');
+   }
+  }).catch(function(){});
+}
+function cupAdd(n){
+ if(S.cupWeek!==weekKey()){S.cupWeek=weekKey();S.cupPts=0;}
+ S.cupPts+=n;save();syncPlayer();
+}
+function ballSeasonAdd(n){S.seasonBalls+=n;save();syncPlayer();}
+
+/* ===================== ПОДАРКИ: отправка, получение, Тайный Санта ===================== */
+if(!Array.isArray(S.myGifts))S.myGifts=[];
+function buyGift(kind,idx){
+ const g=GIFT_KINDS[kind][idx];
+ if(!spend(g.pr))return;
+ giftSendFlow(kind,g);
+}
+function giftSendFlow(kind,g){
+ const box=$('mbox');
+ let h='<h3>🎁 Кому дарим «'+g.n+'»?</h3>'
+  +'<div class="giftCard" style="margin:8px 0"><div class="giftIco">'+g.e+'</div><div class="nm">'+g.n+'</div><div class="joke">'+g.joke+'</div></div>'
+  +'<div class="small" style="margin:6px 0 4px">Ник друга (как в игре, сверху его видно в рейтинге):</div>'
+  +'<input class="gname" id="giftTo" placeholder="Например: Аня" style="margin-bottom:8px">'
+  +'<div class="small" style="margin:4px 0">Послание с подарком:</div>'
+  +'<textarea class="gmsg" id="giftMsg" placeholder="С любовью, от всего сердца…"></textarea>'
+  +'<label class="small" style="display:block;margin:8px 0"><input type="checkbox" id="giftSecret"> 🥚 Отправить как Тайный Санта (имя раскроется через 3 дня, раз в неделю)</label>'
+  +'<label class="small" style="display:block;margin:4px 0 8px"><input type="checkbox" id="giftExpress"> ⚡ Экспресс-доставка ('+EXPRESS_COST+' 🌰) — сани Деда Мороза летят сразу</label>'
+  +'<div class="rbtn2"><button class="btn gold" id="giftSendBtn"> отправить 🎁</button>'
+  +'<button class="btn" onclick="closeModal()">Отложить</button></div>';
+ box.innerHTML=h;$('modal').classList.add('show');showBackBtn();
+ $('giftSendBtn').onclick=function(){
+  const nm=($('giftTo').value||'').trim();
+  if(!nm){toast('Введите ник друга');return}
+  const msg=($('giftMsg').value||'').trim();
+  const secret=$('giftSecret').checked;
+  const express=$('giftExpress').checked;
+  if(secret){
+   if(S.santaWeek===weekKey()){toast('🥚 Тайный Санта — раз в неделю');return}
+  }
+  if(express&&!spend(EXPRESS_COST))return;
+  $('giftSendBtn').disabled=true;$('giftSendBtn').textContent='Сани летят… ✈️';
+  findFriend(nm).then(fr=>{
+   if(!fr){
+    $('giftSendBtn').disabled=false;$('giftSendBtn').textContent='🎁 Отправить';
+    toast('🔍 Игрок «'+nm+'» не найден — проверьте ник в рейтинге');
+    return;
+   }
+   if(fr.id===S.pid){toast('Себе дарить можно, но лучше другу 🙂');$('giftSendBtn').disabled=false;$('giftSendBtn').textContent='🎁 Отправить';return}
+   sendGiftRow(fr,kind,g.n,msg,secret).then(ok=>{
+    if(!ok){toast('⚠️ Не отправилось — проверьте сеть');$('giftSendBtn').disabled=false;$('giftSendBtn').textContent='🎁 Отправить';return}
+    S.giftsSent++;save();
+    if(secret){S.santaWeek=weekKey();save();}
+    checkAchs();
+    closeModal();
+    toast(express?'⚡ Сани Деда Мороза умчались! Подарок у «'+fr.name+'»':'🎁 Подарок отправлен другу '+fr.name+'!');
+    if(CUR==='shop')renderShop();
+   });
+  });
+ };
+}
+function checkIncomingGifts(){
+ fetchNewGifts().then(list=>{
+  if(!list.length)return;
+  showGiftQueue(list);
+ });
+}
+function showGiftQueue(list){
+ if(!list.length)return;
+ const g=list[0];
+ const ageH=(Date.now()-new Date(g.created_at).getTime())/3600000;
+ const revealed=!g.secret||ageH>72;
+ const who=revealed?g.from_name:'Тайный Санта 🥚';
+ const emoji=({plush:'🧸',humor:'🍺',card:'💌'})[g.kind]||'🎁';
+ const box=$('mbox');
+ let h='<div class="gbox"><div class="who">🎁 Подарок от '+esc(who)+'</div>'
+  +'<div class="gico">'+emoji+'</div>'
+  +'<div style="font-weight:800;font-size:17px;color:#ffd86b">'+esc(g.name)+'</div>';
+ if(g.msg)h+='<div class="gtxt">«'+esc(g.msg)+'»</div>';
+ if(!revealed)h+='<div class="small">Личность Санты раскроется через 3 дня. Или угадай сейчас:</div>'
+  +'<input class="gname" id="santaGuess" placeholder="Ник Санты" style="margin:8px 0">'
+  +'<button class="btn blue" id="santaBtn" style="margin-bottom:8px">Угадать (+500 🌰 обоим… почти)</button>';
+ h+='<button class="btn gold" id="giftThanks">Спасибо! 💝</button></div>';
+ box.innerHTML=h;$('modal').classList.add('show');showBackBtn();
+ if(!revealed){
+  $('santaBtn').onclick=function(){
+   const guess=($('santaGuess').value||'').trim().toLowerCase();
+   if(guess&&guess===g.from_name.toLowerCase()){
+    gain(500,'santa');toast('🥚 Угадал! Санта — это '+g.from_name+'. +500 🌰');
+    $('santaBtn').disabled=true;$('santaBtn').textContent='✔ Угадано';
+   }else toast('🥚 Мимо! Попробуй ещё');
+  };
+ }
+ $('giftThanks').onclick=function(){
+  markGiftRead(g.id);
+  S.myGifts.unshift({from:who,name:g.name,emoji:emoji,msg:g.msg,date:g.created_at});
+  if(S.myGifts.length>30)S.myGifts.length=30;
+  S.giftsGot++;save();
+  closeModal();
+  toast('💝 Подарок на полочке «Подарки от друзей»');
+  if(list.length>1)showGiftQueue(list.slice(1));
+  else checkAchs();
+ };
+}
+function santaMyStatus(){return S.santaWeek===weekKey()}
+
+/* ===================== ЗИМНЯЯ ЯРМАРКА (обмен игрушками) ===================== */
+function fairPost(){
+ const list=S.bag.filter(o=>!o.garland);
+ if(!list.length){toast('🧺 Нечего выставлять — мешок пуст');return}
+ const box=$('mbox');
+ let h='<h3>🎁 Ярмарка: выставить игрушку</h3><div class="small">Отдадите эту игрушку первому, кто примет обмен. Укажите, что хотите взамен.</div>';
+ list.forEach(o=>{
+  const bi=S.bag.indexOf(o);
+  h+='<div class="oitem" style="margin-bottom:6px" onclick="fairPick('+bi+')"><div class="oic">'+ornCard(o)+'</div><div class="nm">'+o.name+'</div><span class="rbadge '+RAR[o.rar].rb+'">'+RAR[o.rar].n+'</span></div>';
+ });
+ h+='<button class="btn" onclick="closeModal()">Закрыть</button>';
+ box.innerHTML=h;$('modal').classList.add('show');showBackBtn();
+}
+function fairPick(bi){
+ const o=S.bag[bi];
+ const box=$('mbox');
+ let h='<h3>Обмен: отдаёте «'+o.name+'»</h3><div class="small">Что хотите взамен?</div><div class="rbtn2">';
+ ['common','rare','epic','legend'].forEach(r=>{
+  h+='<button class="btn blue" onclick="fairPublish('+bi+',\''+r+'\')">Любую из «'+RAR[r].n+'»</button>';
+ });
+ h+='</div><button class="btn" style="margin-top:8px" onclick="closeModal()">Отмена</button>';
+ box.innerHTML=h;$('modal').classList.add('show');showBackBtn();
+}
+function fairPublish(bi,wantRar){
+ const o=S.bag[bi];
+ fetch(SUPA_CFG.url+'/rest/v1/gifts',{
+  method:'POST',headers:supaHeaders(),
+  body:JSON.stringify([{from_id:S.pid,from_name:S.name,to_id:'__market',kind:'trade',name:o.name,msg:wantRar,secret:false}])
+ }).then(r=>{
+  if(r.ok){S.bag.splice(bi,1);save();closeModal();toast('🏪 Выставлено на ярмарку: «'+o.name+'» → хотите '+RAR[wantRar].n.toLowerCase());if(CUR==='shop')renderShop();}
+  else toast('⚠️ Ярмарка недоступна');
+ }).catch(()=>toast('⚠️ Ярмарка недоступна'));
+}
+function fairBrowse(){
+ fetch(SUPA_CFG.url+'/rest/v1/gifts?select=*&to_id=eq.__market&read=eq.false&order=id.desc&limit=20',{headers:supaHeaders()})
+  .then(r=>r.ok?r.json():[])
+  .then(list=>{
+   list=(list||[]).filter(g=>g.from_id!==S.pid);
+   const box=$('mbox');
+   if(!list.length){box.innerHTML='<h3>🏪 Ярмарка пуста</h3><div class="small">Будьте первым — выставьте игрушку!</div><button class="btn" onclick="closeModal()">Закрыть</button>';}
+   else{
+    let h='<h3>🏪 Ярмарка обменов</h3><div class="small">Примите обмен — отправите свою игрушку соответствующей редкости автору лота.</div>';
+    list.forEach(g=>{
+     h+='<div class="rateRow"><span class="rn">🎁 '+esc(g.name)+' → '+RAR[g.msg]?RAR[g.msg].n:g.msg+'</span>'
+      +'<button class="btn" style="width:auto;padding:6px 10px" onclick="fairAccept('+g.id+',\''+esc(g.from_id)+'\',\''+esc(g.from_name)+'\',\''+g.msg+'\')">Обменяться</button></div>';
+    });
+    h+='<button class="btn" style="margin-top:8px" onclick="closeModal()">Закрыть</button>';
+    box.innerHTML=h;
+   }
+   $('modal').classList.add('show');showBackBtn();
+  }).catch(()=>toast('⚠️ Ярмарка недоступна'));
+}
+function fairAccept(gid,fid,fname,wantRar){
+ const cand=S.bag.findIndex(o=>!o.garland&&o.rar===wantRar);
+ if(cand<0){toast('🧺 Нет игрушки редкости «'+RAR[wantRar].n+'» для обмена');return}
+ const mine=S.bag[cand];
+ sendGiftRow({id:fid,name:fname},'trade',mine.name,'Ярмарка: обмен на «'+S.treeAndBagHas(gid)+'»',false).then(ok=>{
+  if(!ok){toast('⚠️ Обмен не прошёл');return}
+  S.bag.splice(cand,1);
+  fetch(SUPA_CFG.url+'/rest/v1/gifts?id=eq.'+gid,{method:'PATCH',headers:supaHeaders(),body:JSON.stringify({read:true})}).catch(function(){});
+  save();closeModal();
+  toast('🤝 Ваша «'+mine.name+'» отправлена '+fname+'. Ожидайте встречный подарок!');
+  if(CUR==='shop')renderShop();
+ });
+}
+function treeAndBagHas(){return 'лот ярмарки'}
+
+/* ===================== РЕЙТИНГ ХРАНИТЕЛЕЙ + ЗВОНАРИ + МИР ===================== */
+function achBadgeIcons(){
+ const done=ACHS.filter(a=>S.ach[a.id]).map(a=>a.ic);
+ return done.slice(0,4).join('')||'';
+}
+function renderRate(){
+ syncPlayer();
+ let html='<div class="card"><h3>🏆 Рейтинг Хранителей</h3><div class="small">Топ-50 по уровню и шишкам · бейджи — ачивки игрока</div></div>';
+ html+='<div class="card" id="rateBox"><div class="small">загрузка рейтинга…</div></div>';
+ html+='<div class="card" id="bellBox"><h3>🔔 Ёлочные звонари</h3><div class="small" id="bellInfo">считаем игрушки мира…</div>'
+  +'<div class="pbar"><div class="pfill" id="bellFill" style="width:0%"></div></div>'
+  +'<div class="small" style="margin-top:6px">Когда все игроки вместе повесят 10 000 игрушек — Золотой праздник: награды ×2 на час для всех!</div></div>';
+ html+='<div class="card" id="worldBox"><h3>📊 Городская сводка</h3><div class="small" id="worldInfo">загрузка…</div></div>';
+ html+='<div class="card"><h3>🎟 Кубок и сезон</h3><div class="small">🛷 Очки недели (Кубок): <b>'+S.cupPts+'</b> · ❄️ Снежков в сезоне: <b>'+S.seasonBalls+'</b> · сезон обновляется по воскресеньям</div></div>';
+ html+='<div class="card"><h3>🎖 Ваши ачивки</h3>';
+ ACHS.forEach(a=>{
+  const ok=!!S.ach[a.id];
+  html+='<div class="achRow'+(ok?' done':'')+'"><div class="ic">'+a.ic+'</div><div><div style="font-weight:700;font-size:13px">'+a.n+'</div><div class="small">'+a.d+'</div></div>'+(ok?'<div style="margin-left:auto">✅</div>':'')+'</div>';
+ });
+ html+='</div>';
+ $('main').innerHTML=html;
+ fetchRating().then(r=>{
+  const box=$('rateBox');if(!box)return;
+  if(r&&r.err){box.innerHTML='<div class="small">⚠️ '+r.err+'</div>';return}
+  const rows=r.rows||[];
+  if(!rows.length){box.innerHTML='<div class="small">Рейтинг пуст — вы можете стать первым! 🏆</div>';return}
+  let inner='';
+  rows.forEach((p,i)=>{
+   const me=p.id===S.pid;
+   let badges='';
+   if(me)badges=achBadgeIcons();
+   inner+='<div class="rateRow'+(me?' me':'')+'"><span class="rk">'+(i+1)+'</span><span class="rn">'+esc(p.name||'Аноним')+(me?' (вы)':'')+'</span>'
+    +'<span class="rv">Ур. '+p.level+' · '+fmt(p.cones)+' 🌰'+(badges?' '+badges:'')+'</span></div>';
+  });
+  box.innerHTML=inner;
+ });
+ fetch(SUPA_CFG.url+'/rest/v1/global_stats?select=total_hung,total_gifts,ad_views&id=eq.1',{headers:supaHeaders()})
+  .then(r=>r.ok?r.json():null).then(d=>{
+   if(d&&d.length){
+    const th=d[0].total_hung||0,tg=d[0].total_gifts||0;
+    const bi=$('bellInfo'),bf=$('bellFill'),wi=$('worldInfo');
+    if(bi)bi.textContent='Игрушек повешено всем миром: '+fmt(th)+' / 10 000';
+    if(bf)bf.style.width=Math.min(100,th/100)+'%';
+    if(wi)wi.textContent='🎁 Подарков отправлено: '+fmt(tg)+' · 📺 Показов рекламы собрано: '+fmt(d[0].ad_views||0)+' · каждый подарок и каждый показ — вклад в общий праздник';
+   }
+  }).catch(function(){});
+ checkBells();
+}
+
+/* ===================== ЗАДАНИЯ ДНЯ (рендер) ===================== */
+function renderQuests(){
+ dqEnsure();dedqEnsure();pigTick();
+ if(!Array.isArray(S.dqPicks)||!S.dqPicks.length)dqEnsure();
+ let h='<div class="card"><h3>📋 Задания дня <span class="small">(обновятся завтра)</span></h3>';
+ S.dqPicks.forEach(ix=>{
+  const d=DQ[ix];if(!d)return;
+  const p=Math.min(S.dqP[d.id]||0,d.need),done=!!S.dqDone[d.id];
+  h+='<div class="small" style="margin:6px 0">'+(done?'✅':'▫️')+' '+d.n+' — '+p+'/'+d.need+' · <b style="color:#ffd86b">+'+d.rw+' 🌰</b>'
+   +'<div class="passbar" style="margin:4px 0 0"><div class="passfill" style="width:'+Math.min(100,100*p/d.need)+'%"></div></div></div>';
+ });
+ h+='</div>';
+ const has=dedqHas(),dd=S.dedqDone;
+ h+='<div class="card'+(dd?'':' prize')+'"><h3>🎅 Дед-квест дня</h3><div class="small">'+(dd?'Заказ выполнен! Приходите завтра — Дед придёт с новым капризом.':'Дед Мороз просит: «'+S.dedqItem+'»! Награда ×2: +1000 🌰')+'</div>'
+  +(dd?'':'<button class="btn'+(has?' gold':'')+'" style="margin-top:8px" onclick="dedqGive()">'+(has?'🎅 Отдать «'+S.dedqItem+'»':'🧺 Игрушки нет — купите в Витрине')+'</button>')+'</div>';
+ h+='<div class="card"><h3>🐷 Копилка</h3><div class="small">Копит шишки, пока вы спите: '+S.pig.saved+'/500 · темп '+S.level+' 🌰/мин</div>'
+  +'<button class="btn gold" style="margin-top:8px" onclick="claimPig()">🐷 Вскрыть копилку</button></div>';
+ return h;
+}
+/* ===================== ИГРУШКИ: КАРТОЧКИ, ПОКУПКА, ВЕШАНИЕ ===================== */
 function ornCard(o){
  if(o.garland){
   const cols=GCOLORS[o.type]||GCOLORS.classic;
@@ -524,586 +1212,44 @@ function unhangGarland(){
  S.bag.push({uid:'g'+(S.seq++),name:S.treeGarland.name,emoji:'💡',rar:'garland',type:S.treeGarland.type,garland:true});
  S.treeGarland=null;save();renderTree();toast('✂️ Гирлянда вернулась в мешок');
 }
-function checkFullTree(){
- if(S.treeBonusDay===today())return;
- if(S.tree.every(o=>o)){S.treeBonusDay=today();gain(500,'tree');toast('🌟 Ёлка наряжена полностью! +500 🌰');}
-}
-
-/* ===================== ДЕД МОРОЗ (заказы) ===================== */
-function genOrder(){
- const r=rand(0,2);let o;
- if(r===0){const rar=pick(['common','rare','epic']);o={t:'hang',rar:rar,n:rand(2,3),done:0,reward:rar==='epic'?900:rar==='rare'?600:400};}
- else if(r===1){o={t:'earn',n:400,done:0,reward:300};}
- else{o={t:'sled',n:15,done:0,reward:350};}
- S.order=o;save();
-}
-function progOrder(n){
- if(!S.order)return;S.order.done+=n;
- if(S.order.done>=S.order.n){
-  const rw=S.order.reward;gain(rw,'order');addXp(60);
-  toast('🎅 Дед Мороз: заказ выполнен! +'+rw+' 🌰');
-  S.order=null;setTimeout(genOrder,3000);
- }
- save();
-}
-
-/* ===================== КОПИЛКА, ЗАДАНИЯ ДНЯ, КОЛЛЕКЦИИ ===================== */
-function pigTick(){if(!S.pig)S.pig={saved:0,last:Date.now()};const mins=(Date.now()-S.pig.last)/60000;S.pig.saved=Math.min(500,Math.floor(S.pig.saved+mins*S.level));S.pig.last=Date.now();}
-function claimPig(){
- pigTick();
- if(S.pig.saved<50){toast('🐷 В копилке '+S.pig.saved+'/500 — копится со временем');return}
- const c=S.pig.saved;S.pig.saved=0;S.pig.last=Date.now();
- gain(c,'pig');toast('🐷 Копилка вскрыта: +'+c+' 🌰');
- if(CUR==='tree')renderTree();
-}
-const DQ=[
- {id:'ads',n:'Посмотреть 3 видео',need:3,rw:400},
- {id:'sled',n:'Собрать 20 предметов в санях',need:20,rw:350},
- {id:'balls',n:'Лопнуть 15 снежков',need:15,rw:350},
- {id:'hang',n:'Повесить 3 игрушки',need:3,rw:250},
- {id:'boss',n:'Победить снежного босса',need:1,rw:500}
-];
-function dqEnsure(){
- if(S.dqDay!==today()){
-  let tries=0,picks;
-  do{
-   picks=[0,1,2,3,4].sort(()=>Math.random()-0.5).slice(0,3);
-   tries++;
-  }while(S.dqPrev&&picks.every(i=>(S.dqPrev||[]).includes(i))&&tries<5);
-  S.dqDay=today();S.dqPicks=picks;S.dqPrev=picks;
-  S.dqP={};S.dqDone={};save();
- }
-}
-function dqProg(id,n){
- dqEnsure();
- const idx=DQ.findIndex(d=>d.id===id);
- if(idx<0||!S.dqPicks.includes(idx))return;
- const d=DQ[idx];
- if(S.dqDone[id])return;
- S.dqP[id]=(S.dqP[id]||0)+n;
- if(S.dqP[id]>=d.need){
-  S.dqDone[id]=true;gain(d.rw,'quest');addXp(40);
-  toast('✅ Задание дня «'+d.n+'»: +'+d.rw+' 🌰');
- }
- save();
-}
-const SETS=[
- {n:'Зимний сад',items:['Снежинка','Колокольчик','Свечка'],bonus:0.05},
- {n:'Лесные друзья',items:['Белка','Олень','Медвежонок'],bonus:0.08},
- {n:'Звёздный час',items:['Серебристая звезда','Комета','Звезда желания'],bonus:0.12}
-];
-function ownedNames(){const s=new Set();S.bag.concat(S.tree.filter(Boolean)).forEach(o=>s.add(o.name));return s}
-function collMult(){const on=ownedNames();let m=1;SETS.forEach(st=>{if(st.items.every(i=>on.has(i)))m+=st.bonus});return m}
-function renderQuests(){
- dqEnsure();pigTick();
- if(!Array.isArray(S.dqPicks)||!S.dqPicks.length)dqEnsure();
- let h='<div class="card"><h3>📋 Задания дня <span class="small">(обновятся завтра)</span></h3>';
- S.dqPicks.forEach(ix=>{
-  const d=DQ[ix];if(!d)return;
-  const p=Math.min(S.dqP[d.id]||0,d.need),done=!!S.dqDone[d.id];
-  h+='<div class="small" style="margin:6px 0">'+(done?'✅':'▫️')+' '+d.n+' — '+p+'/'+d.need+' · <b style="color:#ffd86b">+'+d.rw+' 🌰</b>'
-   +'<div class="passbar" style="margin:4px 0 0"><div class="passfill" style="width:'+Math.min(100,100*p/d.need)+'%"></div></div></div>';
- });
- h+='</div>';
- h+='<div class="card"><h3>🐷 Копилка</h3><div class="small">Копит шишки, пока вы спите: '+S.pig.saved+'/500 · темп '+S.level+' 🌰/мин</div>'
-  +'<button class="btn gold" style="margin-top:8px" onclick="claimPig()">🐷 Вскрыть копилку</button></div>';
- return h;
-}
-/* ===================== СЮЖЕТ: персонажи, голос во тьме, главы, загадки ===================== */
-function npcFace(k){
- const bg='<defs><linearGradient id="ng_'+k+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#123067"/><stop offset="1" stop-color="#0a1740"/></linearGradient><radialGradient id="ngG_'+k+'" cx="30%" cy="25%" r="80%"><stop offset="0" stop-color="rgba(120,200,255,.35)"/><stop offset="1" stop-color="rgba(120,200,255,0)"/></radialGradient></defs><rect width="64" height="64" rx="14" fill="url(#ng_'+k+')"/><circle cx="20" cy="14" r="14" fill="url(#ngG_'+k+')"/>';
- if(k==='santa')return '<svg class="npcFace" viewBox="0 0 64 64">'+bg+'<path d="M8,30 Q32,6 56,30 L56,38 Q52,30 32,28 Q12,30 8,38 Z" fill="#b03030"/><path d="M8,30 Q32,6 56,30" fill="none" stroke="#e05555" stroke-width="4" stroke-linecap="round"/><circle cx="52" cy="29" r="6" fill="#fff"/><circle cx="32" cy="38" r="15" fill="#f5cdb0"/><path d="M18,40 Q20,58 32,59 Q44,58 46,40 Q40,46 32,46 Q24,46 18,40 Z" fill="#fdfdfb"/><circle cx="26" cy="35" r="2.1" fill="#3a2a20"/><circle cx="38" cy="35" r="2.1" fill="#3a2a20"/><circle cx="22.5" cy="40" r="3" fill="rgba(235,110,100,.55)"/><circle cx="41.5" cy="40" r="3" fill="rgba(235,110,100,.55)"/><path d="M28,44 Q32,47 36,44" stroke="#8a4a3a" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>';
- if(k==='sneg')return '<svg class="npcFace" viewBox="0 0 64 64">'+bg+'<path d="M10,30 L14,14 L20,26 L26,10 L32,24 L38,10 L44,26 L50,14 L54,30 Q32,22 10,30 Z" fill="#7db8e8" stroke="#cfe6ff" stroke-width="1.2"/><circle cx="32" cy="40" r="15" fill="#f8dcc6"/><path d="M17,36 L47,36 L47,33 L17,33 Z" fill="#9ec9f0"/><circle cx="26" cy="39" r="2.1" fill="#2a3a55"/><circle cx="38" cy="39" r="2.1" fill="#2a3a55"/><circle cx="22.5" cy="44" r="2.8" fill="rgba(245,150,160,.6)"/><circle cx="41.5" cy="44" r="2.8" fill="rgba(245,150,160,.6)"/><path d="M28,48 Q32,50.5 36,48" stroke="#a05a4a" stroke-width="1.6" fill="none" stroke-linecap="round"/><path d="M17,36 Q14,48 18,58 M47,36 Q50,48 46,58" stroke="#e8c46a" stroke-width="3" fill="none" stroke-linecap="round"/></svg>';
- if(k==='lopa')return '<svg class="npcFace" viewBox="0 0 64 64">'+bg+'<rect x="20" y="8" width="24" height="12" rx="3" fill="#20242e"/><rect x="14" y="19" width="36" height="5" rx="2.5" fill="#2c3140"/><circle cx="32" cy="40" r="16" fill="#f2f6fd"/><circle cx="25" cy="37" r="2.2" fill="#1c1c1c"/><circle cx="39" cy="37" r="2.2" fill="#1c1c1c"/><path d="M29,45 L39,48 L29,51 Z" fill="#ff8c3d"/><path d="M16,52 Q32,62 48,52 L48,58 Q32,66 16,58 Z" fill="#c93b3b"/><circle cx="22" cy="42" r="1.7" fill="rgba(235,120,110,.5)"/><circle cx="42" cy="42" r="1.7" fill="rgba(235,120,110,.5)"/></svg>';
- if(k==='fox')return '<svg class="npcFace" viewBox="0 0 64 64">'+bg+'<path d="M12,26 L17,7 L27,20 Z" fill="#d96a20"/><path d="M52,26 L47,7 L37,20 Z" fill="#d96a20"/><path d="M14,23 L18,11 L25,20 Z" fill="#fff"/><path d="M50,23 L46,11 L39,20 Z" fill="#fff"/><circle cx="32" cy="40" r="17" fill="#ef8a3a"/><path d="M18,46 Q32,60 46,46 Q42,42 32,43 Q22,42 18,46 Z" fill="#fdf6ec"/><circle cx="25" cy="38" r="2.1" fill="#2a1a10"/><circle cx="39" cy="38" r="2.1" fill="#2a1a10"/><ellipse cx="32" cy="45" rx="3" ry="2.4" fill="#2a1a10"/><path d="M28,50 Q32,52.5 36,50" stroke="#5a3010" stroke-width="1.5" fill="none" stroke-linecap="round"/><circle cx="17" cy="42" r="2.6" fill="rgba(255,255,255,.45)"/><circle cx="47" cy="42" r="2.6" fill="rgba(255,255,255,.45)"/></svg>';
- if(k==='hedge')return '<svg class="npcFace" viewBox="0 0 64 64">'+bg+'<path d="M8,42 L14,26 L10,17 L21,19 L24,8 L32,15 L39,6 L43,17 L52,13 L49,24 L57,29 L48,33 L51,42 Z" fill="#6d4f30"/><path d="M10,40 L15,27 L12,20 L21,22 L24,11 L31,17 L38,9 L42,19 L50,15 L47,25 L54,29 Z" fill="#8a6640" opacity=".85"/><circle cx="32" cy="44" r="13" fill="#d9b585"/><path d="M20,44 Q32,56 44,44 L44,48 Q32,58 20,48 Z" fill="#c9a26b"/><circle cx="27" cy="41" r="2.2" fill="#2a1a10"/><circle cx="37" cy="41" r="2.2" fill="#2a1a10"/><circle cx="27" cy="40" r="0.9" fill="#fff"/><circle cx="37" cy="40" r="0.9" fill="#fff"/><circle cx="32" cy="46" r="1.8" fill="#3a2a20"/><circle cx="25" cy="47" r="2.1" fill="rgba(235,120,110,.45)"/><circle cx="39" cy="47" r="2.1" fill="rgba(235,120,110,.45)"/></svg>';
- if(k==='gram')return '<svg class="npcFace" viewBox="0 0 64 64">'+bg+'<path d="M14,26 Q32,4 50,26 Q40,18 32,20 Q24,18 14,26 Z" fill="#333a4c"/><path d="M10,28 Q12,10 32,8 Q52,10 54,28 Q46,20 32,22 Q18,20 10,28 Z" fill="#2a3040"/><circle cx="32" cy="38" r="16" fill="#242a38"/><path d="M16,30 Q32,24 48,30 L48,50 Q40,56 32,55 Q24,56 16,50 Z" fill="#2e3547"/><circle cx="25" cy="36" r="3.4" fill="#ffd24d"/><circle cx="39" cy="36" r="3.4" fill="#ffd24d"/><circle cx="25" cy="36" r="1.4" fill="#140f00"/><circle cx="39" cy="36" r="1.4" fill="#140f00"/><path d="M28,45 L36,45 L32,53 Z" fill="#e8a83d"/><path d="M18,14 L8,7 L20,10 Z" fill="#333a4c"/><path d="M46,14 L56,7 L44,10 Z" fill="#333a4c"/></svg>';
- if(k==='morana')return '<svg class="npcFace" viewBox="0 0 64 64">'+bg+'<path d="M10,34 L15,14 L22,28 L29,10 L32,24 L35,10 L42,28 L49,14 L54,34 L54,38 Q32,28 10,38 Z" fill="#a8dcf2" stroke="#e8f7ff" stroke-width="1.4"/><circle cx="32" cy="42" r="14" fill="#eef7fc"/><circle cx="26" cy="41" r="2.4" fill="#2a6a9e"/><circle cx="38" cy="41" r="2.4" fill="#2a6a9e"/><circle cx="26" cy="40" r="1" fill="#fff"/><circle cx="38" cy="40" r="1" fill="#fff"/><path d="M27,50 Q32,48.5 37,50" stroke="#6a9ab8" stroke-width="1.7" fill="none" stroke-linecap="round"/><circle cx="18" cy="36" r="1.6" fill="#cfeeff" opacity=".8"/><circle cx="46" cy="36" r="1.6" fill="#cfeeff" opacity=".8"/><path d="M14,32 Q8,44 12,56 M50,32 Q56,44 52,56" stroke="#bfe4f4" stroke-width="2.5" fill="none" opacity=".7"/></svg>';
- if(k==='zini')return '<svg class="npcFace" viewBox="0 0 64 64">'+bg+'<circle cx="32" cy="34" r="20" fill="rgba(120,255,180,.18)"/><circle cx="32" cy="34" r="20" fill="none" stroke="rgba(150,255,200,.35)" stroke-width="1.4"/><path d="M32,10 L35.5,24 L50,24 L38.5,32.5 L43,47 L32,38.5 L21,47 L25.5,32.5 L14,24 L28.5,24 Z" fill="#ffd86b" stroke="#e8a820" stroke-width="1.2"/><circle cx="28" cy="30" r="1.6" fill="#6a4a00"/><circle cx="36" cy="30" r="1.6" fill="#6a4a00"/><path d="M29,35 Q32,37.5 35,35" stroke="#6a4a00" stroke-width="1.4" fill="none" stroke-linecap="round"/></svg>';
- return '<svg class="npcFace" viewBox="0 0 64 64">'+bg+'<circle cx="32" cy="34" r="14" fill="#8a8fa8"/></svg>';
-}
-const NPCS={
- santa:{n:'Дед Мороз',e:'🎅'},
- sneg:{n:'Снегурочка',e:'❄️'},
- lopa:{n:'Снеговик Лёпа',e:'⛄'},
- fox:{n:'Лиса Рыжуля',e:'🦊'},
- hedge:{n:'Ёжик Тёпа',e:'🦔'},
- gram:{n:'Ворон Грам',e:'🐦‍⬛'},
- morana:{n:'Морана, Ледяная Королева',e:'👸',evil:true},
- zini:{n:'Дух Ёлки Зини',e:'✨'}
-};
-const STORY=[
- {ch:1,npc:'santa',title:'Пробуждение ёлки',
-  myst:['Тссс... Слышишь? Древо дремлет под тремя снегами.','Оно шепчет твоё имя, странник. Оно ждало именно тебя.','Разбуди его — и лес вспомнит, что такое праздник.'],
-  lines:['Ах, наконец-то! Ёлка Зини спала целый год и почти растеряла своё сияание. Ночью я слышал, как она звала на помощь.',
-   'Мне нужен помощник с тёплыми руками. Повесь на ёлку три игрушки — любые, хоть простые шарики. Дело не в цене, а в заботе.',
-   'Как только ёлка почувствует внимание, на ветках загорятся первые огоньки. И тогда... тогда начнётся всё остальное.',
-   'И ещё, дружок: где-то в лесу ходит тот, кто не любит праздников. Услышишь странный шёпот — не пугайся. Но и не верь всему.'],
-  quest:{t:'hang',n:3,rw:300,label:'Повесьте 3 игрушки на ёлку'},
-  out:'Огоньки! Видишь, как засветились ветки? Ёлка проснулась. Но её сердце ещё холодно...',
-  reward:{cones:300,item:'rare'}},
- {ch:2,npc:'sneg',title:'Искристый настой',
-  myst:['Искры помнят тех, кто их собирает...','Настой зреет в тишине. А тишина — это ты, затаившийся.','Дедушка смотрит. Не подведи.'],
-  lines:['Приветствую, помощник дедушки! По всей округе слышно, как гудят огоньки на вашей ёлке.',
-   'Огоньки — это полдела. Для настоящего волшебства нужен «искристый настой» из шишек. Старинный рецепт, ему тысячу лет.',
-   'Накопи 500 🌰 любым способом: мини-игры, колесо, пассивный доход, копилка. Настой любит терпение.',
-   'И предупреждаю: пока варится настой, кто-то крадёт искры из леса. Я видела тень над снегами...'],
-  quest:{t:'earn',n:500,rw:400,label:'Заработайте 500 🌰'},
-  out:'Настой готов и пахнет праздником! Держи гирлянду — она сплетена из первых огоньков ёлки.',
-  reward:{cones:400,garland:true}},
- {ch:3,npc:'lopa',title:'Тропа подарков',
-  myst:['Подарки помнят дорогу домой...','Но кто-то стёр следы на тропе. Смотри под ноги.','И под снегом тоже.'],
-  lines:['Во-о-от это ёлка! Сияет! А под ней пусто, как в моём кармане. Впрочем, у меня их нет. Карманов, я имею в виду.',
-   'Дед Мороз в панике: мешок с подарками рассыпался по склону! Санки — единственный выход. Ловить подарки — мой конёк.',
-   'Собери двадцать предметов за спуск. Я буду грузчиком: сложу всё под ёлку, как настоящий профессионал.',
-   'Совет от элегантного снеговика: магнит — твой лучший друг. А лёд — худший враг. Всё как в жизни.'],
-  quest:{t:'sled',n:20,rw:450,label:'Соберите 20 предметов в «Поймай в сани»'},
-  out:'Гора подарков под ёлкой! Даже мандарины не помялись. Я гений логистики.',
-  reward:{cones:450}},
- {ch:4,npc:'fox',title:'Зов Рыжули',
-  lines:['Пссс! Слышал вой на вершине? Это Снежная Буря. Она злится, что лес веселит её врага — ёлку.',
-   'Буря наслала снежного босса прямо к поляне. Победи его — и мороз на время отступит.',
-   'Секрет: тапай не останавливаясь, чтобы росло комбо, и сбивай льдинки — они дают секунды!',
-   'А ещё я подслушала ту тень над снегами. Она говорила с кем-то ледяным... «Королева недовольна», — шептало. Запомни это.'],
-  quest:{t:'boss',n:1,rw:600,label:'Победите снежного босса'},
-  out:'Буря отступила... пока. Держи эпическую игрушку — нашла её в сугробе. Честно-честно!',
-  reward:{cones:600,item:'epic'}},
- {ch:5,npc:'gram',title:'Шёпот снежков',
-  myst:['Крак-крак. Слышишь, как хрустит иней под лапой?','Это я, ворон Грам. Я считаю снежинки. Все до одной.','И я заметил лишние. Чужие снежки падают на поляну. Прогони их!'],
-  lines:['Хм. Ты слышишь их? Я — да. Снежки чужой воли кружат над поляной.',
-   'Лопни сорок — и тень отпустит лес. Считай это моим экзаменом. Я экзаменую всех, кто хочет знать правду.',
-   'Правда же проста: кто-то оживил снег не просто так. За этим стоит холодное сердце. Очень холодное.'],
-  quest:{t:'balls',n:40,rw:650,label:'Лопните 40 снежков в «Лопни снежки»'},
-  out:'Сорок. Я считал. Тень отступила на север... к ледяным вершинам. Так я и думал.',
-  reward:{cones:650}},
- {ch:6,npc:'gram',title:'Колесо судьбы',
-  myst:['Судьба крутится. Буквально.','Колесо знает имена. Оно знает и моё. И её...','Крути. Каждое вращение — вопрос к зиме.'],
-  lines:['Знаешь, что общего у колеса и судьбы? Оба крутятся, и оба иногда подкидывают дракона.',
-   'Я видел в полёте, как Морана — Ледяная Королева — готовит что-то большое. Ей нужны силы. Ей нужен холод.',
-   'Крути Колесо пять раз. Не ради призов — ради знаков. Судьба показывает дорогу тем, кто крутит.',
-   'И если выпадет эпическая игрушка — считай это подмигиванием зимы. Зима умеет подмигивать.'],
-  quest:{t:'wheel',n:5,rw:700,label:'Крутаните Колесо Зини 5 раз'},
-  out:'Пять знаков. Ясно. Она собирает силы для большого мороза. Успеем — если ты будешь быстрее.',
-  reward:{cones:700}},
- {ch:7,npc:'morana',title:'Ледяная Королева',evil:true,
-  myst:['Холод начинается с тишины...','Она уже здесь. Посмотри на иней на стекле.','Он складывается в буквы. Читай, если не боишься.'],
-  lines:['Значит, это ты — тот самый помощник. Мило. Ёлка светится, лес шумит, все довольны.',
-   'А теперь послушай меня. Я взяла звезду с макушки. Она теперь во льду, на вершине Бурой горы.',
-   'Не потому, что я злая. Просто когда все празднуют — я остаюсь одна. Вечно одна, в своей ледяной тишине.',
-   'Мой снежный страж охраняет вершину. Победи его — и звезда твоя. Но знай: чтобы вернуть её на ёлку... придётся понять и меня.'],
-  quest:{t:'boss',n:1,rw:900,label:'Победите снежного стража Мораны'},
-  out:'Страж пал. Забирай звезду. И... спасибо, что не испугался моего холода. Это давно никто не делал.',
-  reward:{cones:900,item:'epic'}},
- {ch:8,npc:'zini',title:'Праздник Зини',
-  myst:['Я — Древо. Я — Зини.','Я спала тысячу зим, но твои руки разбудили меня.','Остался последний шаг. Наряди меня полностью — и мы отпразднуем вместе.'],
-  lines:['Я слышу тебя, хранитель. Каждую игрушку я чувствую, как сердцебиение.',
-   'Морана вернула звезду — и, поверь, она больше не одна: теперь у неё есть гости на праздник. Впервые за тысячу лет.',
-   'Финальный шаг за тобой: наряди все двадцать пять ветвей. Тогда я обрету полную силу и зажгу небо над лесом.',
-   'А потом — все вместе: Дед Мороз, Снегурочка, Лёпа, Рыжуля, Тёпа, даже Грам. Даже Морана. Праздник для всех. Для тебя.'],
-  quest:{t:'hang_all',n:1,rw:2000,label:'Нарядите ёлку полностью: 25 игрушек'},
-  out:'СИЯЮ! Ты — Хранитель Ёлки. Небо над лесом горит твоим именем. С праздником, друг!',
-  reward:{cones:2000,item:'legend'}}
-];
-const NPC_CHAT={
- santa:['Каша в печи, снег на ветках — жизнь удалась. Главное — не забывай ёлку!','Знаешь, олени тоже просят игрушки. Но им я говорю: трудись, как этот помощник!','Если увидишь мою шапку на ёлке — это не потеря. Это мода.','С ноября уже настоящие призы — деньги, сертификаты! Так что шишки копи усерднее.'],
- sneg:['Хочешь секрет? Снежинки падают ровно тогда, когда ты заботишься о ёлке.','Я коллекционирую морозные узоры. Каждая ветка — как новый витраж.','Не забывай копилку! Она копит даже пока ты спишь.','Морана... она не чудовище. Просто её никто никогда не звал на праздник.'],
- lopa:['Меня назвали Лёпа, потому что я элегантный. Логично же!','Морковка у меня премиальная. Из самого оранжевого снега.','Хочешь покататься на санках? Я — первый советчик по ловле подарков!'],
- fox:['Бегаю быстрее ветра. Ну, почти. Ветер просто тренированнее.','Если найдёшь золотую искру — она моя!.. Ладно, твоя. Но я завидую.','Собираешь коллекции? Белки в курсе. Они завидуют молча.'],
- hedge:['Коллекции — это мой конёк. Точнее, иголки. Собери набор — получишь вечный бонус!','Я считаю шишки быстрее всех. Один раз насчитал двести. Врут ли мои иголки — не знаю.','Тишина в лесу бывает только когда Буря спит. Пусть спит подольше!'],
- gram:['Крак. Вопрос на засыпку: что тяжелее — снег или молчание? Отвечу: молчание.','Я вижу то, что скрыто под снегом. Иногда жалею об этом.','Морана? Хм. Я ворон, я не даю советов. Я даю загадки.'],
- morana:['Ты снова здесь? Смело. Или глупо. Впрочем, это одно и то же в зимнем лесу.','Мой лёд — не злоба. Это просто тишина, застывшая на тысячу лет.','Праздник? Я не помню, как он выглядит. Опиши мне как-нибудь... если захочешь.'],
- zini:['Я помню каждую руку, что вешала на меня игрушки. Тысячи зим, тысячи детей.','Когда ты рядом, мои ветви теплее. Это не поэзия — это физиология древа.','Загадывай желания. Я всё ещё умею исполнять их — с помощью «Звезды желания».']
-};
-const RIDDLES={
- santa:{q:'Что растёт вниз головой и тает от тепла?',o:['Сосулька','Морковка','Шапка'],a:0},
- sneg:{q:'Что белое падает с неба и не тает в руках у Мороза?',o:['Снежинка','Каша','Луна'],a:0},
- lopa:{q:'Что я ношу на голове и потерял в прошлой главе?',o:['Цилиндр','Морковку','Улыбку'],a:0},
- fox:{q:'Чем больше из неё берёшь, тем больше она становится. Что это?',o:['Яма','Норка','Клубок'],a:0},
- hedge:{q:'Сколько иголок у ёжика в полночь?',o:['Все','Ни одной','Ровно двести'],a:0},
- gram:{q:'Что можно поймать, но нельзя удержать в руках?',o:['Мгновение','Снежинку','Эхо'],a:0},
- morana:{q:'Что сильнее льда?',o:['Тепло','Камень','Ветер'],a:0},
- zini:{q:'Я светлю, но не огонь. Я падаю, но не снег. Кто я?',o:['Звезда','Лампа','Комета'],a:0}
-};
-let DLG=null;
-function showDlg(npc,title,lines,endLabel,endFn,myst){
- DLG={npc:npc,title:title,lines:Array.isArray(lines)?lines:[lines],i:0,endLabel:endLabel||'Далее ▸',endFn:endFn||null,myst:!!myst};
- paintDlg();
-}
-function paintDlg(){
- const box=$('mbox');if(!box||!DLG)return;
- const npc=NPCS[DLG.npc]||{n:'???'};
- let h='';
- if(DLG.myst)h='<div class="dlgVoice">✦ ГОЛОС ВО ТЬМЕ ✦</div><div class="dlgMyst">'+DLG.lines[DLG.i]+'</div>';
- else h='<div class="dlgFace">'+npcFace(DLG.npc)+'</div><div class="dlgName">'+npc.n+'</div><div class="dlgTitle">'+DLG.title+'</div>'
-  +'<div class="card" style="margin-bottom:10px">'+DLG.lines[DLG.i]+'</div>';
- h+='<button class="btn" id="dlgNext">'+(DLG.i<DLG.lines.length-1?'Далее ▸':DLG.endLabel)+'</button>';
- box.innerHTML=h;
- $('modal').classList.add('show');showBackBtn();setMusicMode('story');
- if(!DLG.myst)speakLine(DLG.lines[DLG.i],DLG.npc);
- $('dlgNext').onclick=function(){
-  DLG.i++;
-  if(DLG.i<DLG.lines.length)paintDlg();
-  else{const f=DLG.endFn;DLG=null;closeModal();if(f)f();}
- };
-}
-function showRiddle(k){
- const r=RIDDLES[k];if(!r)return;
+function openHangToy(){
+ const list=S.bag.filter(o=>!o.garland);
  const box=$('mbox');
- let h='<div class="dlgFace">'+npcFace(k)+'</div><div class="dlgName">'+NPCS[k].n+'</div><div class="dlgTitle">Загадка от '+NPCS[k].n+'</div>'
-  +'<div class="card" style="margin-bottom:10px">«'+r.q+'»</div><div class="small" style="margin-bottom:6px">Верно: +80 🌰 · Смелая попытка: +30 🌰</div><div class="rbtn2">';
- r.o.forEach((opt,oi)=>{h+='<button class="btn blue" onclick="answerRiddle(\''+k+'\','+oi+')">'+opt+'</button>';});
- h+='</div>';
- box.innerHTML=h;$('modal').classList.add('show');showBackBtn();setMusicMode('story');
- speakLine(r.q,k);
-}
-function answerRiddle(k,oi){
- const r=RIDDLES[k];
- const ok=oi===r.a;
- if(!S.chatGifts[k])S.chatGifts[k]=1;
- gain(ok?80:30,'riddle');addXp(ok?25:8);
- toast(ok?'🧩 Верно! +80 🌰':'🧩 Ответ: «'+r.o[r.a]+'». Но +30 🌰 за смелость!');
- DLG=null;closeModal();
-}
-function openStoryDlg(){
- const st=STORY[S.st.ch-1];if(!st)return;
- if(S.st.phase==='intro'){
-  const f=function(){S.st.phase='quest';S.st.q=0;save();renderStory();toast('🎯 Задание: '+st.quest.label);};
-  if(st.myst&&st.myst.length){
-   showDlg(st.npc,'Глава '+S.st.ch+': '+st.title,st.myst,'Слышать дальше…',function(){
-    showDlg(st.npc,'Глава '+S.st.ch+': '+st.title,st.lines,'Взять задание 🎯',f,st.evil);
-   },true);
-  }else showDlg(st.npc,'Глава '+S.st.ch+': '+st.title,st.lines,'Взять задание 🎯',f,st.evil);
+ if(!list.length)box.innerHTML='<h3>🧺 Мешок пуст</h3><div class="small">Купите игрушки в Витрине — и они появятся здесь.</div>';
+ else{
+  let html='<h3>🧺 Что повесим?</h3><div class="small">Игрушка займёт первое свободное место. Чем шире ярус — тем больше мест.</div>';
+  list.forEach(o=>{
+   const bi=S.bag.indexOf(o);
+   html+='<div class="oitem" style="margin-bottom:6px" onclick="hangAuto('+bi+')"><div class="oic">'+ornCard(o)+'</div><div class="nm">'+o.name+'</div></div>';
+  });
+  box.innerHTML=html;
  }
- else if(S.st.phase==='quest')showDlg(st.npc,'Глава '+S.st.ch,st.quest.label+' — '+Math.min(S.st.q,st.quest.n)+'/'+st.quest.n,'Понятно ✔',null,st.evil);
- else if(S.st.phase==='reward')claimChapter();
- else showDlg(st.npc,'Воспоминания',['История пройдена! Но заходи поболтать — между праздниками мне одиноко.'],'Пока! 👋',null,false);
+ box.innerHTML+='<button class="btn" onclick="closeModal()">Закрыть</button>';
+ $('modal').classList.add('show');showBackBtn();
 }
-function claimChapter(){
- const st=STORY[S.st.ch-1];if(!st)return;
- const rtxt='Награда: +'+st.reward.cones+' 🌰'+(st.reward.item?' и подарок от героя истории!':'')+(st.reward.garland?' и гирлянда!':'');
- showDlg(st.npc,'Глава '+S.st.ch+' завершена!',[st.out,rtxt],'Забрать награду 🎁',function(){
-  gain(st.reward.cones,'story');addXp(60);
-  if(st.reward.item){const o=mkOrn(st.reward.item);S.bag.push(o);toast('🎁 Получено: '+o.emoji+' '+o.name);}
-  if(st.reward.garland){S.bag.push({uid:'g'+(S.seq++),name:'Классическая гирлянда',emoji:'💡',rar:'garland',type:'classic',garland:true});toast('💡 Гирлянда в мешке!');}
-  S.st.ch++;S.st.q=0;S.st.phase=S.st.ch<=STORY.length?'intro':'final';S.st.seen=true;
-  save();renderStory();if(CUR==='tree')renderTree();
- },st.evil);
+function hangAuto(bi){
+ const o=S.bag[bi];if(!o)return;
+ let si=-1;for(let i=0;i<25;i++){if(!S.tree[i]){si=i;break}}
+ if(si<0){toast('🎄 Все 25 мест заняты — сначала снимите что-нибудь');return}
+ S.tree[si]={uid:o.uid,name:o.name,emoji:o.emoji,rar:o.rar};
+ storyProg('hang',1);dqProg('hang',1);
+ if(!S.tree.some(x=>!x))storyProg('hang_all',1);
+ if(S.order&&S.order.t==='hang'&&o.rar===S.order.rar)progOrder(1);
+ S.bag.splice(bi,1);save();closeModal();renderTree();
+ toast('🎄 «'+o.name+'» — на ёлке!');
+ bumpHung();
+ if(!S.tree.some(x=>!x))checkFullTree();
 }
-function storyProg(t,n){
- if(!S.st||S.st.phase!=='quest')return;
- const st=STORY[S.st.ch-1];if(!st||st.quest.t!==t)return;
- S.st.q=Math.min(st.quest.n,S.st.q+n);
- save();
- if(S.st.q>=st.quest.n){S.st.phase='reward';save();claimChapter();}
+function openRemoveToy(){
+ const box=$('mbox');let any=false,html='<h3>✂️ Что снять?</h3>';
+ S.tree.forEach((o,i)=>{if(o){any=true;html+='<div class="oitem" style="margin-bottom:6px" onclick="unhangRm('+i+')"><div class="oic">'+ornCard(o)+'</div><div class="nm">'+o.name+'</div></div>';}});
+ if(!any)html='<h3>✂️ Снимать нечего</h3><div class="small">На ёлке пока нет ваших игрушек.</div>';
+ box.innerHTML=html+'<button class="btn" onclick="closeModal()">Закрыть</button>';
+ $('modal').classList.add('show');showBackBtn();
 }
-function chatWith(k){
- if(S.chatDay!==today()){S.chatDay=today();S.chatGifts={};}
- const st=STORY[S.st.ch-1];
- if(st&&st.npc===k&&S.st.phase!=='final'){openStoryDlg();return}
- if(!S.chatGifts[k]&&RIDDLES[k]){showRiddle(k);return}
- if(!S.chatGifts[k]){S.chatGifts[k]=1;gain(30,'chat');toast('💬 '+NPCS[k].n+': +30 🌰 за разговор');}
- showDlg(k,'Разговор по душам',[pick(NPC_CHAT[k])],'Пока! 👋',null,NPCS[k].evil);
-}
-function storyCard(){
- const st=STORY[S.st.ch-1];
- if(!st)return '<div class="card"><h3>📖 История пройдена!</h3><div class="small">Ты — Хранитель Ёлки! Загляни к Моране — ей впервые можно звонить в гости.</div></div>';
- const evl=st.evil?' <span class="rbadge rb-epic">⚠️ опасный персонаж</span>':'';
- if(S.st.phase==='intro')return '<div class="card"><h3>📖 Глава '+S.st.ch+': '+st.title+evl+'</h3><div class="small">Начинается история… Голос во тьме уже ждёт.</div><button class="btn gold" style="margin-top:8px" onclick="openStoryDlg()">💬 Продолжить историю</button></div>';
- if(S.st.phase==='quest'){const p=Math.min(S.st.q,st.quest.n);return '<div class="card"><h3>🎯 Глава '+S.st.ch+': '+st.title+evl+'</h3><div class="small">'+st.quest.label+' — '+p+'/'+st.quest.n+'</div><div class="passbar"><div class="passfill" style="width:'+Math.min(100,100*p/st.quest.n)+'%"></div></div><button class="btn" style="margin-top:6px" onclick="openStoryDlg()">💬 К '+NPCS[st.npc].n+'</button></div>';}
- return '<div class="card"><h3>🎁 Глава '+S.st.ch+' завершена!</h3><div class="small">Награда ждёт!</div><button class="btn gold" style="margin-top:8px" onclick="openStoryDlg()">Забрать награду</button></div>';
-}
-function renderStory(){
- let html='<div class="card"><h3>📖 История Ёлки Зини</h3><div class="small">Глава '+Math.min(S.st.ch,STORY.length)+' из '+STORY.length+' · голос во тьме и одна очень холодная королева</div></div>';
- html+=storyCard();
- html+='<div class="card prize"><div class="small" style="color:#ffe9a8">'+PRIZES_TEXT+'</div></div>';
- html+='<div class="card"><h3>🧑‍🤝‍🧑 Жители леса</h3><div class="npcGrid">';
- Object.keys(NPCS).forEach(k=>{
-  html+='<div class="npcB'+(NPCS[k].evil?' evil':'')+'" onclick="chatWith(\''+k+'\')">'+npcFace(k)+'<div class="nm">'+NPCS[k].n+'</div></div>';
- });
- html+='</div><div class="small" style="margin-top:6px">Раз в день у каждого — загадка (+80 🌰 за верный ответ). Злые герои подсвечены льдом.</div></div>';
- if(S.st.ch>1){
-  let done='<div class="card"><h3>📜 Пройденные главы</h3>';
-  for(let i=1;i<S.st.ch&&i<=STORY.length;i++)done+='<div class="small">✅ Глава '+i+': '+STORY[i-1].title+'</div>';
-  html+=done+'</div>';
- }
- $('main').innerHTML=html;
-}
+function unhangRm(i){unhang(i);openRemoveToy();}
 
-/* ===================== ЗВЕЗДА ЖЕЛАНИЯ ===================== */
-function hasWishStar(){return S.bag.some(o=>o.name==='Звезда желания')||S.tree.some(o=>o&&o.name==='Звезда желания')}
-function makeWish(){
- if(S.wishDay===today()){toast('⏳ Желание — раз в день');return}
- if(!hasWishStar()){toast('💫 Нужна «Звезда желания»');return}
- S.wishDay=today();
- if(Math.random()<0.5){const c=rand(200,1000);gain(c,'wish');toast('💫 Сбылось! +'+c+' 🌰');}
- else{const o=mkOrn('epic');S.bag.push(o);toast('💫 Звезда дарит: '+o.emoji+' '+o.name+'!');}
- addXp(50);save();renderInv();
-}
-
-/* ===================== КОЛЕСО ===================== */
-const WHEEL=[{t:'c',v:50},{t:'c',v:100},{t:'o',v:'rare'},{t:'c',v:250},{t:'c',v:500},{t:'o',v:'epic'},{t:'c',v:150},{t:'c',v:1000}];
-const WCOLS=['#2f5fe0','#8b3fd0','#d03a3a','#12a06a','#ff9a3d','#6a5cff','#1fffa4','#ffd86b'];
-const SEG=45;
-let wheelAng=0,wheelSpinning=false;
-function drawWheel(){
- const cv=$('wheelCv');if(!cv)return;const ctx=cv.getContext('2d');
- const R=cv.width/2;ctx.clearRect(0,0,cv.width,cv.height);
- WHEEL.forEach((p,i)=>{
-  const a0=(wheelAng+i*SEG)*Math.PI/180,a1=a0+SEG*Math.PI/180;
-  ctx.beginPath();ctx.moveTo(R,R);ctx.arc(R,R,R-6,a0,a1);ctx.closePath();
-  ctx.fillStyle=WCOLS[i];ctx.fill();ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=2;ctx.stroke();
-  ctx.save();ctx.translate(R,R);ctx.rotate(a0+SEG*Math.PI/360);
-  ctx.fillStyle='#fff';ctx.font='bold 15px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText(p.t==='c'?String(p.v):(p.v==='rare'?'Редкая':'Эпик.'),R*.63,0);
-  ctx.restore();
- });
- ctx.beginPath();ctx.arc(R,R,26,0,7);ctx.fillStyle='#0a1a3f';ctx.fill();
- ctx.strokeStyle='#ffd86b';ctx.lineWidth=3;ctx.stroke();
- ctx.font='bold 20px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🎄',R,R+1);
-}
-function calcIndex(rotDeg){let a=(270-rotDeg)%360;if(a<0)a+=360;return Math.floor(a/SEG)%8;}
-function spinWheel(viaAd){
- if(wheelSpinning)return;
- if(viaAd){showAdRewarded(()=>doSpin());return}
- if(S.wheelFree<=0){toast('Бесплатные спины кончились — крутите за рекламу 📺');return}
- S.wheelFree--;save();doSpin();
-}
-function doSpin(){
- wheelSpinning=true;
- const target=rand(0,7);
- let fin=270-(target*SEG+SEG/2);
- fin=((fin%360)+360)%360+360*(3+rand(1,4));
- while(fin<=wheelAng)fin+=360;
- const start=wheelAng,t0=performance.now(),dur=3200;
- (function anim(now){
-  const k=Math.min((now-t0)/dur,1),e=1-Math.pow(1-k,3);
-  wheelAng=start+(fin-start)*e;drawWheel();
-  if(k<1)requestAnimationFrame(anim);
-  else{wheelAng=((wheelAng%360)+360)%360;wheelSpinning=false;wheelPrize(calcIndex(wheelAng));}
- })(performance.now());
-}
-function wheelPrize(i){
- storyProg('wheel',1);
- const p=WHEEL[i];
- if(p.t==='c'){gain(p.v,'wheel');toast('🎡 Выпало: '+p.v+' 🌰');}
- else{const o=mkOrn(p.v);S.bag.push(o);toast('🎡 Выпало: '+o.emoji+' '+o.name+'!');}
- save();renderHeader();
-}
-
-/* ===================== САНИ ===================== */
-let sledRaf=null;
-function startSled(){
- stopSled();
- const cv=$('sledCv');if(!cv)return;
- const W=cv.width=Math.min(cv.clientWidth||360,420),H=cv.height=320;
- const ctx=cv.getContext('2d');
- let sledX=W/2,items=[],score=0,lives=3,elapsed=0,spawnT=0,flash=0,
-     combo=0,comboT=0,magnet=0,shield=false,last=performance.now();
- const move=e=>{
-  const r=cv.getBoundingClientRect();
-  const x=e.touches?e.touches[0].clientX:e.clientX;
-  if(x!==undefined)sledX=Math.max(30,Math.min(W-30,x-r.left));
-  e.preventDefault&&e.preventDefault();
- };
- cv.onpointerdown=move;cv.onpointermove=move;
- function end(){
-  cancelAnimationFrame(sledRaf);sledRaf=null;
-  const rw=score*4;gain(rw,'sled');addXp(score*2);
-  if(score>S.catchBest)S.catchBest=score;
-  if(S.order&&S.order.t==='sled')progOrder(score);
-  storyProg('sled',score);dqProg('sled',score);
-  toast('🛷 Итог: '+score+' → +'+rw+' 🌰');
-  renderGames();
- }
- function loop(now){
-  const dt=Math.min(now-last,50);last=now;
-  elapsed+=dt;spawnT+=dt;flash=Math.max(0,flash-dt);comboT=Math.max(0,comboT-dt);
-  if(comboT<=0)combo=0;
-  if(magnet>0)magnet-=dt;
-  const prog=elapsed/50000,spd=1+prog*1.7;
-  if(spawnT>Math.max(380,640-prog*200)&&items.length<10){spawnT=0;
-   const r=Math.random();let v='gift';
-   if(r>0.93)v='magnet';else if(r>0.89)v='shield';
-   else if(r>0.76)v='ice';else if(r>0.56)v='cone';
-   items.push({x:rand(24,W-24),y:-24,v:v,s:.07*spd+Math.random()*.05});
-  }
-  ctx.fillStyle='#0b1c44';ctx.fillRect(0,0,W,H);
-  for(let i=0;i<items.length;i++){
-   const it=items[i];it.y+=it.s*dt;
-   if(magnet>0&&(it.v==='gift'||it.v==='cone')){const dx=sledX-it.x;it.x+=Math.sign(dx)*Math.min(Math.abs(dx),dt*.06);}
-   ctx.font='26px serif';ctx.textAlign='center';
-   ctx.fillText(it.v==='gift'?'🎁':it.v==='cone'?'🌰':it.v==='ice'?'🧊':it.v==='magnet'?'🧲':'🛡️',it.x,it.y);
-   if(it.y>H-44&&Math.abs(it.x-sledX)<42){
-    if(it.v==='ice'){if(shield){shield=false;it.y=H+99;}else{lives--;flash=200;combo=0;it.y=H+99;}}
-    else if(it.v==='magnet'){magnet=6000;it.y=H+99;}
-    else if(it.v==='shield'){shield=true;it.y=H+99;}
-    else{score+=it.v==='gift'?2:1;combo++;comboT=2500;if(combo>5&&combo%6===0)score+=1;}
-   }
-  }
-  items=items.filter(it=>it.y<H+40);
-  ctx.font='34px serif';ctx.fillText('🛷',sledX,H-10);
-  if(shield){ctx.strokeStyle='rgba(140,220,255,.8)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(sledX,H-24,28,0,7);ctx.stroke();}
-  if(flash>0){ctx.fillStyle='rgba(255,60,60,'+(flash/400)+')';ctx.fillRect(0,0,W,H);}
-  ctx.fillStyle='#ffd86b';ctx.font='bold 15px sans-serif';ctx.textAlign='left';
-  ctx.fillText('🎁 '+score+'   '+'❤️'.repeat(Math.max(lives,0))+'   ⏱ '+Math.ceil((50000-elapsed)/1000)+'с'+(magnet>0?' 🧲':'')+(shield?' 🛡️':''),10,22);
-  if(lives<=0||elapsed>50000){end();return}
-  sledRaf=requestAnimationFrame(loop);
- }
- sledRaf=requestAnimationFrame(loop);
-}
-function stopSled(){if(sledRaf){cancelAnimationFrame(sledRaf);sledRaf=null}}
-
-/* ===================== СНЕЖКИ ===================== */
-let ballRaf=null,ballTimer=null;
-function startBalls(){
- stopBalls();
- const f=$('ballField');if(!f)return;
- f.innerHTML='<div id="ballInfo">❄️ 0 · ⏱ 25с</div>';
- let score=0,time=25,last=performance.now(),balls=[],id=0,acc=0;
- const info=$('ballInfo');
- const upd=()=>info.textContent='❄️ '+score+' · ⏱ '+time+'с';
- function spawn(){
-  if(balls.length>=7)return;
-  const r=Math.random();let v='snow';
-  if(r>0.88)v='bomb';else if(r>0.84)v='freeze';else if(r>0.78)v='gold';
-  const el=document.createElement('div');el.className='pop';
-  el.textContent={snow:'❄️',bomb:'💣',freeze:'⏱️',gold:'⭐'}[v];
-  const b={id:++id,v:v,x:rand(6,80),y:rand(10,70),vx:(Math.random()-0.5)*10,vy:rand(4,14),el:el};
-  balls.push(b);el.style.left=b.x+'%';el.style.top=b.y+'%';
-  el.onpointerdown=()=>{
-   if(b.v==='bomb')score=Math.max(0,score-5);
-   else if(b.v==='gold')score+=5;
-   else if(b.v==='freeze')time+=2;
-   else score+=2;
-   balls=balls.filter(bb=>bb!==b);el.remove();upd();
-  };
-  f.appendChild(el);
-  setTimeout(()=>{if(balls.includes(b)){balls=balls.filter(bb=>bb!==b);el.remove();}},2600);
- }
- ballRaf=requestAnimationFrame(function loop(now){
-  const dt=Math.min(now-last,50);last=now;acc+=dt;
-  if(acc>Math.max(450,650-(25-time)*10)){acc=0;spawn();}
-  for(let i=0;i<balls.length;i++){
-   const b=balls[i];
-   b.x+=b.vx*dt/100;b.y+=b.vy*dt/100;
-   if(b.x<2||b.x>88)b.vx*=-1;
-   if(b.y<8)b.vy=Math.abs(b.vy);if(b.y>78)b.vy=-Math.abs(b.vy);
-   b.el.style.left=b.x+'%';b.el.style.top=b.y+'%';
-  }
-  ballRaf=requestAnimationFrame(loop);
- });
- ballTimer=setInterval(()=>{time--;upd();
-  if(time<=0){stopBalls();
-   const rw=score*3;gain(rw,'balls');addXp(score*2);
-   dqProg('balls',score);storyProg('balls',score);
-   toast('⛄ Итог: '+score+' → +'+rw+' 🌰');
-   renderGames();
-  }},1000);
-}
-function stopBalls(){if(ballRaf){cancelAnimationFrame(ballRaf);ballRaf=null}if(ballTimer){clearInterval(ballTimer);ballTimer=null}}
-
-/* ===================== БОСС ===================== */
-let bossAtk=null;
-const boss={on:false,hp:0,hpMax:0,php:100,time:45,shieldUntil:0,dead:false,combo:0,lastTap:0};
-function startBoss(){
- stopBoss();
- boss.on=true;boss.dead=false;
- boss.hpMax=180+S.level*14;boss.hp=boss.hpMax;
- boss.php=100;boss.time=45;boss.shieldUntil=0;boss.combo=0;boss.lastTap=0;
- const box=$('bossBox');
- box.querySelectorAll('.icicle,.dmg').forEach(e=>e.remove());
- $('bossShield').style.display='none';
- bossAtk=setInterval(()=>{
-  if(boss.dead)return;
-  boss.time--;paint();
-  if(boss.time%9===3)bossShieldOn();
-  if(boss.time>0)spawnIcicle();
-  if(boss.time<=0)bossEnd(false);
- },1000);
- paint();
-}
-function bossShieldOn(){
- boss.shieldUntil=Date.now()+3000;
- $('bossShield').style.display='block';$('bossShield').textContent='🛡️';
- setTimeout(()=>{if(boss.on&&!boss.dead)$('bossShield').style.display='none';},3000);
-}
-function spawnIcicle(){
- const box=$('bossBox');if(!box)return;
- const el=document.createElement('div');el.className='icicle';el.textContent='🧊';
- el.style.left=rand(12,86)+'%';el.style.top='-30px';
- requestAnimationFrame(()=>el.style.top='82%');
- el.onpointerdown=e=>{e.stopPropagation();el.remove();boss.time=Math.min(boss.time+2,45);paint();};
- el.addEventListener('transitionend',()=>{
-  if(!el.isConnected||boss.dead)return;
-  boss.php=Math.max(0,boss.php-10);el.remove();paint();
-  if(boss.php<=0)bossEnd(false);
- });
- box.appendChild(el);
-}
-function bossTap(){
- if(!boss.on||boss.dead)return;
- if(Date.now()<boss.shieldUntil){toast('🛡️ Щит! Подождите');return}
- const now=Date.now();boss.combo=(now-boss.lastTap<700)?Math.min(boss.combo+1,12):1;boss.lastTap=now;
- let dmg=3+boss.combo;const crit=Math.random()<0.12;
- if(crit)dmg*=3;
- if(Date.now()<S.ghUntil)dmg*=2;
- boss.hp=Math.max(0,boss.hp-dmg);
- const el=document.createElement('div');el.className='dmg';
- el.textContent=crit?'💥'+dmg:'−'+dmg;
- el.style.color=crit?'#ffd86b':'#fff';
- el.style.left=(40+rand(0,25))+'%';el.style.top=(30+rand(0,20))+'%';
- el.style.fontSize=crit?'26px':'19px';
- const box=$('bossBox');if(box){box.appendChild(el);setTimeout(()=>el.remove(),800);}
- paint();
- if(boss.hp<=0)bossEnd(true);
-}
-function paint(){
- if(!$('bossHp'))return;
- $('bossHp').style.width=(100*boss.hp/boss.hpMax)+'%';
- $('bossPhp').style.width=boss.php+'%';
- $('bossInfo').textContent='❄️ Босс: '+Math.max(boss.hp,0)+' / '+boss.hpMax+'   🧑 Вы: '+Math.max(boss.php,0)+'   ⏱ '+boss.time+'с   🔗 x'+(1+Math.min(boss.combo,12));
-}
-function bossEnd(win){
- boss.dead=true;stopBoss();
- const box=$('bossBox');if(box)box.querySelectorAll('.icicle').forEach(e=>e.remove());
- if(win){
-  const rw=600+S.level*25;gain(rw,'boss');addXp(130);S.bossWins++;
-  dqProg('boss',1);storyProg('boss',1);
-  toast('🏆 Босс повержен! +'+rw+' 🌰');
- }else toast('❄️ Босс выдержал… Тапайте быстрее и сбивайте 🧊!');
- renderGames();
-}
-function stopBoss(){if(bossAtk){clearInterval(bossAtk);bossAtk=null}boss.on=false;}
-
-/* ===================== СОБЫТИЯ ===================== */
-function maybeEvents(){
- if(Date.now()>S.ghUntil&&Math.random()<0.06){S.ghUntil=Date.now()+60000;toast('🌟 Золотой час! Награды ×2 — 60 сек');}
- if(Date.now()>S.stormUntil&&Math.random()<0.07){
-  S.stormUntil=Date.now()+30000;gain(150,'storm');
-  toast('❄️ Снежная буря! +150 🌰 и ×2 на 30 сек');
- }
- if(Date.now()>S.sparkAt){S.sparkAt=Date.now()+rand(3,6)*60000;if(CUR==='tree')spawnSpark();}
- save();
-}
-function spawnSpark(){
- if($('spark'))return;
- const el=document.createElement('div');el.id='spark';el.textContent='✨';
- el.style.cssText='position:absolute;font-size:28px;cursor:pointer;text-shadow:0 0 9px gold;z-index:6;left:'+rand(10,84)+'%;top:'+rand(8,58)+'%';
- el.onclick=()=>{el.remove();gain(100,'spark');addXp(30);toast('✨ Золотая искра! +100 🌰');};
- const sc=$('treeScene');if(sc)sc.appendChild(el);
-}
-
-/* ===================== ШАПКА ===================== */
-function renderHeader(){
- $('stCones').textContent='🌰 '+fmt(S.cones);
- $('stLevel').textContent='Ур. '+S.level;
- $('stStreak').textContent='🔥 '+S.streak;
- $('xpbar').style.width=Math.min(100,100*S.xp/xpNeed(S.level))+'%';
- $('xplabel').textContent=S.xp+' / '+xpNeed(S.level);
- $('gbtn').disabled=Date.now()<voiceReady;
- $('mbtn').textContent=musOn?'♫ ✓':'♫';
-}
-/* ===================== ЁЛКА (чистая: ярусы, красная звезда, подарки; меню внизу) ===================== */
+/* ===================== ЁЛКА ===================== */
 function sr(seed){let s=(seed>>>0)||1;return function(){s=(s*1664525+1013904223)>>>0;return s/4294967296}}
 function tierPath(cx,yT,yB,w){
  const dy=yB-yT,n=Math.max(4,Math.round(w/13));
@@ -1147,8 +1293,8 @@ function giftsSvg(){
    +'<path d="M'+x+','+(y-hh)+' q'+(w*0.22)+',-'+(hh*0.28)+' '+(w*0.3)+',-'+(hh*0.05)+' q-'+(w*0.16)+','+(hh*0.02)+' -'+(w*0.3)+','+(hh*0.05)+' Z" fill="'+c2+'"/>'
    +'<circle cx="'+x+'" cy="'+(y-hh-1)+'" r="3" fill="'+c2+'"/></g>';
  });
- h+='<g><circle cx="356" cy="452" r="13" fill="#3f8f37" stroke="rgba(0,0,0,.25)"/><circle cx="352" cy="448" r="4" fill="rgba(255,255,255,.4)"/></g>';
- h+='<g><circle cx="146" cy="454" r="12" fill="#d03a3a" stroke="rgba(0,0,0,.25)"/><circle cx="142" cy="450" r="4" fill="rgba(255,255,255,.4)"/></g>';
+ h+='<g><circle cx="356" cy="452" r="13" fill="#3f8f37"/><circle cx="352" cy="448" r="4" fill="rgba(255,255,255,.4)"/></g>';
+ h+='<g><circle cx="146" cy="454" r="12" fill="#d03a3a"/><circle cx="142" cy="450" r="4" fill="rgba(255,255,255,.4)"/></g>';
  h+='<g><circle cx="248" cy="458" r="11" fill="#fff" stroke="#d03a3a" stroke-width="2"/>'
   +'<path d="M238,454 L258,462 M238,462 L258,454" stroke="#d03a3a" stroke-width="2"/></g>';
  return h;
@@ -1180,7 +1326,7 @@ function renderTree(){
   +'<filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="4"/></filter>'
   +'</defs>';
  let sky='<g opacity=".9">';
- for(let i=0;i<14;i++)sky+='<circle cx="'+rand(8,392)+'" cy="'+rand(6,110)+'" r="'+(rand(6,13)/10).toFixed(1)+'" fill="#fff" opacity="'+(0.25+Math.random()*0.5).toFixed(2)+'"/>';
+ for(let i=0;i<16;i++)sky+='<circle cx="'+rand(8,392)+'" cy="'+rand(6,120)+'" r="'+(rand(6,13)/10).toFixed(1)+'" fill="#fff" opacity="'+(0.25+Math.random()*0.5).toFixed(2)+'"/>';
  sky+='</g>';
  let tiers='';
  TIER_GEO.forEach((g,i)=>{tiers+=needleTier(200,g.yT,g.yB,g.w,i);});
@@ -1231,41 +1377,6 @@ function renderTree(){
  renderHeader();
  if(Date.now()>S.sparkAt&&Date.now()<S.sparkAt+90000)spawnSpark();
 }
-function openHangToy(){
- const list=S.bag.filter(o=>!o.garland);
- const box=$('mbox');
- if(!list.length)box.innerHTML='<h3>🧺 Мешок пуст</h3><div class="small">Купите игрушки в Витрине — и они появятся здесь.</div>';
- else{
-  let html='<h3>🧺 Что повесим?</h3><div class="small">Игрушка встанет на первое свободное место.</div>';
-  list.forEach(o=>{
-   const bi=S.bag.indexOf(o);
-   html+='<div class="oitem" style="margin-bottom:6px" onclick="hangAuto('+bi+')"><div class="oic">'+ornCard(o)+'</div><div class="nm">'+o.name+'</div></div>';
-  });
-  box.innerHTML=html;
- }
- box.innerHTML+='<button class="btn" onclick="closeModal()">Закрыть</button>';
- $('modal').classList.add('show');showBackBtn();
-}
-function hangAuto(bi){
- const o=S.bag[bi];if(!o)return;
- let si=-1;for(let i=0;i<25;i++){if(!S.tree[i]){si=i;break}}
- if(si<0){toast('🎄 Все 25 мест заняты — сначала снимите что-нибудь');return}
- S.tree[si]={uid:o.uid,name:o.name,emoji:o.emoji,rar:o.rar};
- storyProg('hang',1);dqProg('hang',1);
- if(!S.tree.some(x=>!x))storyProg('hang_all',1);
- if(S.order&&S.order.t==='hang'&&o.rar===S.order.rar)progOrder(1);
- S.bag.splice(bi,1);save();closeModal();renderTree();
- toast('🎄 «'+o.name+'» — на ёлке!');
- if(!S.tree.some(x=>!x))checkFullTree();
-}
-function openRemoveToy(){
- const box=$('mbox');let any=false,html='<h3>✂️ Что снять?</h3>';
- S.tree.forEach((o,i)=>{if(o){any=true;html+='<div class="oitem" style="margin-bottom:6px" onclick="unhangRm('+i+')"><div class="oic">'+ornCard(o)+'</div><div class="nm">'+o.name+'</div></div>';}});
- if(!any)html='<h3>✂️ Снимать нечего</h3><div class="small">На ёлке пока нет ваших игрушек.</div>';
- box.innerHTML=html+'<button class="btn" onclick="closeModal()">Закрыть</button>';
- $('modal').classList.add('show');showBackBtn();
-}
-function unhangRm(i){unhang(i);openRemoveToy();}
 function claimPassive(){
  const mins=Math.min((Date.now()-S.passiveLast)/60000,1440);
  if(mins<1){toast('⏳ Доход копится, зайдите позже');return}
@@ -1280,9 +1391,9 @@ function claimDaily(){
  toast('🎁 Сундук дня: +'+c+' 🌰');renderHeader();
 }
 
-/* ===================== ВИТРИНА ===================== */
+/* ===================== ВИТРИНА (игрушки + подарки + ярмарка) ===================== */
 function renderShop(){
- let html='<div class="card"><h3>🛍 Витрина Зини</h3><div class="small">Нажмите на карточку, чтобы купить. Игрушка попадёт в Мешок (вкладка 🧺), потом повесите через меню на ёлке.</div></div>';
+ let html='<div class="card"><h3>🛍 Витрина Зини</h3><div class="small">Игрушки — в Мешок, потом повесите через меню на ёлке. Подарки — сразу улетают другу.</div></div>';
  ['common','rare','epic','legend'].forEach(rar=>{
   html+='<div class="shopSec"><h4><span class="rbadge '+RAR[rar].rb+'">'+RAR[rar].n+'</span></h4><div class="grid">';
   CATALOG[rar].forEach(it=>{
@@ -1299,23 +1410,366 @@ function renderShop(){
   html+='<div class="oitem" onclick="buy(\'garland\')">'+mini+'<div class="nm">'+gl[0]+'</div><div class="pr">'+gl[2]+' 🌰</div></div>';
  });
  html+='</div></div>';
+ const sections=[['🧸 Плюшевые друзья — подарок с душой','plush',GIFTS_PLUSH],['🍺 С приколом — рассмешите друга','humor',GIFTS_HUMOR],['💌 Открытки — пара слов на бумаге','card',GIFTS_CARD]];
+ sections.forEach(sec=>{
+  html+='<div class="shopSec"><h4>'+sec[0]+'</h4><div class="grid">';
+  sec[2].forEach((g,i)=>{
+   html+='<div class="giftCard" onclick="buyGift(\''+sec[1]+'\','+i+')"><div class="giftIco">'+g.e+'</div><div class="nm">'+g.n+'</div><div class="joke">«'+g.joke+'»</div><div class="pr">'+g.pr+' 🌰</div></div>';
+  });
+  html+='</div></div>';
+ });
+ html+='<div class="card"><h3>🏪 Зимняя ярмарка</h3><div class="small">Выставляйте дубликаты и меняйтесь игрушками с другими игроками. Валюта обмена — сами игрушки, шишки не нужны.</div>'
+  +'<button class="btn blue" style="margin-top:8px" onclick="fairPost()">🎁 Выставить игрушку</button>'
+  +'<button class="btn gold" style="margin-top:8px" onclick="fairBrowse()">👀 Посмотреть лоты</button></div>';
  $('main').innerHTML=html;
 }
 
-/* ===================== ИГРЫ ===================== */
+/* ===================== ФУЛЛСКРИН ДВИЖОК ===================== */
+let gameStop=null;
+function fitGameCv(cv){
+ cv.width=cv.clientWidth||window.innerWidth;
+ cv.height=cv.clientHeight||window.innerHeight;
+ return cv;
+}
+function drawWinterScene(ctx,W,H){
+ const g=ctx.createLinearGradient(0,0,0,H);
+ g.addColorStop(0,'#0a1740');g.addColorStop(.55,'#12295a');g.addColorStop(1,'#1e3f78');
+ ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+ ctx.fillStyle='rgba(255,255,255,.8)';
+ for(let i=0;i<40;i++){ctx.globalAlpha=0.15+((i*37)%10)/18;ctx.fillRect((i*127)%W,(i*89)%(H*0.55),2,2);}
+ ctx.globalAlpha=1;
+ ctx.fillStyle='#14275a';
+ ctx.beginPath();ctx.moveTo(0,H*0.72);ctx.quadraticCurveTo(W*0.25,H*0.58,W*0.5,H*0.72);ctx.quadraticCurveTo(W*0.75,H*0.86,W,H*0.7);ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.fill();
+ ctx.fillStyle='#e9f2ff';
+ ctx.beginPath();ctx.moveTo(0,H*0.84);ctx.quadraticCurveTo(W*0.3,H*0.8,W*0.6,H*0.86);ctx.quadraticCurveTo(W*0.85,H*0.9,W,H*0.85);ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.fill();
+ ctx.fillStyle='#0e2f1c';
+ [[W*0.07,H*0.8],[W*0.17,H*0.84],[W*0.84,H*0.8],[W*0.94,H*0.86]].forEach(t=>{
+  ctx.beginPath();ctx.moveTo(t[0],t[1]-52);ctx.lineTo(t[0]-20,t[1]);ctx.lineTo(t[0]+20,t[1]);ctx.fill();
+ });
+}
+function openGame(title,ico,text,startFn){
+ stopGameIfAny();
+ $('gameTitle').textContent=ico+' '+title;
+ $('ghIco').textContent=ico;$('ghTitle').textContent=title;$('ghText').textContent=text;
+ $('gameHud').textContent='';
+ const b=$('ghStart');b.textContent='Начать';b.disabled=false;
+ b.onclick=function(){$('gameHint').style.display='none';startFn($('gameCv'),$('gameHud'));};
+ $('gameFs').classList.add('show');
+ $('gameHint').style.display='flex';
+ try{document.addEventListener('keydown',gameEsc)}catch(e){}
+}
+function gameEsc(e){if(e.key==='Escape')closeGame();}
+function stopGameIfAny(){if(gameStop){try{gameStop()}catch(e){}gameStop=null;}}
+function closeGame(){
+ stopGameIfAny();
+ $('gameFs').classList.remove('show');
+ try{document.removeEventListener('keydown',gameEsc)}catch(e){}
+ renderHeader();
+}
+function gameResult(ico,title,text){
+ $('ghIco').textContent=ico;$('ghTitle').textContent=title;$('ghText').textContent=text;
+ const b=$('ghStart');b.textContent='Забрать и выйти';b.disabled=false;
+ b.onclick=function(){closeGame();};
+ $('gameHint').style.display='flex';
+}
+
+/* ===================== ИГРА 1: САНИ (фуллскрин) ===================== */
+function startSledGame(cv,hud){
+ fitGameCv(cv);
+ const ctx=cv.getContext('2d');
+ const W=cv.width,H=cv.height;
+ let sledX=W/2,items=[],score=0,lives=3,elapsed=0,spawnT=0,combo=0,comboT=0,magnet=0,shield=false,done=false,raf=null,last=performance.now();
+ const DUR=50000;
+ function move(e){const x=e.touches?e.touches[0].clientX:e.clientX;if(x!=null)sledX=Math.max(40,Math.min(W-40,x));}
+ cv.onpointerdown=move;cv.onpointermove=move;
+ function updHud(){hud.textContent='🎁 '+score+'  '+'❤️'.repeat(Math.max(lives,0))+'  ⏱ '+Math.max(0,Math.ceil((DUR-elapsed)/1000))+'с'+(magnet>0?' 🧲':'')+(shield?' 🛡️':'');}
+ function finish(){
+  done=true;if(raf)cancelAnimationFrame(raf);
+  const rw=score*4;
+  gain(rw,'sled');addXp(score*2);
+  if(score>S.catchBest)S.catchBest=score;
+  storyProg('sled',score);dqProg('sled',score);cupAdd(score);
+  if(S.order&&S.order.t==='sled')progOrder(score);
+  gameResult('🛷','Спуск завершён!','Собрано: '+score+' предметов → +'+rw+' 🌰 · +'+(score*2)+' опыта. Рекорд: '+S.catchBest);
+ }
+ function loop(now){
+  if(done)return;
+  const dt=Math.min(now-last,50);last=now;
+  elapsed+=dt;spawnT+=dt;comboT=Math.max(0,comboT-dt);if(comboT<=0)combo=0;if(magnet>0)magnet-=dt;
+  const prog=elapsed/DUR,spd=1+prog*1.7;
+  if(spawnT>Math.max(320,640-prog*220)&&items.length<14){spawnT=0;
+   const r=Math.random();let v='gift';
+   if(r>0.93)v='magnet';else if(r>0.89)v='shield';else if(r>0.76)v='ice';else if(r>0.56)v='cone';
+   items.push({x:rand(40,W-40),y:-30,v:v,s:(0.07*spd+Math.random()*0.05)*H/420,ph:Math.random()*6.3});
+  }
+  drawWinterScene(ctx,W,H);
+  items.forEach(it=>{
+   it.y+=it.s*dt;
+   if(magnet>0&&(it.v==='gift'||it.v==='cone')){const dx=sledX-it.x;it.x+=Math.sign(dx)*Math.min(Math.abs(dx),dt*0.06);}
+   ctx.font='30px serif';ctx.textAlign='center';
+   ctx.fillText(it.v==='gift'?'🎁':it.v==='cone'?'🌰':it.v==='ice'?'🧊':it.v==='magnet'?'🧲':'🛡️',it.x,it.y);
+   if(it.y>H-78&&Math.abs(it.x-sledX)<52){
+    if(it.v==='ice'){if(shield){shield=false;it.y=H+99;}else{lives--;combo=0;it.y=H+99;}}
+    else if(it.v==='magnet'){magnet=6000;it.y=H+99;}
+    else if(it.v==='shield'){shield=true;it.y=H+99;}
+    else{score+=it.v==='gift'?2:1;combo++;comboT=2500;if(combo>5&&combo%6===0)score+=1;}
+    updHud();
+   }
+  });
+  items=items.filter(it=>it.y<H+40);
+  ctx.font='44px serif';ctx.textAlign='center';
+  ctx.fillText('🛷',sledX,H-30);
+  if(shield){ctx.strokeStyle='rgba(140,220,255,.85)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(sledX,H-46,36,0,7);ctx.stroke();}
+  if(lives<=0||elapsed>=DUR){finish();return}
+  raf=requestAnimationFrame(loop);
+ }
+ updHud();
+ raf=requestAnimationFrame(loop);
+ gameStop=function(){done=true;if(raf)cancelAnimationFrame(raf);};
+}
+
+/* ===================== ИГРА 2: СНЕЖКИ (фуллскрин) ===================== */
+function startBallsGame(cv,hud){
+ fitGameCv(cv);
+ const ctx=cv.getContext('2d');
+ const W=cv.width,H=cv.height;
+ let score=0,time=30,balls=[],pops=[],done=false,raf=null,timer=null,spawnAcc=0,last=performance.now();
+ const COLS={snow:'#cfe6ff',bomb:'#ff6b6b',gold:'#ffd86b',freeze:'#8fd4ff'};
+ function updHud(){hud.textContent='❄️ '+score+'  ⏱ '+time+'с';}
+ function spawn(){
+  if(balls.length>=10)return;
+  const r=Math.random();let v='snow',rad=26;
+  if(r>0.88){v='bomb';rad=24;}else if(r>0.84){v='freeze';rad=22;}else if(r>0.78){v='gold';rad=20;}
+  balls.push({v:v,x:rand(rad+10,W-rad-10),y:rand(rad+50,H-rad-30),vx:(Math.random()-0.5)*0.18,vy:(Math.random()-0.5)*0.15,rad:rad,ph:Math.random()*6.3});
+ }
+ function finish(){
+  if(done)return;done=true;
+  if(raf)cancelAnimationFrame(raf);if(timer)clearInterval(timer);
+  const rw=score*3;
+  gain(rw,'balls');addXp(score*2);
+  dqProg('balls',score);storyProg('balls',score);cupAdd(score);ballSeasonAdd(score);
+  gameResult('⛄','Раунд окончен!','Снежков лопнуто: '+score+' → +'+rw+' 🌰 · в сезон Снежной недели зачтено '+score+' очков');
+ }
+ cv.onpointerdown=e=>{
+  const rect=cv.getBoundingClientRect();
+  const x=e.clientX-rect.left,y=e.clientY-rect.top;
+  for(let i=balls.length-1;i>=0;i--){
+   const b=balls[i],dx=x-b.x,dy=y-b.y;
+   if(dx*dx+dy*dy<=b.rad*b.rad){
+    if(b.v==='bomb')score=Math.max(0,score-5);
+    else if(b.v==='gold')score+=5;
+    else if(b.v==='freeze')time+=2;
+    else score+=2;
+    pops.push({x:b.x,y:b.y,r:b.rad,a:1,c:COLS[b.v]});
+    balls.splice(i,1);updHud();break;
+   }
+  }
+ };
+ timer=setInterval(()=>{time--;updHud();if(time<=0)finish();},1000);
+ function loop(now){
+  if(done)return;
+  const dt=Math.min(now-last,50);last=now;
+  spawnAcc+=dt;
+  if(spawnAcc>Math.max(420,700-time*8)){spawnAcc=0;spawn();}
+  drawWinterScene(ctx,W,H);
+  pops.forEach(p=>{p.r+=dt*0.12;p.a=Math.max(0,p.a-dt/400);
+   ctx.globalAlpha=p.a;ctx.strokeStyle=p.c;ctx.lineWidth=3;
+   ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.stroke();ctx.globalAlpha=1;});
+  pops=pops.filter(p=>p.a>0);
+  balls.forEach(b=>{
+   b.x+=b.vx*dt;b.y+=b.vy*dt;
+   if(b.x<b.rad||b.x>W-b.rad)b.vx*=-1;
+   if(b.y<b.rad+40||b.y>H-b.rad-20)b.vy*=-1;
+   const wob=Math.sin(b.ph+now/500)*3;
+   const grad=ctx.createRadialGradient(b.x-6+wob,b.y-8,3,b.x,b.y,b.rad);
+   grad.addColorStop(0,'#ffffff');grad.addColorStop(1,COLS[b.v]);
+   ctx.beginPath();ctx.arc(b.x+wob,b.y,b.rad,0,7);
+   ctx.fillStyle=grad;ctx.fill();
+   ctx.strokeStyle='rgba(255,255,255,.6)';ctx.lineWidth=1.5;ctx.stroke();
+   ctx.font='16px serif';ctx.textAlign='center';ctx.textBaseline='middle';
+   ctx.fillText(b.v==='bomb'?'💣':b.v==='gold'?'⭐':b.v==='freeze'?'⏱️':'❄️',b.x+wob,b.y);
+   ctx.textBaseline='alphabetic';
+  });
+  if(done)return;
+  raf=requestAnimationFrame(loop);
+ }
+ updHud();
+ raf=requestAnimationFrame(loop);
+ gameStop=function(){done=true;if(raf)cancelAnimationFrame(raf);if(timer)clearInterval(timer);};
+}
+
+/* ===================== ИГРА 3: СНЕЖНАЯ КРЕПОСТЬ (босс, фуллскрин) ===================== */
+function startFortressGame(cv,hud){
+ fitGameCv(cv);
+ const ctx=cv.getContext('2d');
+ const W=cv.width,H=cv.height;
+ const fx=W/2,fy=H*0.3,fw=Math.min(W*0.34,190),fh=70;
+ let hpMax=180+S.level*14,hp=hpMax,hearts=5,time=60,shieldHp=0,shieldT=0;
+ let thrown=[],lobs=[],puffs=[],done=false,raf=null,timer=null,last=performance.now();
+ let combo=0,lastTap=0,lobT=1600;
+ function updHud(){hud.textContent='🧊 Крепость: '+Math.max(hp,0)+'  '+'❤️'.repeat(Math.max(hearts,0))+'  ⏱ '+Math.max(time,0)+'с'+(shieldHp>0?' 🛡️':'');}
+ function finish(win){
+  if(done)return;done=true;
+  if(raf)cancelAnimationFrame(raf);if(timer)clearInterval(timer);
+  if(win){
+   const rw=600+S.level*25;
+   gain(rw,'fort');addXp(130);S.bossWins++;
+   dqProg('boss',1);storyProg('boss',1);cupAdd(80);
+   gameResult('🏆','Крепость пала!','Страж уснул со смеху. +'+rw+' 🌰 · +130 опыта · Кубок: +80 очков');
+  }else{
+   gameResult('❄️','Крепость устояла','Крепость крепче, чем кажется. Попробуйте ещё — тапайте быстро, держите комбо и уворачивайтесь!');
+  }
+ }
+ cv.onpointerdown=e=>{
+  if(done)return;
+  const rect=cv.getBoundingClientRect();
+  const tx=e.clientX-rect.left,ty=e.clientY-rect.top;
+  const now=Date.now();
+  combo=(now-lastTap<800)?Math.min(combo+1,10):1;lastTap=now;
+  thrown.push({x:W/2,y:H-70,tx:tx,ty:ty,t:0});
+ };
+ timer=setInterval(()=>{time--;updHud();if(time<=0)finish(false);},1000);
+ function loop(now){
+  if(done)return;
+  const dt=Math.min(now-last,50);last=now;
+  comboT=Date.now();shieldT-=dt;lobT-=dt;
+  if(shieldHp<=0&&shieldT<=0){shieldHp=8;shieldT=4200;}
+  if(lobT<=0){lobT=Math.max(900,1700-time*12);
+   lobs.push({x:fx+rand(-fw/2,fw/2),y:fy,tx:sledPlayerX(),vy:(0.12+Math.random()*0.05)*(1+time/120),r:16});}
+  drawWinterScene(ctx,W,H);
+  // крепость
+  ctx.fillStyle='#5f7fae';
+  ctx.beginPath();ctx.roundRect?ctx.roundRect(fx-fw/2,fy-fh/2,fw,fh,12):ctx.rect(fx-fw/2,fy-fh/2,fw,fh);ctx.fill();
+  ctx.fillStyle='#7a99c9';
+  ctx.fillRect(fx-fw/2-14,fy-fh/2-16,20,fh+16);
+  ctx.fillRect(fx+fw/2-6,fy-fh/2-16,20,fh+16);
+  for(let r2=0;r2<3;r2++)for(let c2=0;c2<5;c2++){
+   ctx.fillStyle=(r2+c2)%2?'#4f6f9e':'#6a8abd';
+   ctx.fillRect(fx-fw/2+4+c2*(fw-8)/5,fy-fh/2+6+r2*22,(fw-8)/5-4,18);
+  }
+  ctx.font='34px serif';ctx.textAlign='center';
+  ctx.fillText('🧊',fx,fy+12);
+  if(shieldHp>0){
+   ctx.strokeStyle='rgba(150,220,255,.9)';ctx.lineWidth=4;
+   ctx.beginPath();ctx.arc(fx,fy,fw*0.72,0,7);ctx.stroke();
+   ctx.fillStyle='#fff';ctx.font='bold 14px sans-serif';
+   ctx.fillText('щит '+shieldHp,fx,fy-fh/2-24);
+  }
+  // полоски HP крепости
+  ctx.fillStyle='rgba(0,0,0,.4)';ctx.fillRect(fx-fw/2,fy-fh/2-34,fw,10);
+  ctx.fillStyle='#ff5f5f';ctx.fillRect(fx-fw/2,fy-fh/2-34,fw*Math.max(0,hp/hpMax),10);
+  // снежки игрока
+  thrown.forEach(t=>{t.t+=dt/420;
+   const mx=(t.x+t.tx)/2,my=Math.min(t.y,t.ty)-90;
+   const u=t.t,iu=1-u;
+   t.cx=iu*iu*t.x+2*iu*u*mx+u*u*t.tx;
+   t.cy=iu*iu*t.y+2*iu*u*my+u*u*t.ty;});
+  thrown.forEach(t=>{
+   ctx.beginPath();ctx.arc(t.cx,t.cy,9,0,7);ctx.fillStyle='#fff';ctx.fill();
+   ctx.strokeStyle='rgba(120,180,255,.7)';ctx.lineWidth=2;ctx.stroke();});
+  thrown=thrown.filter(t=>{
+   if(t.t<1)return true;
+   if(Math.abs(t.tx-fx)<fw/2+16&&Math.abs(t.ty-fy)<fh/2+22){
+    let d=4+combo;const crit=Math.random()<0.12;
+    if(crit)d*=3;
+    if(shieldHp>0){shieldHp-=1;updHud();return false;}
+    hp=Math.max(0,hp-d);
+    puffs.push({x:t.tx,y:t.ty,txt:crit?'💥'+d:'−'+d,c:crit?'#ffd86b':'#fff',a:1});
+    updHud();
+    if(hp<=0)finish(true);
+   }else puffs.push({x:t.tx,y:t.ty,txt:'мимо',c:'rgba(255,255,255,.6)',a:1});
+   return false;
+  });
+  // обстрел крепости
+  const px=sledPlayerX();
+  lobs.forEach(l=>{l.y+=l.vy*dt;
+   if(l.tx===undefined)l.tx=px;
+   const drift=(px-l.tx)*Math.min(1,l.y/(H*0.7));
+   const lx=l.x+drift;
+   ctx.beginPath();ctx.arc(lx,l.y,l.r,0,7);ctx.fillStyle='#fff';ctx.fill();
+   ctx.strokeStyle='rgba(120,180,255,.6)';ctx.lineWidth=2;ctx.stroke();
+   if(l.y>H-56&&Math.abs(lx-px)<46){
+    l.y=H+99;hearts--;puffs.push({x:px,y:H-90,txt:'−1 ❤️',c:'#ff6b6b',a:1});updHud();
+    if(hearts<=0)finish(false);
+   }});
+  lobs=lobs.filter(l=>l.y<H+40);
+  // снеговик-игрок
+  const sw=Math.sin(now/300)*6;
+  ctx.font='40px serif';ctx.fillText('⛄',px+sw,H-26);
+  // всплывающий урон
+  puffs.forEach(p=>{p.a-=dt/800;p.y-=dt*0.05;
+   ctx.globalAlpha=Math.max(0,p.a);ctx.fillStyle=p.c;
+   ctx.font='bold 20px sans-serif';ctx.fillText(p.txt,p.x,p.y);ctx.globalAlpha=1;});
+  puffs=puffs.filter(p=>p.a>0);
+  if(done)return;
+  raf=requestAnimationFrame(loop);
+ }
+ function sledPlayerX(){return W/2;}
+ updHud();
+ raf=requestAnimationFrame(loop);
+ gameStop=function(){done=true;if(raf)cancelAnimationFrame(raf);if(timer)clearInterval(timer);};
+}
+
+/* ===================== КОЛЕСО (остаётся на вкладке Игры) ===================== */
+const WHEEL=[{t:'c',v:50},{t:'c',v:100},{t:'o',v:'rare'},{t:'c',v:250},{t:'c',v:500},{t:'o',v:'epic'},{t:'c',v:150},{t:'c',v:1000}];
+const WCOLS=['#2f5fe0','#8b3fd0','#d03a3a','#12a06a','#ff9a3d','#6a5cff','#1fffa4','#ffd86b'];
+const SEG=45;
+let wheelAng=0,wheelSpinning=false;
+function drawWheel(){
+ const cv=$('wheelCv');if(!cv)return;const ctx=cv.getContext('2d');
+ const R=cv.width/2;ctx.clearRect(0,0,cv.width,cv.height);
+ WHEEL.forEach((p,i)=>{
+  const a0=(wheelAng+i*SEG)*Math.PI/180,a1=a0+SEG*Math.PI/180;
+  ctx.beginPath();ctx.moveTo(R,R);ctx.arc(R,R,R-6,a0,a1);ctx.closePath();
+  ctx.fillStyle=WCOLS[i];ctx.fill();ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=2;ctx.stroke();
+  ctx.save();ctx.translate(R,R);ctx.rotate(a0+SEG*Math.PI/360);
+  ctx.fillStyle='#fff';ctx.font='bold 15px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText(p.t==='c'?String(p.v):(p.v==='rare'?'Редкая':'Эпик.'),R*.63,0);
+  ctx.restore();
+ });
+ ctx.beginPath();ctx.arc(R,R,26,0,7);ctx.fillStyle='#0a1a3f';ctx.fill();
+ ctx.strokeStyle='#ffd86b';ctx.lineWidth=3;ctx.stroke();
+ ctx.font='bold 20px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('🎄',R,R+1);
+}
+function calcIndex(rotDeg){let a=(270-rotDeg)%360;if(a<0)a+=360;return Math.floor(a/SEG)%8;}
+function spinWheel(viaAd){
+ if(wheelSpinning)return;
+ if(viaAd){showAdRewarded(()=>doSpin());return}
+ if(S.wheelFree<=0){toast('Бесплатные спины кончились — крутите за рекламу 📺');return}
+ S.wheelFree--;save();doSpin();
+}
+function doSpin(){
+ wheelSpinning=true;
+ const target=rand(0,7);
+ let fin=270-(target*SEG+SEG/2);
+ fin=((fin%360)+360)%360+360*(3+rand(1,4));
+ while(fin<=wheelAng)fin+=360;
+ const start=wheelAng,t0=performance.now(),dur=3200;
+ (function anim(now){
+  const k=Math.min((now-t0)/dur,1),e=1-Math.pow(1-k,3);
+  wheelAng=start+(fin-start)*e;drawWheel();
+  if(k<1)requestAnimationFrame(anim);
+  else{wheelAng=((wheelAng%360)+360)%360;wheelSpinning=false;wheelPrize(calcIndex(wheelAng));}
+ })(performance.now());
+}
+function wheelPrize(i){
+ storyProg('wheel',1);
+ const p=WHEEL[i];
+ if(p.t==='c'){gain(p.v,'wheel');toast('🎡 Выпало: '+p.v+' 🌰');}
+ else{const o=mkOrn(p.v);S.bag.push(o);toast('🎡 Выпало: '+o.emoji+' '+o.name+'!');}
+ save();renderHeader();
+}
+
+/* ===================== ВКЛАДКА ИГРЫ ===================== */
 function renderGames(){
- stopBalls();stopBoss();
- let html='<div class="card"><h3>🎮 Игры</h3><div class="small">Босс и мини-игры. Награды идут в задания дня и сюжет.</div></div>';
- html+='<div class="card"><h3>❄️ Снежный босс</h3><div class="small">Побед: '+S.bossWins+' · Награда: '+(600+S.level*25)+' 🌰 · Тапайте босса, ловите криты 💥, сбивайте 🧊!</div>'
-  +'<div class="hpbar"><div class="hpfill" id="bossHp" style="width:100%"></div></div>'
-  +'<div class="hpbar"><div class="hpfill" id="bossPhp" style="width:100%;background:linear-gradient(90deg,#2ee38b,#8fe3b0)"></div></div>'
-  +'<div id="bossInfo" class="small" style="margin:4px 0">Нажмите «Начать бой», затем бейте по боссу!</div>'
-  +'<div id="bossBox" onclick="bossTap()"><div id="bossEmoji">🧊</div><div id="bossShield"></div></div>'
-  +'<button class="btn red" style="margin-top:8px" onclick="startBoss()">Начать бой</button></div>';
+ stopGameIfAny();
+ let html='<div class="card"><h3>🎮 Игры</h3><div class="small">Открываются на весь экран. Очки идут в Кубок недели и сезон Снежной недели.</div></div>';
+ html+='<div class="card"><h3>❄️ Снежная крепость</h3><div class="small">Штурмуйте крепость Стража: тап — бросок снежка, комбо усиливает удары, криты 💥 бьют ×3. Разбивайте щит 🛡️ и уворачивайтесь от обстрела. Побед: '+S.bossWins+'</div>'
+  +'<button class="btn red" style="margin-top:8px" onclick="openGame(\'Снежная крепость\',\'🧊\',\'Тапайте по экрану — снеговик бросает снежки в крепость. Комбо (быстрые тапы) усиливает удар, криты бьют ×3. Сначала сбейте щит, потом саму крепость. Уворачивайтесь от вражеских снежков!\',startFortressGame)">🏰 Штурмовать крепость</button></div>';
  html+='<div class="card"><h3>🛷 Поймай в сани</h3><div class="small">🎁 +2 · 🌰 +1 · 🧊 минус жизнь (3 — конец) · 🧲 магнит · 🛡️ щит · комбо-бонусы. Рекорд: '+S.catchBest+'</div>'
-  +'<canvas id="sledCv" height="320"></canvas><button class="btn blue" style="margin-top:8px" onclick="startSled()">Поехали!</button></div>';
- html+='<div class="card"><h3>⛄ Лопни снежки</h3><div class="small">25 секунд: ❄️ +2 · ⭐ +5 · 💣 −5 · ⏱️ +2 сек</div>'
-  +'<div id="ballField"></div><button class="btn blue" style="margin-top:8px" onclick="startBalls()">Лопать!</button></div>';
+  +'<button class="btn blue" style="margin-top:8px" onclick="openGame(\'Поймай в сани\',\'🛷\',\'Водите пальцем — санки едут за ним. Ловите подарки 🎁 и шишки 🌰, берегите лёд 🧊. Магнит 🧲 притянет всё рядом, щит 🛡️ спасёт от льда.\',startSledGame)">🎮 Открыть на весь экран</button></div>';
+ html+='<div class="card"><h3>⛄ Лопни снежки</h3><div class="small">30 секунд: ❄️ +2 · ⭐ +5 · 💣 −5 · ⏱️ +2 сек. Очки — в сезон Снежной недели!</div>'
+  +'<button class="btn blue" style="margin-top:8px" onclick="openGame(\'Лопни снежки\',\'⛄\',\'Тапайте по снежкам — они лопаются с брызгами. Золотые ⭐ дают ×5, бомбы 💣 отнимают, часы ⏱️ добавляют время.\',startBallsGame)">🎮 Открыть на весь экран</button></div>';
  html+='<div class="card"><h3>🎡 Колесо Зини</h3><div class="small">Бесплатных спинов: <b>'+S.wheelFree+'</b> из 3</div>'
   +'<div class="wheelWrap"><div class="wheelPtr">🔻</div><canvas id="wheelCv" width="280" height="280"></canvas></div>'
   +'<button class="btn gold" onclick="spinWheel(false)">Крутить бесплатно</button>'
@@ -1341,7 +1795,6 @@ function vidBonus(){
   if(CUR==='pass')renderPass();
  });
 }
-let _taskBound=false;
 function attachAdsgramTask(){
  loadAdsgramSdk().then(ok=>{
   const t=$('agTask');if(!t||!ok)return;
@@ -1392,7 +1845,7 @@ function renderPass(){
  attachAdsgramTask();
 }
 
-/* ===================== ЗАРАБОТОК (общий: в рублях, курс 82 ₽/$, обновление каждую секунду) ===================== */
+/* ===================== ЗАРАБОТОК (рубли, обновление каждую секунду) ===================== */
 function renderEarn(){
  if(earnIv){clearInterval(earnIv);earnIv=null}
  const rub=v=>(v*EARN_CFG.rateRub);
@@ -1444,6 +1897,13 @@ function renderInv(){
   html+='<div class="oitem"><div class="oic">'+ornCard(o)+'</div><div class="nm">'+o.name+'</div><span class="rbadge '+R.rb+'">'+R.n+'</span></div>';
  });
  html+='</div></div>';
+ if(S.myGifts&&S.myGifts.length){
+  html+='<div class="card"><h3>💝 Подарки от друзей ('+S.myGifts.length+')</h3>';
+  S.myGifts.slice(0,12).forEach(g=>{
+   html+='<div class="achRow"><div class="ic">'+g.emoji+'</div><div><div style="font-weight:700;font-size:13px">'+esc(g.name)+' <span class="small">от '+esc(g.from)+'</span></div>'+(g.msg?'<div class="small" style="font-style:italic">«'+esc(g.msg)+'»</div>':'')+'</div></div>';
+  });
+  html+='</div>';
+ }
  if(S.order){
   const otxt={hang:'Повесьте '+Math.min(S.order.done,S.order.n)+'/'+S.order.n+' игрушек редкости «'+(RAR[S.order.rar]?RAR[S.order.rar].n:'любые')+'»',
    earn:'Заработайте '+Math.min(S.order.done,S.order.n)+'/'+S.order.n+' 🌰',
@@ -1455,19 +1915,36 @@ function renderInv(){
  const canWish=S.wishDay!==today()&&hasWishStar();
  html+='<div class="card"><h3>💫 Звезда желания</h3><div class="small">'+(hasWishStar()?'Звезда у вас! Раз в день исполняет желание.':'Купите «Звезду желания» в Витрине.')+'</div>'
   +'<button class="btn'+(canWish?' gold':'')+'" '+(canWish?'':'disabled')+' style="margin-top:8px" onclick="makeWish()">Загадать желание</button></div>';
- html+='<div class="card"><h3>📈 Статистика</h3><div class="small">Уровень: '+S.level+'/100 · 🔥 '+S.streak+' · Побед над боссом: '+S.bossWins+' · Рекорд саней: '+S.catchBest+' · 📺 Реклам: '+S.adViews+' · Коллекции: ×'+collMult().toFixed(2)+'</div></div>';
+ html+='<div class="card"><h3>📈 Статистика</h3><div class="small">Уровень: '+S.level+'/100 · 🔥 '+S.streak+' · Побед над крепостью: '+S.bossWins+' · Рекорд саней: '+S.catchBest+' · 📺 Реклам: '+S.adViews+' · Подарков отправлено: '+S.giftsSent+' · Коллекции: ×'+collMult().toFixed(2)+'</div></div>';
+ $('main').innerHTML=html;
+}
+
+/* ===================== ВКЛАДКА ПОДАРКИ ===================== */
+function renderFriends(){
+ let html='<div class="card"><h3>🎁 Подарки</h3><div class="small">Дарите друзьям плюшевых мишек с тёплыми словами, смешные презенты и открытки. Найдите друга по нику в рейтинге 🏆.</div>'
+  +'<button class="btn gold" style="margin-top:8px" onclick="switchTab(\'shop\')">🛍 Выбрать подарок в Витрине</button></div>';
+ html+='<div class="card"><h3>🥚 Тайный Санта</h3><div class="small">'+(santaMyStatus()?'На этой неделе вы уже тайничели. Личность раскроется через 3 дня после отправки.':'На этой неделе можно отправить один анонимный подарок. Получатель угадает — и вы оба получите +500 🌰!')+'</div></div>';
+ html+='<div class="card"><h3>⚡ Экспресс-доставка</h3><div class="small">Обычный подарок ждёт друга до его входа в игру. За '+EXPRESS_COST+' 🌰 сани Деда Мороза летят мгновенно — отмечайте галочку при отправке.</div></div>';
+ html+='<div class="card"><h3>💝 Ваши полученные подарки ('+(S.myGifts?S.myGifts.length:0)+')</h3>';
+ if(!S.myGifts||!S.myGifts.length)html+='<div class="small">Пока пусто. Подсказка: отправьте подарок первыми — и друзья ответят!</div>';
+ else S.myGifts.forEach(g=>{
+  html+='<div class="achRow"><div class="ic">'+g.emoji+'</div><div><div style="font-weight:700;font-size:13px">'+esc(g.name)+' <span class="small">от '+esc(g.from)+'</span></div>'+(g.msg?'<div class="small" style="font-style:italic">«'+esc(g.msg)+'»</div>':'')+'</div></div>';
+ });
+ html+='</div>';
+ html+='<div class="card"><h3>📨 Уведомления</h3><div class="small">Когда друг отправит вам подарок — бот пришлёт сообщение «🎁 Вам пришёл новый подарок!». Настройка скрипта уведомлений — на стороне хостинга.</div></div>';
+ html+='<button class="btn blue" style="margin-bottom:10px" onclick="checkIncomingGifts()">🔄 Проверить новые подарки</button>';
  $('main').innerHTML=html;
 }
 
 /* ===================== ВКЛАДКИ ===================== */
 let CUR='tree';
 let earnIv=null;
-const TABS=[['tree','🎄 Ёлка'],['shop','🛍 Витрина'],['games','🎮 Игры'],['story','📖 История'],['pass','🎟 Пропуск'],['earn','💸 Заработок'],['inv','🧺 Инвентарь']];
+const TABS=[['tree','🎄 Ёлка'],['shop','🛍 Витрина'],['games','🎮 Игры'],['story','📖 История'],['pass','🎟 Пропуск'],['earn','💸 Заработок'],['rate','🏆 Рейтинг'],['friends','🎁 Подарки'],['inv','🧺 Мешок']];
 function switchTab(t){
- CUR=t;stopBalls();stopSled();stopBoss();
+ CUR=t;stopGameIfAny();
  if(earnIv){clearInterval(earnIv);earnIv=null;}
  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
- const views={tree:renderTree,shop:renderShop,games:renderGames,story:renderStory,pass:renderPass,earn:renderEarn,inv:renderInv};
+ const views={tree:renderTree,shop:renderShop,games:renderGames,story:renderStory,pass:renderPass,earn:renderEarn,rate:renderRate,friends:renderFriends,inv:renderInv};
  try{(views[t]||renderTree)();}
  catch(e){$('main').innerHTML='<div class="card"><h3>Ой, что-то сломалось</h3><div class="small">'+e.message+'</div></div>';}
 }
@@ -1475,59 +1952,53 @@ function renderTabs(){
  $('tabs').innerHTML=TABS.map(([k,l])=>'<button class="tab'+(k===CUR?' on':'')+'" data-t="'+k+'" onclick="switchTab(\''+k+'\')">'+l+'</button>').join('');
 }
 
-/* ===================== ГИРЛЯНДА ПО КРАЯМ + СОСУЛЬКИ + МОРОЗ ===================== */
-function garlandTop(){
- const old=$('edgeWrap');if(old)old.remove();
- const wrap=document.createElement('div');wrap.id='edgeWrap';
- const cols=['#ff4d4d','#ffd24d','#4dff88','#4da6ff','#ff4de0'];
- function strand(){
-  const n=15,pts=[];
-  for(let i=0;i<=n;i++)pts.push([(i%2)?17:7,100*i/n]);
-  const wire='M'+pts.map(p=>p[0]+','+p[1].toFixed(1)).join(' L ');
-  let l='';
-  pts.forEach((p,i)=>{
-   const c=cols[i%cols.length];
-   l+='<circle cx="'+p[0]+'" cy="'+p[1].toFixed(1)+'" r="2.4" fill="'+c+'" class="ice" style="animation-delay:'+(i*0.18).toFixed(2)+'s"/>';
-  });
-  return '<svg viewBox="0 0 24 100" preserveAspectRatio="none" style="width:26px;height:100%;display:block"><path d="'+wire+'" stroke="rgba(20,30,25,.75)" stroke-width="2" fill="none"/>'+l+'</svg>';
+/* ===================== СОБЫТИЯ, ИСКРА, ШАПКА ===================== */
+function maybeEvents(){
+ if(Date.now()>S.ghUntil&&Math.random()<0.06){S.ghUntil=Date.now()+60000;toast('🌟 Золотой час! Награды ×2 — 60 сек');}
+ if(Date.now()>S.stormUntil&&Math.random()<0.07){
+  S.stormUntil=Date.now()+30000;gain(150,'storm');
+  toast('❄️ Снежная буря! +150 🌰 и ×2 на 30 сек');
  }
- wrap.innerHTML='<div style="position:absolute;left:0;top:0;height:100%;width:26px">'+strand()+'</div>'
-  +'<div style="position:absolute;right:0;top:0;height:100%;width:26px">'+strand()+'</div>'
-  +'<div id="frostOv"></div>';
- document.body.appendChild(wrap);
- const R=sr(9911);
- let ic='';
- for(let i=0;i<28;i++){
-  const x=(i+0.5)*(100/28),hh=5+R()*13;
-  ic+='<path d="M'+x.toFixed(1)+',0 L'+(x-2.4).toFixed(1)+',0 L'+x.toFixed(1)+','+hh.toFixed(1)+' Z" fill="rgba(200,230,255,.6)"/>';
- }
- const strip=document.createElement('div');
- strip.style.cssText='position:fixed;top:0;left:0;width:100%;height:26px;z-index:2;pointer-events:none';
- strip.innerHTML='<svg viewBox="0 0 100 20" preserveAspectRatio="none" style="width:100%;height:100%;display:block"><path d="M0,0 L100,0 L100,2.5 L0,2.5 Z" fill="rgba(235,246,255,.9)"/>'+ic+'</svg>';
- document.body.appendChild(strip);
+ if(Date.now()>S.sparkAt){S.sparkAt=Date.now()+rand(3,6)*60000;if(CUR==='tree')spawnSpark();}
+ save();
+}
+function spawnSpark(){
+ if($('spark'))return;
+ const el=document.createElement('div');el.id='spark';el.textContent='✨';
+ el.style.cssText='position:absolute;font-size:28px;cursor:pointer;text-shadow:0 0 9px gold;z-index:6;left:'+rand(10,84)+'%;top:'+rand(8,58)+'%';
+ el.onclick=()=>{el.remove();gain(100,'spark');addXp(30);toast('✨ Золотая искра! +100 🌰');};
+ const sc=$('treeScene');if(sc)sc.appendChild(el);
+}
+function renderHeader(){
+ $('stCones').textContent='🌰 '+fmt(S.cones);
+ $('stLevel').textContent='Ур. '+S.level;
+ $('stStreak').textContent='🔥 '+S.streak;
+ $('xpbar').style.width=Math.min(100,100*S.xp/xpNeed(S.level))+'%';
+ $('xplabel').textContent=S.xp+' / '+xpNeed(S.level);
+ $('gbtn').disabled=Date.now()<voiceReady;
+ $('mbtn').textContent=musOn?'♫ ✓':'♫';
 }
 function snowfall(){
  let h='';
- for(let i=0;i<8;i++)h+='<span style="left:'+rand(0,98)+'%;animation-duration:'+rand(9,17)+'s;animation-delay:-'+rand(0,16)+'s;font-size:'+rand(10,15)+'px">❄️</span>';
+ for(let i=0;i<10;i++)h+='<span style="left:'+rand(0,98)+'%;animation-duration:'+rand(9,17)+'s;animation-delay:-'+rand(0,16)+'s;font-size:'+rand(10,15)+'px">❄️</span>';
  $('snow').innerHTML=h;
 }
 const TICKER_MSGS=[
  '🎄 Добро пожаловать на Ёлку Зини!',
  PRIZES_TEXT,
+ '🏆 Рейтинг Хранителей ждёт — меряйтесь уровнями с друзьями',
+ '🎁 Отправьте другу плюшевого мишку с тёплым словом',
+ '🥚 Тайный Санта раз в неделю: анонимный подарок + угадывание',
+ '⚡ Экспресс-доставка: сани Деда Мороза летят мгновенно',
+ '🔔 Когда мир повесит 10 000 игрушек — Золотой праздник ×2 для всех',
+ '🏰 Штурмуйте Снежную крепость на весь экран',
  '✨ Ловите золотую искру прямо на ёлке — это +100 🌰',
- '🎁 Сундук дня усиливается вашим огнём подряд 🔥',
- '🎡 Крутите колесо за рекламу — бесплатный лимит не тратится!',
- '🧊 Тапайте льдинки в бою с боссом — это +2 секунды',
- '🧲 Магнит притянет подарки прямо к санкам',
+ '🎡 Крутите колесо за рекламу — бесплатный лимит не тратится',
  '💰 Каждое видео — +300 🌰 по заданию спонсора, без лимита',
- '🐷 Копилка копит шишки, пока вы спите',
- '📋 Три задания дня — каждый день новые',
+ '📋 Три задания дня + Дед-квест с двойной наградой',
  '🏆 Собирайте коллекции — постоянный бонус к наградам',
- '📖 Пройдите 8 глав истории и станьте Хранителем Ёлки!',
- '💬 Загадка от НПС раз в день: верный ответ +80 🌰',
- '💸 Заработок игры растёт от каждого видео',
- '✦ Голос во тьме шепчет: «Древо помнит тебя»',
- '❄️ Снежная буря — награды ×2, успевайте!'
+ '📖 Пройдите 8 глав истории и узнайте правду о Моране',
+ '❄️ Снежная неделя: все очки за снежки — в общий зачёт сезона'
 ];
 
 /* ===================== ТИК ===================== */
@@ -1539,7 +2010,7 @@ setInterval(()=>{
 
 /* ===================== ИНИТ ===================== */
 (function init(){
- garlandTop();snowfall();renderTabs();
+ snowfall();renderTabs();
  $('tickerInner').textContent=TICKER_MSGS.join('   ✦   ')+'   ✦   ';
  if(S.streakDay!==today()){
   const yest=new Date(Date.now()-86400000).toISOString().slice(0,10);
@@ -1549,8 +2020,13 @@ setInterval(()=>{
  }
  if(S.wheelDay!==today()){S.wheelFree=3;S.wheelDay=today();}
  if(!S.order)genOrder();
- seedStatsRow();
+ seedStatsRow();syncPlayer();
  save();renderHeader();switchTab('tree');
+ setTimeout(checkIncomingGifts,1500);
+ setInterval(function(){
+  renderHeader();
+  if(CUR==='rate')renderRate();
+ },60000);
 })();
 </script>
 </body>
