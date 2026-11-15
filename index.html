@@ -1127,6 +1127,7 @@ function tierPath(cx,yT,yB,w){
   +' C '+(cx-w*0.72).toFixed(1)+' '+(yT+(yB-yT)*0.62).toFixed(1)+' '+(cx-w*0.35).toFixed(1)+' '+(yT+(yB-yT)*0.18).toFixed(1)+' '+cx+' '+yT+' Z';
  return p;
 }
+function sr(seed){let s=(seed>>>0)||1;return function(){s=(s*1664525+1013904223)>>>0;return s/4294967296}}
 function needleTier(cx,yT,yB,w,si,rich){
  const R=sr(si*7349+11);
  const base=si%2?'#256f31':'#2f8f3f',light=si%2?'#2f8f3f':'#3fa84e';
