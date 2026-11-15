@@ -1483,16 +1483,19 @@ function wheelSpin(free){
   }, 4400);
 }
 document.getElementById('btn-wheel').addEventListener('click', function(){ wheelSpin(true); });
-document.getElementById('btn-wheel-ad').addEventListener('click', function(){
-  if (!adController) { wheelSpin(true); return; }
-  adController.show()
+  document.getElementById('btn-wheel-ad').addEventListener('click', function(){
+  var wb = document.getElementById('btn-wheel-ad');
+  wb.disabled = true;
+  showAdRewarded()
     .then(function(result){
+      wb.disabled = false;
       if (result && result.done === false) { toast('Досмотри рекламу до конца, чтобы крутить 🎡'); return; }
       wheelSpin(false);
     })
     .catch(function(err){
-      console.warn('AdsGram:', err && err.description);
-      toast('Реклама пока недоступна — попробуй позже 🎡');
+      wb.disabled = false;
+      console.warn('AdsGram:', err && err.message);
+      toast('Реклама пока недоступна — попробуй через минуту 🎡');
     });
 });
 
@@ -1962,7 +1965,9 @@ stBuild();
 stOverlay('Лопни снежки', 'Нажми «Играть» — у тебя 25 секунд', false, '⛄');
 renderSt();
 
-// ===== Голос «Зини дроп!» каждые 5 минут (мелодии больше нет) =====
+// ============================================================
+// ГОЛОС «ЗИНИ ДРОП!» каждые 5 минут (мелодии больше нет)
+// ============================================================
 var musicOn = false;
 try { musicOn = localStorage.getItem('zini_music_' + playerId) === 'on'; } catch(e){}
 var ziniVoiceTimer = null;
@@ -2021,3 +2026,6 @@ if (musicOn) musicStart();
 </script>
 </body>
 </html>
+
+document.getElementById('btn-wheel-ad').addEventListener('click', function(){
+  
