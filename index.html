@@ -142,16 +142,18 @@ adsgram-task{--adsgram-task-bg:rgba(255,255,255,.1);--adsgram-task-color:#eef3ff
 </div>
 <div id="toast"></div>
 <script>
+/* Светофор: любая ошибка покажется тостом с номером строки */
 window.addEventListener('error',function(e){
  try{toast('⚠️ '+e.message+' — строка '+e.lineno);}catch(_){}
- console.error(e.error||e.message);
+ if(window.console)console.error(e.error||e.message);
 });
+
 /* ===================== НАСТРОЙКИ ===================== */
 const AG_CFG={blockId:'59627',taskBlockId:'task-59804',debug:false};
 const EARN_CFG={perViewUsd:0.01,perTaskUsd:0.01,fallbackRate:80,currency:'₽'};
 let USD_RATE=EARN_CFG.fallbackRate;
-/* Вставь сюда свои данные из Supabase (Project Settings → API) */
-const SUPA_CFG={https://clxewmkuntmgtbovrgqk.supabase.co/rest/v1/:'',sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX:''};
+/* Данные из Supabase (Project Settings → API) — для общего заработка */
+const SUPA_CFG={url:'',key:''};
 
 /* ===================== СРЕДА ===================== */
 const IS_TG=!!(window.Telegram&&window.Telegram.WebApp&&window.Telegram.WebApp.initData!=='');
@@ -209,7 +211,8 @@ async function showAdRewarded(onReward){
  }finally{_adBusy=false;}
 }
 function simulateAd(onReward){
- const ov=$('adsOv');ov.classList.add('show');
+ const ov=$('adsOv');if(!ov){onReward();return}
+ ov.classList.add('show');
  let c=3;const el=$('adsCnt'),fill=$('adsFill');
  el.textContent=c;fill.style.width='0%';
  requestAnimationFrame(()=>fill.style.width='100%');
@@ -281,7 +284,7 @@ function normalizeState(){
   let rar=o.rar||o.r||'common';if(!RAR[rar])rar='common';
   return{uid:o.uid||('o'+i),name:name,emoji:o.emoji||(flat[name]?flat[name].e:'🔔'),rar:rar,garland:!!o.garland,type:o.type};
  });
- if(!Array.isArray(S.tree)||S.tree.length<25)S.tree=(S.tree||[]).slice(0,25);
+ if(!Array.isArray(S.tree)||S.tree.length>25)S.tree=(S.tree||[]).slice(0,25);
  while(S.tree.length<25)S.tree.push(null);
  S.tree=S.tree.map((o,i)=>{
   if(!o)return null;
@@ -290,16 +293,20 @@ function normalizeState(){
  });
  if(!Array.isArray(S.claimed))S.claimed=[];
  if(!S.pig||typeof S.pig!=='object')S.pig={saved:0,last:Date.now()};
+ if(typeof S.pig.saved!=='number')S.pig.saved=0;
+ if(typeof S.pig.last!=='number')S.pig.last=Date.now();
+ if(!Array.isArray(S.dqPicks))S.dqPicks=[];
+ if(!S.dqP||typeof S.dqP!=='object')S.dqP={};
+ if(!S.dqDone||typeof S.dqDone!=='object')S.dqDone={};
  if(!S.seq)S.seq=S.bag.length+1;
 }
 normalizeState();
 if(!S.name&&TG_USER&&(TG_USER.first_name||TG_USER.username)){S.name=(TG_USER.first_name||TG_USER.username).slice(0,16);}
-function save(){localStorage.setItem('zini_v14_state',JSON.stringify(S));}
+function save(){try{localStorage.setItem('zini_v14_state',JSON.stringify(S));}catch(e){}}
 const today=()=>new Date().toISOString().slice(0,10);
 
 /* ===================== ОБЩИЙ ЗАРАБОТОК (Supabase) ===================== */
 let supa=null,supaTried=false;
-const globalEarn={views:null,tasks:null};
 function ensureSupa(){
  if(supa||supaTried)return Promise.resolve(supa);
  supaTried=true;
@@ -316,7 +323,7 @@ function fetchGlobalEarn(){
  return ensureSupa().then(cl=>{
   if(!cl)return null;
   return cl.from('global_stats').select('ad_views,ad_tasks').eq('id',1).single()
-   .then(r=>{if(r&&r.data){globalEarn.views=r.data.ad_views||0;globalEarn.tasks=r.data.ad_tasks||0;return globalEarn;}return null;})
+   .then(r=>{if(r&&r.data)return{views:r.data.ad_views||0,tasks:r.data.ad_tasks||0};return null;})
    .catch(()=>null);
  });
 }
@@ -341,7 +348,7 @@ function fetchUsdRate(){
 
 /* ===================== УТИЛИТЫ ===================== */
 const $=id=>document.getElementById(id);
-function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;$('toast').appendChild(d);setTimeout(()=>d.remove(),2200);}
+function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;const h=$('toast');if(!h)return;h.appendChild(d);setTimeout(()=>d.remove(),2200);}
 function fmt(n){return n>=1000?(n/1000).toFixed(n%1000?1:0).replace('.0','')+'к':''+n}
 function rand(a,b){return Math.floor(a+Math.random()*(b-a+1))}
 function pick(a){return a[rand(0,a.length-1)]}
@@ -401,8 +408,9 @@ function openBagPicker(slotIdx,garl){
  if(!list.length)html+='<p class="small">'+(garl?'Гирлянд нет — купите в Витрине.':'Пусто. Загляните в «Витрину»!')+'</p>';
  list.forEach(o=>{
   const bagIdx=S.bag.indexOf(o);
+  const rr=RAR[o.rar]||RAR.common;
   html+='<div class="oitem" style="margin-bottom:6px" onclick="doHang('+(garl?'null':slotIdx)+','+bagIdx+')">'
-   +(garl?'<div style="font-size:30px">💡</div>':'<div class="bauble '+RAR[o.rar].cls+'">'+o.emoji+'</div>')
+   +(garl?'<div style="font-size:30px">💡</div>':'<div class="bauble '+rr.cls+'">'+o.emoji+'</div>')
    +'<div class="nm">'+o.name+'</div></div>';
  });
  html+='<button class="btn" onclick="closeModal()">Закрыть</button>';
@@ -473,7 +481,7 @@ const DQ=[
 function dqEnsure(){
  if(S.dqDay!==today()){
   S.dqDay=today();
-  S.dqPicks=[...Array(DQ.length).keys()].sort(()=>Math.random()-0.5).slice(0,3);
+  S.dqPicks=[0,1,2,3,4].sort(()=>Math.random()-0.5).slice(0,3);
   S.dqP={};S.dqDone={};save();
  }
 }
@@ -499,9 +507,11 @@ function ownedNames(){const s=new Set();S.bag.concat(S.tree.filter(Boolean)).for
 function collMult(){const on=ownedNames();let m=1;SETS.forEach(st=>{if(st.items.every(i=>on.has(i)))m+=st.bonus});return m}
 function renderQuests(){
  dqEnsure();pigTick();
+ if(!Array.isArray(S.dqPicks)||!S.dqPicks.length)dqEnsure();
  let h='<div class="card"><h3>📋 Задания дня <span class="small">(обновятся завтра)</span></h3>';
  S.dqPicks.forEach(ix=>{
-  const d=DQ[ix],p=Math.min(S.dqP[d.id]||0,d.need),done=!!S.dqDone[d.id];
+  const d=DQ[ix];if(!d)return;
+  const p=Math.min(S.dqP[d.id]||0,d.need),done=!!S.dqDone[d.id];
   h+='<div class="small" style="margin:6px 0">'+(done?'✅':'▫️')+' '+d.n+' — '+p+'/'+d.need+' · <b style="color:#ffd86b">+'+d.rw+' 🌰</b>'
    +'<div class="passbar" style="margin:4px 0 0"><div class="passfill" style="width:'+Math.min(100,100*p/d.need)+'%"></div></div></div>';
  });
@@ -799,8 +809,10 @@ let CUR='tree';
 const TABS=[['tree','🎄 Ёлка'],['shop','🛍 Витрина'],['games','🎮 Игры'],['pass','🎟 Пропуск'],['earn','💸 Заработок'],['inv','🧺 Инвентарь']];
 function switchTab(t){
  CUR=t;stopBalls();stopSled();stopBoss();
+ if(earnIv){clearInterval(earnIv);earnIv=null;}
  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
- try{({tree:renderTree,shop:renderShop,games:renderGames,pass:renderPass,earn:renderEarn,inv:renderInv})[t]();}
+ const views={tree:renderTree,shop:renderShop,games:renderGames,pass:renderPass,earn:renderEarn,inv:renderInv};
+ try{(views[t]||renderTree)();}
  catch(e){$('main').innerHTML='<div class="card"><h3>Ой, что-то сломалось</h3><div class="small">'+e.message+'</div></div>';}
 }
 function renderTabs(){
@@ -859,7 +871,6 @@ function needleTier(cx,yT,yB,w,si){
 const BGLOW={common:'#3fd97e',rare:'#5f9dff',epic:'#c07bff',legend:'#ffcf5e'};
 function renderTree(){
  const defs='<defs>'
-  +'<linearGradient id="tg0" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1f9254"/><stop offset="1" stop-color="#0b5230"/></linearGradient>'
   +'<linearGradient id="trunkG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5d3a17"/><stop offset=".5" stop-color="#8a5a2b"/><stop offset="1" stop-color="#4d2f12"/></linearGradient>'
   +'<radialGradient id="bg-common" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#d9ffe9"/><stop offset=".45" stop-color="#4fd98a"/><stop offset="1" stop-color="#136b3d"/></radialGradient>'
   +'<radialGradient id="bg-rare" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="#e2f2ff"/><stop offset=".45" stop-color="#5f9dff"/><stop offset="1" stop-color="#1c3f9e"/></radialGradient>'
@@ -877,6 +888,7 @@ function renderTree(){
  SLOTS.forEach((p,i)=>{
   const o=S.tree[i],cy=p.yS+27;
   if(o){
+   const rr=RAR[o.rar]||RAR.common;
    orns+='<g class="ornG" style="animation-delay:'+((i%7)*0.35).toFixed(2)+'s">'
     +'<line x1="'+p.x+'" y1="'+p.yS+'" x2="'+p.x+'" y2="'+(p.yS+9)+'" stroke="rgba(255,255,255,.55)" stroke-width="1.5"/>'
     +'<rect x="'+(p.x-4)+'" y="'+(p.yS+9)+'" width="8" height="6" rx="1.5" fill="#e8b93c" stroke="#8a6a10" stroke-width="0.8"/>'
@@ -1000,7 +1012,6 @@ function sponsorTask(){
   gain(300,'sponsor');addXp(40);dqProg('ads',1);
   toast('✨ Видео просмотрено! +300 🌰');
   if(CUR==='pass')renderPass();
-  if(CUR==='earn')updateEarn();
  });
 }
 function vidBonus(){
@@ -1036,7 +1047,7 @@ function renderPass(){
  let html='<div class="card"><h3>📺 Видео за награду (Reward)</h3>'
   +'<div class="small">Каждый просмотренный ролик — сразу +300 🌰, без дневного лимита.</div>'
   +'<button class="btn gold" style="margin-top:10px" onclick="sponsorTask()">📺 Смотреть видео (+300)</button>'
-  +'<div class="small" style="margin-top:6px">Блок 59627 · сейчас вы в '+env+(AG_CFG.debug?' · debug-режим (тестовые ролики)':'')+'</div></div>';
+  +'<div class="small" style="margin-top:6px">Блок '+AG_CFG.blockId+' · сейчас вы в '+env+(AG_CFG.debug?' · debug-режим (тестовые ролики)':'')+'</div></div>';
  html+='<div class="card"><h3>🎬 Бонус за видео-рекламу</h3>'
   +'<div class="small">'+(Date.now()<S.vidNext?'Следующий бонус через '+mmss(S.vidNext-Date.now()):'Бонус готов! +150 🌰 (раз в 3 минуты)')+'</div>'
   +'<button class="btn blue" style="margin-top:10px" onclick="vidBonus()">📺 Смотреть и получить</button></div>';
@@ -1074,7 +1085,7 @@ function renderEarn(){
  html+='<div class="card"><div class="small">💡 Один счётчик на всех игроков. Точная сумма — в кабинете partner.adsgram.ai.</div></div>';
  $('main').innerHTML=html;
  updateEarn();
- earnIv=setInterval(updateEarn,5000);
+ earnIv=setInterval(()=>{if(!$('earnGlobal')){clearInterval(earnIv);earnIv=null;return}updateEarn();},5000);
 }
 function updateEarn(){
  const el=$('earnGlobal');if(!el)return;
