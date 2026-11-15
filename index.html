@@ -1538,3 +1538,55 @@ function garlandTop(){
 function snowfall(){
  let h='';
  for(let i=0;i<8;i++)h+='<span style
+   function snowfall(){
+ let h='';
+ for(let i=0;i<8;i++)h+='<span style="left:'+rand(0,98)+'%;animation-duration:'+rand(9,17)+'s;animation-delay:-'+rand(0,16)+'s;font-size:'+rand(10,15)+'px">❄️</span>';
+ $('snow').innerHTML=h;
+}
+
+/* ===================== БЕГУЩАЯ СТРОКА ===================== */
+const TICKER_MSGS=[
+ '🎄 Добро пожаловать на Ёлку Зини!',
+ PRIZES_TEXT,
+ '✨ Ловите золотую искру прямо на ёлке — это +100 🌰',
+ '🎁 Сундук дня усиливается вашим огнём подряд 🔥',
+ '🎡 Крутите колесо за рекламу — бесплатный лимит не тратится!',
+ '🧊 Тапайте льдинки в бою с боссом — это +2 секунды',
+ '🧲 Магнит притянет подарки прямо к санкам',
+ '💰 Каждое видео — +300 🌰 по заданию спонсора, без лимита',
+ '🐷 Копилка копит шишки, пока вы спите',
+ '📋 Три задания дня — каждый день новые',
+ '🏆 Собирайте коллекции — постоянный бонус к наградам',
+ '📖 Пройдите 8 глав истории и станьте Хранителем Ёлки!',
+ '💬 Загадка от НПС раз в день: верный ответ +80 🌰',
+ '💸 Общий заработок игры растёт от каждого видео',
+ '✦ Голос во тьме шепчет: «Древо помнит тебя»',
+ '❄️ Снежная буря — награды ×2, успевайте!'
+];
+
+/* ===================== ТИК ===================== */
+setInterval(()=>{
+ maybeEvents();
+ if(CUR==='tree'&&Date.now()>S.sparkAt)spawnSpark();
+ renderHeader();
+},15000);
+
+/* ===================== ИНИТ ===================== */
+(function init(){
+ garlandTop();snowfall();renderTabs();
+ $('tickerInner').textContent=TICKER_MSGS.join('   ✦   ')+'   ✦   ';
+ fetchUsdRate();
+ if(S.streakDay!==today()){
+  const yest=new Date(Date.now()-86400000).toISOString().slice(0,10);
+  if(S.streakDay===yest){S.streak++;gain(50+S.streak*25,'streak');toast('🔥 Огонь подряд: день '+S.streak+'! +'+(50+S.streak*25)+' 🌰');}
+  else{S.streak=1;gain(50,'streak');toast('🔥 Новый огонь подряд! +50 🌰');}
+  S.streakDay=today();
+ }
+ if(S.wheelDay!==today()){S.wheelFree=3;S.wheelDay=today();}
+ if(!S.order)genOrder();
+ save();renderHeader();switchTab('tree');
+})();
+</script>
+</body>
+</html>
+
