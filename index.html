@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Ёлка Зини 🎄 v7.0</title>
+<title>Ёлка Зини 🎄 v7.1</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
@@ -30,12 +30,10 @@ header{display:flex;justify-content:space-between;align-items:center;margin-bott
 .screen.active{display:block;}
 
 .tree-stage{text-align:center;background:var(--card);border-radius:16px;padding:24px 12px 16px;margin-bottom:12px;backdrop-filter:blur(6px);position:relative;overflow:hidden;}
-.tree-glow{position:absolute;left:50%;top:44%;width:180px;height:180px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(198,255,94,.18),transparent 70%);pointer-events:none;transition:box-shadow .5s;}
+.tree-glow{position:absolute;left:50%;top:50%;width:220px;height:220px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(198,255,94,.18),transparent 70%);pointer-events:none;transition:box-shadow .5s;}
 .tree-glow-active{animation:glowPulse 2.6s ease-in-out infinite alternate;}
-@keyframes glowPulse{from{box-shadow:0 0 24px rgba(198,255,94,.35);}to{box-shadow:0 0 55px rgba(198,255,94,.75);}}
-#tree-emoji{font-size:76px;line-height:1;display:inline-block;animation:sway 4s ease-in-out infinite;position:relative;}
-@keyframes sway{0%,100%{transform:rotate(-3deg);}50%{transform:rotate(3deg);}}
-#tree-title{margin-top:8px;font-weight:800;font-size:18px;color:var(--acc);}
+@keyframes glowPulse{from{box-shadow:0 0 24px rgba(198,255,94,.35);}to{box-shadow:0 0 60px rgba(198,255,94,.75);}}
+#tree-title{font-weight:800;font-size:18px;color:var(--acc);}
 #tree-sub{font-size:13px;color:var(--mut);margin-top:4px;}
 .ornament-row{display:flex;justify-content:center;gap:8px;min-height:26px;margin-top:10px;flex-wrap:wrap;}
 .orn-dot{text-align:center;font-size:18px;animation:popIn .5s cubic-bezier(.2,1.6,.4,1);}
@@ -43,9 +41,27 @@ header{display:flex;justify-content:space-between;align-items:center;margin-bott
 .orn-dot span{display:block;font-size:9px;color:var(--mut);max-width:64px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .gifts-line{font-size:12px;color:var(--mut);margin-top:8px;}
 .streak-line{font-size:13px;color:#ffd75e;text-align:center;margin-top:6px;font-weight:700;}
-.garland{position:absolute;top:0;left:0;right:0;height:6px;display:flex;gap:14px;justify-content:center;pointer-events:none;}
-.garland i{width:6px;height:6px;border-radius:50%;animation:twinkle 1.2s ease-in-out infinite;}
-@keyframes twinkle{0%,100%{opacity:.25;transform:scale(.7);}50%{opacity:1;transform:scale(1.3);}}
+
+/* ===== Ёлка на CSS: растёт с уровнем ===== */
+.tv-stage{position:relative;width:200px;height:250px;margin:6px auto 0;transition:transform .5s;cursor:pointer;}
+.tv-scale-s{transform:scale(.72);}
+.tv-scale-m{transform:scale(1);}
+.tv-scale-l{transform:scale(1.18);}
+.tv-scale-xl{transform:scale(1.38);}
+.tv-stage.shaking{animation:tvShake .5s ease;}
+@keyframes tvShake{0%,100%{transform:rotate(0);}20%{transform:rotate(-4deg);}40%{transform:rotate(4deg);}60%{transform:rotate(-3deg);}80%{transform:rotate(3deg);}}
+.tv-tier{position:absolute;left:50%;transform:translateX(-50%);width:0;height:0;border-style:solid;}
+.tv-t1{bottom:34px;border-width:0 55px 55px 55px;border-color:transparent transparent #2fae55 transparent;z-index:3;}
+.tv-t2{bottom:70px;border-width:0 78px 66px 78px;border-color:transparent transparent #279a4b transparent;z-index:2;}
+.tv-t3{bottom:118px;border-width:0 98px 74px 98px;border-color:transparent transparent #1f7a3d transparent;z-index:1;}
+#tv-cap{position:absolute;bottom:184px;left:50%;transform:translateX(-50%);width:64px;height:16px;background:rgba(240,248,255,.92);border-radius:9px;z-index:4;filter:blur(1px);display:none;}
+#tv-star{position:absolute;bottom:196px;left:50%;transform:translateX(-50%);font-size:32px;z-index:6;display:none;filter:drop-shadow(0 0 10px #ffd75e);cursor:pointer;animation:starFloat 2.6s ease-in-out infinite;}
+@keyframes starFloat{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-6px);}}
+#tv-trunk{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:26px;height:36px;background:linear-gradient(180deg,#8a5a2b,#6b4420);border-radius:4px;z-index:0;}
+#tv-orns span{position:absolute;font-size:17px;z-index:6;transform:translateX(-50%);animation:popIn .5s cubic-bezier(.2,1.6,.4,1);filter:drop-shadow(0 1px 3px rgba(0,0,0,.45));}
+#tv-garland i{position:absolute;width:7px;height:7px;border-radius:50%;z-index:5;animation:twinkle 1.4s ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:.25;transform:scale(.7);}50%{opacity:1;transform:scale(1.35);}}
+.falling-candy{position:fixed;font-size:26px;z-index:98;pointer-events:none;transition:all .9s ease-in;}
 
 .card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;backdrop-filter:blur(6px);}
 .bar-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:14px;}
@@ -123,12 +139,12 @@ h3{margin:4px 0 12px;font-size:18px;}
 .price-big{font-size:32px;font-weight:800;color:#fff;}
 #pass-code-input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(198,255,94,.4);background:rgba(10,16,34,.8);color:#fff;font-size:14px;box-sizing:border-box;margin-bottom:8px;}
 
-/* ===== Задание спонсора: анимированная карточка ===== */
+/* ===== Задание спонсора ===== */
 .sponsor-card{position:relative;overflow:hidden;border:1px solid rgba(198,255,94,.5);background:linear-gradient(135deg,rgba(35,45,80,.9),rgba(22,30,55,.9));}
 .sc-shine{position:absolute;top:-60%;left:-60%;width:45%;height:220%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.22),transparent);transform:rotate(18deg);animation:shine 3.2s linear infinite;pointer-events:none;}
 @keyframes shine{0%{left:-60%;}55%{left:135%;}100%{left:135%;}}
 .sc-top{display:flex;align-items:center;gap:12px;}
-.sc-icon{font-size:36px;animation:sway 3s ease-in-out infinite;flex:none;}
+.sc-icon{font-size:36px;flex:none;}
 .sc-title{font-weight:800;font-size:16px;}
 .sc-reward{font-size:26px;font-weight:800;color:var(--acc);margin:10px 0 12px;text-align:center;text-shadow:0 0 14px rgba(198,255,94,.45);}
 .sc-note{margin-top:8px;text-align:center;}
@@ -140,20 +156,18 @@ h3{margin:4px 0 12px;font-size:18px;}
 .slot.locked{opacity:.45;cursor:default;}
 .slot i{position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);font-style:normal;font-size:9px;color:var(--mut);background:rgba(0,0,0,.55);padding:1px 5px;border-radius:5px;white-space:nowrap;}
 
-/* ===== Эффекты награды ===== */
+/* ===== Эффекты ===== */
 .confetti{position:fixed;width:9px;height:14px;z-index:100;pointer-events:none;animation:confFall 1.5s ease-in forwards;}
 @keyframes confFall{0%{transform:translateY(0) rotate(0) scale(1);opacity:1;}100%{transform:translateY(65vh) rotate(760deg) scale(.6);opacity:0;}}
 .coin-fly{position:fixed;font-size:26px;z-index:100;pointer-events:none;transition:all .85s cubic-bezier(.35,-.25,.65,1);}
 .zini-spark{position:fixed;font-size:34px;cursor:pointer;z-index:98;animation:sparkPulse 1s ease-in-out infinite;filter:drop-shadow(0 0 10px #c6ff5e);}
 @keyframes sparkPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.3);}}
 
-/* ===== Босс ===== */
 #boss-bar{height:14px;background:#2a2a44;border-radius:7px;overflow:hidden;margin:10px 0;}
 #boss-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#ff6b6b,#ffd75e);border-radius:7px;transition:width .2s;}
 #boss-emoji{font-size:60px;line-height:1;cursor:pointer;user-select:none;transition:transform .08s;display:inline-block;margin-top:6px;}
 #boss-emoji:active{transform:scale(.88);}
 
-/* ===== Модалка выбора украшения ===== */
 #orn-picker{position:fixed;inset:0;background:rgba(5,8,18,.8);z-index:100;display:none;align-items:center;justify-content:center;padding:16px;}
 #orn-picker.show{display:flex;}
 #orn-picker .card{max-width:340px;width:100%;max-height:70vh;overflow-y:auto;margin:0;}
@@ -178,11 +192,19 @@ h3{margin:4px 0 12px;font-size:18px;}
 <main>
   <section id="screen-tree" class="screen active">
     <div class="tree-stage" id="tree-stage">
-      <div class="garland" id="garland"></div>
       <div class="tree-glow" id="tree-glow"></div>
-      <div id="tree-emoji">🌱</div>
       <div id="tree-title">Росток</div>
       <div id="tree-sub">Полей и стряхни снег, чтобы ёлка росла</div>
+      <div id="tree-visual" class="tv-stage tv-scale-s">
+        <div id="tv-star">⭐</div>
+        <div id="tv-cap"></div>
+        <div class="tv-tier tv-t3"></div>
+        <div class="tv-tier tv-t2"></div>
+        <div class="tv-tier tv-t1"></div>
+        <div id="tv-trunk"></div>
+        <div id="tv-garland"></div>
+        <div id="tv-orns"></div>
+      </div>
       <div id="ornament-row" class="ornament-row"></div>
       <div id="gifts-line" class="gifts-line"></div>
       <div id="streak-line" class="streak-line"></div>
@@ -191,7 +213,7 @@ h3{margin:4px 0 12px;font-size:18px;}
       <b style="font-size:15px;">🎄 Украшения на ёлке</b>
       <div id="slots-list" style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:12px;"></div>
       <div id="orn-bonus-line" class="muted" style="margin-top:8px;">Бонус украшений: +0% к наградам</div>
-      <div class="muted" style="margin-top:4px;">Тапни по открытому слоту — повесь шар из инвентаря!</div>
+      <div class="muted" style="margin-top:4px;">Тапни по слоту — повесь шар, и он появится прямо на ёлке! Постучи по ёлке — уронит конфетку 🍬</div>
     </div>
     <div class="card">
       <div class="bar-row"><span>💧 Влажность</span><div class="bar-bg"><div id="bar-moist" class="bar-fill"></div></div></div>
@@ -340,6 +362,7 @@ try { supabase = window.supabase.createClient(SB_URL, SB_KEY); } catch(e){ conso
 
 var WATER_CD = 2 * 3600 * 1000;
 var SHAKE_CD = 4 * 3600 * 1000;
+var KNOCK_CD = 10 * 60 * 1000;
 var PASSIVE_CAP_H = 24;
 
 // ===== AdsGram =====
@@ -379,7 +402,7 @@ var QUESTS = [
 var state = {
   xp:0, level:1, pinecones:0,
   moisture:0, snow:0,
-  last_watered:0, last_shake:0, last_collect:0,
+  last_watered:0, last_shake:0, last_collect:0, last_knock:0, last_wish:0,
   weekly_pinecones:0, week_key:'', total_drops:0,
   pass_active:false, pass_until:0,
   streak:0, last_visit:'', recent_drops:[],
@@ -566,7 +589,7 @@ function gainXp(n){
     if (state.level % 25 === 0) milestoneDrop('epic');
     if (state.level === 100) { milestoneDrop('mythic'); toast('👑 Ты — ЛЕГЕНДА ИГРЫ! Уровень 100!'); }
   }
-  if (ups > 0 && state.level < 100) toast('🎉 Ёлка выросла до уровня ' + state.level + '!');
+  if (ups > 0) { toast('🎉 Ёлка подросла до уровня ' + state.level + '!'); confetti(24); }
 }
 
 function rollRarity(){
@@ -591,7 +614,6 @@ function dropOrnament(forcedRarity, source, forced){
   state.recent_drops = state.recent_drops || [];
   state.recent_drops.unshift({ i: info.icon, n: itemName });
   state.recent_drops = state.recent_drops.slice(0, 5);
-  // копия в личную коллекцию для украшения ёлки
   state.my_ornaments.push({ k: itemId + '_' + Date.now(), n: itemName, r: rarity, e: emoji });
   if (state.my_ornaments.length > 200) state.my_ornaments.shift();
   if (!isGuest && supabase) {
@@ -606,9 +628,11 @@ function dropOrnament(forcedRarity, source, forced){
   renderAll();
 }
 
-// ===== Украшение ёлки: слоты и бонусы =====
+// ===== Украшение ёлки: слоты, бонусы и шары на самой ёлке =====
 var SLOT_LEVELS = [1, 3, 6, 10, 15, 20, 25];
 var SLOT_BONUS = { common:2, rare:5, epic:10, legendary:20, mythic:35, pass:25 };
+var TV_ORN_POS = [{l:50,b:158},{l:33,b:128},{l:67,b:126},{l:38,b:92},{l:62,b:88},{l:45,b:54},{l:58,b:48}];
+var TV_GAR_POS = [{l:30,b:122},{l:50,b:128},{l:70,b:122},{l:22,b:80},{l:50,b:88},{l:78,b:80},{l:34,b:44},{l:66,b:44}];
 function slotUnlocked(i){ return state.level >= SLOT_LEVELS[i]; }
 function slotBonusTotal(){
   var s = 0;
@@ -647,25 +671,44 @@ function renderSlots(){
     host.appendChild(el);
   }
   document.getElementById('orn-bonus-line').textContent = 'Бонус украшений: +' + slotBonusTotal() + '% к наградам';
-  updateTreeGlow();
+  renderTreeVisual();
 }
-function updateTreeGlow(){
+function renderTreeVisual(){
+  var tv = document.getElementById('tree-visual');
+  if (!tv) return;
+  tv.classList.remove('tv-scale-s','tv-scale-m','tv-scale-l','tv-scale-xl');
+  var cls = state.level >= 61 ? 'tv-scale-xl' : state.level >= 31 ? 'tv-scale-l' : state.level >= 11 ? 'tv-scale-m' : 'tv-scale-s';
+  tv.classList.add(cls);
+  var orns = document.getElementById('tv-orns');
+  orns.innerHTML = '';
+  state.decor.forEach(function(d, i){
+    if (!d) return;
+    var pos = TV_ORN_POS[i] || TV_ORN_POS[0];
+    var s = document.createElement('span');
+    s.textContent = d.e;
+    s.style.left = pos.l + '%';
+    s.style.bottom = pos.b + 'px';
+    orns.appendChild(s);
+  });
+  var gar = document.getElementById('tv-garland');
   var filled = state.decor.filter(Boolean).length;
-  var glow = document.getElementById('tree-glow');
-  if (glow) glow.classList.toggle('tree-glow-active', filled >= 3);
-  var garland = document.getElementById('garland');
-  if (garland) {
-    if (filled >= 3) {
-      garland.innerHTML = '';
-      var cols = ['#ff6b6b','#ffd75e','#7dd3fc','#c6ff5e','#ff7ad9'];
-      for (var i = 0; i < 14; i++) {
-        var dot = document.createElement('i');
-        dot.style.background = cols[i % cols.length];
-        dot.style.animationDelay = (i * 0.15) + 's';
-        garland.appendChild(dot);
-      }
-    } else { garland.innerHTML = ''; }
+  gar.innerHTML = '';
+  if (filled >= 3) {
+    var cols = ['#ff6b6b','#ffd75e','#7dd3fc','#c6ff5e','#ff7ad9'];
+    TV_GAR_POS.forEach(function(p, i){
+      var dot = document.createElement('i');
+      dot.style.left = p.l + '%';
+      dot.style.bottom = p.b + 'px';
+      dot.style.background = cols[i % cols.length];
+      dot.style.animationDelay = (i * 0.18) + 's';
+      gar.appendChild(dot);
+    });
   }
+  var star = document.getElementById('tv-star');
+  var cap = document.getElementById('tv-cap');
+  var showStar = state.level >= 31 || filled >= 7;
+  star.style.display = showStar ? 'block' : 'none';
+  cap.style.display = (!showStar && state.level >= 11) ? 'block' : 'none';
 }
 function openPicker(idx){
   var picker = document.getElementById('orn-picker');
@@ -689,7 +732,7 @@ function openPicker(idx){
         saveLocal();
         confetti(14);
         coinFly(row);
-        toast('🎄 Повесил «' + o.n + '»! Бонус +' + SLOT_BONUS[o.r] + '%');
+        toast('🎄 Повесил «' + o.n + '» на ёлку! Бонус +' + SLOT_BONUS[o.r] + '%');
         renderSlots(); renderAll();
       }
       closePicker();
@@ -701,6 +744,63 @@ function closePicker(){
   var picker = document.getElementById('orn-picker');
   picker.classList.remove('show');
   picker.innerHTML = '';
+}
+
+// ===== Постучать по ёлке: конфетка падает =====
+function knockKey(){ return 'zini_knock_' + playerId; }
+function doKnock(){
+  var tv = document.getElementById('tree-visual');
+  if (tv) { tv.classList.remove('shaking'); void tv.offsetWidth; tv.classList.add('shaking'); }
+  haptic();
+  var last = state.last_knock || 0;
+  var left = KNOCK_CD - (Date.now() - last);
+  if (left > 0) {
+    if (Math.random() < 0.3) toast('🌲 Ёлка качается, но конфетки кончились — загляни через ' + Math.ceil(left / 60000) + ' мин');
+    return;
+  }
+  state.last_knock = Date.now();
+  markDirty();
+  var val = Math.floor((100 + Math.floor(Math.random() * 10) * 100) * luckyMult() * ornamentMult());
+  state.pinecones += val;
+  state.weekly_pinecones += val;
+  var candy = document.createElement('div');
+  candy.className = 'falling-candy';
+  candy.textContent = ['🍬','🍭','🧸','⭐'][Math.floor(Math.random() * 4)];
+  var r = tv ? tv.getBoundingClientRect() : null;
+  if (r) { candy.style.left = (r.left + r.width / 2) + 'px'; candy.style.top = (r.top + 40) + 'px'; }
+  document.body.appendChild(candy);
+  (function(el){
+    requestAnimationFrame(function(){ requestAnimationFrame(function(){
+      el.style.transform = 'translateY(70vh) rotate(540deg)';
+      el.style.opacity = '0.2';
+    }); });
+    setTimeout(function(){ el.remove(); }, 1000);
+  })(candy);
+  if (Math.random() < 0.1) { dropOrnament('common', 'knock'); }
+  else toast('🍬 Из ёлки выпала конфетка! +' + fmt(val) + ' 🌰');
+  renderAll();
+}
+
+// ===== Звезда-желание =====
+function doStarWish(e){
+  e.stopPropagation();
+  var today = new Date().toDateString();
+  if (state.last_wish === today) { toast('⭐ Звезда уже исполнила желание сегодня — приходи завтра!'); return; }
+  state.last_wish = today;
+  markDirty(); saveLocal();
+  confetti(40);
+  haptic();
+  var roll = Math.random();
+  if (roll < 0.15) {
+    dropOrnament('rare', 'wish', true);
+  } else {
+    var val = Math.floor((500 + Math.floor(Math.random() * 16) * 100) * luckyMult() * ornamentMult());
+    state.pinecones += val;
+    state.weekly_pinecones += val;
+    coinFly(document.getElementById('tv-star'));
+    toast('⭐ Желание исполнено! +' + fmt(val) + ' 🌰');
+  }
+  renderAll();
 }
 
 function doWater(){
@@ -747,18 +847,16 @@ function timeLeft(fromTs, cd){
   return Math.floor(m / 60) + ' ч ' + (m % 60) + ' мин';
 }
 
-function stageFor(level){
-  if (level >= 100) return {e:'🌟🎄', t:'ЛЕГЕНДА ИГРЫ'};
-  if (level >= 86)  return {e:'🎄🌟', t:'Сияющая'};
-  if (level >= 61)  return {e:'🎄✨', t:'Величественная'};
-  if (level >= 31)  return {e:'🎄',   t:'Новогодняя'};
-  if (level >= 11)  return {e:'🌲',   t:'Наряженная'};
-  return {e:'🌱', t:'Росток'};
+function stageName(level){
+  if (level >= 100) return 'ЛЕГЕНДА ИГРЫ';
+  if (level >= 86)  return 'Сияющая';
+  if (level >= 61)  return 'Величественная';
+  if (level >= 31)  return 'Новогодняя';
+  if (level >= 11)  return 'Наряженная';
+  return 'Росток';
 }
 function renderAll(){
-  var st = stageFor(state.level);
-  document.getElementById('tree-emoji').textContent = st.e;
-  document.getElementById('tree-title').textContent = st.t;
+  document.getElementById('tree-title').textContent = stageName(state.level);
   document.getElementById('tree-sub').textContent = 'Доход: ' + fmt(passiveRate()) + ' 🌰/час · огонь ' + (state.streak || 1) + ' дн. 🔥';
   document.getElementById('h-name').textContent = playerName;
   document.getElementById('h-level').textContent = 'Уровень ' + state.level;
@@ -891,7 +989,7 @@ function buyPrize(rarity){
   renderShop();
 }
 
-// ===== AdsGram: контроллеры (создаются один раз) =====
+// ===== AdsGram: контроллеры =====
 var adController = null, taskController = null;
 (function initAds(){
   if (!window.AdsGram) return;
@@ -910,7 +1008,7 @@ function adBonusTaken(){
 function doAdBonus(){
   var btn = document.getElementById('btn-ad-bonus');
   if (adBonusTaken()) { toast('Бонус уже забран сегодня — приходи завтра! 🎁'); return; }
-  if (!adController) { grantAdBonus(); return; } // SDK не загрузился (браузер-гость) — не злим игрока
+  if (!adController) { grantAdBonus(); return; }
   btn.disabled = true; btn.textContent = '📺 Загружаю рекламу…';
   adController.show()
     .then(function(result){
@@ -1065,7 +1163,7 @@ function bossHit(){
 bossRender();
 
 // ============================================================
-// НОЯБРЬСКИЙ ПРОПУСК: СБП через админа, активация кодом, задания
+// НОЯБРЬСКИЙ ПРОПУСК
 // ============================================================
 function renderPass(){
   var el = document.getElementById('pass-content');
@@ -1239,6 +1337,8 @@ document.getElementById('btn-water').addEventListener('click', doWater);
 document.getElementById('btn-shake').addEventListener('click', doShake);
 document.getElementById('btn-collect').addEventListener('click', doCollect);
 document.getElementById('btn-ad-bonus').addEventListener('click', doAdBonus);
+document.getElementById('tree-visual').addEventListener('click', doKnock);
+document.getElementById('tv-star').addEventListener('click', doStarWish);
 
 // ============================================================
 // ПОМОЩНИКИ ДЛЯ ИГР
