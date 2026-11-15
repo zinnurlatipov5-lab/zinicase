@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Ёлка Зини 🎄 v6.6</title>
+<title>Ёлка Зини 🎄 v7.0</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
@@ -30,16 +30,22 @@ header{display:flex;justify-content:space-between;align-items:center;margin-bott
 .screen.active{display:block;}
 
 .tree-stage{text-align:center;background:var(--card);border-radius:16px;padding:24px 12px 16px;margin-bottom:12px;backdrop-filter:blur(6px);position:relative;overflow:hidden;}
-.tree-glow{position:absolute;left:50%;top:44%;width:180px;height:180px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(198,255,94,.18),transparent 70%);pointer-events:none;}
+.tree-glow{position:absolute;left:50%;top:44%;width:180px;height:180px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(198,255,94,.18),transparent 70%);pointer-events:none;transition:box-shadow .5s;}
+.tree-glow-active{animation:glowPulse 2.6s ease-in-out infinite alternate;}
+@keyframes glowPulse{from{box-shadow:0 0 24px rgba(198,255,94,.35);}to{box-shadow:0 0 55px rgba(198,255,94,.75);}}
 #tree-emoji{font-size:76px;line-height:1;display:inline-block;animation:sway 4s ease-in-out infinite;position:relative;}
 @keyframes sway{0%,100%{transform:rotate(-3deg);}50%{transform:rotate(3deg);}}
 #tree-title{margin-top:8px;font-weight:800;font-size:18px;color:var(--acc);}
 #tree-sub{font-size:13px;color:var(--mut);margin-top:4px;}
 .ornament-row{display:flex;justify-content:center;gap:8px;min-height:26px;margin-top:10px;flex-wrap:wrap;}
-.orn-dot{text-align:center;font-size:18px;}
+.orn-dot{text-align:center;font-size:18px;animation:popIn .5s cubic-bezier(.2,1.6,.4,1);}
+@keyframes popIn{from{transform:scale(0);}to{transform:scale(1);}}
 .orn-dot span{display:block;font-size:9px;color:var(--mut);max-width:64px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .gifts-line{font-size:12px;color:var(--mut);margin-top:8px;}
 .streak-line{font-size:13px;color:#ffd75e;text-align:center;margin-top:6px;font-weight:700;}
+.garland{position:absolute;top:0;left:0;right:0;height:6px;display:flex;gap:14px;justify-content:center;pointer-events:none;}
+.garland i{width:6px;height:6px;border-radius:50%;animation:twinkle 1.2s ease-in-out infinite;}
+@keyframes twinkle{0%,100%{opacity:.25;transform:scale(.7);}50%{opacity:1;transform:scale(1.3);}}
 
 .card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:12px;backdrop-filter:blur(6px);}
 .bar-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;font-size:14px;}
@@ -52,6 +58,8 @@ header{display:flex;justify-content:space-between;align-items:center;margin-bott
 .btn:disabled{opacity:.45;}
 .btn.ghost{background:transparent;border:1px solid rgba(198,255,94,.4);color:var(--acc);}
 .btn.blue{background:linear-gradient(135deg,#38bdf8,#818cf8);color:#0a0a10;}
+.btn.gold{background:linear-gradient(135deg,#ffd75e,#ff9f43);color:#0a0a10;animation:btnPulse 1.8s ease-in-out infinite;}
+@keyframes btnPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.03);}}
 .btn-row{display:flex;gap:8px;}
 .btn-row .btn{flex:1;}
 
@@ -115,27 +123,40 @@ h3{margin:4px 0 12px;font-size:18px;}
 .price-big{font-size:32px;font-weight:800;color:#fff;}
 #pass-code-input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(198,255,94,.4);background:rgba(10,16,34,.8);color:#fff;font-size:14px;box-sizing:border-box;margin-bottom:8px;}
 
-/* ===== Карточка задания спонсора (AdsGram Task) ===== */
-.task{
-  --adsgram-task-font-size:16px;
-  --adsgram-task-icon-size:50px;
-  --adsgram-task-button-width:74px;
-  --adsgram-task-icon-border-radius:10px;
-  display:block;
-  width:100%;
-  max-width:360px;
-  margin:0 auto 12px;
-  padding:10px 14px 10px 10px;
-  border-radius:14px;
-  background:var(--card);
-  border:1px solid rgba(198,255,94,.3);
-  color:#fff;
-  backdrop-filter:blur(6px);
-}
-.task__reward{margin:5px 0 0 0;font-size:14px;color:var(--acc);font-weight:700;}
-.task__button{margin-left:0;border-radius:10px;font-weight:800;}
-.task__button_claim{background-color:var(--acc);color:#0a0a10;}
-.task__button_done{background-color:var(--acc2);color:#0a0a10;}
+/* ===== Задание спонсора: анимированная карточка ===== */
+.sponsor-card{position:relative;overflow:hidden;border:1px solid rgba(198,255,94,.5);background:linear-gradient(135deg,rgba(35,45,80,.9),rgba(22,30,55,.9));}
+.sc-shine{position:absolute;top:-60%;left:-60%;width:45%;height:220%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.22),transparent);transform:rotate(18deg);animation:shine 3.2s linear infinite;pointer-events:none;}
+@keyframes shine{0%{left:-60%;}55%{left:135%;}100%{left:135%;}}
+.sc-top{display:flex;align-items:center;gap:12px;}
+.sc-icon{font-size:36px;animation:sway 3s ease-in-out infinite;flex:none;}
+.sc-title{font-weight:800;font-size:16px;}
+.sc-reward{font-size:26px;font-weight:800;color:var(--acc);margin:10px 0 12px;text-align:center;text-shadow:0 0 14px rgba(198,255,94,.45);}
+.sc-note{margin-top:8px;text-align:center;}
+
+/* ===== Слоты украшений ===== */
+.slot{width:54px;height:54px;border:2px dashed rgba(198,255,94,.3);border-radius:12px;background:rgba(10,16,34,.5);display:flex;align-items:center;justify-content:center;font-size:26px;position:relative;cursor:pointer;transition:all .2s;}
+.slot.open{border-style:solid;border-color:rgba(198,255,94,.65);}
+.slot.filled{border-color:#4ade80;background:rgba(74,222,128,.12);animation:popIn .45s cubic-bezier(.2,1.6,.4,1);}
+.slot.locked{opacity:.45;cursor:default;}
+.slot i{position:absolute;bottom:-2px;left:50%;transform:translateX(-50%);font-style:normal;font-size:9px;color:var(--mut);background:rgba(0,0,0,.55);padding:1px 5px;border-radius:5px;white-space:nowrap;}
+
+/* ===== Эффекты награды ===== */
+.confetti{position:fixed;width:9px;height:14px;z-index:100;pointer-events:none;animation:confFall 1.5s ease-in forwards;}
+@keyframes confFall{0%{transform:translateY(0) rotate(0) scale(1);opacity:1;}100%{transform:translateY(65vh) rotate(760deg) scale(.6);opacity:0;}}
+.coin-fly{position:fixed;font-size:26px;z-index:100;pointer-events:none;transition:all .85s cubic-bezier(.35,-.25,.65,1);}
+.zini-spark{position:fixed;font-size:34px;cursor:pointer;z-index:98;animation:sparkPulse 1s ease-in-out infinite;filter:drop-shadow(0 0 10px #c6ff5e);}
+@keyframes sparkPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.3);}}
+
+/* ===== Босс ===== */
+#boss-bar{height:14px;background:#2a2a44;border-radius:7px;overflow:hidden;margin:10px 0;}
+#boss-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#ff6b6b,#ffd75e);border-radius:7px;transition:width .2s;}
+#boss-emoji{font-size:60px;line-height:1;cursor:pointer;user-select:none;transition:transform .08s;display:inline-block;margin-top:6px;}
+#boss-emoji:active{transform:scale(.88);}
+
+/* ===== Модалка выбора украшения ===== */
+#orn-picker{position:fixed;inset:0;background:rgba(5,8,18,.8);z-index:100;display:none;align-items:center;justify-content:center;padding:16px;}
+#orn-picker.show{display:flex;}
+#orn-picker .card{max-width:340px;width:100%;max-height:70vh;overflow-y:auto;margin:0;}
 </style>
 </head>
 <body>
@@ -156,14 +177,21 @@ h3{margin:4px 0 12px;font-size:18px;}
 
 <main>
   <section id="screen-tree" class="screen active">
-    <div class="tree-stage">
-      <div class="tree-glow"></div>
+    <div class="tree-stage" id="tree-stage">
+      <div class="garland" id="garland"></div>
+      <div class="tree-glow" id="tree-glow"></div>
       <div id="tree-emoji">🌱</div>
       <div id="tree-title">Росток</div>
       <div id="tree-sub">Полей и стряхни снег, чтобы ёлка росла</div>
       <div id="ornament-row" class="ornament-row"></div>
       <div id="gifts-line" class="gifts-line"></div>
       <div id="streak-line" class="streak-line"></div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <b style="font-size:15px;">🎄 Украшения на ёлке</b>
+      <div id="slots-list" style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:12px;"></div>
+      <div id="orn-bonus-line" class="muted" style="margin-top:8px;">Бонус украшений: +0% к наградам</div>
+      <div class="muted" style="margin-top:4px;">Тапни по открытому слоту — повесь шар из инвентаря!</div>
     </div>
     <div class="card">
       <div class="bar-row"><span>💧 Влажность</span><div class="bar-bg"><div id="bar-moist" class="bar-fill"></div></div></div>
@@ -186,13 +214,23 @@ h3{margin:4px 0 12px;font-size:18px;}
   </section>
 
   <section id="screen-mini" class="screen">
-    <h3>📋 Задание спонсора</h3>
-    <adsgram-task data-block-id='task-59804' class='task'>
-      <p slot='reward' class='task__reward'>🌰 300</p>
-      <div slot='button' class='task__button'>выполнить</div>
-      <div slot='claim' class='task__button task__button_claim'>получить</div>
-      <div slot='done' class='task__button task__button_done'>готово</div>
-    </adsgram-task>
+    <h3>🎁 Задание спонсора</h3>
+    <div class="card sponsor-card">
+      <div class="sc-shine"></div>
+      <div class="sc-top">
+        <div class="sc-icon">🎁</div>
+        <div>
+          <div class="sc-title">Задание спонсора</div>
+          <div class="muted">Подписка или переход в мини-апп — откроется в новом окне</div>
+        </div>
+      </div>
+      <div class="sc-reward">+300 🌰</div>
+      <button id="btn-sponsor" class="btn gold">✨ Выполнить задание</button>
+      <div class="muted sc-note">Награда придёт сразу после выполнения. Спонсоры меняются — заходи почаще!</div>
+    </div>
+
+    <div class="card" id="boss-card" style="text-align:center;"></div>
+
     <h3>🎮 Поймай подарок</h3>
     <div id="mg-host"></div>
     <h3>🎯 Снежный тир</h3>
@@ -228,6 +266,7 @@ h3{margin:4px 0 12px;font-size:18px;}
 </nav>
 
 <div id="toast"></div>
+<div id="orn-picker"></div>
 
 <script>
 // ===== Таблица 100 уровней =====
@@ -278,16 +317,8 @@ var SB_KEY = 'sb_publishable_LwCY23gqbFpUpJGhpXTlKQ_anyBHyHX';
 var ADMIN_CONTACT = 'zinidropadmin';
 
 var PASS_CODES = [
-  'ZINI-7K2M-NOV1',
-  'ZINI-9XQ4-NOV2',
-  'ZINI-3PDL-NOV3',
-  'ZINI-8TFR-NOV4',
-  'ZINI-5WBN-NOV5',
-  'ZINI-2HKG-NOV6',
-  'ZINI-6MJY-NOV7',
-  'ZINI-4QZT-NOV8',
-  'ZINI-7VDL-NOV9',
-  'ZINI-1CXN-NOV10'
+  'ZINI-7K2M-NOV1','ZINI-9XQ4-NOV2','ZINI-3PDL-NOV3','ZINI-8TFR-NOV4','ZINI-5WBN-NOV5',
+  'ZINI-2HKG-NOV6','ZINI-6MJY-NOV7','ZINI-4QZT-NOV8','ZINI-7VDL-NOV9','ZINI-1CXN-NOV10'
 ];
 
 var PASS_BASE_PRICE = 199;
@@ -312,9 +343,9 @@ var SHAKE_CD = 4 * 3600 * 1000;
 var PASSIVE_CAP_H = 24;
 
 // ===== AdsGram =====
-var ADS_TAG = '59627';        // rewarded-блок: бонус за рекламу
-var TASK_BLOCK_ID = 'task-59804'; // блок «Задание»: подписка/переход у спонсора
-var TASK_REWARD = 300;        // награда игроку за задание
+var REWARD_BLOCK = '59627';
+var TASK_BLOCK = 'task-59804';
+var TASK_REWARD = 300;
 var AD_BONUS = 500;
 
 var ORNAMENTS = {
@@ -325,6 +356,7 @@ var ORNAMENTS = {
   mythic:    ['Легендарная звезда Зини'],
   pass:      ['Дракон Нового года','Золотая печать Зини','Ледяной феникс','Корона Зимнего владыки','Снежный дракончик','Аметистовая гирлянда']
 };
+var ORN_EMOJI = ['🔴','🔵','🟡','❄️','🔔','🌰','🍊','🍬','🧊','⭐','🌟','❄️','🍊','☁️','🥈','🪄','💎','🔥','🦌','⭐','🌌','🌈','⛄','🔔'];
 var RARITY_INFO = {
   common:    {icon:'⚪', label:'Обычный'},
   rare:      {icon:'🔵', label:'Редкий'},
@@ -350,7 +382,8 @@ var state = {
   last_watered:0, last_shake:0, last_collect:0,
   weekly_pinecones:0, week_key:'', total_drops:0,
   pass_active:false, pass_until:0,
-  streak:0, last_visit:'', recent_drops:[]
+  streak:0, last_visit:'', recent_drops:[],
+  my_ornaments:[], decor:[]
 };
 
 function fmt(n){ return String(Math.floor(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
@@ -366,6 +399,44 @@ function toast(msg){
   t.textContent = msg; t.style.display = 'block';
   clearTimeout(toastTimer);
   toastTimer = setTimeout(function(){ t.style.display = 'none'; }, 2600);
+}
+
+// ===== Эффекты: конфетти и летящие монеты =====
+var CONF_COLORS = ['#c6ff5e','#4ade80','#ffd75e','#7dd3fc','#ff7ad9'];
+function confetti(n){
+  n = n || 28;
+  for (var i = 0; i < n; i++) {
+    var c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.background = CONF_COLORS[i % CONF_COLORS.length];
+    c.style.left = (38 + Math.random() * 24) + '%';
+    c.style.top = '35%';
+    c.style.animationDelay = (Math.random() * 0.35) + 's';
+    document.body.appendChild(c);
+    (function(el){ setTimeout(function(){ el.remove(); }, 2000); })(c);
+  }
+}
+function coinFly(fromEl){
+  var target = document.getElementById('pinecone-count');
+  if (!fromEl || !target) return;
+  var a = fromEl.getBoundingClientRect(), b = target.getBoundingClientRect();
+  for (var i = 0; i < 5; i++) {
+    var c = document.createElement('div');
+    c.className = 'coin-fly';
+    c.textContent = '🌰';
+    c.style.left = (a.left + a.width / 2 - 13) + 'px';
+    c.style.top = (a.top) + 'px';
+    document.body.appendChild(c);
+    (function(el, dx){
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){
+        el.style.left = (b.left + b.width / 2 - 13 + dx) + 'px';
+        el.style.top = (b.top) + 'px';
+        el.style.transform = 'scale(.35)';
+        el.style.opacity = '0.15';
+      }); });
+      setTimeout(function(){ el.remove(); }, 950);
+    })(c, (Math.random() - 0.5) * 40);
+  }
 }
 
 // ===== Пропуск: цена и сроки =====
@@ -390,12 +461,8 @@ function currentWeekNumber(){
   var daysPassed = Math.ceil((now - start) / 86400000);
   return Math.floor((daysPassed - 1) / 7) + 1;
 }
-function daysToEnd(){
-  return Math.max(0, Math.ceil((passEndDate().getTime() - Date.now()) / 86400000));
-}
-function daysToStart(){
-  return Math.max(0, Math.ceil((passStartDate().getTime() - Date.now()) / 86400000));
-}
+function daysToEnd(){ return Math.max(0, Math.ceil((passEndDate().getTime() - Date.now()) / 86400000)); }
+function daysToStart(){ return Math.max(0, Math.ceil((passStartDate().getTime() - Date.now()) / 86400000)); }
 
 // ===== Задания =====
 function questsKey(){ return 'zini_quests_' + playerId; }
@@ -423,6 +490,8 @@ function loadLocal(){
   try {
     var raw = localStorage.getItem('zinixmas_' + playerId);
     if (raw) { var s = JSON.parse(raw); for (var k in s) if (k !== 'quests') state[k] = s[k]; }
+    if (!Array.isArray(state.my_ornaments)) state.my_ornaments = [];
+    if (!Array.isArray(state.decor)) state.decor = [];
   } catch(e){}
 }
 
@@ -472,7 +541,7 @@ function applyPlayer(p){
   saveLocal();
 }
 
-function passiveRate(){ return 500 + state.level * 50; }
+function passiveRate(){ return (500 + state.level * 50) * ornamentMult(); }
 function pendingPassive(){
   var t = state.last_collect || Date.now();
   var hours = Math.min(PASSIVE_CAP_H, (Date.now() - t) / 3600000);
@@ -515,44 +584,149 @@ function dropOrnament(forcedRarity, source, forced){
   if (!pool || !pool.length) { rarity = 'common'; pool = ORNAMENTS[rarity]; }
   var idx = Math.floor(Math.random() * pool.length);
   var itemName = pool[idx];
+  var emoji = ORN_EMOJI[idx % ORN_EMOJI.length];
   var itemId = rarity + '_' + idx;
   state.total_drops++;
   var info = RARITY_INFO[rarity];
   state.recent_drops = state.recent_drops || [];
   state.recent_drops.unshift({ i: info.icon, n: itemName });
   state.recent_drops = state.recent_drops.slice(0, 5);
+  // копия в личную коллекцию для украшения ёлки
+  state.my_ornaments.push({ k: itemId + '_' + Date.now(), n: itemName, r: rarity, e: emoji });
+  if (state.my_ornaments.length > 200) state.my_ornaments.shift();
   if (!isGuest && supabase) {
     supabase.from('inventory').insert({ player_id: playerId, item_id: itemId, item_name: itemName, rarity: rarity, source: source || 'care' })
       .then(function(){ return supabase.from('drop_log').insert({ player_id: playerId, player_name: playerName, item_id: itemId, item_name: itemName, rarity: rarity, source: source || 'care' }); })
       .then(function(){ loadTicker(); loadInventory(); })
       .catch(function(e){ console.warn('drop save error', e); });
   }
+  confetti(rarity === 'legendary' || rarity === 'mythic' ? 45 : 18);
   toast(info.icon + ' Выбит ' + info.label + ': «' + itemName + '»!');
+  saveLocal();
   renderAll();
+}
+
+// ===== Украшение ёлки: слоты и бонусы =====
+var SLOT_LEVELS = [1, 3, 6, 10, 15, 20, 25];
+var SLOT_BONUS = { common:2, rare:5, epic:10, legendary:20, mythic:35, pass:25 };
+function slotUnlocked(i){ return state.level >= SLOT_LEVELS[i]; }
+function slotBonusTotal(){
+  var s = 0;
+  state.decor.forEach(function(d){ if (d) s += (SLOT_BONUS[d.r] || 0); });
+  return s;
+}
+function ornamentMult(){ return 1 + slotBonusTotal() / 100; }
+function availableOrnaments(){
+  var placedKeys = {};
+  state.decor.forEach(function(d){ if (d) placedKeys[d.k] = true; });
+  return state.my_ornaments.filter(function(o){ return !placedKeys[o.k]; });
+}
+function renderSlots(){
+  var host = document.getElementById('slots-list');
+  if (!host) return;
+  host.innerHTML = '';
+  for (var i = 0; i < SLOT_LEVELS.length; i++) {
+    var d = state.decor[i] || null;
+    var el = document.createElement('div');
+    if (d) {
+      el.className = 'slot filled';
+      el.textContent = d.e;
+      var tag = document.createElement('i');
+      tag.textContent = '+' + SLOT_BONUS[d.r] + '%';
+      el.appendChild(tag);
+    } else if (slotUnlocked(i)) {
+      el.className = 'slot open';
+      el.textContent = '➕';
+      (function(idx){
+        el.addEventListener('click', function(){ openPicker(idx); });
+      })(i);
+    } else {
+      el.className = 'slot locked';
+      el.innerHTML = '🔒<i>ур. ' + SLOT_LEVELS[i] + '</i>';
+    }
+    host.appendChild(el);
+  }
+  document.getElementById('orn-bonus-line').textContent = 'Бонус украшений: +' + slotBonusTotal() + '% к наградам';
+  updateTreeGlow();
+}
+function updateTreeGlow(){
+  var filled = state.decor.filter(Boolean).length;
+  var glow = document.getElementById('tree-glow');
+  if (glow) glow.classList.toggle('tree-glow-active', filled >= 3);
+  var garland = document.getElementById('garland');
+  if (garland) {
+    if (filled >= 3) {
+      garland.innerHTML = '';
+      var cols = ['#ff6b6b','#ffd75e','#7dd3fc','#c6ff5e','#ff7ad9'];
+      for (var i = 0; i < 14; i++) {
+        var dot = document.createElement('i');
+        dot.style.background = cols[i % cols.length];
+        dot.style.animationDelay = (i * 0.15) + 's';
+        garland.appendChild(dot);
+      }
+    } else { garland.innerHTML = ''; }
+  }
+}
+function openPicker(idx){
+  var picker = document.getElementById('orn-picker');
+  var items = availableOrnaments();
+  var html = '<div class="card"><b>Повесить украшение</b><div class="muted" style="margin:6px 0 10px;">Слот ' + (idx + 1) + ' · бонусы: ⚪+2% 🔵+5% 🟣+10% 🟡+20% 🌈+35%</div>';
+  if (!items.length) html += '<div class="muted">Свободных шаров нет — выбей их в играх, купи в витрине или выполни задание спонсора!</div>';
+  items.slice(-30).reverse().forEach(function(o){
+    var info = RARITY_INFO[o.r] || RARITY_INFO.common;
+    html += '<div class="inv-item" data-key="' + o.k + '" style="cursor:pointer;">' +
+      '<div class="inv-emoji">' + o.e + '</div>' +
+      '<div class="inv-name"><b class="r-' + o.r + '">' + o.n + '</b><span class="inv-count">' + info.label + ' · +' + SLOT_BONUS[o.r] + '%</span></div></div>';
+  });
+  html += '<button class="btn ghost" id="orn-picker-close" style="margin-top:8px;">Закрыть</button></div>';
+  picker.innerHTML = html;
+  picker.classList.add('show');
+  picker.querySelectorAll('[data-key]').forEach(function(row){
+    row.addEventListener('click', function(){
+      var o = items.find(function(x){ return x.k === row.dataset.key; });
+      if (o) {
+        state.decor[idx] = { k: o.k, n: o.n, r: o.r, e: o.e };
+        saveLocal();
+        confetti(14);
+        coinFly(row);
+        toast('🎄 Повесил «' + o.n + '»! Бонус +' + SLOT_BONUS[o.r] + '%');
+        renderSlots(); renderAll();
+      }
+      closePicker();
+    });
+  });
+  document.getElementById('orn-picker-close').addEventListener('click', closePicker);
+}
+function closePicker(){
+  var picker = document.getElementById('orn-picker');
+  picker.classList.remove('show');
+  picker.innerHTML = '';
 }
 
 function doWater(){
   if (!canWater()) { toast('Ёлку можно полить через ' + timeLeft(state.last_watered, WATER_CD)); return; }
   state.last_watered = Date.now();
-  var rew = waterReward();
+  var rew = Math.floor(waterReward() * luckyMult() * ornamentMult());
   state.pinecones += rew;
   state.weekly_pinecones += rew;
   bumpQuest('water_count', 1);
   gainXp(60);
   if (Math.random() < 0.2) dropOrnament(null, 'water');
   markDirty(); renderAll(); renderPass();
+  coinFly(document.getElementById('btn-water'));
   toast('💧 Полил ёлку! +' + fmt(rew) + ' 🌰');
 }
 function doShake(){
   if (!canShake()) { toast('Снег ещё не напрёсся — вернись через ' + timeLeft(state.last_shake, SHAKE_CD)); return; }
   state.last_shake = Date.now();
-  var rew = shakeReward();
+  var rew = Math.floor(shakeReward() * luckyMult() * ornamentMult());
   state.pinecones += rew;
   state.weekly_pinecones += rew;
   bumpQuest('shake_count', 1);
   gainXp(40);
   if (Math.random() < 0.15) dropOrnament(null, 'shake');
   markDirty(); renderAll(); renderPass();
+  coinFly(document.getElementById('btn-shake'));
   toast('❄️ Снег стряхнут! +' + fmt(rew) + ' 🌰');
 }
 function doCollect(){
@@ -562,6 +736,7 @@ function doCollect(){
   state.pinecones += p;
   state.weekly_pinecones += p;
   markDirty(); renderAll(); renderPass();
+  coinFly(document.getElementById('btn-collect'));
   toast('🌰 +' + fmt(p) + ' шишек!');
 }
 function timeLeft(fromTs, cd){
@@ -626,6 +801,7 @@ function renderAll(){
   } else {
     document.getElementById('xp-line').textContent = 'Опыт: ' + fmt(state.xp) + ' / ' + fmt(need);
   }
+  renderSlots();
 }
 
 async function loadTicker(){
@@ -715,6 +891,14 @@ function buyPrize(rarity){
   renderShop();
 }
 
+// ===== AdsGram: контроллеры (создаются один раз) =====
+var adController = null, taskController = null;
+(function initAds(){
+  if (!window.AdsGram) return;
+  try { adController = window.AdsGram.init({ blockId: REWARD_BLOCK, debug: false }); } catch(e){ console.warn('AdsGram reward init:', e); }
+  try { taskController = window.AdsGram.init({ blockId: TASK_BLOCK, debug: false }); } catch(e){ console.warn('AdsGram task init:', e); }
+})();
+
 // ===== Бонус за рекламу (раз в день) =====
 function adBonusKey(){ return 'zini_adbonus_' + playerId; }
 function adBonusTaken(){
@@ -724,42 +908,161 @@ function adBonusTaken(){
   } catch(e){ return false; }
 }
 function doAdBonus(){
+  var btn = document.getElementById('btn-ad-bonus');
   if (adBonusTaken()) { toast('Бонус уже забран сегодня — приходи завтра! 🎁'); return; }
-  if (ADS_TAG && window.AdsGram) {
-    try {
-      var ad = window.AdsGram.init({ blockId: ADS_TAG });
-      ad.show()
-        .then(function(result){
-          if (result && result.done === false) { toast('Досмотри рекламу до конца, чтобы получить бонус 🎁'); return; }
-          grantAdBonus();
-        })
-        .catch(function(){ grantAdBonus(); }); // рекламы не нашлось — игрока не злим, награду всё равно выдаём
-    } catch(e){ grantAdBonus(); }
-  } else {
-    grantAdBonus();
-  }
+  if (!adController) { grantAdBonus(); return; } // SDK не загрузился (браузер-гость) — не злим игрока
+  btn.disabled = true; btn.textContent = '📺 Загружаю рекламу…';
+  adController.show()
+    .then(function(result){
+      btn.disabled = false; btn.textContent = '🎁 Бонус за рекламу: +500 🌰 (раз в день)';
+      if (result && result.done === false) { toast('Досмотри рекламу до конца, чтобы получить бонус 🎁'); return; }
+      grantAdBonus();
+    })
+    .catch(function(err){
+      btn.disabled = false; btn.textContent = '🎁 Бонус за рекламу: +500 🌰 (раз в день)';
+      console.warn('AdsGram:', err && err.description);
+      toast('Реклама пока недоступна — попробуй через пару минут 🎁');
+    });
 }
 function grantAdBonus(){
   try { localStorage.setItem(adBonusKey(), JSON.stringify({ day: new Date().toDateString() })); } catch(e){}
-  state.pinecones += AD_BONUS;
-  state.weekly_pinecones += AD_BONUS;
+  var ab = Math.floor(AD_BONUS * luckyMult() * ornamentMult());
+  state.pinecones += ab;
+  state.weekly_pinecones += ab;
   markDirty(); renderAll(); renderPass();
-  toast('🎁 Бонус получен: +' + fmt(AD_BONUS) + ' 🌰');
+  confetti(30);
+  coinFly(document.getElementById('btn-ad-bonus'));
+  toast('🎁 Бонус получен: +' + fmt(ab) + ' 🌰');
 }
 
-// ===== Награда за задание спонсора (AdsGram Task) =====
-function grantTaskReward(){
-  state.pinecones += TASK_REWARD;
-  state.weekly_pinecones += TASK_REWARD;
-  markDirty(); renderAll(); renderPass();
-  toast('✅ Задание спонсора выполнено: +' + fmt(TASK_REWARD) + ' 🌰');
+// ===== Задание спонсора =====
+function openSponsorTask(){
+  var btn = document.getElementById('btn-sponsor');
+  if (!taskController) { toast('Задания загружаются — попробуй через минуту ⏳'); return; }
+  btn.disabled = true; btn.textContent = '⏳ Открываю задание…';
+  taskController.show()
+    .then(function(result){
+      btn.disabled = false; btn.textContent = '✨ Выполнить задание';
+      if (result && result.done === false) { toast('Доведи задание до конца — и награда твоя 🌰'); return; }
+      grantTaskReward();
+    })
+    .catch(function(err){
+      btn.disabled = false; btn.textContent = '✨ Выполнить задание';
+      console.warn('AdsGram task:', err && err.description);
+      toast('Задание пока недоступно — попробуй позже 🎁');
+    });
 }
-(function initTask(){
-  var taskEl = document.querySelector('adsgram-task');
-  if (!taskEl) return;
-  taskEl.addEventListener('reward', function(){ grantTaskReward(); });
-  taskEl.addEventListener('onError', function(){ console.warn('AdsGram task: ошибка загрузки'); });
+function grantTaskReward(){
+  var tr = Math.floor(TASK_REWARD * luckyMult() * ornamentMult());
+  state.pinecones += tr;
+  state.weekly_pinecones += tr;
+  markDirty(); renderAll(); renderPass();
+  confetti(35);
+  coinFly(document.getElementById('btn-sponsor'));
+  toast('✅ Задание спонсора выполнено: +' + fmt(tr) + ' 🌰');
+}
+document.getElementById('btn-sponsor').addEventListener('click', openSponsorTask);
+
+// ===== Золотой час =====
+function luckyHour(){
+  var d = new Date();
+  var doy = Math.floor((d - new Date(d.getFullYear(), 0, 0)) / 86400000);
+  var seed = (Number(playerId) || 7) + doy;
+  return seed % 24;
+}
+function isLuckyNow(){ return new Date().getHours() === luckyHour(); }
+function luckyMult(){ return isLuckyNow() ? 2 : 1; }
+var luckyAnnounced = false;
+setInterval(function(){
+  if (isLuckyNow() && !luckyAnnounced) { luckyAnnounced = true; toast('🌟 ЗОЛОТОЙ ЧАС! Все награды ×2 — окно открыто 1 час!'); }
+  if (!isLuckyNow()) luckyAnnounced = false;
+}, 30000);
+
+// ===== Золотые искры =====
+(function sparkLoop(){
+  function spawnSpark(){
+    if (!document.hidden) {
+      var s = document.createElement('div');
+      s.className = 'zini-spark';
+      s.textContent = '✨';
+      s.style.left = (10 + Math.random() * 75) + '%';
+      s.style.top = (14 + Math.random() * 60) + '%';
+      document.body.appendChild(s);
+      var val = 200 + Math.floor(Math.random() * 4) * 200;
+      var caught = false;
+      s.addEventListener('pointerdown', function(){
+        if (caught) return;
+        caught = true;
+        state.pinecones += val;
+        state.weekly_pinecones += val;
+        markDirty(); renderAll(); haptic(); confetti(10); s.remove();
+        toast('✨ Поймал золотую искру! +' + fmt(val) + ' 🌰');
+      });
+      setTimeout(function(){ if (s.parentNode) s.remove(); }, 9000);
+    }
+    setTimeout(spawnSpark, 120000 + Math.random() * 240000);
+  }
+  setTimeout(spawnSpark, 45000);
 })();
+
+// ===== Снежный босс =====
+var BOSS_BASE = 100000;
+function bossKey(){ return 'zini_boss_' + playerId; }
+function bossWeek(){
+  var d = new Date();
+  var day = (d.getUTCDay() + 6) % 7;
+  var mon = new Date(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() - day);
+  return mon.toDateString();
+}
+function loadBossData(){ try { return JSON.parse(localStorage.getItem(bossKey()) || '{}'); } catch(e){ return {}; } }
+var boss = loadBossData();
+if (boss.week !== bossWeek() || typeof boss.num !== 'number') {
+  boss = { week: bossWeek(), num: (boss.num || 1), dmg: 0, chests: 0 };
+  try { localStorage.setItem(bossKey(), JSON.stringify(boss)); } catch(e){}
+}
+function bossMaxHp(){ return BOSS_BASE * boss.num; }
+function bossRender(){
+  var card = document.getElementById('boss-card');
+  if (!card) return;
+  var hp = bossMaxHp();
+  var pct = Math.min(100, Math.floor(boss.dmg / hp * 100));
+  card.innerHTML =
+    '<div style="font-weight:800;font-size:16px;">☃️ Снежный босс №' + boss.num + '</div>' +
+    '<div class="muted" style="margin-top:2px;">Тапай по боссу! Каждую неделю новый — толще и с жирнее наградами.</div>' +
+    '<div id="boss-bar"><div id="boss-bar-fill" style="width:' + pct + '%;"></div></div>' +
+    '<div class="muted">Урон: ' + fmt(boss.dmg) + ' / ' + fmt(hp) + ' · сундуков: ' + boss.chests + '</div>' +
+    '<div id="boss-emoji">☃️</div>' +
+    '<div class="muted" style="margin-top:4px;">Каждые 10% урона — сундук 📦 Победа: +' + fmt(10000 * boss.num) + ' 🌰 + редкий шар!</div>';
+  var e = document.getElementById('boss-emoji');
+  if (e) e.addEventListener('pointerdown', bossHit);
+}
+function bossHit(){
+  var hp = bossMaxHp();
+  boss.dmg += 30 + state.level * 15;
+  var chestNow = Math.floor(boss.dmg / (hp * 0.1));
+  if (chestNow > boss.chests) {
+    boss.chests = chestNow;
+    var cval = 2000 * boss.num;
+    state.pinecones += cval; state.weekly_pinecones += cval;
+    markDirty(); renderAll(); confetti(20);
+    toast('📦 Сундук открыт! +' + fmt(cval) + ' 🌰');
+  }
+  if (boss.dmg >= hp) {
+    var win = 10000 * boss.num;
+    state.pinecones += win; state.weekly_pinecones += win;
+    markDirty(); renderAll(); confetti(60);
+    dropOrnament('rare', 'boss', true);
+    boss.num++; boss.dmg = 0; boss.chests = 0;
+    toast('🏆 Босс повержен! +' + fmt(win) + ' 🌰! Следующий будет толще…');
+    try { localStorage.setItem(bossKey(), JSON.stringify(boss)); } catch(e){}
+    bossRender();
+    return;
+  }
+  haptic();
+  try { localStorage.setItem(bossKey(), JSON.stringify(boss)); } catch(e){}
+  bossRender();
+}
+bossRender();
 
 // ============================================================
 // НОЯБРЬСКИЙ ПРОПУСК: СБП через админа, активация кодом, задания
@@ -892,6 +1195,7 @@ function activatePass(){
   state.quest_claimed = {};
   try { localStorage.setItem('zini_claimed_' + playerId, JSON.stringify({})); } catch(e){}
   markDirty(); renderAll(); renderPass();
+  confetti(40);
   toast('💠 Ноябрьский пропуск активирован до 30 ноября!');
   saveLocal();
 }
@@ -957,12 +1261,12 @@ function haptic(){
   try { if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light'); } catch(e){}
 }
 function finishGame(opts){
-  var rew = opts.reward;
+  var rew = Math.floor((opts.reward || 0) * luckyMult() * ornamentMult());
   state.pinecones += rew;
   state.weekly_pinecones += rew;
   markDirty(); renderAll(); saveLocal();
   if (opts.drop) dropOrnament(null, opts.source);
-  else if (rew > 0) toast('🌰 +' + fmt(rew) + ' шишек!');
+  else if (rew > 0) { coinFly(opts.btn); toast('🌰 +' + fmt(rew) + ' шишек!'); }
   renderPass();
 }
 
@@ -1072,7 +1376,7 @@ function mgEnd(){
   mgOverlay('Игра окончена!', 'Очки: ' + mg.score + ' • Награда: ' + fmt(rew) + ' 🌰', true, '🏆');
 }
 function mgClaim(){
-  finishGame({ reward: mg.pendReward || 0, drop: mg.pendDrop, source: 'mini_game' });
+  finishGame({ reward: mg.pendReward || 0, drop: mg.pendDrop, source: 'mini_game', btn: document.getElementById('mg-claim') });
   mg.pendReward = 0; mg.pendDrop = false;
   mgOverlay('Поймай подарок', 'Нажми «Играть» и лови подарки', false, '🎁');
 }
@@ -1179,7 +1483,7 @@ function stEnd(){
   stOverlay('Время вышло!', 'Попаданий: ' + st.score + ' • Награда: ' + fmt(rew) + ' 🌰', true, '🏆');
 }
 function stClaim(){
-  finishGame({ reward: st.pendReward || 0, drop: st.pendDrop, source: 'snow_shooter' });
+  finishGame({ reward: st.pendReward || 0, drop: st.pendDrop, source: 'snow_shooter', btn: document.getElementById('st-claim') });
   st.pendReward = 0; st.pendDrop = false;
   stOverlay('Снежный тир', 'Нажми «Играть» — у тебя 30 секунд', false, '🎯');
 }
