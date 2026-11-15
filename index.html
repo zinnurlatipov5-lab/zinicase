@@ -1118,46 +1118,90 @@ function renderTabs(){
 
 /* ===================== ЁЛКА (как на картинке: ярусы, красная звезда, банты, золотая лента) ===================== */
 function tierPath(cx,yT,yB,w){
+ const dy=yB-yT,n=Math.max(4,Math.round(w/13));
  let p='M '+cx+' '+yT
-  +' C '+(cx+w*0.35).toFixed(1)+' '+(yT+(yB-yT)*0.18).toFixed(1)+' '+(cx+w*0.72).toFixed(1)+' '+(yT+(yB-yT)*0.62).toFixed(1)+' '+(cx+w).toFixed(1)+' '+yB
-  +' Q '+(cx+w*0.62).toFixed(1)+' '+(yB+5).toFixed(1)+' '+(cx+w*0.4).toFixed(1)+' '+(yB-4).toFixed(1)
-  +' Q '+(cx+w*0.2).toFixed(1)+' '+(yB+5).toFixed(1)+' '+cx+' '+(yB-4).toFixed(1)
-  +' Q '+(cx-w*0.2).toFixed(1)+' '+(yB+5).toFixed(1)+' '+(cx-w*0.4).toFixed(1)+' '+(yB-4).toFixed(1)
-  +' Q '+(cx-w*0.62).toFixed(1)+' '+(yB+5).toFixed(1)+' '+(cx-w).toFixed(1)+' '+yB
-  +' C '+(cx-w*0.72).toFixed(1)+' '+(yT+(yB-yT)*0.62).toFixed(1)+' '+(cx-w*0.35).toFixed(1)+' '+(yT+(yB-yT)*0.18).toFixed(1)+' '+cx+' '+yT+' Z';
+  +' C '+(cx+w*0.25).toFixed(1)+' '+(yT+dy*0.08).toFixed(1)+' '+(cx+w*0.6).toFixed(1)+' '+(yT+dy*0.45).toFixed(1)+' '+(cx+w).toFixed(1)+' '+yB;
+ for(let k=0;k<n;k++){
+  const x1=cx+w-k*(2*w/n),x2=cx+w-(k+1)*(2*w/n),xm=(x1+x2)/2;
+  p+=' Q '+xm.toFixed(1)+' '+(yB+7).toFixed(1)+' '+x2.toFixed(1)+' '+yB;
+ }
+ p+=' C '+(cx-w*0.6).toFixed(1)+' '+(yT+dy*0.45).toFixed(1)+' '+(cx-w*0.25).toFixed(1)+' '+(yT+dy*0.08).toFixed(1)+' '+cx+' '+yT+' Z';
  return p;
 }
-function sr(seed){let s=(seed>>>0)||1;return function(){s=(s*1664525+1013904223)>>>0;return s/4294967296}}
 function needleTier(cx,yT,yB,w,si,rich){
  const R=sr(si*7349+11);
- const base=si%2?'#256f31':'#2f8f3f',light=si%2?'#2f8f3f':'#3fa84e';
- let h='<path d="'+tierPath(cx,yT,yB,w)+'" fill="'+base+'" stroke="rgba(8,40,18,.55)" stroke-width="1.5"/>';
- h+='<path d="'+tierPath(cx,yT,yB,w*0.58)+'" fill="'+light+'" opacity=".45"/>';
- const bn=Math.max(2,Math.round(w/34));
- for(let b=0;b<bn;b++){
-  const t=(b+0.6)/bn;
-  const bx=cx+(b%2?1:-1)*w*t*0.5,by=yT+(yB-yT)*(0.3+t*0.45);
-  h+='<g transform="translate('+bx.toFixed(1)+','+by.toFixed(1)+')">'
-   +'<path d="M-7,-3.5 L0,0 L-7,3.5 Z" fill="#d03a3a"/><path d="M7,-3.5 L0,0 L7,3.5 Z" fill="#d03a3a"/>'
-   +'<circle r="2.4" fill="#a01f1f"/></g>';
+ const base=si%2?'#3f8f37':'#4a9e3f',light=si%2?'#5cb04a':'#6fbf4f',dark='#2e6f2a';
+ let h='<path d="'+tierPath(cx,yT,yB,w)+'" fill="'+dark+'"/>';
+ h+='<path d="'+tierPath(cx,yT,yB-3,w-4)+'" fill="'+base+'"/>';
+ h+='<path d="'+tierPath(cx,yT,yB-7,(w-8)*0.62)+'" fill="'+light+'" opacity=".8"/>';
+ const fringe=Math.max(5,Math.round(w/16));
+ for(let f=0;f<fringe;f++){
+  const t=(f+0.5)/fringe,side=f%2?1:-1;
+  const bx=cx+side*w*0.92*t,by=yT+(yB-yT)*(0.15+t*0.8);
+  h+='<circle cx="'+bx.toFixed(1)+'" cy="'+by.toFixed(1)+'" r="'+(4+R()*4).toFixed(1)+'" fill="'+base+'"/>';
  }
- h+='<path d="M '+cx+' '+(yT+3)+' Q '+(cx+w*0.5).toFixed(1)+' '+(yT+(yB-yT)*0.12+4).toFixed(1)+' '+(cx+w).toFixed(1)+' '+(yB-2).toFixed(1)+'" stroke="rgba(240,248,255,.75)" stroke-width="3" fill="none" stroke-linecap="round"/>';
- h+='<path d="M '+cx+' '+(yT+3)+' Q '+(cx-w*0.5).toFixed(1)+' '+(yT+(yB-yT)*0.12+4).toFixed(1)+' '+(cx-w).toFixed(1)+' '+(yB-2).toFixed(1)+'" stroke="rgba(240,248,255,.75)" stroke-width="3" fill="none" stroke-linecap="round"/>';
+ return h;
+}
+function treeDecor(rich){
+ let h='';
+ const balls=[[0,52,'#e07a2e',7],[26,88,'#d03a3a',8],[-22,96,'#3f6fd8',7],[40,128,'#7b4fd0',7],[-34,136,'#d03a3a',8],[10,158,'#e8c46a',7],[-48,166,'#e07a2e',7],[30,178,'#d03a3a',8],[-14,192,'#3f6fd8',8],[52,204,'#e8c46a',7],[-58,206,'#d03a3a',7],[0,222,'#e07a2e',8],[-38,228,'#7b4fd0',7],[44,236,'#d03a3a',8],[-20,252,'#e8c46a',8],[26,262,'#3f6fd8',7],[-4,276,'#d03a3a',9],[58,268,'#e07a2e',7],[-60,272,'#d03a3a',8],[16,296,'#7b4fd0',8],[-44,300,'#e8c46a',7],[40,308,'#d03a3a',8]];
+ balls.forEach(b=>{
+  h+='<g><circle cx="'+(200+b[0])+'" cy="'+b[1]+'" r="'+b[3]+'" fill="'+b[2]+'" stroke="rgba(0,0,0,.25)"/>'
+   +'<rect x="'+(200+b[0]-2)+'" y="'+(b[1]-b[3]-4)+'" width="4" height="5" rx="1" fill="#c9a24d"/>'
+   +'<ellipse cx="'+(200+b[0]-b[3]*0.3)+'" cy="'+(b[1]-b[3]*0.3)+'" rx="'+(b[3]*0.3).toFixed(1)+'" ry="'+(b[3]*0.22).toFixed(1)+'" fill="rgba(255,255,255,.55)"/></g>';
+ });
+ const bows=[[0,78,10],[28,148,11],[-30,160,10],[12,212,12],[-46,220,10],[34,250,12],[-12,284,13],[52,300,10]];
+ bows.forEach(b=>{
+  const x=200+b[0],y=b[1],s=b[2];
+  h+='<g transform="translate('+x+','+y+')">'
+   +'<path d="M0,0 L'+(-s)+','+(-s*0.6)+' L'+(-s*0.9)+','+(s*0.5)+' Z" fill="#d03a3a"/>'
+   +'<path d="M0,0 L'+s+','+(-s*0.6)+' L'+(s*0.9)+','+(s*0.5)+' Z" fill="#d03a3a"/>'
+   +'<circle r="'+(s*0.32).toFixed(1)+'" fill="#a01f1f"/></g>';
+ });
+ const canes=[[58,110],[-52,116],[62,190],[-64,240]];
+ canes.forEach(c=>{
+  h+='<text x="'+(200+c[0])+'" y="'+c[1]+'" font-size="14" text-anchor="middle">🍬</text>';
+ });
  return h;
 }
 function ribbonSvg(rich){
  let h='';
- const bands=[{y1:92,y2:104,w:50},{y1:128,y2:142,w:64},{y1:164,y2:180,w:78},{y1:200,y2:218,w:92},{y1:236,y2:256,w:106}];
- bands.forEach((b,i)=>{
-  const cx=200,x1=cx-b.w,x2=cx+b.w;
-  const col=i%2?'#e8c46a':'#f6dda0';
-  const op=rich?0.95:0.75,wd=rich?7:5.5;
-  h+='<path d="M '+x1+' '+b.y1+' Q '+cx+' '+b.y2+' '+x2+' '+b.y1+'" fill="none" stroke="'+col+'" stroke-width="'+wd+'" opacity="'+op+'" stroke-linecap="round"/>';
-  if(rich)h+='<path d="M '+x1+' '+b.y1+' Q '+cx+' '+b.y2+' '+x2+' '+b.y1+'" fill="none" stroke="#fff" stroke-width="1.4" opacity=".45" stroke-linecap="round"/>';
+ const wd=rich?11:8,col='#e8c46a';
+ const bands=[
+  'M 155 96 Q 200 128 262 100 Q 216 118 190 106 Z',
+  'M 132 150 Q 210 118 288 152 Q 230 136 196 156 Q 250 174 268 158 Z',
+  'M 112 208 Q 200 168 296 214 Q 240 190 204 214 Q 252 234 284 216 Z',
+  'M 96 262 Q 200 224 312 270 Q 250 244 208 270 Q 258 292 296 274 Z'
+ ];
+ bands.forEach(d=>{
+  h+='<path d="'+d+'" fill="none" stroke="'+col+'" stroke-width="'+wd+'" stroke-linecap="round" opacity="'+(rich?0.95:0.8)+'"/>';
+  h+='<path d="'+d+'" fill="none" stroke="#f6dda0" stroke-width="'+(wd*0.4).toFixed(1)+'" stroke-linecap="round" opacity=".5"/>';
  });
  return h;
 }
 function giftsSvg(){
+ const boxes=[
+  [118,442,44,34,'#e8c46a','#d03a3a'],[162,448,52,40,'#d03a3a','#e8c46a'],
+  [216,440,40,46,'#2f4f9e','#8fb4ff'],[252,448,56,42,'#e8c46a','#d03a3a'],
+  [304,442,44,36,'#e07a2e','#fff'],[76,448,30,26,'#d03a3a','#e8c46a'],
+  [340,448,26,22,'#7b4fd0','#e8c46a']
+ ];
+ let h='';
+ boxes.forEach(b=>{
+  const x=b[0],y=b[1],w=b[2],hh=b[3],c1=b[4],c2=b[5];
+  h+='<g><rect x="'+(x-w/2)+'" y="'+(y-hh)+'" width="'+w+'" height="'+hh+'" rx="3" fill="'+c1+'" stroke="rgba(0,0,0,.28)"/>'
+   +'<rect x="'+(x-w/2)+'" y="'+(y-hh)+'" width="'+w+'" height="'+(hh*0.3)+'" rx="3" fill="'+c2+'" opacity=".92"/>'
+   +'<rect x="'+(x-w*0.09)+'" y="'+(y-hh)+'" width="'+(w*0.18)+'" height="'+hh+'" fill="'+c2+'" opacity=".92"/>'
+   +'<path d="M'+x+','+(y-hh)+' q-'+(w*0.22)+',-'+(hh*0.28)+' -'+(w*0.3)+',-'+(hh*0.05)+' q'+(w*0.16)+','+(hh*0.02)+' '+(w*0.3)+','+(hh*0.05)+' Z" fill="'+c2+'"/>'
+   +'<path d="M'+x+','+(y-hh)+' q'+(w*0.22)+',-'+(hh*0.28)+' '+(w*0.3)+',-'+(hh*0.05)+' q-'+(w*0.16)+','+(hh*0.02)+' -'+(w*0.3)+','+(hh*0.05)+' Z" fill="'+c2+'"/>'
+   +'<circle cx="'+x+'" cy="'+(y-hh-1)+'" r="3" fill="'+c2+'"/></g>';
+ });
+ h+='<g><circle cx="356" cy="452" r="13" fill="#3f8f37" stroke="rgba(0,0,0,.25)"/><circle cx="352" cy="448" r="4" fill="rgba(255,255,255,.4)"/></g>';
+ h+='<g><circle cx="146" cy="454" r="12" fill="#d03a3a" stroke="rgba(0,0,0,.25)"/><circle cx="142" cy="450" r="4" fill="rgba(255,255,255,.4)"/></g>';
+ h+='<g><circle cx="248" cy="458" r="11" fill="#fff" stroke="#d03a3a" stroke-width="2"/>'
+  +'<path d="M238,454 L258,462 M238,462 L258,454" stroke="#d03a3a" stroke-width="2"/></g>';
+ return h;
+}
  const n=Math.min(8,1+Math.floor(S.level/8));
  let h='';
  const gs=[[70,442,26,22,'#d03a3a','#e8c46a'],[112,448,20,18,'#e8c46a','#d03a3a'],[152,444,30,24,'#4da6ff','#e8c46a'],[248,446,22,20,'#ff6b6b','#e8c46a'],[286,440,28,26,'#e8c46a','#d03a3a'],[330,446,18,16,'#7ee8a2','#e8c46a'],[196,450,16,14,'#d03a3a','#fff'],[356,450,14,12,'#b03570','#e8c46a']];
@@ -1211,7 +1255,7 @@ function renderTree(){
   +'<ellipse cx="200" cy="452" rx="140" ry="14" fill="rgba(235,245,255,.28)"/>'
   +'<rect x="186" y="325" width="28" height="120" rx="6" fill="url(#trunkG)"/>'
   +'<path d="M192,335 L192,435 M200,330 L200,440 M208,335 L208,435" stroke="rgba(40,22,4,.35)" stroke-width="2" fill="none"/>'
-  +tiers+ribbonSvg(superRich)+gar+giftsSvg()+orns+star+'</g>';
+  +tiers+ribbonSvg(superRich)+treeDecor(superRich)+gar+giftsSvg()+orns+star+'</g>';
  const svg='<svg style="position:absolute;inset:0;width:100%;height:100%" viewBox="0 0 400 470" preserveAspectRatio="xMidYMid meet">'
   +defs+sky
   +'<path d="M0,438 Q90,412 200,428 Q310,442 400,420 L400,470 L0,470 Z" fill="#0d2050"/>'
