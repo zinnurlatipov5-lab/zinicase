@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<title>Ёлка Зини 🎄 v7.2</title>
+<title>Ёлка Зини 🎄 v8.0</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://sad.adsgram.ai/js/sad.min.js"></script>
@@ -11,13 +11,13 @@
 :root{--bg:#0b1224;--card:rgba(22,30,55,.75);--card2:rgba(35,45,80,.7);--acc:#c6ff5e;--acc2:#4ade80;--mut:#9aa7c7;--red:#ff6b6b;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
 html,body{height:100%;}
-body{background:linear-gradient(180deg,#0b1224 0%,#101a35 45%,#1b2a52 100%);color:#fff;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;padding:12px 12px 210px;overflow-x:hidden;}
+body{background:linear-gradient(180deg,#0b1224 0%,#101a35 45%,#1b2a52 100%);color:#fff;font-family:-apple-system,'Segoe UI',Roboto,sans-serif;padding:12px 12px 250px;overflow-x:hidden;}
 #snow{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
 .snowflake{position:absolute;top:-4%;background:#fff;border-radius:50%;opacity:.7;animation:fall linear infinite;}
 @keyframes fall{from{transform:translateY(-5vh);}to{transform:translateY(108vh);}}
 header,#ticker-bar,main,.tabs,#toast{position:relative;z-index:1;}
 
-/* ===== Шапка: имя + баланс + уровень ===== */
+/* ===== Шапка ===== */
 header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;background:var(--card);border-radius:14px;padding:10px 12px;backdrop-filter:blur(6px);}
 #h-name{font-weight:800;font-size:15px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 #h-right{display:flex;align-items:center;gap:8px;flex:none;}
@@ -28,7 +28,7 @@ header{display:flex;justify-content:space-between;align-items:center;gap:8px;mar
 
 #ticker-bar{display:flex;align-items:center;border-radius:12px;background:rgba(198,255,94,.07);border:1px solid rgba(198,255,94,.3);overflow:hidden;height:48px;margin-bottom:12px;}
 .ticker-label{flex:none;background:var(--acc);color:#0a0a10;font-size:14px;font-weight:800;padding:0 14px;border-radius:10px;margin:5px;white-space:nowrap;}
-#ticker-track{white-space:nowrap;font-size:15px;font-weight:600;color:var(--acc);padding-right:20px;animation:ticker 30s linear infinite;will-change:transform;display:flex;align-items:center;gap:6px;}
+#ticker-track{white-space:nowrap;font-size:15px;font-weight:600;color:var(--acc);padding-right:20px;animation:ticker 30s linear infinite;will-change:transform;}
 @keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
 .screen{display:none;}
@@ -47,7 +47,7 @@ header{display:flex;justify-content:space-between;align-items:center;gap:8px;mar
 .gifts-line{font-size:12px;color:var(--mut);margin-top:8px;}
 .streak-line{font-size:13px;color:#ffd75e;text-align:center;margin-top:6px;font-weight:700;}
 
-/* ===== Ёлка-картинка: растёт с уровнем ===== */
+/* ===== Ёлка ===== */
 #tv-stage{position:relative;width:230px;height:250px;margin:10px auto 0;cursor:pointer;user-select:none;transition:transform .5s;}
 #tv-stage.shaking{animation:tvShake .5s ease;}
 @keyframes tvShake{0%,100%{transform:rotate(0);}20%{transform:rotate(-4deg);}40%{transform:rotate(4deg);}60%{transform:rotate(-3deg);}80%{transform:rotate(3deg);}}
@@ -93,15 +93,15 @@ h3{margin:4px 0 12px;font-size:18px;}
 .inv-count{color:var(--mut);font-size:13px;}
 .r-common{color:#b8b8c4;} .r-rare{color:#4da3ff;} .r-epic{color:#b678ff;} .r-legendary{color:#ffd75e;} .r-mythic{color:#ff7ad9;} .r-pass{color:#7dd3fc;}
 
-.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:rgba(20,27,50,.95);border-top:3px solid #3a3a52;padding:10px 2px calc(10px + env(safe-area-inset-bottom));z-index:99;box-shadow:0 -6px 20px rgba(0,0,0,.45);}
-.tab{flex:1;background:none;border:0;color:#8b9bc4;font-size:12px;font-weight:800;padding:12px 0 10px;border-radius:14px;cursor:pointer;font-family:inherit;text-align:center;line-height:1.2;margin:0 2px;transition:all .2s ease;}
-.tab .tab-icon{display:block;font-size:24px;margin-bottom:3px;}
+.tabs{position:fixed;left:0;right:0;bottom:0;display:flex;background:rgba(20,27,50,.97);border-top:3px solid #3a3a52;padding:7px 2px calc(7px + env(safe-area-inset-bottom));z-index:99;box-shadow:0 -6px 20px rgba(0,0,0,.45);}
+.tab{flex:1;background:none;border:0;color:#8b9bc4;font-size:11px;font-weight:800;padding:9px 0 7px;border-radius:12px;cursor:pointer;font-family:inherit;text-align:center;line-height:1.2;margin:0 1px;transition:all .2s ease;}
+.tab .tab-icon{display:block;font-size:21px;margin-bottom:2px;}
 .tab.active{color:var(--acc);background:rgba(198,255,94,.16);box-shadow:0 0 18px rgba(198,255,94,.35);border:1px solid rgba(198,255,94,.4);}
 
-#toast{position:fixed;left:50%;bottom:130px;transform:translateX(-50%);background:#22223a;border:1px solid var(--acc);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;display:none;z-index:99;max-width:90%;text-align:center;}
+#toast{position:fixed;left:50%;bottom:180px;transform:translateX(-50%);background:#22223a;border:1px solid var(--acc);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;display:none;z-index:99;max-width:90%;text-align:center;}
 #guest-note{background:#3a2a12;border:1px solid #ffb020;color:#ffd75e;border-radius:10px;padding:10px;font-size:13px;margin-bottom:12px;display:none;}
 
-.game-area{position:relative;height:340px;background:rgba(10,16,34,.85);border:1px solid rgba(120,150,255,.2);border-radius:14px;overflow:hidden;margin-bottom:12px;}
+.game-area{position:relative;height:340px;background:linear-gradient(180deg,rgba(10,16,34,.9),rgba(20,30,60,.85));border:1px solid rgba(120,150,255,.2);border-radius:14px;overflow:hidden;margin-bottom:12px;user-select:none;touch-action:manipulation;}
 .gift{position:absolute;font-size:36px;cursor:pointer;z-index:2;will-change:transform;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));}
 .hud-r{position:absolute;top:8px;right:10px;font-size:15px;font-weight:800;color:var(--acc);z-index:3;}
 .hud-l{position:absolute;top:8px;left:10px;font-size:15px;font-weight:800;color:var(--red);z-index:3;}
@@ -109,10 +109,12 @@ h3{margin:4px 0 12px;font-size:18px;}
 .overlay{position:absolute;left:0;right:0;top:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(10,14,30,.85);text-align:center;padding:16px;z-index:5;}
 .game-avatar{width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:44px;margin-bottom:14px;background:linear-gradient(135deg,#38bdf8,#c084fc);box-shadow:0 0 24px rgba(125,211,252,.4);animation:apulse 2s ease-in-out infinite;}
 @keyframes apulse{0%,100%{transform:scale(1);box-shadow:0 0 20px rgba(125,211,252,.35);}50%{transform:scale(1.07);box-shadow:0 0 36px rgba(192,132,252,.55);}}
-.st-target{position:absolute;font-size:34px;cursor:pointer;z-index:2;filter:drop-shadow(0 2px 4px rgba(0,0,0,.5));animation:pop .3s ease;}
+.st-target{position:absolute;font-size:40px;cursor:pointer;z-index:2;filter:drop-shadow(0 2px 6px rgba(0,0,0,.5));animation:pop .25s ease;}
+.st-target.st-bomb{filter:drop-shadow(0 0 10px #ff6b6b);}
 @keyframes pop{from{transform:scale(.3);}to{transform:scale(1);}}
+#spr-player{position:absolute;bottom:8px;font-size:44px;z-index:3;transition:left .15s ease;filter:drop-shadow(0 3px 6px rgba(0,0,0,.5));}
 
-/* ===== Витрина: красивые карточки игрушек ===== */
+/* ===== Витрина ===== */
 .shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .shop-card{background:var(--card2);border-radius:14px;padding:14px 10px;text-align:center;backdrop-filter:blur(6px);border:1px solid rgba(120,150,255,.15);display:flex;flex-direction:column;}
 .shop-emoji{font-size:40px;line-height:1.15;min-height:52px;display:flex;align-items:center;justify-content:center;gap:2px;flex-wrap:wrap;filter:drop-shadow(0 3px 6px rgba(0,0,0,.45));}
@@ -162,6 +164,12 @@ h3{margin:4px 0 12px;font-size:18px;}
 .zini-spark{position:fixed;font-size:34px;cursor:pointer;z-index:98;animation:sparkPulse 1s ease-in-out infinite;filter:drop-shadow(0 0 10px #c6ff5e);}
 @keyframes sparkPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.3);}}
 
+/* ===== Колесо удачи ===== */
+#wheel-wrap{position:relative;width:234px;height:234px;margin:6px auto 0;}
+#wheel{width:100%;height:100%;border-radius:50%;border:5px solid rgba(198,255,94,.65);transition:transform 4.2s cubic-bezier(.15,.85,.25,1);position:relative;overflow:hidden;box-shadow:0 0 30px rgba(198,255,94,.25);}
+#wheel .wl{position:absolute;left:50%;top:50%;font-size:12px;font-weight:800;color:#fff;transform-origin:0 0;white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.7);}
+#wheel-pointer{position:absolute;top:-14px;left:50%;transform:translateX(-50%);font-size:26px;z-index:4;color:#ffd75e;filter:drop-shadow(0 2px 4px rgba(0,0,0,.6));}
+
 #boss-bar{height:14px;background:#2a2a44;border-radius:7px;overflow:hidden;margin:10px 0;}
 #boss-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,#ff6b6b,#ffd75e);border-radius:7px;transition:width .2s;}
 #boss-emoji{font-size:60px;line-height:1;cursor:pointer;user-select:none;transition:transform .08s;display:inline-block;margin-top:6px;}
@@ -187,7 +195,7 @@ h3{margin:4px 0 12px;font-size:18px;}
 
 <div id="guest-note">⚠️ Открой игру через Telegram — прогресс сохраняется только там.</div>
 
-<div id="ticker-bar"><span class="ticker-label">ПРИЗЫ</span><div id="ticker-track">Шары ещё не выбиты — будь первым! 🎄</div></div>
+<div id="ticker-bar"><span class="ticker-label">ПРИЗЫ</span><div id="ticker-track">Игрушки ещё не выбиты — будь первым! 🎄</div></div>
 
 <main>
   <section id="screen-tree" class="screen active">
@@ -239,7 +247,7 @@ h3{margin:4px 0 12px;font-size:18px;}
           <div class="muted">Подписка или переход в мини-апп — откроется в новом окне</div>
         </div>
       </div>
-      <div class="sc-reward">+300 <span class="pine-wrap"></span></div>
+      <div class="sc-reward">+300</div>
       <adsgram-task data-block-id="task-59804" class="zini-task">
         <p slot="reward">300</p>
         <div slot="button">✨ выполнить</div>
@@ -251,10 +259,25 @@ h3{margin:4px 0 12px;font-size:18px;}
 
     <div class="card" id="boss-card" style="text-align:center;"></div>
 
-    <h3>🎮 Поймай подарок</h3>
+    <h3>🎿 Зимний спринт</h3>
     <div id="mg-host"></div>
-    <h3>🎯 Снежный тир</h3>
+    <h3>⛄ Лопни снежки</h3>
     <div id="st-host"></div>
+
+    <h3>🎡 Колесо удачи</h3>
+    <div class="card" style="text-align:center;">
+      <div id="wheel-wrap">
+        <div id="wheel-pointer">▼</div>
+        <div id="wheel"></div>
+      </div>
+      <div id="wheel-status" class="muted" style="margin:12px 0 10px;"></div>
+      <div class="btn-row">
+        <button id="btn-wheel" class="btn">🎡 Крутить</button>
+        <button id="btn-wheel-ad" class="btn ghost">📺 Крутить за рекламу</button>
+      </div>
+      <div class="muted" style="margin-top:8px;">1 бесплатное вращение в день. Смотри рекламу — крути ещё!</div>
+    </div>
+
     <button id="btn-ad-bonus" class="btn ghost">🎁 Бонус за рекламу: +500 (раз в день)</button>
   </section>
 
@@ -358,8 +381,9 @@ var playerName = me ? (me.first_name || 'Игрок') : 'Игрок';
 var supabase = null;
 try { supabase = window.supabase.createClient(SB_URL, SB_KEY); } catch(e){ console.warn('Supabase не создан', e); }
 
-var WATER_CD = 2 * 3600 * 1000;
-var SHAKE_CD = 4 * 3600 * 1000;
+// ===== Кулдауны: адекватные =====
+var WATER_CD = 30 * 60 * 1000;   // полив: 30 минут
+var SHAKE_CD = 60 * 60 * 1000;   // встряхивание: 1 час
 var KNOCK_CD = 10 * 60 * 1000;
 var PASSIVE_CAP_H = 24;
 
@@ -400,8 +424,8 @@ var PRICES = { common:5000, rare:15000, epic:50000, legendary:200000, mythic:100
 var QUESTS = [
   { id:'q1', icon:'💧', name:'Полей ёлку 5 раз', need:5, key:'water_count', reward:{ pinecones:5000, drop:'rare' } },
   { id:'q2', icon:'❄️', name:'Стряхни снег 3 раза', need:3, key:'shake_count', reward:{ pinecones:7500, drop:'rare' } },
-  { id:'q3', icon:'🎁', name:'Набери 30 очков в «Поймай подарок»', need:30, key:'mini_score', reward:{ drop:'epic' } },
-  { id:'q4', icon:'🎯', name:'30 попаданий в «Снежный тир»', need:30, key:'tir_hits', reward:{ drop:'epic' } },
+  { id:'q3', icon:'🎿', name:'Собери 25 подарков в «Зимнем спринте»', need:25, key:'mini_score', reward:{ drop:'epic' } },
+  { id:'q4', icon:'⛄', name:'Лопни 20 снежков в «Лопни снежки»', need:20, key:'tir_hits', reward:{ drop:'epic' } },
   { id:'q5', icon:'🛒', name:'Купи любую игрушку в витрине', need:1, key:'shop_buys', reward:{ pinecones:10000, drop:'pass' } },
   { id:'q6', icon:'🏆', name:'Заработай 50 000 шишек за неделю', need:50000, key:'weekly_goal', reward:{ pinecones:20000, drop:'legendary' } }
 ];
@@ -431,7 +455,26 @@ function toast(msg){
   toastTimer = setTimeout(function(){ t.style.display = 'none'; }, 2600);
 }
 
-// ===== Эффекты: конфетти и летящие шишки =====
+// ===== Звуки =====
+var audioCtx = null;
+function sfx(freq, dur, type){
+  try {
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    var o = audioCtx.createOscillator(), g = audioCtx.createGain();
+    o.type = type || 'sine'; o.frequency.value = freq;
+    g.gain.value = 0.07;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start();
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    o.stop(audioCtx.currentTime + dur);
+  } catch(e){}
+}
+function sReward(){ sfx(880, .12); setTimeout(function(){ sfx(1320, .18); }, 100); }
+function sTap(){ sfx(620, .06, 'square'); }
+function sFail(){ sfx(180, .25, 'sawtooth'); }
+function sWin(){ sfx(660, .1); setTimeout(function(){ sfx(880, .1); }, 110); setTimeout(function(){ sfx(1180, .22); }, 220); }
+
+// ===== Эффекты =====
 var CONF_COLORS = ['#c6ff5e','#4ade80','#ffd75e','#7dd3fc','#ff7ad9'];
 function confetti(n){
   n = n || 28;
@@ -525,7 +568,7 @@ function loadLocal(){
   } catch(e){}
 }
 
-// ===== Огонь за ежедневные входы =====
+// ===== Огонь =====
 function handleStreak(){
   var today = new Date().toDateString();
   if (state.last_visit === today) return;
@@ -536,6 +579,7 @@ function handleStreak(){
   state.pinecones += bonus;
   state.weekly_pinecones += bonus;
   markDirty();
+  sReward();
   toast('🔥 Огонь ' + state.streak + ' ' + (state.streak === 1 ? 'день' : 'дн.') + ' подряд! +' + fmt(bonus) + ' ' + PINE);
 }
 
@@ -596,7 +640,7 @@ function gainXp(n){
     if (state.level % 25 === 0) milestoneDrop('epic');
     if (state.level === 100) { milestoneDrop('mythic'); toast('👑 Ты — ЛЕГЕНДА ИГРЫ! Уровень 100!'); }
   }
-  if (ups > 0) { toast('🎉 Ёлка подросла до уровня ' + state.level + '!'); confetti(24); }
+  if (ups > 0) { toast('🎉 Ёлка подросла до уровня ' + state.level + '!'); confetti(24); sWin(); }
 }
 
 function rollRarity(){
@@ -630,12 +674,13 @@ function dropOrnament(forcedRarity, source, forced){
       .catch(function(e){ console.warn('drop save error', e); });
   }
   confetti(rarity === 'legendary' || rarity === 'mythic' ? 45 : 18);
+  sReward();
   toast(emoji + ' Выбит ' + info.label + ': «' + itemName + '»!');
   saveLocal();
   renderAll();
 }
 
-// ===== Украшение ёлки: слоты, бонусы, игрушки на ёлке =====
+// ===== Украшение ёлки =====
 var SLOT_LEVELS = [1, 3, 6, 10, 15, 20, 25];
 var SLOT_BONUS = { common:2, rare:5, epic:10, legendary:20, mythic:35, pass:25 };
 var TV_ORN_POS = [{l:50,t:20},{l:34,t:38},{l:66,t:38},{l:27,t:62},{l:50,t:58},{l:73,t:62},{l:50,t:82}];
@@ -727,7 +772,7 @@ function openPicker(idx){
   var picker = document.getElementById('orn-picker');
   var items = availableOrnaments();
   var html = '<div class="card"><b>Повесить игрушку</b><div class="muted" style="margin:6px 0 10px;">Слот ' + (idx + 1) + ' · бонусы: ⚪+2% 🔵+5% 🟣+10% 🟡+20% 🌈+35%</div>';
-  if (!items.length) html += '<div class="muted">Свободных игрушек нет — выбей их в играх, купи в витрине или выполни задание спонсора!</div>';
+  if (!items.length) html += '<div class="muted">Свободных игрушек нет — выбей их в играх, на колесе или выполни задание спонсора!</div>';
   items.slice(-30).reverse().forEach(function(o){
     var info = RARITY_INFO[o.r] || RARITY_INFO.common;
     html += '<div class="inv-item" data-key="' + o.k + '" style="cursor:pointer;">' +
@@ -759,7 +804,7 @@ function closePicker(){
   picker.innerHTML = '';
 }
 
-// ===== Потрогать ёлку: конфетка =====
+// ===== Потрогать ёлку =====
 function doKnock(){
   var tv = document.getElementById('tv-stage');
   if (tv) { tv.classList.remove('shaking'); void tv.offsetWidth; tv.classList.add('shaking'); }
@@ -789,7 +834,7 @@ function doKnock(){
     setTimeout(function(){ el.remove(); }, 1000);
   })(candy);
   if (Math.random() < 0.1) { dropOrnament('common', 'knock'); }
-  else toast('🍬 Из ёлки выпала конфетка! +' + fmt(val) + ' ' + PINE);
+  else { toast('🍬 Из ёлки выпала конфетка! +' + fmt(val) + ' ' + PINE); sTap(); }
   renderAll();
 }
 
@@ -800,8 +845,7 @@ function doStarWish(e){
   if (state.last_wish === today) { toast('⭐ Звезда уже исполнила желание сегодня — приходи завтра!'); return; }
   state.last_wish = today;
   markDirty(); saveLocal();
-  confetti(40);
-  haptic();
+  confetti(40); sWin(); haptic();
   var roll = Math.random();
   if (roll < 0.15) {
     dropOrnament('rare', 'wish', true);
@@ -826,6 +870,7 @@ function doWater(){
   if (Math.random() < 0.2) dropOrnament(null, 'water');
   markDirty(); renderAll(); renderPass();
   coinFly(document.getElementById('btn-water'));
+  sReward();
   toast('💧 Полил ёлку! +' + fmt(rew) + ' ' + PINE);
 }
 function doShake(){
@@ -839,6 +884,7 @@ function doShake(){
   if (Math.random() < 0.15) dropOrnament(null, 'shake');
   markDirty(); renderAll(); renderPass();
   coinFly(document.getElementById('btn-shake'));
+  sReward();
   toast('❄️ Снег стряхнут! +' + fmt(rew) + ' ' + PINE);
 }
 function doCollect(){
@@ -849,6 +895,7 @@ function doCollect(){
   state.weekly_pinecones += p;
   markDirty(); renderAll(); renderPass();
   coinFly(document.getElementById('btn-collect'));
+  sReward();
   toast('+' + fmt(p) + ' ' + PINE + ' — доход собран!');
 }
 function timeLeft(fromTs, cd){
@@ -922,8 +969,7 @@ async function loadTicker(){
   if (res.error || !res.data || !res.data.length) { track.textContent = 'Игрушки ещё не выбиты — будь первым! 🎄'; return; }
   var items = res.data.map(function(w){
     var pool = ORN_EMOJI[w.rarity] || ['🔴'];
-    var emoji = pool[0];
-    return '👤 ' + (w.player_name || 'Игрок') + ' выбил ' + emoji + ' ' + w.item_name;
+    return '👤 ' + (w.player_name || 'Игрок') + ' выбил ' + pool[0] + ' ' + w.item_name;
   });
   var line = items.join('   •   ') + '   •   ';
   track.textContent = line + line;
@@ -974,7 +1020,7 @@ async function loadInventory(){
   el.innerHTML = html;
 }
 
-// ===== Витрина: красивые карточки игрушек =====
+// ===== Витрина =====
 function renderShop(){
   var el = document.getElementById('prize-list');
   if (!el) return;
@@ -1007,14 +1053,13 @@ function buyPrize(rarity){
   renderShop();
 }
 
-// ===== AdsGram: rewarded-контроллер =====
+// ===== AdsGram =====
 var adController = null;
 (function initAds(){
   if (!window.AdsGram) return;
   try { adController = window.AdsGram.init({ blockId: REWARD_BLOCK, debug: false }); } catch(e){ console.warn('AdsGram reward init:', e); }
 })();
 
-// ===== Бонус за рекламу (раз в день) =====
 function adBonusKey(){ return 'zini_adbonus_' + playerId; }
 function adBonusTaken(){
   try {
@@ -1045,19 +1090,19 @@ function grantAdBonus(){
   state.pinecones += ab;
   state.weekly_pinecones += ab;
   markDirty(); renderAll(); renderPass();
-  confetti(30);
+  confetti(30); sReward();
   coinFly(document.getElementById('btn-ad-bonus'));
   toast('🎁 Бонус получен: +' + fmt(ab) + ' ' + PINE);
 }
 
-// ===== Задание спонсора: родной виджет AdsGram =====
+// ===== Задание спонсора =====
 function grantTaskReward(){
   var taskEl = document.querySelector('adsgram-task');
   var tr = Math.floor(TASK_REWARD * luckyMult() * ornamentMult());
   state.pinecones += tr;
   state.weekly_pinecones += tr;
   markDirty(); renderAll(); renderPass();
-  confetti(35);
+  confetti(35); sReward();
   coinFly(taskEl);
   toast('✅ Задание спонсора выполнено: +' + fmt(tr) + ' ' + PINE);
 }
@@ -1102,7 +1147,7 @@ setInterval(function(){
         caught = true;
         state.pinecones += val;
         state.weekly_pinecones += val;
-        markDirty(); renderAll(); haptic(); confetti(10); s.remove();
+        markDirty(); renderAll(); haptic(); confetti(10); sTap(); s.remove();
         toast('✨ Поймал золотую искру! +' + fmt(val) + ' ' + PINE);
       });
       setTimeout(function(){ if (s.parentNode) s.remove(); }, 9000);
@@ -1151,13 +1196,13 @@ function bossHit(){
     boss.chests = chestNow;
     var cval = 2000 * boss.num;
     state.pinecones += cval; state.weekly_pinecones += cval;
-    markDirty(); renderAll(); confetti(20);
+    markDirty(); renderAll(); confetti(20); sTap();
     toast('📦 Сундук открыт! +' + fmt(cval) + ' ' + PINE);
   }
   if (boss.dmg >= hp) {
     var win = 10000 * boss.num;
     state.pinecones += win; state.weekly_pinecones += win;
-    markDirty(); renderAll(); confetti(60);
+    markDirty(); renderAll(); confetti(60); sWin();
     dropOrnament('rare', 'boss', true);
     boss.num++; boss.dmg = 0; boss.chests = 0;
     toast('🏆 Босс повержен! +' + fmt(win) + ' ' + PINE + '! Следующий будет толще…');
@@ -1170,6 +1215,104 @@ function bossHit(){
   bossRender();
 }
 bossRender();
+
+// ===== Колесо удачи =====
+var WHEEL_SECTORS = [
+  { t:'pc',   v:200,   label:'200' },
+  { t:'pc',   v:500,   label:'500' },
+  { t:'pc',   v:1000,  label:'1 000' },
+  { t:'drop', r:'common', label:'игрушка' },
+  { t:'pc',   v:2500,  label:'2 500' },
+  { t:'pc',   v:5000,  label:'5 000' },
+  { t:'drop', r:'epic', label:'ЭПИК!' },
+  { t:'pc',   v:10000, label:'10 000' }
+];
+var WHEEL_COLORS = ['#3a4a7a','#232f55'];
+function wheelKey(){ return 'zini_wheel_' + playerId; }
+function wheelFreeUsed(){
+  try {
+    var raw = JSON.parse(localStorage.getItem(wheelKey()) || '{}');
+    return raw.day === new Date().toDateString();
+  } catch(e){ return false; }
+}
+function markWheelFree(){
+  try { localStorage.setItem(wheelKey(), JSON.stringify({ day: new Date().toDateString() })); } catch(e){}
+}
+var wheelRot = 0, wheelSpinning = false;
+(function buildWheel(){
+  var w = document.getElementById('wheel');
+  if (!w) return;
+  var stops = [];
+  for (var i = 0; i < 8; i++) {
+    stops.push(WHEEL_COLORS[i % 2] + ' ' + (i * 45) + 'deg ' + ((i + 1) * 45) + 'deg');
+  }
+  w.style.background = 'conic-gradient(' + stops.join(',') + ')';
+  WHEEL_SECTORS.forEach(function(s, i){
+    var a = i * 45 + 22.5;
+    var span = document.createElement('div');
+    span.className = 'wl';
+    span.textContent = s.label;
+    span.style.transform = 'rotate(' + a + 'deg) translate(-50%, -95px)';
+    span.style.transformOrigin = '0 0';
+    w.appendChild(span);
+  });
+})();
+function wheelUpdateStatus(){
+  var el = document.getElementById('wheel-status');
+  if (!el) return;
+  el.textContent = wheelFreeUsed()
+    ? 'Бесплатный спин уже был. Крути за рекламу — сколько хочешь!'
+    : 'Бесплатное вращение готово!';
+}
+function wheelSpinReward(sector){
+  if (sector.t === 'pc') {
+    var val = Math.floor(sector.v * luckyMult() * ornamentMult());
+    state.pinecones += val;
+    state.weekly_pinecones += val;
+    markDirty(); renderAll(); renderPass();
+    coinFly(document.getElementById('wheel'));
+    confetti(30); sReward();
+    toast('🎡 Колесо принесло +' + fmt(val) + ' ' + PINE + '!');
+  } else {
+    dropOrnament(sector.r, 'wheel', true);
+    confetti(40); sWin();
+    toast('🎡 Джекпот! Игрушка выпала с колеса!');
+  }
+}
+function wheelSpin(free){
+  if (wheelSpinning) return;
+  if (free && wheelFreeUsed()) { toast('Бесплатный спин уже был сегодня — крутись за рекламу 📺'); return; }
+  if (free) markWheelFree();
+  wheelSpinning = true;
+  var btn = document.getElementById('btn-wheel');
+  if (btn) btn.disabled = true;
+  var rot = wheelRot + 5 * 360 + Math.floor(Math.random() * 360);
+  wheelRot = rot;
+  var w = document.getElementById('wheel');
+  w.style.transform = 'rotate(' + rot + 'deg)';
+  sTap();
+  setTimeout(function(){
+    var angle = (360 - (rot % 360)) % 360;
+    var idx = Math.floor(angle / 45) % 8;
+    wheelSpinReward(WHEEL_SECTORS[idx]);
+    wheelSpinning = false;
+    wheelUpdateStatus();
+    if (btn) btn.disabled = false;
+  }, 4400);
+}
+document.getElementById('btn-wheel').addEventListener('click', function(){ wheelSpin(true); });
+document.getElementById('btn-wheel-ad').addEventListener('click', function(){
+  if (!adController) { wheelSpin(true); return; }
+  adController.show()
+    .then(function(result){
+      if (result && result.done === false) { toast('Досмотри рекламу до конца, чтобы крутить 🎡'); return; }
+      wheelSpin(false);
+    })
+    .catch(function(err){
+      console.warn('AdsGram:', err && err.description);
+      toast('Реклама пока недоступна — попробуй позже 🎡');
+    });
+});
 
 // ============================================================
 // НОЯБРЬСКИЙ ПРОПУСК
@@ -1230,7 +1373,7 @@ function renderPass(){
       '<div class="card" style="text-align:center;">' +
         '<div style="font-size:34px;">💠</div>' +
         '<div style="font-weight:800;font-size:16px;margin:8px 0;">' + PASS_SEASON_NAME + '</div>' +
-        '<div class="muted">Продажи откроются 16 ноября. Осталось: ' + daysToStart() + ' дн.<br>Не пропусти — с каждой неделей пропуск дорожает!</div>' +
+        '<div class="muted">Продажи уже скоро. Осталось: ' + daysToStart() + ' дн.<br>Не пропусти — с каждой неделей пропуск дорожает!</div>' +
       '</div>';
     return;
   }
@@ -1286,7 +1429,7 @@ function claimQuest(qid){
   }
   markDirty(); renderAll();
   if (q.reward.drop) dropOrnament(q.reward.drop, 'pass_quest', true);
-  if (q.reward.pinecones) toast('🏆 Задание выполнено! +' + fmt(q.reward.pinecones) + ' ' + PINE);
+  if (q.reward.pinecones) { toast('🏆 Задание выполнено! +' + fmt(q.reward.pinecones) + ' ' + PINE); sWin(); }
   renderPass();
 }
 function activatePass(){
@@ -1302,7 +1445,7 @@ function activatePass(){
   state.quest_claimed = {};
   try { localStorage.setItem('zini_claimed_' + playerId, JSON.stringify({})); } catch(e){}
   markDirty(); renderAll(); renderPass();
-  confetti(40);
+  confetti(40); sWin();
   toast('💠 Ноябрьский пропуск активирован до 30 ноября!');
   saveLocal();
 }
@@ -1355,9 +1498,9 @@ document.getElementById('tv-star').addEventListener('click', doStarWish);
 function dayAttempts(key){
   try {
     var raw = JSON.parse(localStorage.getItem(key) || '{}');
-    if (raw.day !== new Date().toDateString()) return 3;
-    return Math.max(0, 3 - (raw.used || 0));
-  } catch(e){ return 3; }
+    if (raw.day !== new Date().toDateString()) return 5;
+    return Math.max(0, 5 - (raw.used || 0));
+  } catch(e){ return 5; }
 }
 function useAttempt(key){
   var raw = {};
@@ -1370,21 +1513,24 @@ function haptic(){
   try { if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light'); } catch(e){}
 }
 function finishGame(opts){
-  var rew = Math.floor((opts.reward || 0) * luckyMult() * ornamentMult());
+  var rew = Math.max(0, Math.floor((opts.reward || 0) * luckyMult() * ornamentMult()));
   state.pinecones += rew;
   state.weekly_pinecones += rew;
   markDirty(); renderAll(); saveLocal();
   if (opts.drop) dropOrnament(null, opts.source);
-  else if (rew > 0) { coinFly(opts.btn); toast('+' + fmt(rew) + ' ' + PINE + ' — награда за игру!'); }
+  else if (rew > 0) { coinFly(opts.btn); sReward(); toast('+' + fmt(rew) + ' ' + PINE + ' — награда за игру!'); }
   renderPass();
 }
 
 // ============================================================
-// ИГРА 1: ПОЙМАЙ ПОДАРОК
+// ИГРА 1: ЗИМНИЙ СПРИНТ (догонялки-уклонялки)
+// Тапай по полю — лыжник бежит туда. Собирай подарки,
+// уворачивайся от снежных глыб. 3 столкновения — конец.
 // ============================================================
 var MG_KEY = 'zini_mini_' + playerId;
-var GIFT_EMOJI = ['🎁','🎀','🍬','🍭','🧸','⭐'];
-var mg = { active:false, score:0, misses:0, spawnT:0, timeout:0, pendReward:0, pendDrop:false };
+var SPR_OBST = ['🪨','🧊','🪵','❄️'];
+var SPR_GIFT = ['🎁','🍬','⭐','🍭'];
+var mg = { active:false, score:0, hits:0, playerX:50, spawnT:0, pendReward:0, pendDrop:false };
 var mgEl = {};
 
 function mgBuild(){
@@ -1394,18 +1540,19 @@ function mgBuild(){
   host.innerHTML =
     '<div class="card">' +
       '<div style="display:flex;justify-content:space-between;align-items:center;">' +
-        '<div><div class="muted">Попытки</div><div id="mg-attempts" style="font-size:20px;font-weight:800;color:var(--acc);">3</div></div>' +
-        '<button id="mg-start" class="btn" style="width:auto;padding:12px 20px;">▶️ Играть</button>' +
+        '<div><div class="muted">Попытки</div><div id="mg-attempts" style="font-size:20px;font-weight:800;color:var(--acc);">5</div></div>' +
+        '<button id="mg-start" class="btn" style="width:auto;padding:12px 20px;">▶️ Спускаться</button>' +
       '</div>' +
-      '<div class="muted" style="margin-top:10px;">Тапай по падающим подаркам. 3 промаха — конец.</div>' +
+      '<div class="muted" style="margin-top:10px;">Тапай по склону — лыжник побежит туда. Лови 🎁, уворачивайся от 🪨🧊🪵!</div>' +
     '</div>' +
     '<div id="mg-area" class="game-area">' +
       '<div id="mg-score" class="hud-r"></div>' +
       '<div id="mg-miss" class="hud-l"></div>' +
+      '<div id="spr-player">⛷️</div>' +
       '<div id="mg-overlay" class="overlay">' +
-        '<div class="game-avatar" id="mg-avatar">🎁</div>' +
-        '<div id="mg-title" style="font-weight:800;font-size:18px;margin-bottom:8px;">Поймай подарок</div>' +
-        '<div id="mg-sub" class="muted" style="margin-bottom:14px;">Нажми «Играть» и лови подарки</div>' +
+        '<div class="game-avatar" id="mg-avatar">⛷️</div>' +
+        '<div id="mg-title" style="font-weight:800;font-size:18px;margin-bottom:8px;">Зимний спринт</div>' +
+        '<div id="mg-sub" class="muted" style="margin-bottom:14px;">Тапай по склону и уворачивайся!</div>' +
         '<button id="mg-claim" class="btn" style="display:none;max-width:220px;">Забрать награду</button>' +
       '</div>' +
     '</div>';
@@ -1416,8 +1563,16 @@ function mgBuild(){
   mgEl.score = document.getElementById('mg-score');
   mgEl.miss = document.getElementById('mg-miss');
   mgEl.avatar = document.getElementById('mg-avatar');
+  mgEl.player = document.getElementById('spr-player');
   document.getElementById('mg-start').addEventListener('click', mgStart);
   document.getElementById('mg-claim').addEventListener('click', mgClaim);
+  mgEl.area.addEventListener('pointerdown', function(e){
+    if (!mg.active) return;
+    var r = mgEl.area.getBoundingClientRect();
+    var x = Math.min(88, Math.max(12, (e.clientX - r.left) / r.width * 100));
+    mg.playerX = x;
+    mgEl.player.style.left = x + '%';
+  });
 }
 function renderMg(){
   var el = document.getElementById('mg-attempts');
@@ -1432,73 +1587,84 @@ function mgOverlay(title, sub, showClaim, avatar){
 }
 function mgStart(){
   if (mg.active) return;
-  if (dayAttempts(MG_KEY) <= 0) { toast('Попытки на сегодня кончились — вернись завтра! 🎄'); return; }
+  if (dayAttempts(MG_KEY) <= 0) { toast('Попытки на сегодня кончились — вернись завтра! 🎿'); return; }
   useAttempt(MG_KEY); renderMg();
-  mg.active = true; mg.score = 0; mg.misses = 0;
+  mg.active = true; mg.score = 0; mg.hits = 0; mg.playerX = 50;
+  mgEl.player.style.left = '50%';
   mgEl.overlay.style.display = 'none';
   mgUpdateHud();
   mgSpawn();
 }
 function mgUpdateHud(){
-  mgEl.score.textContent = '🎯 ' + mg.score;
-  mgEl.miss.textContent = '💔 ' + mg.misses + '/3';
+  mgEl.score.textContent = '🎁 ' + mg.score;
+  mgEl.miss.textContent = '💔 ' + mg.hits + '/3';
 }
 function mgSpawn(){
   if (!mg.active) return;
+  var isGift = Math.random() < 0.3;
   var g = document.createElement('div');
   g.className = 'gift';
-  g.textContent = GIFT_EMOJI[Math.floor(Math.random() * GIFT_EMOJI.length)];
-  g.style.left = (5 + Math.random() * 80) + '%';
+  g.textContent = isGift
+    ? SPR_GIFT[Math.floor(Math.random() * SPR_GIFT.length)]
+    : SPR_OBST[Math.floor(Math.random() * SPR_OBST.length)];
+  var x = 5 + Math.random() * 84;
+  g.style.left = x + '%';
   g.style.top = '-40px';
-  var dur = Math.max(1800, 3200 - mg.score * 40);
+  var dur = Math.max(1400, 2400 - mg.score * 25);
   g.style.transition = 'transform ' + dur + 'ms linear';
   mgEl.area.appendChild(g);
   requestAnimationFrame(function(){ requestAnimationFrame(function(){
-    g.style.transform = 'translateY(' + (mgEl.area.offsetHeight + 50) + 'px)';
+    g.style.transform = 'translateY(' + (mgEl.area.offsetHeight + 60) + 'px)';
   }); });
-  g.addEventListener('pointerdown', function(e){
-    e.stopPropagation();
-    if (!mg.active || g.dataset.done) return;
-    g.dataset.done = '1';
-    mg.score++;
-    mgUpdateHud(); haptic();
-    g.remove();
-  });
-  mg.timeout = setTimeout(function(){
+  if (isGift) {
+    g.addEventListener('pointerdown', function(e){
+      e.stopPropagation();
+      if (!mg.active || g.dataset.done) return;
+      g.dataset.done = '1';
+      mg.score++;
+      mgUpdateHud(); haptic(); sTap();
+      g.remove();
+    });
+  }
+  setTimeout(function(){
     if (!g.parentNode || g.dataset.done) return;
     g.remove();
-    mg.misses++;
-    mgUpdateHud();
-    if (mg.misses >= 3) { mgEnd(); return; }
-    mgSpawn();
-  }, dur + 60);
-  mg.spawnT = setTimeout(mgSpawn, 750 + Math.random() * 500);
+    if (!isGift) {
+      var diff = Math.abs(parseFloat(g.style.left) - mg.playerX);
+      if (diff < 13) {
+        mg.hits++;
+        mgUpdateHud(); sFail(); haptic();
+        if (mg.hits >= 3) { mgEnd(); return; }
+      }
+    }
+  }, dur + 80);
+  mg.spawnT = setTimeout(mgSpawn, 550 + Math.random() * 400);
 }
 function mgEnd(){
   mg.active = false;
-  clearTimeout(mg.spawnT); clearTimeout(mg.timeout);
+  clearTimeout(mg.spawnT);
   mgEl.area.querySelectorAll('.gift').forEach(function(g){ g.remove(); });
-  var rew = 300 * mg.score + state.level * 100;
+  var rew = 250 * mg.score + state.level * 100;
   mg.pendReward = rew;
   mg.pendDrop = Math.random() < Math.min(0.5, 0.15 + mg.score * 0.02);
   bumpQuest('mini_score', mg.score);
-  mgOverlay('Игра окончена!', 'Очки: ' + mg.score + ' • Награда ждёт ниже', true, '🏆');
+  mgOverlay('Столкновение!', 'Подарков собрано: ' + mg.score + ' • Награда ждёт ниже', true, '🏆');
 }
 function mgClaim(){
-  finishGame({ reward: mg.pendReward || 0, drop: mg.pendDrop, source: 'mini_game', btn: document.getElementById('mg-claim') });
+  finishGame({ reward: mg.pendReward || 0, drop: mg.pendDrop, source: 'winter_sprint', btn: document.getElementById('mg-claim') });
   mg.pendReward = 0; mg.pendDrop = false;
-  mgOverlay('Поймай подарок', 'Нажми «Играть» и лови подарки', false, '🎁');
+  mgOverlay('Зимний спринт', 'Тапай по склону и уворачивайся!', false, '⛷️');
 }
 mgBuild();
-mgOverlay('Поймай подарок', 'Нажми «Играть» и лови подарки', false, '🎁');
+mgOverlay('Зимний спринт', 'Тапай по склону и уворачивайся!', false, '⛷️');
 renderMg();
 
 // ============================================================
-// ИГРА 2: СНЕЖНЫЙ ТИР
+// ИГРА 2: ЛОПНИ СНЕЖКИ (реакция)
+// 25 секунд: лопай ⛄ снежков, НЕ трогай 💣 бомбы.
 // ============================================================
 var ST_KEY = 'zini_tir_' + playerId;
-var ST_TARGETS = ['🎯','⛄','🔔'];
-var st = { active:false, score:0, timeLeft:30, tickT:0, spawnT:0, pendReward:0, pendDrop:false };
+var st = { active:false, score:0, timeLeft:25, tickT:0, spawnT:0, pendReward:0, pendDrop:false };
 var stEl = {};
 
 function stBuild(){
@@ -1508,18 +1674,18 @@ function stBuild(){
   host.innerHTML =
     '<div class="card">' +
       '<div style="display:flex;justify-content:space-between;align-items:center;">' +
-        '<div><div class="muted">Попытки</div><div id="st-attempts" style="font-size:20px;font-weight:800;color:var(--acc);">3</div></div>' +
+        '<div><div class="muted">Попытки</div><div id="st-attempts" style="font-size:20px;font-weight:800;color:var(--acc);">5</div></div>' +
         '<button id="st-start" class="btn" style="width:auto;padding:12px 20px;">▶️ Играть</button>' +
       '</div>' +
-      '<div class="muted" style="margin-top:10px;">30 секунд. Тапай по мишеням — каждое попадание это очко и шишки в конце.</div>' +
+      '<div class="muted" style="margin-top:10px;">25 секунд. Лопай ⛄ — плюс очко. Тронешь 💣 — минус три!</div>' +
     '</div>' +
     '<div id="st-area" class="game-area">' +
       '<div id="st-score" class="hud-r"></div>' +
       '<div id="st-time" class="hud-c"></div>' +
       '<div id="st-overlay" class="overlay">' +
-        '<div class="game-avatar" id="st-avatar">🎯</div>' +
-        '<div id="st-title" style="font-weight:800;font-size:18px;margin-bottom:8px;">Снежный тир</div>' +
-        '<div id="st-sub" class="muted" style="margin-bottom:14px;">Нажми «Играть» — у тебя 30 секунд</div>' +
+        '<div class="game-avatar" id="st-avatar">⛄</div>' +
+        '<div id="st-title" style="font-weight:800;font-size:18px;margin-bottom:8px;">Лопни снежки</div>' +
+        '<div id="st-sub" class="muted" style="margin-bottom:14px;">Нажми «Играть» — у тебя 25 секунд</div>' +
         '<button id="st-claim" class="btn" style="display:none;max-width:220px;">Забрать награду</button>' +
       '</div>' +
     '</div>';
@@ -1546,9 +1712,9 @@ function stOverlay(title, sub, showClaim, avatar){
 }
 function stStart(){
   if (st.active) return;
-  if (dayAttempts(ST_KEY) <= 0) { toast('Попытки на сегодня кончились — вернись завтра! 🎯'); return; }
+  if (dayAttempts(ST_KEY) <= 0) { toast('Попытки на сегодня кончились — вернись завтра! ⛄'); return; }
   useAttempt(ST_KEY); renderSt();
-  st.active = true; st.score = 0; st.timeLeft = 30;
+  st.active = true; st.score = 0; st.timeLeft = 25;
   stEl.overlay.style.display = 'none';
   stUpdateHud();
   stSpawn();
@@ -1557,47 +1723,57 @@ function stStart(){
     stEl.time.textContent = '⏱ ' + st.timeLeft;
     if (st.timeLeft <= 0) stEnd();
   }, 1000);
-  stEl.time.textContent = '⏱ 30';
+  stEl.time.textContent = '⏱ 25';
 }
 function stUpdateHud(){
-  stEl.score.textContent = '🎯 ' + st.score;
+  stEl.score.textContent = '⛄ ' + st.score;
 }
 function stSpawn(){
   if (!st.active) return;
+  var isBomb = Math.random() < 0.22;
   var t = document.createElement('div');
-  t.className = 'st-target';
-  t.textContent = ST_TARGETS[Math.floor(Math.random() * ST_TARGETS.length)];
-  t.style.left = (3 + Math.random() * 85) + '%';
-  t.style.top = (5 + Math.random() * 75) + '%';
+  t.className = 'st-target' + (isBomb ? ' st-bomb' : '');
+  t.textContent = isBomb ? '💣' : '⛄';
+  t.style.left = (3 + Math.random() * 82) + '%';
+  t.style.top = (5 + Math.random() * 72) + '%';
   stEl.area.appendChild(t);
+  var popped = false;
   t.addEventListener('pointerdown', function(e){
     e.stopPropagation();
-    if (!st.active || t.dataset.done) return;
-    t.dataset.done = '1';
-    st.score++;
-    stUpdateHud(); haptic();
+    if (!st.active || popped) return;
+    popped = true;
+    if (isBomb) {
+      st.score -= 3;
+      sFail();
+      mgEl && haptic();
+      toast('💣 Бомба! −3 очка');
+    } else {
+      st.score++;
+      haptic(); sTap();
+    }
+    stUpdateHud();
     t.remove();
   });
-  setTimeout(function(){ if (t.parentNode && !t.dataset.done) t.remove(); }, 1300 + Math.random() * 800);
-  st.spawnT = setTimeout(stSpawn, 500 + Math.random() * 500);
+  setTimeout(function(){ if (t.parentNode && !popped) t.remove(); }, 1100 + Math.random() * 600);
+  st.spawnT = setTimeout(stSpawn, 480 + Math.random() * 420);
 }
 function stEnd(){
   st.active = false;
   clearInterval(st.tickT); clearTimeout(st.spawnT);
   stEl.area.querySelectorAll('.st-target').forEach(function(t){ t.remove(); });
-  var rew = 250 * st.score + state.level * 80;
+  var rew = Math.max(0, st.score * 180 + state.level * 80);
   st.pendReward = rew;
-  st.pendDrop = Math.random() < Math.min(0.5, 0.15 + st.score * 0.02);
-  bumpQuest('tir_hits', st.score);
-  stOverlay('Время вышло!', 'Попаданий: ' + st.score + ' • Забери награду ниже', true, '🏆');
+  st.pendDrop = st.score > 8 && Math.random() < Math.min(0.5, 0.15 + st.score * 0.02);
+  bumpQuest('tir_hits', Math.max(0, st.score));
+  stOverlay('Время вышло!', 'Снежков: ' + st.score + ' • Награда ждёт ниже', true, '🏆');
 }
 function stClaim(){
-  finishGame({ reward: st.pendReward || 0, drop: st.pendDrop, source: 'snow_shooter', btn: document.getElementById('st-claim') });
+  finishGame({ reward: st.pendReward || 0, drop: st.pendDrop, source: 'snow_pop', btn: document.getElementById('st-claim') });
   st.pendReward = 0; st.pendDrop = false;
-  stOverlay('Снежный тир', 'Нажми «Играть» — у тебя 30 секунд', false, '🎯');
+  stOverlay('Лопни снежки', 'Нажми «Играть» — у тебя 25 секунд', false, '⛄');
 }
 stBuild();
-stOverlay('Снежный тир', 'Нажми «Играть» — у тебя 30 секунд', false, '🎯');
+stOverlay('Лопни снежки', 'Нажми «Играть» — у тебя 25 секунд', false, '⛄');
 renderSt();
 
 // ===== Старт =====
@@ -1608,6 +1784,7 @@ loadQuests();
 renderAll();
 renderPass();
 renderShop();
+wheelUpdateStatus();
 loadRemote();
 </script>
 </body>
