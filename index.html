@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZINI TOURNAMENT: Проверка оплаты</title>
+    <style>
+        :root { --primary: #ff4757; --bg: #1e1e2e; --card: #2f3542; --text: #ffffff; --gold: #f1c40f; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; justify-content: center; padding: 20px; margin: 0; }
+        .container { max-width: 500px; width: 100%; background: var(--card); padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); text-align: center; }
+        h1 { color: var(--gold); margin-bottom: 10px; }
+        p { line-height: 1.6; color: #ccc; }
+        .status-box { padding: 15px; border-radius: 10px; font-weight: bold; margin: 20px 0; background: rgba(255, 71, 87, 0.1); border: 1px solid rgba(255, 71, 87, 0.3); }
+        .btn { background: var(--primary); color: white; border: none; padding: 15px 25px; width: 100%; border-radius: 8px; font-size: 18px; cursor: pointer; margin-top: 10px; transition: transform 0.1s; }
+        .btn:active { transform: scale(0.98); }
+        .btn-disabled { background: #555; cursor: not-allowed; }
+        .question-block { display: none; }
+        .q-text { font-size: 20px; margin-bottom: 20px; color: white; }
+        .options { display: flex; flex-direction: column; gap: 12px; }
+        .opt-btn { background: #3d4250; color: white; text-align: left; padding: 14px; border-radius: 8px; border: none; cursor: pointer; }
+        .score { font-size: 24px; font-weight: bold; color: var(--gold); margin: 15px 0; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: none; background: #3d4250; color: white; box-sizing: border-box; }
+        textarea { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: none; background: #3d4250; color: white; resize: none; height: 80px; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>🏆 ZINI TOURNAMENT</h1>
+    
+    <!-- ЭКРАН 1: ГЛАВНОЕ МЕНЮ -->
+    <div id="screen-home">
+        <p>Турниры проходят 3 раза в день.</p>
+        <div class="status-box" id="status-display">Статус: Ожидание старта от организатора</div>
+        
+        <button class="btn" onclick="registerPlayer()">Хочу участвовать!</button>
+        <p id="reg-msg" style="margin-top:15px;"></p>
+        
+        <div style="margin-top:20px; padding:15px; background:rgba(0,0,0,0.2); border-radius:8px;">
+            <p style="color:var(--gold); font-weight:bold;">💰 Условия участия:</p>
+            <p>• Стоимость входа: <b>15 ₽</b></p>
+            <p>• Оплата: <b>СБП</b> (номер пришлёт организатор в ЛС)</p>
+            <p>• Награда: выдаётся вручную после турнира</p>
+            <p style="font-size:12px; color:#888;">⚠️ Не переводите деньги, пока не получите подтверждение от админа!</p>
+        </div>
+    </div>
+    <!-- ЭКРАН 2: РЕГИСТРАЦИЯ И ПОДТВЕРЖДЕНИЕ ОПЛАТЫ -->
+    <div id="screen-register" class="question-block">
+        <h3>Подтверждение участия</h3>
+        <p style="color:#ccc;">Чтобы мы знали, кто выиграл, укажи данные и прикрепи подтверждение оплаты.</p>
+        <input type="text" id="tg-nick" placeholder="Твой Telegram ник (без @)">
+        <input type="text" id="proof-link" placeholder="Ссылка на скрин оплаты (Google Диск / Imgur)">
+        <textarea id="extra-info" placeholder="Дополнительно (если нужно)"></textarea>
+        <button class="btn" onclick="confirmRegistration()">Подтвердить участие и начать</button>
+    </div>
+
+    <!-- ЭКРАН 3: ИГРА -->
+    <div id="screen-game" class="question-block">
+        <div class="score">Очки: <span id="score-val">0</span></div>
+        <div class="q-text" id="q-text"></div>
+        <div class="options" id="options-container"></div>
+        <button class="btn btn-disabled" style="margin-top:30px;" onclick="resetGame()">Выйти из турнира</button>
+    </div>
+
+    <!-- ЭКРАН 4: РЕЗУЛЬТАТ -->
+    <div id="screen-result" class="question-block">
+        <h2 style="color:var(--gold)">🎉 Турнир завершён!</h2>
+        <p>Твой счёт: <span id="final-score" style="font-size:28px; color:white;">0</span></p>
+        <p>Организатор проверит оплату и свяжется с тобой для выдачи приза.</p>
+        <button class="btn" onclick="location.reload()">В главное меню</button>
+    </div>
+</div>
+<script>
+    // ================= НАСТРОЙКИ =================
+    // Сюда можно вставить хоть 1000 вопросов — структура та же.
+    const QUESTIONS_ALL = [
+        ["Столица Франции?", ["Берлин", "Париж", "Рим", "Мадрид"], 1],
+        ["Сколько минут в полутора часах?", ["75", "90", "100", "60"], 1],
+        ["Самая длинная река в мире?", ["Амазонка", "Нил", "Янцзы", "Миссисипи"], 1],
+        ["Кто написал 'Мёртвые души'?", ["Пушкин", "Гоголь", "Толстой", "Достоевский"], 1],
+        ["Химический символ золота?", ["Ag", "Au", "Go", "Z"], 1],
+        ["Год полёта Гагарина?", ["1957", "1961", "1963", "1969"], 1],
+        ["Самое глубокое озеро в мире?", ["Танганьика", "Байкал", "Каспий", "Верхнее"], 1],
+        ["2 в 5-й степени?", ["16", "32", "64", "128"], 1],
+        ["Какой газ преобладает в атмосфере Земли?", ["Кислород", "Азот", "Углекислый", "Аргон"], 1],
+        ["Кто изобрёл телефон?", ["Белл", "Эдисон", "Тесла", "Маркони"], 0],
+        ["Столица Японии?", ["Пекин", "Токио", "Сеул", "Гонконг"], 1],
+        ["Сколько костей в теле взрослого человека?", ["206", "210", "220", "198"], 0],
+        ["Какая планета ближе всего к Солнцу?", ["Венера", "Меркурий", "Земля", "Марс"], 1],
+        ["Автор 'Гарри Поттера'?", ["Роулинг", "Кинг", "Толкин", "Мартин"], 0],
+        ["В каком году началась Вторая мировая война?", ["1939", "1941", "1937", "1945"], 0],
+        ["Какое животное самое быстрое на суше?", ["Гепард", "Лев", "Антилопа", "Тигр"], 0],
+        ["Столица Австралии?", ["Сидней", "Мельбурн", "Канберра", "Брисбен"], 2],
+        ["Как называется столица Италии?", ["Рим", "Милан", "Турин", "Неаполь"], 0],
+        ["Кто нарисовал 'Мону Лизу'?", ["Микеланджело", "Да Винчи", "Рафаэль", "Боттичелли"], 1],
+        ["Из чего состоит вода?", ["H2O", "CO2", "O2", "N2"], 0],
+        ["Какой океан самый большой?", ["Атлантический", "Тихий", "Индийский", "Северный Ледовитый"], 1],
+        ["Кто президент США в 2024 году?", ["Байден", "Трамп", "Обама", "Клинтон"], 0],
+        ["Столица Канады?", ["Торонто", "Оттава", "Монреаль", "Ванкувер"], 1],
+        ["Какая страна самая большая по площади?", ["Китай", "Россия", "США", "Канада"], 1],
+        ["Кто написал 'Войну и мир'?", ["Достоевский", "Чехов", "Толстой", "Тургенев"], 2],
+        ["Сколько дней в високосном году?", ["365", "366", "367", "364"], 1],
+        ["Какой элемент обозначается буквой 'Fe'?", ["Золото", "Железо", "Медь", "Серебро"], 1],
+        ["Столица Испании?", ["Мадрид", "Барселона", "Валенсия", "Севилья"], 0],
+        ["Кто открыл пенициллин?", ["Пастер", "Флеминг", "Кох", "Листер"], 1],
+        ["Какая гора самая высокая в мире?", ["Килиманджаро", "Эльбрус", "Эверест", "Мак-Кинли"], 2]
+    ];
+
+    const QUESTIONS_PER_TOURNAMENT = 25;
+    let questionsSet = [];
+    let currentScore = 0;
+    let currentQIndex = 0;
+    let isPlaying = false;
+    let hasRegistered = false;
+    // Перемешиваем вопросы, чтобы каждый день были разные
+    function initQuestions() {
+        const shuffled = QUESTIONS_ALL.slice();
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        questionsSet = shuffled.slice(0, QUESTIONS_PER_TOURNAMENT);
+    }
+
+    function showScreen(screenId) {
+        document.querySelectorAll('.question-block').forEach(el => el.style.display = 'none');
+        document.getElementById('screen-home').style.display = 'none';
+        document.getElementById(screenId).style.display = 'block';
+    }
+
+    function registerPlayer() {
+        showScreen('screen-register');
+    }
+
+    async function confirmRegistration() {
+        const nick = document.getElementById('tg-nick').value.trim();
+        const proof = document.getElementById('proof-link').value.trim();
+
+        if (!nick || !proof) {
+            alert('Пожалуйста, заполните ник и ссылку на скрин оплаты.');
+            return;
+        }
+
+        hasRegistered = true;
+        initQuestions();
+        currentScore = 0;
+        currentQIndex = 0;
+        showScreen('screen-game');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        if (currentQIndex >= questionsSet.length) {
+            finishGame();
+            return;
+        }
+
+        const qData = questionsSet[currentQIndex];
+        document.getElementById('q-text').innerText = qData[0];
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = '';
+
+        qData[1].forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'opt-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(idx);
+            optionsContainer.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selectedIdx) {
+        const correctIdx = questionsSet[currentQIndex][2];
+        if (selectedIdx === correctIdx) {
+            currentScore += 10;
+            document.getElementById('score-val').innerText = currentScore;
+        }
+        currentQIndex++;
+        loadQuestion();
+    }
+
+    function finishGame() {
+        isPlaying = false;
+        document.getElementById('final-score').innerText = currentScore;
+        showScreen('screen-result');
+
+        // ОТПРАВКА В GOOGLE ТАБЛИЦУ (твоя админка)
+        sendToAdmin(currentScore);
+    }
+
+    function resetGame() {
+        location.reload();
+    }
+    // Отправка результата админу через Telegram (без таблиц)
+    function sendToAdmin(score) {
+        const nick = document.getElementById('tg-nick').value;
+        const date = new Date().toLocaleString('ru-RU');
+        const text = encodeURIComponent(
+            `🎮 РЕЗУЛЬТАТ ТУРНИРА\n` +
+            `Ник: ${nick}\n` +
+            `Счёт: ${score} очков\n` +
+            `Дата: ${date}`
+        );
+        // Показываем кнопку-ссылку в окне результата
+        const container = document.getElementById('screen-result');
+        const btn = document.createElement('a');
+        btn.className = 'btn';
+        btn.href = `https://t.me/zini2l?text=${text}`;
+        btn.target = '_blank';
+        btn.style.display = 'block';
+        btn.style.textDecoration = 'none';
+        btn.style.marginTop = '10px';
+        btn.innerText = '📤 Отправить результат админу';
+        container.insertBefore(btn, container.lastElementChild);
+    }
