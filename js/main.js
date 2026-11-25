@@ -25,8 +25,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function checkBalance() {
-        balance.innerHTML = `Баланс: ${userBalance} звёзд`;
-    }
-
-    checkBalance();
-});
+        balance.innerHTML = `Баланс: ${userBalance}
