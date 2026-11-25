@@ -18,4 +18,25 @@ h1 {
     text-align: center;
 }
 
-button {
+.cases button {
+    padding: 10px 20px;
+    margin: 5px;
+    background: #4fc3f7;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.cases button:hover {
+    background: #3b99f3;
+}
+
+#case-result {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+#balance {
+    margin-top: 10px;
+}
