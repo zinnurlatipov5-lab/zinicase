@@ -9,8 +9,11 @@
 <body>
     <div id="app">
         <h1>Откройте свой подарок!</h1>
-        <button onclick="openFreeCase()">Открыть бесплатный кейс</button>
-        <button onclick="buyCase()">Купить кейс (10 звёзд)</button>
+        <div class="cases">
+            <button onclick="openCase('common')">Обычный (10 звёзд)</button>
+            <button onclick="openCase('rare')">Редкий (20 звёзд)</button>
+            <button onclick="openCase('legendary')">Легендарный (50 звёзд)</button>
+        </div>
         <div id="case-result"></div>
         <div id="balance">Баланс: 0 звёзд</div>
         <button onclick="inviteFriends()">Пригласить друзей</button>
