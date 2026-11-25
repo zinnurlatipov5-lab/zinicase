@@ -8,11 +8,14 @@
 </head>
 <body>
     <div id="app">
-        <!-- Элементы интерфейса -->
-        <button onclick="openCase()">Открыть бесплатный кейс</button>
-        <div id="case-result"></div>
+        <h1>Откройте свой подарок!</h1>
+        <button onclick="openFreeCase()">Открыть бесплатный кейс</button>
         <button onclick="buyCase()">Купить кейс (10 звёзд)</button>
+        <div id="case-result"></div>
+        <div id="balance">Баланс: 0 звёзд</div>
+        <button onclick="inviteFriends()">Пригласить друзей</button>
     </div>
     <script src="js/main.js"></script>
+    <script src="js/ykassa.js"></script>
 </body>
 </html>
