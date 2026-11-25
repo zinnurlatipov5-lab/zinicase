@@ -21,12 +21,24 @@
   .balance-chip {
     margin-top:16px;
   }
+  .btn {
+    padding: 12px 24px;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #4f8cff, #7cc4ff);
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(79,140,255,.3);
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
 <div class="main-screen">
   <div class="logo">🎁 Зимний подарок</div>
-  <div class="balance-chip" onclick="go('cases')">⭐ <span id="balance">0</span></div>
+  <div class="balance-chip">⭐ <span id="balance">0</span></div>
+  <div class="btn" onclick="goToCases()">Открыть кейсы →</div>
+  <div class="btn" onclick="showWithdraw()">Вывести средства</div>
 </div>
 <div class="cases-screen" style="display:none;">
   <div class="banner">
@@ -58,4 +70,3 @@
     <button class="btn green" onclick="go('cases')">Открыть ещё</button>
     <button class="btn" onclick="go('inventory')">В инвентарь</button>
   </div>
-</div>
