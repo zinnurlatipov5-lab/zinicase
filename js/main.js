@@ -1,39 +1,39 @@
 document.addEventListener('DOMContentLoaded', () => {
     const caseResult = document.getElementById('case-result');
+    const balance = document.getElementById('balance');
 
-    // Функция открытия бесплатного кейса
-    async function openCase() {
-        // Логика приглашения друзей (можно добавить через API)
-        if (canOpenFreeCase()) {
+    let userBalance = 0;
+
+    async function openFreeCase() {
+        if (userBalance >= 0) {
             const prize = getRandomPrize();
             caseResult.innerHTML = `Вы открыли: ${prize}`;
-            // Здесь можно добавить логику приглашения друзей
+            userBalance--; // Уменьшаем баланс после открытия
+            balance.innerHTML = `Баланс: ${userBalance} звёзд`;
         } else {
-            alert('Пригласите 3 друзей, чтобы открыть бесплатный кейс!');
+            alert('Необходимо пригласить 3 друзей для бесплатного кейса!');
         }
     }
 
-    // Функция покупки кейса
     function buyCase() {
-        // Здесь логика покупки через ЮKassa
-        // После успешной оплаты вызываем функцию получения приза
-        getPaidPrize();
+        if (confirm('Купить кейс за 10 звёзд?')) {
+            userBalance -= 10;
+            balance.innerHTML = `Баланс: ${userBalance} звёзд`;
+            getPaidPrize();
+        }
     }
 
-    // Функция получения случайного приза
-    function getRandomPrize() {
-        return ['Обычный подарок', 'Редкий подарок', 'Эксклюзивный подарок'][Math.floor(Math.random() * 3)];
-    }
-
-    // Проверка условий для бесплатного кейса
-    function canOpenFreeCase() {
-        // Здесь можно добавить проверку количества приглашённых друзей
-        return true; // Пример проверки
-    }
-
-    // Функция получения приза после оплаты
     function getPaidPrize() {
-        // Здесь можно добавить логику получения приза после оплаты
-        alert('Вы получили приз после оплаты!');
+        const prize = ['Обычный подарок', 'Редкий подарок', 'Эксклюзивный подарок'][Math.floor(Math.random() * 3)];
+        caseResult.innerHTML = `Вы получили: ${prize}`;
     }
-});
+
+    function inviteFriends() {
+        alert('Пригласите 3 друзей и получите шанс на бесплатный кейс!');
+    }
+
+    function checkBalance() {
+        balance.innerHTML = `Баланс: ${userBalance} звёзд`;
+    }
+
+    checkBalance();
