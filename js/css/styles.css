@@ -12,7 +12,10 @@ body {
     padding: 20px;
     border: 1px solid #ddd;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-width: 375px; /* Ширина для мобильных устройств */
+    max-width: 375px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 h1 {
