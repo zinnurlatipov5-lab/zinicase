@@ -1,23 +1,441 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Зимний подарок</title>
-    <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Зимний подарок — Кейсы</title>
+  <!-- Подключаем SDK Telegram, чтобы игра работала внутри Telegram Mini App -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  
+  <style>
+    /* ================= СТИЛИ (CSS) ================= */
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    body {
+      font-family:-apple-system,'Segoe UI',Roboto,sans-serif;
+      background:linear-gradient(180deg,#0b1026 0%,#12204d 50%,#1a2f66 100%);
+      color:#eaf2ff; min-height:100vh; overflow-x:hidden;
+    }
+    .snow { position:fixed; top:-10px; border-radius:50%; background:#fff; opacity:.7; pointer-events:none; z-index:0; }
+    .wrap { max-width:480px; margin:0 auto; padding:14px 14px 90px; position:relative; z-index:1; }
+
+    header {
+      display:flex; align-items:center; justify-content:space-between;
+      background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12);
+      border-radius:16px; padding:12px 14px; margin-bottom:14px; backdrop-filter:blur(6px);
+    }
+    header .logo { font-size:18px; font-weight:700; }
+    header .logo span { color:#7cc4ff; }
+    .balance-chip {
+      background:linear-gradient(135deg,#ffd76e,#ff9d3c); color:#3a2000;
+      font-weight:700; border-radius:20px; padding:8px 14px; font-size:14px;
+      display:flex; align-items:center; gap:6px; cursor:pointer;
+    }
+
+    .tabs { display:flex; gap:6px; margin-bottom:14px; }
+    .tabs button {
+      flex:1; padding:10px 4px; border:none; border-radius:12px; font-size:13px; font-weight:600;
+      background:rgba(255,255,255,.08); color:#cfe0ff; cursor:pointer; transition:.2s;
+    }
+    .tabs button.active { background:linear-gradient(135deg,#4f8cff,#7cc4ff); color:#fff; }
+
+    .page { display:none; } .page.active { display:block; }
+
+    .cat-title { margin:16px 0 10px; font-size:15px; font-weight:700; color:#9fc3ff; }
+    .cases-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+    .case-card {
+      background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
+      border-radius:16px; padding:14px 10px; text-align:center; cursor:pointer; transition:.2s;
+    }
+    .case-card:active { transform:scale(.96); }
+    .case-card .emoji { font-size:34px; }
+    .case-card .name { font-size:13px; font-weight:600; margin:8px 0 4px; }
+    .case-card .price { font-size:12px; color:#ffd76e; font-weight:700; }
+    .case-card.free .price { color:#7dff9e; }
+
+    .roulette-wrap {
+      display:none; position:fixed; inset:0; z-index:50;
+      background:rgba(5,8,25,.92); backdrop-filter:blur(8px);
+      flex-direction:column; align-items:center; justify-content:center; padding:20px;
+    }
+    .roulette-wrap.open { display:flex; }
+    .rl-title { font-size:18px; font-weight:700; margin-bottom:18px; }
+    .rl-window {
+      width:100%; max-width:420px; height:110px; overflow:hidden; position:relative;
+      border-radius:14px; border:2px solid rgba(255,255,255,.25);
+      background:rgba(255,255,255,.05);
+    }
+    .rl-window::before,.rl-window::after {
+      content:''; position:absolute; top:0; bottom:0; width:40px; z-index:2;
+    }
+    .rl-window::before { left:0; background:linear-gradient(90deg,rgba(11,16,38,1),transparent); }
+    .rl-window::after { right:0; background:linear-gradient(-90deg,rgba(11,16,38,1),transparent); }
+    .rl-line {
+      position:absolute; left:50%; top:0; bottom:0; width:3px; margin-left:-1.5px;
+      background:#ffd76e; z-index:3; border-radius:2px; box-shadow:0 0 12px #ffd76e;
+    }
+    .rl-track { display:flex; align-items:center; height:100%; will-change:transform; }
+    .rl-item {
+      flex:0 0 84px; height:90px; margin:0 4px; border-radius:12px;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+      font-size:32px; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15);
+    }
+    .rl-result { display:none; margin-top:22px; text-align:center; }
+    .rl-result.show { display:block; }
+    .rl-result .big-emoji { font-size:64px; animation:pop .5s ease; }
+    @keyframes pop { 0%{transform:scale(0)} 70%{transform:scale(1.25)} 100%{transform:scale(1)} }
+    .rl-result .r-name { font-size:18px; font-weight:700; margin-top:8px; }
+    .rl-result .r-rare { font-size:12px; margin-top:4px; }
+    .rl-close {
+      margin-top:24px; padding:14px 40px; border:none; border-radius:14px; font-size:15px; font-weight:700;
+      background:linear-gradient(135deg,#4f8cff,#7cc4ff); color:#fff; cursor:pointer;
+    }
+
+    .panel {
+      background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
+      border-radius:16px; padding:16px; margin-bottom:12px;
+    }
+    .panel h3 { font-size:15px; margin-bottom:8px; }
+    .panel p { font-size:13px; color:#cfe0ff; line-height:1.5; }
+    .btn {
+      display:block; width:100%; padding:14px; border:none; border-radius:14px;
+      font-size:15px; font-weight:700; cursor:pointer; margin-top:12px; transition:.2s;
+      background:linear-gradient(135deg,#4f8cff,#7cc4ff); color:#fff;
+    }
+    .btn:active { transform:scale(.97); }
+    .btn.green { background:linear-gradient(135deg,#2fbf71,#7dff9e); color:#04310f; }
+    .btn.gold { background:linear-gradient(135deg,#ffd76e,#ff9d3c); color:#3a2000; }
+    .btn.ghost { background:rgba(255,255,255,.1); color:#cfe0ff; }
+    .btn:disabled { opacity:.45; }
+
+    .dep-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; }
+    .dep-grid button {
+      padding:14px 4px; border-radius:12px; border:1px solid rgba(255,255,255,.2);
+      background:rgba(255,255,255,.08); color:#ffd76e; font-weight:700; font-size:14px; cursor:pointer;
+    }
+    .dep-grid button:active { background:rgba(255,255,255,.2); }
+
+    .inv-empty { text-align:center; color:#8fa8d8; font-size:13px; padding:30px 10px; }
+    .inv-item {
+      display:flex; align-items:center; gap:12px; padding:12px;
+      background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
+      border-radius:14px; margin-bottom:8px;
+    }
+    .inv-item .emoji { font-size:30px; }
+    .inv-item .info { flex:1; }
+    .inv-item .info b { font-size:14px; display:block; }
+    .inv-item .info span { font-size:11px; color:#9fc3ff; }
+
+    #toast {
+      position:fixed; left:50%; bottom:110px; transform:translateX(-50%) translateY(20px);
+      background:#1e2c5c; border:1px solid rgba(255,255,255,.25); color:#fff;
+      padding:12px 20px; border-radius:14px; font-size:13px; opacity:0; transition:.3s; z-index:99;
+      max-width:85%; text-align:center;
+    }
+    #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+    .ref-link {
+      margin-top:10px; padding:10px; border-radius:10px; background:rgba(0,0,0,.3);
+      font-size:12px; color:#7cc4ff; word-break:break-all;
+    }
+  </style>
 </head>
 <body>
-    <div id="app">
-        <h1>Откройте свой подарок!</h1>
-        <div class="cases">
-            <button onclick="openCase('common')">Обычный (10 звёзд)</button>
-            <button onclick="openCase('rare')">Редкий (20 звёзд)</button>
-            <button onclick="openCase('legendary')">Легендарный (50 звёзд)</button>
-        </div>
-        <div id="case-result"></div>
-        <div id="balance">Баланс: 0 звёзд</div>
-        <button onclick="inviteFriends()">Пригласить друзей</button>
+  <!-- Основной интерфейс -->
+  <div class="wrap">
+    <header>
+      <div class="logo">🎁 Зимний<span>Подарок</span></div>
+      <div class="balance-chip" onclick="go('deposit')">⭐ <span id="balance">0</span></div>
+    </header>
+
+    <div class="tabs">
+      <button class="active" onclick="go('cases')">📦 Кейсы</button>
+      <button onclick="go('inventory')">🎒 Инвентарь</button>
+      <button onclick="go('friends')">👥 Друзья</button>
+      <button onclick="go('deposit')">💳 Пополнить</button>
     </div>
-    <script src="js/main.js"></script>
-</body>
-</html>
+
+    <div class="page active" id="page-cases"></div>
+
+    <div class="page" id="page-inventory">
+      <div class="panel"><h3>Ваши подарки</h3><p>Здесь хранятся все выпавшие подарки. Их можно вывести в Telegram-аккаунт.</p></div>
+      <div id="inv-list"></div>
+    </div>
+
+    <div class="page" id="page-friends">
+      <div class="panel">
+        <h3>👥 Пригласите друзей</h3>
+        <p>Пригласите <b>3 друзей</b> — и вы сможете забрать подарок из бесплатного кейса. За каждого друга также даём <b>5 звёзд</b>.</p>
+        <div class="ref-link" id="ref-link"></div>
+        <button class="btn green" onclick="shareInvite()">📨 Пригласить друзей</button>
+      </div>
+      <div class="panel">
+        <h3>Прогресс</h3>
+        <p id="ref-progress"></p>
+      </div>
+    </div>
+
+    <div class="page" id="page-deposit">
+      <div class="panel">
+        <h3>💳 Пополнение</h3>
+        <p>При пополнении от <b>10 звёзд</b> — бонус <b>+10% к балансу</b> в подарок! Оплата через ЮKassa (карта, СБП, ЮMoney).</p>
+        <div class="dep-grid" id="dep-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Окно рулетки (анимация открытия кейса) -->
+  <div class="roulette-wrap" id="roulette">
+    <div class="rl-title" id="rl-title">Открываем кейс...</div>
+    <div class="rl-window"><div class="rl-track" id="rl-track"></div><div class="rl-line"></div></div>
+    <div class="rl-result" id="rl-result">
+      <div class="big-emoji" id="r-emoji">🎁</div>
+      <div class="r-name" id="r-name"></div>
+      <div class="r-rare" id="r-rare"></div>
+      <div id="r-extra"></div>
+    </div>
+    <button class="rl-close" id="rl-close" onclick="closeRoulette()">Забрать</button>
+  </div>
+
+  <div id="toast"></div>
+
+  <script>
+    /* ================= НАСТРОЙКИ ================= */
+    const BOT_USERNAME = 'YourBotName'; // ЗАМЕНИТЬ: имя вашего бота без @
+
+    /* ================= ДАННЫЕ (50 КЕЙСОВ) ================= */
+    const RARITIES = [
+      {key:'common',    name:'Обычный',      color:'#cfe0ff', chance:60},
+      {key:'rare',      name:'Редкий',       color:'#7cc4ff', chance:25},
+      {key:'epic',      name:'Эпический',    color:'#c88fff', chance:11},
+      {key:'legendary', name:'Легендарный',  color:'#ffd76e', chance:3.5},
+      {key:'mythic',    name:'Мифический',   color:'#ff7ea0', chance:0.5},
+    ];
+    const PRIZES_BY_RARITY = {
+      common:    [['❄️','Снежинка',25],['🧣','Тёплый шарф',40],['🕯️','Свечка',50],['🧦','Носочки',60],['🍬','Конфеты',30],['🎀','Бантик',35],['🔔','Колокольчик',45],['🧤','Варежки',55],['🥶','Ледышка',20],['📮','Открытка',70]],
+      rare:      [['⛄','Снеговик',150],['��Сани',220],['🧸','Медвежонок',280],['🎄','Мини-ёлка',200],['🎁','Подарочек',180],['🧦','Подарочные носки',160],['📱','Чехол',350],['🎧','Наушнички',400],['🍫','Шоколадница',140],['🥂','Гирлянда',190]],
+      epic:      [['🌙','Лунный шар',700],['🔮','Хрустальный шар',900],['⛸️','Коньки',850],['🕯️','Аромасвечи',750],['🧊','Ледяной трон',1200],['🦌','Олень',1000],['🎮','Геймпад',1100],['⌚','Часы',1300],['🎪','Новогодний шатёр',950],['🧊','Ледяной дракон',1400]],
+      legendary: [['👑','Корона Зимы',3000],['💎','Алмазная снежинка',4000],['🚀','Ракета',5000],['🛡️','Ледяной щит',3500],['🐉','Дракон-хранитель',6000],['🏆','Кубок',4500],['🗡️','Клинок Мороза',3800],['🏰','Ледяной замок',5500],['🌟','Звезда Вечности',7000],['🦅','Орёл Бури',4800]],
+      mythic:    [['🌌','Галактика',15000],['🔮','Артефакт Судьбы',20000],['🐉','Небесный дракон',25000],['❄️','Вечная Зима',30000],['⚡','Гром Севера',22000],['👑','Императорский Трон',40000],['🪐','Планета-бриллиант',28000],['🗡️','Меч Богов',26000],['🦄','Единорог',18000],['💫','Комета',21000]],
+    };
+
+    const CATEGORIES = [
+      {id:'free',  name:'🎁 Бесплатные',  emoji:'❄️', free:true},
+      {id:'winter',name:'🎄 Новогодние',  emoji:'🎄'},
+      {id:'rare',  name:'💎 Редкие',      emoji:'💎'},
+      {id:'legend',name:'👑 Легендарные', emoji:'👑'},
+      {id:'mythic',name:'🌌 Мифические',  emoji:'🌌'},
+    ];
+
+    const CASES = [];
+    (function buildCases(){
+      const prices = {winter:[15,20,25,30,35,40,45,50,60,75], rare:[100,120,150,180,220,260,300,350,420,500],
+                      legend:[1000,1200,1500,1800,2200,2700,3200,4000,5000,6500], mythic:[10000,12000,15000,18000,22000,27000,34000,42000,55000,75000]};
+      const namesWinter = ['Снежный','Ёлочный','Мандариновый','Свечный','Варежковый','Гирляндный','Снеговик','Бубенцовый','Шарфовый','Подарочный'];
+      const namesRare   = ['Кристальный','Ледниковый','Тайный','Фрост','Северный','Хрустальный','Морозный','Ночной','Туманный','Гранитный'];
+      const namesLegend = ['Королевский','Зимний Трон','Вечная мерзлота','Драконий','Северного Ветра','Алмазный','Звёздный','Корона','Легенда','Полярный'];
+      const namesMythic = ['Галактический','Судьбы','Небесный','Вечный','Громовой','Императорский','Планетарный','Божественный','Единорожий','Кометный'];
+      const nameSets = {winter:namesWinter, rare:namesRare, legend:namesLegend, mythic:namesMythic};
+      const emos = {winter:['🎄','🍬','🕯️','🧣','⛄','🛷','🔔','🎀','🧸','🎁'],
+                    rare:['❄️','💎','🌫️','🧊','🌠','🔵','⚡','🌑','🪨','🔷'],
+                    legend:['👑','🏰','🐉','🏆','⚔️','💎','⭐','🛡️','🦅','🌟'],
+                    mythic:['🌌','🔮','🐲','💫','⚡','👑','🪐','🗡️','🦄','☄️']};
+
+      // Бесплатный кейс — 1 шт.
+      CASES.push({id:0, cat:'free', name:'Бесплатный кейс', emoji:'🎁', price:0, free:true,
+        pool:[['❄️','Снежинка',40],['🧣','Тёплый шарф',30],['🍬','Конфеты',20],['🧸','Медвежонок',7],['💎','Кристалл',2.5],['👑','Корона Зимы',0.5]]});
+
+      function pickRandom(arr,n){ const c=[...arr], out=[]; for(let i=0;i<n;i++) out.push(c.splice(Math.floor(Math.random()*c.length),1)[0]); return out; }
+
+      for (const cat of ['winter','rare','legend','mythic']) {
+        for (let i=0;i<10;i++) {
+          const pool = [];
+          pool.push(...pickRandom(PRIZES_BY_RARITY.common, 3));
+          pool.push(...pickRandom(PRIZES_BY_RARITY.rare, 3));
+          if (cat!=='winter') pool.push(...pickRandom(PRIZES_BY_RARITY.epic, 2));
+          if (cat==='legend'||cat==='mythic') pool.push(...pickRandom(PRIZES_BY_RARITY.legendary, 2));
+          if (cat==='mythic') pool.push(...pickRandom(PRIZES_BY_RARITY.mythic, 2));
+          CASES.push({id:CASES.length, cat, name: nameSets[cat][i]+' кейс',
+                      emoji: emos[cat][i], price: prices[cat][i], pool});
+        }
+      }
+    })();
+
+    /* ================= СОСТОЯНИЕ ================= */
+    let S = JSON.parse(localStorage.getItem('zp_state')||'null') || {balance:0, invites:0, freeUsed:'', inventory:[], spent:0};
+    function save(){ localStorage.setItem('zp_state', JSON.stringify(S)); }
+
+    /* ================= TELEGRAM ================= */
+    const tg = window.Telegram?.WebApp;
+    if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor('#0b1026'); }
+    const USER_ID = tg?.initDataUnsafe?.user?.id || 0;
+    const REF_URL = `https://t.me/${BOT_USERNAME}?start=ref_${USER_ID||'guest'}`;
+
+    /* ================= UI ================= */
+    function toast(msg){
+      const t = document.getElementById('toast');
+      t.textContent = msg; t.classList.add('show');
+      clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 2600);
+    }
+    function go(page){
+      const map = {cases:'Кейсы', inventory:'Инвентарь', friends:'Друзья', deposit:'Пополнить'};
+      document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active', b.textContent.includes(map[page])));
+      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+      document.getElementById('page-'+page).classList.add('active');
+      if (page==='inventory') renderInventory();
+      if (page==='friends') renderFriends();
+      if (page==='deposit') renderDeposit();
+      updateBalance();
+    }
+    function updateBalance(){ document.getElementById('balance').textContent = S.balance; }
+
+    function renderCases(){
+      const host = document.getElementById('page-cases');
+      let html = '';
+      for (const cat of CATEGORIES) {
+        html += `<div class="cat-title">${cat.name}</div><div class="cases-grid">`;
+        CASES.filter(c=>c.cat===cat.id).forEach(c=>{
+          html += `<div class="case-card ${c.free?'free':''}" onclick="openCase(${c.id})">
+            <div class="emoji">${c.emoji}</div>
+            <div class="name">${c.name}</div>
+            <div class="price">${c.free ? (todayFreeUsed() ? 'Завтра' : 'Бесплатно') : c.price+' ⭐'}</div>
+          </div>`;
+        });
+        html += '</div>';
+      }
+      host.innerHTML = html;
+    }
+    function todayFreeUsed(){ return S.freeUsed === new Date().toDateString(); }
+
+    function pickPrize(pool){
+      const total = pool.reduce((s,p)=>s+p[2],0);
+      let r = Math.random()*total;
+      for (const p of pool){ r -= p[2]; if (r<=0) return p; }
+      return pool[pool.length-1];
+    }
+
+    /* ===== РУЛЕТКА ===== */
+    function openCase(id){
+      const c = CASES[id];
+      if (c.free) {
+        if (todayFreeUsed()) return toast('Бесплатный кейс уже открыт. Приходите завтра! ⏰');
+        if (S.invites < 3) return toast(`Чтобы забрать подарок, пригласите 3 друзей (осталось ${3-S.invites}) 👥`);
+      } else if (S.balance < c.price) return toast('Недостаточно звёзд. Пополните баланс 💳');
+      if (!c.free) S.balance -= c.price;
+      else S.freeUsed = new Date().toDateString();
+      save(); updateBalance(); renderCases();
+      spin(c);
+    }
+
+    function spin(c){
+      const winner = pickPrize(c.pool);
+      const track = document.getElementById('rl-track');
+      const wrap = document.getElementById('roulette');
+      document.getElementById('rl-result').classList.remove('show');
+      document.getElementById('rl-title').textContent = c.name;
+      wrap.classList.add('open');
+
+      const items = [];
+      for (let i=0;i<45;i++) items.push(c.pool[Math.floor(Math.random()*c.pool.length)]);
+      items[40] = winner;
+      track.innerHTML = items.map(p=>`<div class="rl-item" style="${rarityStyle(p)}"><span>${p[0]}</span><small>${p[1]}</small></div>`).join('');
+      track.style.transition = 'none';
+      track.style.transform = 'translateX(0)';
+
+      const ITEM_W = 92;
+      const win = document.querySelector('.rl-window').clientWidth;
+      const offset = 40*ITEM_W + 42 - win/2 + (Math.random()*20-10);
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{
+        track.style.transition = 'transform 4.2s cubic-bezier(.08,.75,.05,1)';
+        track.style.transform = `translateX(-${offset}px)`;
+      }));
+
+      setTimeout(()=>{
+        document.getElementById('r-emoji').textContent = winner[0];
+        document.getElementById('r-name').textContent = winner[1];
+        const rar = rarityOf(winner);
+        document.getElementById('r-rare').textContent = rar.name;
+        document.getElementById('r-rare').style.color = rar.color;
+        document.getElementById('r-extra').innerHTML = c.free ? '<div style="font-size:12px;color:#7dff9e;margin-top:6px">Условие (3 друга) выполнено ✓</div>' : '';
+        document.getElementById('rl-result').classList.add('show');
+        S.inventory.push({emoji:winner[0], name:winner[1], rarity:rar.key, date:Date.now()});
+        save();
+      }, 4400);
+    }
+    function rarityOf(prize){
+      for (const [key,list] of Object.entries(PRIZES_BY_RARITY))
+        if (list.some(p=>p[0]===prize[0]&&p[1]===prize[1])) return RARITIES.find(r=>r.key===key);
+      return RARITIES[0];
+    }
+    function rarityStyle(prize){
+      const r = rarityOf(prize);
+      return `background:linear-gradient(160deg,${r.color}33,rgba(255,255,255,.06));border-color:${r.color}66`;
+    }
+    function closeRoulette(){ document.getElementById('roulette').classList.remove('open'); renderCases(); }
+
+    /* ===== ИНВЕНТАРЬ ===== */
+    function renderInventory(){
+      const host = document.getElementById('inv-list');
+      if (!S.inventory.length){ host.innerHTML = '<div class="inv-empty">Пока пусто 🕊️<br>Откройте первый кейс!</div>'; return; }
+      host.innerHTML = S.inventory.map((it,i)=>`
+        <div class="inv-item">
+          <div class="emoji">${it.emoji}</div>
+          <div class="info"><b>${it.name}</b><span>${RARITIES.find(r=>r.key===it.rarity).name} · ${new Date(it.date).toLocaleDateString()}</span></div>
+          <button class="btn ghost" style="width:auto;padding:8px 14px;margin:0;font-size:12px" onclick="withdraw(${i})">Вывести</button>
+        </div>`).join('');
+    }
+    function withdraw(i){
+      const it = S.inventory[i];
+      toast(`Подарок «${it.name}» отправлен на вывод. Обработка — до 24 ч ✅`);
+      S.inventory.splice(i,1); save(); renderInventory();
+    }
+
+    /* ===== ДРУЗЬЯ ===== */
+    function renderFriends(){
+      document.getElementById('ref-link').textContent = REF_URL;
+      document.getElementById('ref-progress').innerHTML =
+        `Приглашено: <b>${S.invites} / 3</b><br>${S.invites>=3 ? '✅ Бесплатный кейс доступен!' : 'Осталось пригласить: <b>'+(3-S.invites)+'</b>'}`;
+    }
+    function shareInvite(){
+      const url = `https://t.me/share/url?url=${encodeURIComponent(REF_URL)}&text=${encodeURIComponent('🎁 Играй со мной в Зимний Подарок — открывай кейсы и забирай призы!')}`;
+      if (tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url,'_blank');
+      // ДЕМО-режим: каждый шаринг засчитывается как +1 друг для проверки.
+      // В реальной версии друзей подтверждает сервер по start-параметру ref_<id>.
+      if (S.invites < 3) { S.invites++; save(); renderFriends(); toast(`Принято! Друзей: ${S.invites}/3`); }
+    }
+
+    /* ===== ПОПОЛНЕНИЕ ===== */
+    const DEP_AMOUNTS = [10, 25, 50, 100, 250, 500];
+    function renderDeposit(){
+      document.getElementById('dep-grid').innerHTML = DEP_AMOUNTS.map(a=>
+        `<button onclick="deposit(${a})">+${a+Math.floor(a*0.1)}⭐</button>`).join('');
+    }
+    function deposit(amount){
+      const bonus = amount >= 10 ? Math.floor(amount*0.1) : 0;
+      /* === РЕАЛЬНАЯ ОПЛАТА ===
+         Здесь нужен запрос на ваш сервер, который создаёт платёж в ЮKassa:
+         fetch('/api/deposit', {method:'POST', body: JSON.stringify({userId: USER_ID, amount})})
+         После подтверждения вебхуком от ЮKassa сервер начисляет звёзды.
+         Ниже — демо-начисление для локальной проверки. */
+      S.balance += amount + bonus;
+      save(); updateBalance();
+      toast(bonus ? `Пополнено ${amount}⭐ + бонус ${bonus}⭐ (+10%) 🎉` : `Пополнено ${amount}⭐`);
+    }
+
+    /* ===== СНЕГ ===== */
+    for (let i=0;i<30;i++){
+      const f = document.createElement('div');
+      f.className='snow';
+      const size = 2+Math.random()*4;
+      f.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}vw;animation:fall ${4+Math.random()*6}s linear ${Math.random()*6}s infinite`;
+      document.body.appendChild(f);
+    }
+    const snowStyle = document.createElement('style');
+    snowStyle.textContent = '@keyframes fall{to{transform:translateY(105vh) rotate(360deg)}}';
+    document.head.appendChild(snowStyle);
+
+    /* ===== СТАРТ ===== */
+    renderCases(); updateBalance(); renderDeposit();
+    </script>
+    </body>
+    </html>
+
