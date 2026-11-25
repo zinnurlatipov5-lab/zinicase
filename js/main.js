@@ -1,31 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
     const caseResult = document.getElementById('case-result');
     const balance = document.getElementById('balance');
-
     let userBalance = 0;
 
-    async function openFreeCase() {
-        if (userBalance >= 0) {
-            const prize = getRandomPrize();
-            caseResult.innerHTML = `Вы открыли: ${prize}`;
-            userBalance--; // Уменьшаем баланс после открытия
-            balance.innerHTML = `Баланс: ${userBalance} звёзд`;
-        } else {
-            alert('Необходимо пригласить 3 друзей для бесплатного кейса!');
-        }
-    }
+    const prizes = {
+        'common': ['Обычный подарок', 'Снежная шапка', 'Ёлочный шар'],
+        'rare': ['Редкий подарок', 'Тёплая варежка', 'Новогодний фонарик'],
+        'legendary': ['Легендарный подарок', 'Снежный трон', 'Хрустальная снежинка']
+    };
 
-    function buyCase() {
-        if (confirm('Купить кейс за 10 звёзд?')) {
+    async function openCase(category) {
+        if (userBalance >= 10) {
+            const prize = prizes[category][Math.floor(Math.random() * prizes[category].length)];
+            caseResult.innerHTML = `Вы открыли: ${prize}`;
             userBalance -= 10;
             balance.innerHTML = `Баланс: ${userBalance} звёзд`;
-            getPaidPrize();
+        } else {
+            alert('Недостаточно звёзд!');
         }
-    }
-
-    function getPaidPrize() {
-        const prize = ['Обычный подарок', 'Редкий подарок', 'Эксклюзивный подарок'][Math.floor(Math.random() * 3)];
-        caseResult.innerHTML = `Вы получили: ${prize}`;
     }
 
     function inviteFriends() {
@@ -37,3 +29,4 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     checkBalance();
+});
