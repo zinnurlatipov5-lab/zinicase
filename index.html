@@ -2,86 +2,86 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <title>АвтоКейсы</title>
-  <link rel="stylesheet" href="styles.css">
-  <script src="script.js"></script>
+  <style>
+    :root {
+      --bg-dark: #0f152a;
+      --bg-panel: rgba(255, 255, 255, 0.06);
+      --accent: #ffd76e;
+      --accent-hover: #ff9d3c;
+      --text-main: #eaf2ff;
+      --text-muted: #9fc3ff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-bottom: 20px;
+    }
+    .wrap {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 12px;
+    }
+
+    /* Header */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-panel);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+    }
+    .logo {
+      font-size: 19px;
+      font-weight: 800;
+    }
+    .logo span { color: var(--accent); }
+    .bal {
+      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
+      color: #221200;
+      border: none;
+      border-radius: 24px;
+      padding: 9px 18px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 15px;
+    }
+  </style>
 </head>
 <body>
   <div class="wrap">
     <header>
       <div class="logo">🚗 Авто<span>Кейсы</span></div>
-      <button class="bal" onclick="go('dep')">₽ <span id="bal">0</span></button>
+      <button class="bal">₽ <span id="bal">0</span></button>
     </header>
+    <!-- Страницы -->
+    .page { display: none; }
+    .page.active { display: block; animation: fadeIn 0.2s ease-out; }
+    @keyframes fadeIn { from { opacity: 0.5; } to { opacity: 1; } }
 
-    <div class="page active" id="p-home">
-      <div class="panel">
-        <p>Добро пожаловать в АвтоКейсы! Открывайте кейсы и выигрывайте крутые машины.</p>
-      </div>
-      <div class="stats">
-        <div class="stat">
-          <b id="s-bal">0</b><span>₽ на счету</span>
-        </div>
-        <div class="stat">
-          <b id="s-op">0</b><span>кейсов открыто</span>
-        </div>
-        <div class="stat">
-          <b id="s-best">—</b><span>лучший приз</span>
-        </div>
-      </div>
-    </div>
-    <div class="grid2">
-      <div class="tile" onclick="go('cases')">
-        <div class="ic">📦</div>
-        <b>Открыть кейс</b>
-        <small>Стоимость: 20,000 ₽</small>
-      </div>
-      <div class="tile" onclick="bonus()">
-        <div class="ic">🎁</div>
-        <b>Ежедневный бонус</b>
-        <small>+25 ₽ каждый день</small>
-      </div>
-      <div class="tile" onclick="go('inv')">
-        <div class="ic">🚙</div>
-        <b>Гараж</b>
-        <small>Продай или выведи</small>
-      </div>
-    </div>
-    <div class="tile" onclick="go('dep')">
-      <div class="ic">💳</div>
-      <b>Пополнить</b>
-      <small>+10% бонус</small>
-    </div>
-    <div class="tile" onclick="go('fr')">
-      <div class="ic">👥</div>
-      <b>Друзья</b>
-      <small>+25 ₽ за друга</small>
-    </div>
-    <div class="tile" onclick="go('rk')">
-      <div class="ic">🚀</div>
-      <b>Ракета</b>
-      <small>Забирай до краха</small>
-    </div>
-  </div>
-  <div class="page" id="p-cases">
-    <button class="back" onclick="go('home')">← Назад</button>
-    <div class="balstrip">
-      <span>💰 Баланс</span>
-      <span id="tabBal">0 ₽</span>
-    </div>
-    <div class="catbar" id="catbar"></div>
-    <div id="caseList"></div>
-  </div>
-
-  <div class="page" id="p-inv">
-    <button class="back" onclick="go('home')">← Назад</button>
-    <div class="panel">
-      <h3>Ваш гараж</h3>
-      <div class="cases">
-        <div class="case" onclick="showDetails()">
-          <div class="cp">
-            <img src="car.jpg" alt="Car">
-            <span>🚗 Машина за 650 ₽</span>
-          </div>
-          <div class="nm">Машина</div>
-          <div
+    .back {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--text-main);
+      border-radius: 14px;
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    .panel {
+      background: var(--bg-panel);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+    .panel h3 { font-size: 17px; margin-bottom: 8px; }
+    .panel p { font-size: 13px; color: var(--text
