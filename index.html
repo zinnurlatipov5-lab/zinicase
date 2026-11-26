@@ -5,83 +5,337 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
   <title>АвтоКейсы</title>
   <style>
-    :root {
-      --bg-dark: #0f152a;
-      --bg-panel: rgba(255, 255, 255, 0.06);
-      --accent: #ffd76e;
-      --accent-hover: #ff9d3c;
-      --text-main: #eaf2ff;
-      --text-muted: #9fc3ff;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg-dark);
-      color: var(--text-main);
+      font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background: radial-gradient(900px 500px at 50% -10%, #24408f, #0b1026) fixed #0b1026;
+      color: #eaf2ff;
       min-height: 100vh;
-      padding-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .wrap {
       max-width: 480px;
-      margin: 0 auto;
-      padding: 12px;
+      width: 100%;
+      padding: 14px;
     }
-
-    /* Header */
     header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: var(--bg-panel);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
-      padding: 12px 16px;
-      margin-bottom: 14px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 16px;
     }
     .logo {
       font-size: 19px;
       font-weight: 800;
     }
-    .logo span { color: var(--accent); }
     .bal {
-      background: linear-gradient(135deg, var(--accent), var(--accent-hover));
-      color: #221200;
-      border: none;
-      border-radius: 24px;
-      padding: 9px 18px;
-      font-weight: 700;
+      background: linear-gradient(135deg, #ffd76e, #ff9d3c);
+      color: #3a2000;
+      font-weight: 800;
+      border-radius: 22px;
+      padding: 9px 16px;
       cursor: pointer;
+      border: none;
       font-size: 15px;
     }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <header>
-      <div class="logo">🚗 Авто<span>Кейсы</span></div>
-      <button class="bal">₽ <span id="bal">0</span></button>
-    </header>
-    <!-- Страницы -->
     .page { display: none; }
-    .page.active { display: block; animation: fadeIn 0.2s ease-out; }
-    @keyframes fadeIn { from { opacity: 0.5; } to { opacity: 1; } }
-
-    .back {
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.15);
-      color: var(--text-main);
-      border-radius: 14px;
-      padding: 10px 16px;
-      font-weight: 700;
-      cursor: pointer;
-      margin-bottom: 12px;
-    }
+    .page.active { display: block; }
     .panel {
-      background: var(--bg-panel);
+      background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.12);
       border-radius: 16px;
-      padding: 16px;
+      padding: 14px;
+      margin-bottom: 16px;
+      text-align: center;
+      font-size: 14px;
+      color: #cfe0ff;
+    }
+    .stats {
+      display: flex;
+      gap: 10px;
       margin-bottom: 14px;
     }
-    .panel h3 { font-size: 17px; margin-bottom: 8px; }
-    .panel p { font-size: 13px; color: var(--text
+    .stat {
+      flex: 1;
+      text-align: center;
+      padding: 12px 8px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .stat b {
+      display: block;
+      font-size: 16px;
+      margin-bottom: 4px;
+      color: #ffd76e;
+    }
+    .stat span {
+      font-size: 11px;
+      color: #9fc3ff;
+    }
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    @media (max-width: 360px) {
+      .grid2 { grid-template-columns: 1fr; }
+    }
+    .tile {
+      border-radius: 18px;
+      padding: 18px 14px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.14);
+      text-align: center;
+      transition: transform 0.1s ease;
+    }
+    .tile:active {
+      transform: scale(0.96);
+    }
+    .tile small {
+      display: block;
+      margin-top: 6px;
+      color: #9fc3ff;
+      font-size: 12px;
+    }
+    .ic {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 10px auto;
+    }
+    .back {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      border-radius: 12px;
+      padding: 8px 12px;
+      cursor: pointer;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+    .withdraw-form {
+      padding: 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+    }
+    .withdraw-form h3 {
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+    #withdrawAmount {
+      width: 100%;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(0,0,0,0.3);
+      color: white;
+      margin-bottom: 8px;
+      font-size: 15px;
+      outline: none;
+    }
+    #withdrawAmount:focus {
+      border-color: #ffd76e;
+    }
+    .btn-withdraw {
+      width: 100%;
+      background: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 15px;
+    }
+/* Анимация открытия кейса */
+@keyframes popIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.case-open-anim {
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* Стили логов */
+.log-area {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.4;
+  max-height: 200px;
+  overflow-y: auto;
+  padding-top: 8px;
+  background: rgba(255,255,255,0.06);
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.log-area div {
+  padding: 10px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.1);
+  margin-bottom: 4px;
+  color: #eaf2ff;
+}
+
+/* Оверлей дропа */
+.drop-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.1);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.drop-overlay.active {
+  display: flex;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+// Сохранение состояния в localStorage
+function saveState() {
+  localStorage.setItem('balance', balance);
+  localStorage.setItem('casesOpened', casesOpened);
+  localStorage.setItem('bestPrize', bestPrize);
+}
+
+function loadState() {
+  balance = localStorage.getItem('balance') || 0;
+  casesOpened = localStorage.getItem('casesOpened') || 0;
+  bestPrize = localStorage.getItem('bestPrize') || '—';
+  updateUI();
+}
+
+document.addEventListener('DOMContentLoaded', loadState);
+
+// Обновление UI
+function updateUI() {
+  // Ваш код updateUI из предыдущей версии
+}
+
+// Открытие кейса
+function openCase() {
+  // Ваш код openCase из предыдущей версии
+  saveState();
+}
+
+// Бонус +25 ₽
+function bonus() {
+  // Ваш код bonus из предыдущей версии
+  saveState();
+}
+
+// Вывод средств
+function processWithdrawal() {
+  // Ваш код processWithdrawal из предыдущей версии
+  saveState();
+}
+// Сохранение состояния в localStorage
+function saveState() {
+  localStorage.setItem('balance', balance);
+  localStorage.setItem('casesOpened', casesOpened);
+  localStorage.setItem('bestPrize', bestPrize);
+}
+
+function loadState() {
+  balance = localStorage.getItem('balance') || 0;
+  casesOpened = localStorage.getItem('casesOpened') || 0;
+  bestPrize = localStorage.getItem('bestPrize') || '—';
+  updateUI();
+}
+
+document.addEventListener('DOMContentLoaded', loadState);
+
+// Обновление UI
+function updateUI() {
+  document.getElementById('balance').textContent = balance;
+  document.getElementById('stat-balance').textContent = balance;
+  document.getElementById('stat-cases').textContent = casesOpened;
+  document.getElementById('stat-best').textContent = bestPrize;
+}
+
+// Открытие кейса
+function openCase() {
+  const cost = 20000;
+  if (balance < cost) {
+    alert('Недостаточно средств! Нужно 20 000 ₽.');
+    return;
+  }
+  balance -= cost;
+  casesOpened++;
+
+  const prizes = [
+    { name: 'Копейка', value: 650 },
+    { name: 'BMW 3 серии', value: 18000 },
+    { name: 'Mercedes S-Class', value: 45000 },
+    { name: 'Rolls-Royce', value: 120000 }
+  ];
+  const prize = prizes[Math.floor(Math.random() * prizes.length)];
+
+  bestPrize = prize.value > parseFloat(bestPrize.replace(/[^0-9]/g, '')) ? prize.value : bestPrize;
+  updateUI();
+
+  const tiles = document.querySelectorAll('.tile');
+  tiles.forEach(t => t.classList.remove('case-open-anim'));
+  tiles[0].classList.add('case-open-anim');
+
+  log(`Открыт кейс: ${prize.name} (${prize.value} ₽)`);
+  document.querySelector('.drop-overlay').classList.add('active');
+  setTimeout(() => {
+    document.querySelector('.drop-overlay').classList.remove('active');
+  }, 2000);
+}
+
+// Бонус +25 ₽
+function bonus() {
+  balance += 25;
+  updateUI();
+  log('+25 ₽ (ежедневный бонус)');
+}
+
+// Вывод средств
+function processWithdrawal() {
+  const input = document.getElementById('withdrawAmount');
+  const amount = parseInt(input.value, 10);
+
+  if (!amount || amount <= 0) {
+    alert('Введите корректную сумму.');
+    return;
+  }
+  if (amount < 250) {
+    alert('Минимальная сумма вывода — 250 ₽.');
+    return;
+  }
+  if (amount > balance) {
+    alert('На балансе недостаточно средств.');
+    return;
+  }
+
+  balance -= amount;
+  updateUI();
+  input.value = '';
+  log(`Выведено: ${amount} ₽`);
