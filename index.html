@@ -13,7 +13,7 @@
     color:#eaf2ff; min-height:100vh; overflow-x:hidden;
   }
   .snow { position:fixed; top:-10px; border-radius:50%; background:#fff; opacity:.6; pointer-events:none; z-index:0; }
-  .wrap { max-width:480px; margin:0 auto; padding:14px 14px 90px; position:relative; z-index:1; }
+  .wrap { max-width:480px; margin:0 auto; padding:14px 14px 40px; position:relative; z-index:1; }
 
   header {
     display:flex; align-items:center; justify-content:space-between;
@@ -27,27 +27,26 @@
   .balance-chip {
     background:linear-gradient(135deg,#ffd76e,#ff9d3c); color:#3a2000;
     font-weight:800; border-radius:22px; padding:9px 16px; font-size:15px;
-    display:flex; align-items:center; gap:6px; cursor:pointer; box-shadow:0 4px 18px rgba(255,157,60,.35);
-    white-space:nowrap;
+    display:flex; align-items:center; gap:6px; cursor:pointer;
+    box-shadow:0 4px 18px rgba(255,157,60,.35); white-space:nowrap;
   }
   .balance-chip:active { transform:scale(.95); }
 
-  /* ===== КНОПКА НАЗАД — во всех разделах ===== */
   .page-back {
     display:inline-flex; align-items:center; gap:6px; margin-bottom:12px;
     background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
     color:#eaf2ff; font-weight:800; font-size:13px; padding:10px 16px;
-    border-radius:14px; cursor:pointer; backdrop-filter:blur(8px);
+    border-radius:14px; cursor:pointer;
   }
   .page-back:active { transform:scale(.95); }
 
   .welcome {
-    border-radius:20px; padding:18px 16px; margin-bottom:14px; position:relative; overflow:hidden;
+    border-radius:20px; padding:18px 16px; margin-bottom:14px;
     background:linear-gradient(135deg,rgba(255,215,110,.16),rgba(124,92,255,.12));
     border:1px solid rgba(255,215,110,.35);
     display:flex; align-items:center; gap:14px;
   }
-  .welcome .santa { font-size:52px; flex-shrink:0; filter:drop-shadow(0 6px 14px rgba(0,0,0,.4)); animation:float 3s ease-in-out infinite; }
+  .welcome .santa { font-size:52px; flex-shrink:0; animation:float 3s ease-in-out infinite; }
   @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
   .welcome .w-hi { font-size:16px; font-weight:800; }
   .welcome .w-hi span { color:#ffd76e; }
@@ -61,14 +60,11 @@
   .banner h2 { font-size:18px; margin-bottom:4px; }
   .banner p { font-size:12px; color:#eaf2ffcc; }
   .banner .big { position:absolute; right:12px; top:50%; transform:translateY(-50%) rotate(-10deg); font-size:52px; opacity:.9; }
-  .banner::after {
-    content:''; position:absolute; width:120px; height:120px; border-radius:50%;
-    background:rgba(255,255,255,.15); top:-50px; right:60px; filter:blur(10px);
-  }
+  .banner .btn { margin-top:12px; background:#0b1026; width:auto; display:inline-block; padding:10px 22px; font-size:13px; }
 
   .home-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
   .home-tile {
-    border-radius:18px; padding:18px 14px; cursor:pointer; position:relative; overflow:hidden;
+    border-radius:18px; padding:18px 14px; cursor:pointer;
     background:linear-gradient(160deg,rgba(79,140,255,.18),rgba(255,255,255,.04));
     border:1px solid rgba(255,255,255,.14);
   }
@@ -101,28 +97,20 @@
     position:absolute; width:90px; height:90px; border-radius:50%;
     top:-30px; left:50%; margin-left:-45px; filter:blur(18px); opacity:.5;
   }
-  .case-card .emoji {
-    font-size:44px; position:relative; filter:drop-shadow(0 6px 12px rgba(0,0,0,.4));
-    animation:float 3s ease-in-out infinite;
-  }
+  .case-card .emoji { font-size:44px; position:relative; animation:float 3s ease-in-out infinite; }
   .case-card .name { font-size:13px; font-weight:700; margin:10px 0 6px; position:relative; }
-  .case-card .price {
-    position:relative; display:inline-block; font-size:12px; font-weight:800;
-    padding:5px 12px; border-radius:12px;
-  }
+  .case-card .price { position:relative; display:inline-block; font-size:12px; font-weight:800; padding:5px 12px; border-radius:12px; }
 
-  .cat-free   .case-card { background:linear-gradient(160deg,#2fbf7133,#ffffff0d); border:1px solid #2fbf7155; }
-  .cat-free   .glow { background:#2fbf71; }
-  .cat-free   .price { background:rgba(255,255,255,.15); color:#7dff9e; }
-  .cat-budget .case-card { background:linear-gradient(160deg,#4f8cff40,#ffffff0d); border:1px solid #4f8cff66; }
-  .cat-budget .glow { background:#4f8cff; }
-  .cat-mid    .case-card { background:linear-gradient(160deg,#7cc4ff33,#c86dff26); border:1px solid #7cc4ff66; }
-  .cat-mid    .glow { background:#7cc4ff; }
-  .cat-premium{ .case-card { background:linear-gradient(160deg,#ffd76e40,#ff9d3c26); } }
+  .cat-free    .case-card { background:linear-gradient(160deg,#2fbf7133,#ffffff0d); border:1px solid #2fbf7155; }
+  .cat-free    .glow { background:#2fbf71; }
+  .cat-free    .price { color:#7dff9e; }
+  .cat-budget  .case-card { background:linear-gradient(160deg,#4f8cff40,#ffffff0d); border:1px solid #4f8cff66; }
+  .cat-budget  .glow { background:#4f8cff; }
+  .cat-mid     .case-card { background:linear-gradient(160deg,#7cc4ff33,#c86dff26); border:1px solid #7cc4ff66; }
+  .cat-mid     .glow { background:#7cc4ff; }
   .cat-premium .case-card { background:linear-gradient(160deg,#ffd76e40,#ff9d3c26); border:1px solid #ffd76e77; }
   .cat-premium .glow { background:#ffb84f; }
 
-  /* ===== ПРОСМОТР КЕЙСА ===== */
   .case-view {
     display:none; position:fixed; inset:0; z-index:70;
     background:radial-gradient(900px 500px at 50% -10%, #1e3a8a 0%, #0b1026 65%), #0b1026;
@@ -133,11 +121,10 @@
     position:fixed; top:14px; left:14px; z-index:75;
     background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
     color:#eaf2ff; font-weight:800; font-size:13px; padding:10px 16px;
-    border-radius:14px; cursor:pointer; backdrop-filter:blur(8px);
+    border-radius:14px; cursor:pointer;
   }
-  .cv-back:active { transform:scale(.95); }
   .cv-head { text-align:center; padding-top:64px; }
-  .cv-emoji { font-size:110px; filter:drop-shadow(0 10px 30px rgba(0,0,0,.5)); animation:float 3s ease-in-out infinite; }
+  .cv-emoji { font-size:110px; animation:float 3s ease-in-out infinite; }
   .cv-name { font-size:22px; font-weight:800; margin-top:10px; }
   .cv-desc { font-size:12px; color:#9fc3ff; margin-top:6px; }
   .cv-prizes { margin-top:22px; }
@@ -162,10 +149,9 @@
   }
   .cv-open-bar .btn { margin-top:0; }
 
-  /* ===== РУЛЕТКА ===== */
   .roulette-wrap {
     display:none; position:fixed; inset:0; z-index:80;
-    background:rgba(5,8,25,.94); backdrop-filter:blur(10px);
+    background:rgba(5,8,25,.94);
     flex-direction:column; align-items:center; justify-content:center; padding:20px;
   }
   .roulette-wrap.open { display:flex; }
@@ -179,8 +165,93 @@
   .rl-window::after  { right:0; background:linear-gradient(-90deg,rgba(5,8,25,1),transparent); }
   .rl-line {
     position:absolute; left:50%; top:-4px; bottom:-4px; width:3px; margin-left:-1.5px;
-    background:linear-gradient(180deg,#ffd76e,#ff9d3c); z-index:3; border-radius:2px;
-    box-shadow:0 0 14px #ffd76e;
+    background:linear-gradient(180deg,#ffd76e,#ff9d3c); z-index:3; border-radius:2px; box-shadow:0 0 14px #ffd76e;
+  }
+  .rl-track { display:flex; align-items:center; height:100%; will-change:transform; }
+  .rl-item {
+    flex:0 0 84px; height:92px; margin:0 4px; border-radius:14px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+    font-size:32px; border:1px solid rgba(255,255,255,.15);
+<style>
+  .cases-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+  .case-card {
+    border-radius:18px; padding:16px 10px 12px; text-align:center; cursor:pointer;
+    transition:.15s; position:relative; overflow:hidden;
+  }
+  .case-card:active { transform:scale(.95); }
+  .case-card .glow {
+    position:absolute; width:90px; height:90px; border-radius:50%;
+    top:-30px; left:50%; margin-left:-45px; filter:blur(18px); opacity:.5;
+  }
+  .case-card .emoji { font-size:44px; position:relative; animation:float 3s ease-in-out infinite; }
+  .case-card .name { font-size:13px; font-weight:700; margin:10px 0 6px; position:relative; }
+  .case-card .price { position:relative; display:inline-block; font-size:12px; font-weight:800; padding:5px 12px; border-radius:12px; }
+
+  .cat-free    .case-card { background:linear-gradient(160deg,#2fbf7133,#ffffff0d); border:1px solid #2fbf7155; }
+  .cat-free    .glow { background:#2fbf71; }
+  .cat-free    .price { color:#7dff9e; }
+  .cat-budget  .case-card { background:linear-gradient(160deg,#4f8cff40,#ffffff0d); border:1px solid #4f8cff66; }
+  .cat-budget  .glow { background:#4f8cff; }
+  .cat-mid     .case-card { background:linear-gradient(160deg,#7cc4ff33,#c86dff26); border:1px solid #7cc4ff66; }
+  .cat-mid     .glow { background:#7cc4ff; }
+  .cat-premium .case-card { background:linear-gradient(160deg,#ffd76e40,#ff9d3c26); border:1px solid #ffd76e77; }
+  .cat-premium .glow { background:#ffb84f; }
+
+  .case-view {
+    display:none; position:fixed; inset:0; z-index:70;
+    background:radial-gradient(900px 500px at 50% -10%, #1e3a8a 0%, #0b1026 65%), #0b1026;
+    overflow-y:auto; padding:0 16px 120px;
+  }
+  .case-view.open { display:block; }
+  .cv-back {
+    position:fixed; top:14px; left:14px; z-index:75;
+    background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+    color:#eaf2ff; font-weight:800; font-size:13px; padding:10px 16px;
+    border-radius:14px; cursor:pointer;
+  }
+  .cv-head { text-align:center; padding-top:64px; }
+  .cv-emoji { font-size:110px; animation:float 3s ease-in-out infinite; }
+  .cv-name { font-size:22px; font-weight:800; margin-top:10px; }
+  .cv-desc { font-size:12px; color:#9fc3ff; margin-top:6px; }
+  .cv-prizes { margin-top:22px; }
+  .cv-prizes h4 { font-size:14px; margin-bottom:10px; color:#cfe0ff; }
+  .cv-prize {
+    display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:14px; margin-bottom:8px;
+    background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.1);
+  }
+  .cv-prize .pe { font-size:28px; }
+  .cv-prize .pinfo { flex:1; }
+  .cv-prize .pinfo b { font-size:13px; display:block; }
+  .cv-prize .pinfo span { font-size:11px; }
+  .cv-prize .pval { text-align:right; }
+  .cv-prize .pval b { color:#ffd76e; font-size:13px; display:block; }
+  .cv-prize .pval small { font-size:10px; color:#9fc3ff; }
+  .chance-bar { height:5px; border-radius:4px; background:rgba(255,255,255,.1); margin-top:5px; overflow:hidden; }
+  .chance-bar i { display:block; height:100%; border-radius:4px; }
+  .cv-open-bar {
+    position:fixed; left:0; right:0; bottom:0; z-index:75;
+    padding:12px 16px 20px; background:linear-gradient(180deg,transparent,#0b1026 40%);
+  }
+  .cv-open-bar .btn { margin-top:0; }
+
+  .roulette-wrap {
+    display:none; position:fixed; inset:0; z-index:80;
+    background:rgba(5,8,25,.94);
+    flex-direction:column; align-items:center; justify-content:center; padding:20px;
+  }
+  .roulette-wrap.open { display:flex; }
+  .rl-title { font-size:17px; font-weight:800; margin-bottom:18px; color:#cfe0ff; }
+  .rl-window {
+    width:100%; max-width:420px; height:112px; overflow:hidden; position:relative;
+    border-radius:16px; border:2px solid rgba(255,255,255,.25); background:rgba(255,255,255,.05);
+  }
+  .rl-window::before,.rl-window::after { content:''; position:absolute; top:0; bottom:0; width:50px; z-index:2; }
+  .rl-window::before { left:0; background:linear-gradient(90deg,rgba(5,8,25,1),transparent); }
+  .rl-window::after  { right:0; background:linear-gradient(-90deg,rgba(5,8,25,1),transparent); }
+  .rl-line {
+    position:absolute; left:50%; top:-4px; bottom:-4px; width:3px; margin-left:-1.5px;
+    background:linear-gradient(180deg,#ffd76e,#ff9d3c); z-index:3; border-radius:2px; box-shadow:0 0 14px #ffd76e;
   }
   .rl-track { display:flex; align-items:center; height:100%; will-change:transform; }
   .rl-item {
@@ -190,10 +261,9 @@
   }
   .rl-item small { font-size:9px; color:#cfe0ff; text-align:center; padding:0 4px; line-height:1.15; font-weight:600; }
 
-  /* ===== ФИНАЛ: ПРИЗ ===== */
   .result-wrap {
     display:none; position:fixed; inset:0; z-index:90;
-    background:rgba(5,8,25,.95); backdrop-filter:blur(14px);
+    background:rgba(5,8,25,.95);
     flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center;
   }
   .result-wrap.open { display:flex; }
@@ -203,17 +273,7 @@
     animation:pulse 2s ease-in-out infinite;
   }
   @keyframes pulse { 0%,100%{transform:scale(1);opacity:.3} 50%{transform:scale(1.25);opacity:.55} }
-  .rays {
-    position:absolute; width:420px; height:420px; top:8%; left:50%; margin-left:-210px; opacity:.5;
-    background:conic-gradient(from 0deg, transparent 0deg 20deg, rgba(255,255,255,.07) 20deg 22deg, transparent 22deg 40deg);
-    border-radius:50%; animation:spin 14s linear infinite;
-  }
-  @keyframes spin { to { transform:rotate(360deg); } }
-  .big-emoji {
-    font-size:110px; position:relative; z-index:2;
-    filter:drop-shadow(0 10px 30px rgba(0,0,0,.6));
-    animation:drop .7s cubic-bezier(.2,1.4,.4,1);
-  }
+  .big-emoji { font-size:110px; position:relative; z-index:2; animation:drop .7s cubic-bezier(.2,1.4,.4,1); }
   @keyframes drop { 0%{transform:translateY(-140px) scale(.3);opacity:0} 100%{transform:translateY(0) scale(1);opacity:1} }
   .r-name { font-size:23px; font-weight:800; margin-top:14px; position:relative; z-index:2; }
   .r-rare {
@@ -225,11 +285,9 @@
   .r-buttons { position:relative; z-index:2; display:flex; gap:10px; margin-top:34px; width:100%; max-width:360px; }
   .r-buttons .btn { margin-top:0; }
 
-  /* ===== ОКНО ВЫВОДА ===== */
   .wd-modal {
     display:none; position:fixed; inset:0; z-index:95;
-    background:rgba(5,8,25,.9); backdrop-filter:blur(10px);
-    align-items:center; justify-content:center; padding:24px;
+    background:rgba(5,8,25,.9); align-items:center; justify-content:center; padding:24px;
   }
   .wd-modal.open { display:flex; }
   .wd-box {
@@ -245,33 +303,21 @@
     border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.07);
     color:#fff; font-size:14px; outline:none;
   }
-  .wd-box input:focus { border-color:#7cc4ff; }
 
-  .panel {
-    background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12);
-    border-radius:18px; padding:16px; margin-bottom:12px;
-  }
+  .panel { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:18px; padding:16px; margin-bottom:12px; }
   .panel h3 { font-size:15px; margin-bottom:8px; }
   .panel p { font-size:13px; color:#cfe0ff; line-height:1.5; }
 
   .btn {
     display:block; width:100%; padding:16px; border:none; border-radius:16px;
-    font-size:15px; font-weight:800; letter-spacing:.3px; cursor:pointer; margin-top:12px; transition:.18s;
-    color:#fff; position:relative; overflow:hidden;
+    font-size:15px; font-weight:800; cursor:pointer; margin-top:12px; transition:.18s; color:#fff;
     background:linear-gradient(135deg,#4f8cff,#7cc4ff);
-    box-shadow:0 6px 20px rgba(79,140,255,.35), inset 0 1px 0 rgba(255,255,255,.28);
+    box-shadow:0 6px 20px rgba(79,140,255,.35);
   }
-  .btn::before {
-    content:''; position:absolute; top:0; left:-60%; width:40%; height:100%;
-    background:linear-gradient(100deg,transparent,rgba(255,255,255,.25),transparent);
-    animation:shine 3.2s infinite;
-  }
-  @keyframes shine { 0%{left:-60%} 60%,100%{left:130%} }
   .btn:active { transform:scale(.96); filter:brightness(.95); }
-  .btn.green { background:linear-gradient(135deg,#2fbf71,#7dff9e); color:#04310f; box-shadow:0 6px 20px rgba(47,191,113,.35), inset 0 1px 0 rgba(255,255,255,.3); }
-  .btn.gold { background:linear-gradient(135deg,#ffd76e,#ff9d3c); color:#3a2000; box-shadow:0 6px 20px rgba(255,157,60,.35), inset 0 1px 0 rgba(255,255,255,.35); }
+  .btn.green { background:linear-gradient(135deg,#2fbf71,#7dff9e); color:#04310f; box-shadow:0 6px 20px rgba(47,191,113,.35); }
+  .btn.gold { background:linear-gradient(135deg,#ffd76e,#ff9d3c); color:#3a2000; box-shadow:0 6px 20px rgba(255,157,60,.35); }
   .btn.ghost { background:rgba(255,255,255,.1); color:#cfe0ff; box-shadow:none; }
-  .btn.ghost::before { display:none; }
 
   .dep-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px; }
   .dep-grid button {
@@ -279,7 +325,6 @@
     background:linear-gradient(160deg,rgba(255,215,110,.15),rgba(255,255,255,.04));
     color:#ffd76e; font-weight:800; font-size:13px; cursor:pointer;
   }
-  .dep-grid button:active { transform:scale(.95); }
   .dep-grid small { font-size:10px; color:#7dff9e; font-weight:600; }
 
   .inv-empty { text-align:center; color:#8fa8d8; font-size:13px; padding:40px 10px; }
@@ -293,9 +338,7 @@
   .inv-item .info b { font-size:14px; display:block; }
   .inv-item .info span { font-size:11px; color:#9fc3ff; }
   .inv-item .acts { display:flex; flex-direction:column; gap:6px; }
-  .inv-item .acts button {
-    padding:7px 12px; border:none; border-radius:10px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;
-  }
+  .inv-item .acts button { padding:7px 12px; border:none; border-radius:10px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap; }
   .inv-item .acts .sell { background:rgba(255,215,110,.2); color:#ffd76e; }
   .inv-item .acts .wd { background:linear-gradient(135deg,#2fbf71,#7dff9e); color:#04310f; }
 
@@ -306,12 +349,8 @@
     max-width:85%; text-align:center;
   }
   #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-  .ref-link {
-    margin-top:10px; padding:10px; border-radius:12px; background:rgba(0,0,0,.3);
-    font-size:12px; color:#7cc4ff; word-break:break-all;
-  }
+  .ref-link { margin-top:10px; padding:10px; border-radius:12px; background:rgba(0,0,0,.3); font-size:12px; color:#7cc4ff; word-break:break-all; }
 
-  /* ===== РАКЕТА ===== */
   .rk-screen {
     position:relative; height:280px; border-radius:18px; overflow:hidden;
     background:linear-gradient(180deg,#0a1230 0%,#1e3a8a 70%,#4f8cff22 100%);
@@ -322,8 +361,8 @@
     font-size:46px; font-weight:800; color:#ffd76e;
     text-shadow:0 0 24px rgba(255,215,110,.45); z-index:3;
   }
-  .rk-mult.crashed { color:#ff6b6b; text-shadow:0 0 24px rgba(255,107,107,.5); }
-  .rk-mult.boost { color:#7dff9e; text-shadow:0 0 28px rgba(125,255,158,.6); }
+  .rk-mult.crashed { color:#ff6b6b; }
+  .rk-mult.boost { color:#7dff9e; }
   .rk-rocket {
     position:absolute; left:10px; bottom:14px; z-index:2;
     display:flex; flex-direction:column; align-items:center; gap:2px;
@@ -334,18 +373,14 @@
     background:rgba(11,16,38,.7); padding:2px 8px; border-radius:8px;
     border:1px solid rgba(124,196,255,.4);
   }
-  .rk-rocket .rk-emoji { font-size:44px; transform:rotate(-45deg); filter:drop-shadow(0 4px 14px rgba(255,157,60,.5)); }
-  .rk-rocket.boost .rk-emoji { filter:drop-shadow(0 0 20px #ffd76e) drop-shadow(0 0 40px #ff9d3c); }
-  .rk-rocket.boost .rk-name { color:#ffd76e; border-color:rgba(255,215,110,.6); }
+  .rk-rocket .rk-emoji { font-size:44px; transform:rotate(-45deg); }
+  .rk-rocket.boost .rk-emoji { filter:drop-shadow(0 0 20px #ffd76e); }
   .rk-trail {
     position:absolute; width:14px; height:14px; border-radius:50%;
     background:radial-gradient(circle,#ffd76e,transparent 70%);
     opacity:.8; z-index:1; pointer-events:none;
   }
-  .rk-status {
-    position:absolute; bottom:12px; left:0; right:0; text-align:center;
-    font-size:12px; font-weight:700; color:#cfe0ff; z-index:3;
-  }
+  .rk-status { position:absolute; bottom:12px; left:0; right:0; text-align:center; font-size:12px; font-weight:700; color:#cfe0ff; z-index:3; }
   .rk-bets { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-top:12px; }
   .rk-bets button {
     padding:12px 2px; border-radius:12px; border:1px solid rgba(255,215,110,.35);
@@ -353,13 +388,13 @@
     color:#ffd76e; font-weight:800; font-size:12px; cursor:pointer;
   }
   .rk-bets button.sel { background:linear-gradient(135deg,#ffd76e,#ff9d3c); color:#3a2000; }
-  .rk-hist { display:flex; gap:6px; margin-top:12px; overflow-x:auto; padding-bottom:4px; }
+  .rk-hist { display:flex; gap:6px; margin-top:12px; overflow-x:auto; }
   .rk-hist span {
     flex-shrink:0; font-size:11px; font-weight:800; padding:6px 10px; border-radius:10px;
     background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12);
   }
-  .rk-hist span.good { color:#7dff9e; border-color:rgba(125,255,158,.4); }
-  .rk-hist span.bad  { color:#ff9d9d; border-color:rgba(255,107,107,.4); }
+  .rk-hist span.good { color:#7dff9e; }
+  .rk-hist span.bad  { color:#ff9d9d; }
 </style>
 </head>
 <body>
@@ -369,13 +404,12 @@
     <div class="balance-chip" onclick="go('deposit')">₽ <span id="balance">0</span></div>
   </header>
 
-  <!-- ГЛАВНЫЙ ЭКРАН -->
   <div class="page active" id="page-home">
     <div class="welcome">
       <div class="santa">🎅</div>
       <div>
         <div class="w-hi">Привет, <span id="w-name">друг</span>!</div>
-        <div class="w-text">Автосалон Деда Мороза: кейсы с машинами от «Копейки» за 10 ₽ до Lamborghini за 140 000 ₽. Крути рулетку и забирай ключи! ❄️</div>
+        <div class="w-text">Автосалон Деда Мороза: кейсы с машинами от «Копейки» за 10 ₽ до Lamborghini за 140 000 ₽. Крути рулетку и забирай ключи!</div>
       </div>
     </div>
     <div class="banner">
@@ -392,25 +426,22 @@
     <div class="home-grid">
       <div class="home-tile" onclick="go('cases')"><div class="ic">📦</div><b>Кейсы</b><small>машины от 10 ₽</small></div>
       <div class="home-tile gold-tile" onclick="claimBonus()"><div class="ic">🎁</div><b>Ежедневный бонус</b><small id="bonus-hint">+50 ₽ каждый день</small></div>
-      <div class="home-tile" onclick="go('inventory')"><div class="ic">🚙</div><b>Мой гараж</b><small>продать или вывести в TG</small></div>
+      <div class="home-tile" onclick="go('inventory')"><div class="ic">🚙</div><b>Мой гараж</b><small>продать или вывести</small></div>
       <div class="home-tile" onclick="go('friends')"><div class="ic">👥</div><b>Друзья</b><small>пригласи и получай ₽</small></div>
       <div class="home-tile" onclick="go('rocket')"><div class="ic">🚀</div><b>Ракета ZINI</b><small>забирай икс до краша</small></div>
     </div>
   </div>
 
-  <!-- КЕЙСЫ -->
   <div class="page" id="page-cases">
     <button class="page-back" onclick="go('home')">← Назад</button>
   </div>
 
-  <!-- ГАРАЖ -->
   <div class="page" id="page-inventory">
     <button class="page-back" onclick="go('home')">← Назад</button>
     <div class="panel"><h3>🚙 Мой гараж</h3><p>Машину можно продать за рубли или вывести в Telegram-аккаунт. Вывод обрабатывается до 24 часов.</p></div>
     <div id="inv-list"></div>
   </div>
 
-  <!-- ДРУЗЬЯ -->
   <div class="page" id="page-friends">
     <button class="page-back" onclick="go('home')">← Назад</button>
     <div class="panel">
@@ -422,22 +453,79 @@
     <div class="panel"><h3>Прогресс</h3><p id="ref-progress"></p></div>
   </div>
 
-  <!-- ПОПОЛНЕНИЕ -->
+  <div class="page" id="page-deposit">
+    <button class="page-back" onclick="go('home')">← Назад</button>
+    <div class="panel">
+      <h3
+<div class="wrap">
+  <header>
+    <div class="logo">🚗 Авто<span>Кейсы</span><small>открывай · выигрывай · выводи</small></div>
+    <div class="balance-chip" onclick="go('deposit')">₽ <span id="balance">0</span></div>
+  </header>
+
+  <div class="page active" id="page-home">
+    <div class="welcome">
+      <div class="santa">🎅</div>
+      <div>
+        <div class="w-hi">Привет, <span id="w-name">друг</span>!</div>
+        <div class="w-text">Автосалон Деда Мороза: кейсы с машинами от «Копейки» за 10 ₽ до Lamborghini за 140 000 ₽. Крути рулетку и забирай ключи!</div>
+      </div>
+    </div>
+    <div class="banner">
+      <h2>🏆 Новогодний автосалон</h2>
+      <p>Машины АвтоВАЗа и иномарки + бонус +10% к пополнению</p>
+      <button class="btn" onclick="go('cases')">Смотреть кейсы →</button>
+      <div class="big">🔑</div>
+    </div>
+    <div class="stat-row">
+      <div class="stat-box"><b id="stat-balance">0</b><span>₽ на счету</span></div>
+      <div class="stat-box"><b id="stat-opened">0</b><span>кейсов открыто</span></div>
+      <div class="stat-box"><b id="stat-best">—</b><span>лучший приз</span></div>
+    </div>
+    <div class="home-grid">
+      <div class="home-tile" onclick="go('cases')"><div class="ic">📦</div><b>Кейсы</b><small>машины от 10 ₽</small></div>
+      <div class="home-tile gold-tile" onclick="claimBonus()"><div class="ic">🎁</div><b>Ежедневный бонус</b><small id="bonus-hint">+50 ₽ каждый день</small></div>
+      <div class="home-tile" onclick="go('inventory')"><div class="ic">🚙</div><b>Мой гараж</b><small>продать или вывести</small></div>
+      <div class="home-tile" onclick="go('friends')"><div class="ic">👥</div><b>Друзья</b><small>пригласи и получай ₽</small></div>
+      <div class="home-tile" onclick="go('rocket')"><div class="ic">🚀</div><b>Ракета ZINI</b><small>забирай икс до краша</small></div>
+    </div>
+  </div>
+
+  <div class="page" id="page-cases">
+    <button class="page-back" onclick="go('home')">← Назад</button>
+  </div>
+
+  <div class="page" id="page-inventory">
+    <button class="page-back" onclick="go('home')">← Назад</button>
+    <div class="panel"><h3>🚙 Мой гараж</h3><p>Машину можно продать за рубли или вывести в Telegram-аккаунт. Вывод обрабатывается до 24 часов.</p></div>
+    <div id="inv-list"></div>
+  </div>
+
+  <div class="page" id="page-friends">
+    <button class="page-back" onclick="go('home')">← Назад</button>
+    <div class="panel">
+      <h3>👥 Пригласите друзей</h3>
+      <p>Пригласите <b>3 друзей</b> — и сможете забрать машину из бесплатного кейса. За каждого друга ещё даём <b>25 ₽</b>.</p>
+      <div class="ref-link" id="ref-link"></div>
+      <button class="btn green" onclick="shareInvite()">📨 Пригласить друзей</button>
+    </div>
+    <div class="panel"><h3>Прогресс</h3><p id="ref-progress"></p></div>
+  </div>
+
   <div class="page" id="page-deposit">
     <button class="page-back" onclick="go('home')">← Назад</button>
     <div class="panel">
       <h3>💳 Пополнение</h3>
-      <p>При любом пополнении — бонус <b>+10%</b>! Оплата через ЮKassa: карта, СБП, ЮMoney.</p>
+      <p>При любом пополнении — бонус <b>+10%</b>! (демо-режим: деньги начисляются сразу)</p>
       <div class="dep-grid" id="dep-grid"></div>
     </div>
   </div>
 
-  <!-- РАКЕТА -->
   <div class="page" id="page-rocket">
     <button class="page-back" onclick="go('home')">← Назад</button>
     <div class="panel">
       <h3>🚀 Ракета ZINI</h3>
-      <p>Ставь рубли, запускай ракету и забирай выигрыш <b>до</b> краша. Икс от 1.10 до 50.00 — а иногда ракета пролетает краш и летит дальше!</p>
+      <p>Ставь рубли, запускай ракету и забирай выигрыш <b>до</b> краша. Икс от 1.15 до 50.00.</p>
     </div>
     <div class="rk-screen">
       <div class="rk-mult" id="rk-mult">1.00x</div>
@@ -450,7 +538,6 @@
   </div>
 </div>
 
-<!-- Просмотр кейса -->
 <div class="case-view" id="case-view">
   <button class="cv-back" onclick="closeCaseView()">← Назад</button>
   <div class="cv-head">
@@ -465,15 +552,12 @@
   <div class="cv-open-bar"><button class="btn gold" id="cv-open-btn" onclick="openCase(currentCase)">Открыть</button></div>
 </div>
 
-<!-- Рулетка -->
 <div class="roulette-wrap" id="roulette">
   <div class="rl-title" id="rl-title">Открываем кейс...</div>
   <div class="rl-window"><div class="rl-track" id="rl-track"></div><div class="rl-line"></div></div>
 </div>
 
-<!-- Финальный экран -->
 <div class="result-wrap" id="result-wrap">
-  <div class="rays"></div>
   <div class="result-glow" id="r-glow"></div>
   <div class="big-emoji" id="r-emoji">🚗</div>
   <div class="r-name" id="r-name"></div>
@@ -485,7 +569,6 @@
   </div>
 </div>
 
-<!-- Окно вывода -->
 <div class="wd-modal" id="wd-modal">
   <div class="wd-box">
     <div class="wd-emoji" id="wd-emoji">🚗</div>
@@ -504,22 +587,18 @@ const BOT_USERNAME = 'YourBotName';
 const HOUSE_EDGE = 0.75;
 const FREE_CASE_EV = 25;
 
-/* ============ МАШИНЫ: АвтоВАЗ + иномарки ============ */
-/* v — цена в рублях (10…140000), t — уровень редкости */
+/* ============ МАШИНЫ ============ */
 const CARS = [
   {e:'🚗', n:'ВАЗ-2101 «Копейка»',   v:10,     t:'common'},
   {e:'🚙', n:'Ока',                  v:15,     t:'common'},
   {e:'🚗', n:'ВАЗ-2107',             v:20,     t:'common'},
   {e:'🚙', n:'Нива 4x4',             v:25,     t:'common'},
   {e:'🚗', n:'Лада Гранта',          v:30,     t:'common'},
-  {e:'🚗', n:'Лада Самара',          v:35,     t:'common'},
   {e:'🚙', n:'Daewoo Matiz',         v:40,     t:'common'},
   {e:'🚗', n:'Renault Logan',        v:50,     t:'common'},
   {e:'🚙', n:'Hyundai Solaris',      v:60,     t:'common'},
   {e:'🚗', n:'VW Polo',              v:70,     t:'common'},
-  {e:'🚗', n:'Lada Largus',          v:80,     t:'common'},
   {e:'🚙', n:'Kia Rio',              v:90,     t:'common'},
-  {e:'🚗', n:'Lada Vesta',           v:120,    t:'common'},
   {e:'🚙', n:'Lada Vesta SW Cross',  v:250,    t:'uncommon'},
   {e:'🚗', n:'Lada XRAY',            v:300,    t:'uncommon'},
   {e:'🚙', n:'Hyundai Creta',        v:400,    t:'uncommon'},
@@ -527,9 +606,7 @@ const CARS = [
   {e:'🚙', n:'Skoda Rapid',          v:600,    t:'uncommon'},
   {e:'🚙', n:'VW Tiguan',            v:900,    t:'uncommon'},
   {e:'🚙', n:'Toyota Corolla',       v:1200,   t:'uncommon'},
-  {e:'🚙', n:'Mazda 3',              v:1500,   t:'uncommon'},
   {e:'🚙', n:'Kia Sportage',         v:2500,   t:'rare'},
-  {e:'🚙', n:'Hyundai Tucson',       v:3000,   t:'rare'},
   {e:'🚙', n:'Toyota Camry',         v:4000,   t:'rare'},
   {e:'🚙', n:'Honda CR-V',           v:5000,   t:'rare'},
   {e:'🚙', n:'BMW 3 Series',         v:7000,   t:'rare'},
@@ -537,18 +614,16 @@ const CARS = [
   {e:'🚙', n:'Mercedes C-Class',     v:12000,  t:'rare'},
   {e:'🚙', n:'BMW X5',               v:20000,  t:'epic'},
   {e:'🚙', n:'Mercedes GLE',         v:30000,  t:'epic'},
-  {e:'🚙', n:'Porsche Macan',        v:40000,  t:'epic'},
   {e:'🏎️', n:'Porsche 911',          v:60000,  t:'epic'},
   {e:'🏎️', n:'Ferrari 488',          v:100000, t:'legend'},
-  {e:'🚘', n:'Rolls-Royce Ghost',    v:120000, t:'legend'},
   {e:'🏎️', n:'Lamborghini Huracan',  v:140000, t:'legend'},
 ];
 const RARITIES = [
-  {key:'common',   name:'Развалюха',    color:'#cfe0ff'},
-  {key:'uncommon', name:'Рабочая',      color:'#7dff9e'},
-  {key:'rare',     name:'Солидная',     color:'#7cc4ff'},
-  {key:'epic',     name:'Премиум',      color:'#c88fff'},
-  {key:'legend',   name:'Мечта',        color:'#ffd76e'},
+  {key:'common',   name:'Развалюха', color:'#cfe0ff'},
+  {key:'uncommon', name:'Рабочая',   color:'#7dff9e'},
+  {key:'rare',     name:'Солидная',  color:'#7cc4ff'},
+  {key:'epic',     name:'Премиум',   color:'#c88fff'},
+  {key:'legend',   name:'Мечта',     color:'#ffd76e'},
 ];
 const CATEGORIES = [
   {id:'free',    cls:'cat-free',    name:'🎁 Бесплатный'},
@@ -586,11 +661,7 @@ const CASES = [];
     mid:['Шоссе','Ночная гонка','Семейный','Бизнес-класс'],
     premium:['Люкс','Президентский','Шейх','Миллионер'],
   };
-  const emos = {
-    budget:['🧰','🔧','🛞','🚗'],
-    mid:['🏁','🚦','🛣️','💺'],
-    premium:['💎','👑','🏆','🎰'],
-  };
+  const emos = {budget:['🧰','🔧','🛞','🚗'], mid:['🏁','🚦','🛣️','💺'], premium:['💎','👑','🏆','🎰']};
   const byTier = t => CARS.filter(c=>c.t===t);
   function pickRandom(arr,n){ const c=[...arr], out=[]; for(let i=0;i<n;i++) out.push(c.splice(Math.floor(Math.random()*c.length),1)[0]); return out; }
 
@@ -611,29 +682,27 @@ const CASES = [];
     }
   }
 })();
-</script>
 
-<script>
 /* ================= СОСТОЯНИЕ ================= */
-let S = JSON.parse(localStorage.getItem('zp_state')||'null') || {balance:0, invites:0, freeUsed:'', lastBonus:'', opened:0, best:0, inventory:[], pending:null, wdIdx:-1, rockHist:[]};
-function save(){ localStorage.setItem('zp_state', JSON.stringify(S)); }
+let S = JSON.parse(localStorage.getItem('zk_state')||'null') || {balance:0, invites:0, freeUsed:'', lastBonus:'', opened:0, best:0, inventory:[], pending:null, wdIdx:-1, rockHist:[]};
+function save(){ localStorage.setItem('zk_state', JSON.stringify(S)); }
 function fmt(n){ return Math.round(n).toLocaleString('ru-RU'); }
 
 /* ================= TELEGRAM ================= */
-const tg = window.Telegram?.WebApp;
-if (tg) { tg.ready(); tg.expand(); tg.setHeaderColor('#0b1026'); }
-const USER_ID = tg?.initDataUnsafe?.user?.id || 0;
-const USER_NAME = tg?.initDataUnsafe?.user?.first_name || 'Игрок';
-const REF_URL = `https://t.me/${BOT_USERNAME}?start=ref_${USER_ID||'guest'}`;
+const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+if (tg) { try { tg.ready(); tg.expand(); } catch(e){} }
+const USER_NAME = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? (tg.initDataUnsafe.user.first_name || 'Игрок') : 'Игрок';
+const USER_ID = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : 0;
+const REF_URL = 'https://t.me/' + BOT_USERNAME + '?start=ref_' + (USER_ID||'guest');
 
 /* ================= UI ================= */
 function toast(msg){
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
-  clearTimeout(t._h); t._h = setTimeout(()=>t.classList.remove('show'), 2600);
+  clearTimeout(t._h); t._h = setTimeout(function(){ t.classList.remove('show'); }, 2600);
 }
 function go(page){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
   document.getElementById('page-'+page).classList.add('active');
   if (page==='inventory') renderInventory();
   if (page==='friends') renderFriends();
@@ -656,7 +725,7 @@ function renderHome(){
   document.getElementById('bonus-hint').textContent = used ? 'Бонус забран, приходи завтра' : '+50 ₽ каждый день';
 }
 function claimBonus(){
-  if (S.lastBonus === new Date().toDateString()) return toast('Бонус уже получен сегодня ⏰ Возвращайся завтра!');
+  if (S.lastBonus === new Date().toDateString()) return toast('Бонус уже получен сегодня ⏰');
   S.lastBonus = new Date().toDateString(); S.balance += 50;
   save(); renderHome(); updateBalance();
   toast('Ежедневный бонус: +50 ₽ 🎉');
@@ -667,14 +736,12 @@ function renderCases(){
   const host = document.getElementById('page-cases');
   let html = '';
   for (const cat of CATEGORIES) {
-    html += `<div class="cat-title">${cat.name}</div><div class="cases-grid ${cat.cls}">`;
-    CASES.filter(c=>c.cat===cat.id).forEach(c=>{
-      html += `<div class="case-card" onclick="showCaseView(${c.id})">
-        <div class="glow"></div>
-        <div class="emoji">${c.emoji}</div>
-        <div class="name">${c.name}</div>
-        <div class="price">${c.free ? (todayFreeUsed() ? 'Завтра ⏰' : 'Бесплатно') : fmt(c.price)+' ₽'}</div>
-      </div>`;
+    html += '<div class="cat-title">'+cat.name+'</div><div class="cases-grid '+cat.cls+'">';
+    CASES.filter(function(c){ return c.cat===cat.id; }).forEach(function(c){
+      html += '<div class="case-card" onclick="showCaseView('+c.id+')">'
+        + '<div class="glow"></div><div class="emoji">'+c.emoji+'</div>'
+        + '<div class="name">'+c.name+'</div>'
+        + '<div class="price">'+(c.free ? (todayFreeUsed() ? 'Завтра ⏰' : 'Бесплатно') : fmt(c.price)+' ₽')+'</div></div>';
     });
     html += '</div>';
   }
@@ -689,30 +756,27 @@ function showCaseView(id){
   const c = CASES[id];
   document.getElementById('cv-emoji').textContent = c.emoji;
   document.getElementById('cv-name').textContent = c.name;
-  const maxPrize = Math.max(...c.pool.map(p=>p.v));
-  document.getElementById('cv-desc').textContent = `Топ-машина: ${fmt(maxPrize)} ₽ · средний возврат ${fmt(c.free?FREE_CASE_EV:c.price*HOUSE_EDGE)} ₽`;
+  const maxPrize = Math.max.apply(null, c.pool.map(function(p){ return p.v; }));
+  document.getElementById('cv-desc').textContent = 'Топ-машина: '+fmt(maxPrize)+' ₽ · средний возврат '+fmt(c.free?FREE_CASE_EV:c.price*HOUSE_EDGE)+' ₽';
   const btn = document.getElementById('cv-open-btn');
   if (c.free) {
     btn.textContent = todayFreeUsed() ? 'Завтра ⏰' : 'Открыть бесплатно';
     btn.disabled = todayFreeUsed();
     btn.style.opacity = todayFreeUsed() ? '.5' : '1';
   } else {
-    btn.textContent = `Открыть за ${fmt(c.price)} ₽`;
+    btn.textContent = 'Открыть за '+fmt(c.price)+' ₽';
     btn.disabled = false; btn.style.opacity = '1';
   }
-  document.getElementById('cv-list').innerHTML = c.pool.map((p,i)=>{
-    const rar = RARITIES.find(r=>r.key===p.t);
+  document.getElementById('cv-list').innerHTML = c.pool.map(function(p,i){
+    const rar = RARITIES.find(function(r){ return r.key===p.t; });
     const ch = chancePercent(c.weights, i);
-    return `<div class="cv-prize" style="border-color:${rar.color}44">
-      <div class="pe">${p.e}</div>
-      <div class="pinfo"><b>${p.n}</b><span style="color:${rar.color}">${rar.name}</span>
-        <div class="chance-bar"><i style="width:${Math.max(1.5,Math.min(100,ch))}%;background:${rar.color}"></i></div>
-      </div>
-      <div class="pval"><b>${fmt(p.v)} ₽</b><small>шанс ${ch<1?ch.toFixed(3):ch.toFixed(1)}%</small></div>
-    </div>`;
+    return '<div class="cv-prize" style="border-color:'+rar.color+'44">'
+      + '<div class="pe">'+p.e+'</div>'
+      + '<div class="pinfo"><b>'+p.n+'</b><span style="color:'+rar.color+'">'+rar.name+'</span>'
+      + '<div class="chance-bar"><i style="width:'+Math.max(1.5,Math.min(100,ch))+'%;background:'+rar.color+'"></i></div></div>'
+      + '<div class="pval"><b>'+fmt(p.v)+' ₽</b><small>шанс '+(ch<1?ch.toFixed(3):ch.toFixed(1))+'%</small></div></div>';
   }).join('');
   document.getElementById('case-view').classList.add('open');
-  window.scrollTo(0,0);
 }
 function closeCaseView(){ document.getElementById('case-view').classList.remove('open'); }
 
@@ -720,9 +784,9 @@ function closeCaseView(){ document.getElementById('case-view').classList.remove(
 function openCase(id){
   const c = CASES[id];
   if (c.free) {
-    if (todayFreeUsed()) return toast('Бесплатный кейс уже открыт. Приходите завтра! ⏰');
-    if (S.invites < 3) return toast(`Чтобы забрать машину, пригласите 3 друзей (осталось ${3-S.invites}) 👥`);
-  } else if (S.balance < c.price) return toast('Недостаточно рублей. Пополните баланс 💳');
+    if (todayFreeUsed()) return toast('Бесплатный кейс уже открыт ⏰');
+    if (S.invites < 3) return toast('Пригласите 3 друзей (осталось '+(3-S.invites)+') 👥');
+  } else if (S.balance < c.price) return toast('Недостаточно рублей 💳');
   if (!c.free) S.balance -= c.price;
   else S.freeUsed = new Date().toDateString();
   save(); updateBalance(); renderCases();
@@ -745,33 +809,33 @@ function spin(c){
   const items = [];
   for (let i=0;i<45;i++) items.push(c.pool[Math.floor(Math.random()*c.pool.length)]);
   items[40] = winner;
-  track.innerHTML = items.map(p=>`<div class="rl-item" style="${rarityStyle(p)}"><span>${p.e}</span><small>${p.n}</small></div>`).join('');
+  track.innerHTML = items.map(function(p){
+    const r = RARITIES.find(function(x){ return x.key===p.t; }) || RARITIES[0];
+    return '<div class="rl-item" style="background:linear-gradient(160deg,'+r.color+'33,rgba(255,255,255,.06));border-color:'+r.color+'66"><span>'+p.e+'</span><small>'+p.n+'</small></div>';
+  }).join('');
   track.style.transition = 'none';
   track.style.transform = 'translateX(0)';
 
   const win = document.querySelector('.rl-window').clientWidth;
   const offset = 40*ITEM_W + ITEM_W/2 - win/2;
-  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
     track.style.transition = 'transform 4.2s cubic-bezier(.1,.8,.12,1)';
-    track.style.transform = `translateX(-${offset}px)`;
-  }));
+    track.style.transform = 'translateX(-'+offset+'px)';
+  });});
 
   setTimeout(showResult, 4500);
 }
 function showResult(){
   const p = S.pending;
-  const rar = RARITIES.find(r=>r.key===p.rarity);
-  const wrap = document.getElementById('result-wrap');
+  const rar = RARITIES.find(function(r){ return r.key===p.rarity; });
   document.getElementById('roulette').classList.remove('open');
   document.getElementById('r-glow').style.background = rar.color;
   document.getElementById('r-emoji').textContent = p.emoji;
   document.getElementById('r-name').textContent = p.name;
   const rr = document.getElementById('r-rare');
   rr.textContent = rar.name; rr.style.color = rar.color; rr.style.borderColor = rar.color+'66';
-  document.getElementById('r-value').textContent = `Стоимость: ${fmt(p.value)} ₽ · из «${p.caseName}»`;
-  const em = document.getElementById('r-emoji');
-  em.style.animation='none'; void em.offsetWidth; em.style.animation='';
-  wrap.classList.add('open');
+  document.getElementById('r-value').textContent = 'Стоимость: '+fmt(p.value)+' ₽ · из «'+p.caseName+'»';
+  document.getElementById('result-wrap').classList.add('open');
   renderCases();
 }
 function sellPrize(){
@@ -780,7 +844,7 @@ function sellPrize(){
   save(); updateBalance(); renderHome();
   document.getElementById('result-wrap').classList.remove('open');
   renderCases();
-  toast(`«${p.name}» продана за ${fmt(p.value)} ₽ — деньги на счету! 💰`);
+  toast('«'+p.name+'» продана за '+fmt(p.value)+' ₽ 💰');
 }
 function keepPrize(){
   const p = S.pending;
@@ -790,88 +854,76 @@ function keepPrize(){
   document.getElementById('result-wrap').classList.remove('open');
   toast('Машина отправлена в гараж 🚙');
 }
-function rarityStyle(p){
-  const r = RARITIES.find(r=>r.key===p.t) || RARITIES[0];
-  return `background:linear-gradient(160deg,${r.color}33,rgba(255,255,255,.06));border-color:${r.color}66`;
-}
 <script>
 /* ===== ГАРАЖ + ВЫВОД ===== */
 function renderInventory(){
   const host = document.getElementById('inv-list');
   if (!S.inventory.length){ host.innerHTML = '<div class="inv-empty">Гараж пока пуст 🕊️<br>Откройте первый кейс!</div>'; return; }
-  host.innerHTML = S.inventory.map((it,i)=>{
-    const rar = RARITIES.find(r=>r.key===it.rarity);
-    return `<div class="inv-item" style="border-color:${rar.color}44">
-      <div class="emoji">${it.emoji}</div>
-      <div class="info"><b>${it.name}</b><span style="color:${rar.color}">${rar.name}</span> · <span>${fmt(it.value)} ₽ · ${new Date(it.date).toLocaleDateString()}</span></div>
-      <div class="acts">
-        <button class="sell" onclick="sellInv(${i})">Продать ${fmt(it.value)} ₽</button>
-        <button class="wd" onclick="openWd(${i})">Вывести в TG</button>
-      </div>
-    </div>`;
+  host.innerHTML = S.inventory.map(function(it,i){
+    const rar = RARITIES.find(function(r){ return r.key===it.rarity; });
+    return '<div class="inv-item" style="border-color:'+rar.color+'44">'
+      + '<div class="emoji">'+it.emoji+'</div>'
+      + '<div class="info"><b>'+it.name+'</b><span style="color:'+rar.color+'">'+rar.name+'</span> · <span>'+fmt(it.value)+' ₽ · '+new Date(it.date).toLocaleDateString()+'</span></div>'
+      + '<div class="acts"><button class="sell" onclick="sellInv('+i+')">Продать '+fmt(it.value)+' ₽</button>'
+      + '<button class="wd" onclick="openWd('+i+')">Вывести в TG</button></div></div>';
   }).join('');
 }
 function sellInv(i){
   const it = S.inventory[i];
   S.balance += it.value; S.inventory.splice(i,1);
   save(); updateBalance(); renderInventory();
-  toast(`«${it.name}» продана за ${fmt(it.value)} ₽ 💰`);
+  toast('«'+it.name+'» продана за '+fmt(it.value)+' ₽ 💰');
 }
 function openWd(i){
   const it = S.inventory[i];
   S.wdIdx = i;
   document.getElementById('wd-emoji').textContent = it.emoji;
   document.getElementById('wd-name').textContent = it.name;
-  document.getElementById('wd-val').textContent = `К выводу: ${fmt(it.value)} ₽`;
-  document.getElementById('wd-user').value = tg?.initDataUnsafe?.user?.username ? '@'+tg.initDataUnsafe.user.username : '';
+  document.getElementById('wd-val').textContent = 'К выводу: '+fmt(it.value)+' ₽';
+  document.getElementById('wd-user').value = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.username) ? '@'+tg.initDataUnsafe.user.username : '';
   document.getElementById('wd-modal').classList.add('open');
 }
 function closeWd(){ document.getElementById('wd-modal').classList.remove('open'); S.wdIdx = -1; }
 function confirmWithdraw(){
   const u = document.getElementById('wd-user').value.trim().replace(/^@/,'');
-  if (!u || u.length < 3) return toast('Укажите свой @username в Telegram 📝');
+  if (!u || u.length < 3) return toast('Укажите свой @username 📝');
   const it = S.inventory[S.wdIdx];
-  /* РЕАЛЬНЫЙ ВЫВОД: отправьте на сервер и выдайте подарок только после
-     проверки подписи initData на бэкенде. */
   if (tg && tg.sendData) tg.sendData(JSON.stringify({type:'withdraw', gift:it.name, value:it.value, username:u}));
   S.inventory.splice(S.wdIdx,1);
   save(); renderInventory(); closeWd();
-  toast(`Заявка на вывод «${it.name}» (${fmt(it.value)} ₽) для @${u} принята 📦`);
+  toast('Заявка на вывод «'+it.name+'» принята 📦');
 }
 
 /* ===== ДРУЗЬЯ ===== */
 function renderFriends(){
   document.getElementById('ref-link').textContent = REF_URL;
-  document.getElementById('ref-progress').innerHTML =
-    `Привет, <b>${USER_NAME}</b>!<br>Приглашено: <b>${S.invites} / 3</b><br>${S.invites>=3 ? '✅ Бесплатный кейс доступен!' : 'Осталось пригласить: <b>'+(3-S.invites)+'</b>'}`;
+  document.getElementById('ref-progress').innerHTML = 'Приглашено: <b>'+S.invites+' / 3</b><br>' + (S.invites>=3 ? '✅ Бесплатный кейс доступен!' : 'Осталось пригласить: <b>'+(3-S.invites)+'</b>');
 }
 function shareInvite(){
-  const url = `https://t.me/share/url?url=${encodeURIComponent(REF_URL)}&text=${encodeURIComponent('🚗 Играй со мной в АвтоКейсы — открывай кейсы с машинами от Копейки до Lamborghini!')}`;
+  const url = 'https://t.me/share/url?url='+encodeURIComponent(REF_URL)+'&text='+encodeURIComponent('🚗 Играй со мной в АвтоКейсы — машины от Копейки до Lamborghini!');
   if (tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url,'_blank');
   if (S.invites < 3) {
     S.invites++; S.balance += 25;
     save(); renderFriends(); updateBalance();
-    toast(`Друг приглашен! +25 ₽. Друзей: ${S.invites}/3`);
+    toast('Друг приглашен! +25 ₽. Друзей: '+S.invites+'/3');
   }
 }
 
 /* ===== ПОПОЛНЕНИЕ ===== */
 const DEP_AMOUNTS = [10, 50, 100, 500, 1000, 5000];
 function renderDeposit(){
-  document.getElementById('dep-grid').innerHTML = DEP_AMOUNTS.map(a=>
-    `<button onclick="deposit(${a})">${fmt(a)} ₽<br><small>+${fmt(a+Math.floor(a*0.1))} итого</small></button>`).join('');
+  document.getElementById('dep-grid').innerHTML = DEP_AMOUNTS.map(function(a){
+    return '<button onclick="deposit('+a+')">'+fmt(a)+' ₽<br><small>+'+fmt(a+Math.floor(a*0.1))+' итого</small></button>';
+  }).join('');
 }
 function deposit(amount){
   const bonus = Math.floor(amount*0.1);
-  /* РЕАЛЬНАЯ ОПЛАТА: запрос на сервер → начисление только после вебхука платёжки. Ниже — демо. */
   S.balance += amount + bonus;
   save(); updateBalance(); renderHome();
-  toast(`Пополнено ${fmt(amount)} ₽ + бонус ${fmt(bonus)} ₽ (+10%) 🎉`);
+  toast('Пополнено '+fmt(amount)+' ₽ + бонус '+fmt(bonus)+' ₽ 🎉');
 }
 
-/* ===== РАКЕТА ZINI — КРАШ ПОЧИНЕН ===== */
-/* Раньше минимум краша был 1.00 и ракета мгновенно сгорала на 1 иксе.
-   Теперь: минимум 1.15, проверка краша ПОСЛЕ роста икса, пролёт краша +4 икса. */
+/* ===== РАКЕТА ZINI — краш починен ===== */
 const RK = {running:false, bet:10, mult:1, crashAt:0, boost:false, timer:null, tick:0};
 
 function rollCrash(){
@@ -883,17 +935,18 @@ function rollCrash(){
 
 function renderRocket(){
   const host = document.getElementById('rk-bets');
-  if (host) host.innerHTML = [10,50,100,250,500].map(a=>
-    `<button class="${RK.bet===a?'sel':''}" onclick="setBet(${a})">${fmt(a)} ₽</button>`).join('');
+  if (host) host.innerHTML = [10,50,100,250,500].map(function(a){
+    return '<button class="'+(RK.bet===a?'sel':'')+'" onclick="setBet('+a+')">'+fmt(a)+' ₽</button>';
+  }).join('');
   renderRkHist();
 }
 function setBet(a){ if (RK.running) return; RK.bet = a; renderRocket(); }
-
 function renderRkHist(){
   const host = document.getElementById('rk-hist');
   if (!host) return;
-  host.innerHTML = (S.rockHist||[]).map(h=>
-    `<span class="${h.win?'good':'bad'}">${h.win?'✅':'💥'} ${h.x.toFixed(2)}x</span>`).join('');
+  host.innerHTML = (S.rockHist||[]).map(function(h){
+    return '<span class="'+(h.win?'good':'bad')+'">'+(h.win?'✅':'💥')+' '+h.x.toFixed(2)+'x</span>';
+  }).join('');
 }
 
 function rocketAction(){
@@ -918,14 +971,12 @@ function rocketAction(){
 }
 
 function rocketTick(){
-  // сначала растёт икс, только потом проверяем краш — ракета всегда летит
   RK.mult = Math.round((RK.mult * 1.0045)*100)/100;
   RK.tick++;
 
   const mult = document.getElementById('rk-mult');
   const rk = document.getElementById('rk-rocket');
 
-  // редкий пролёт: ракета пролетает краш и уверенно летит ещё +4 икса
   if (!RK.boost && RK.mult >= RK.crashAt && Math.random() < 0.10) {
     RK.boost = true;
     RK.crashAt = Math.round((RK.crashAt + 4)*100)/100;
@@ -946,10 +997,10 @@ function rocketTick(){
     tr.style.left = rk.style.left; tr.style.bottom = rk.style.bottom;
     tr.style.animation = 'fadeTrail 1s forwards';
     document.querySelector('.rk-screen').appendChild(tr);
-    setTimeout(()=>tr.remove(), 1000);
+    setTimeout(function(){ tr.remove(); }, 1000);
   }
 
-  document.getElementById('rk-btn').textContent = `Забрать ${fmt(RK.bet*RK.mult)} ₽`;
+  document.getElementById('rk-btn').textContent = 'Забрать '+fmt(RK.bet*RK.mult)+' ₽';
 
   if (RK.mult >= RK.crashAt) return rocketCrash();
 }
@@ -959,32 +1010,31 @@ function cashOut(){
   clearInterval(RK.timer); RK.running = false;
   const win = Math.round(RK.bet * RK.mult);
   S.balance += win;
-  S.rockHist = [{x:RK.mult, win:true}, ...(S.rockHist||[])].slice(0,12);
+  S.rockHist = [{x:RK.mult, win:true}].concat(S.rockHist||[]).slice(0,12);
   save(); updateBalance(); renderRocket();
   const btn = document.getElementById('rk-btn');
   btn.textContent = 'Запустить 🚀'; btn.classList.add('gold'); btn.classList.remove('green');
-  document.getElementById('rk-status').textContent = `Забрано ${fmt(win)} ₽ на ${RK.mult.toFixed(2)}x! 🎉`;
-  toast(`Забрал ${fmt(win)} ₽ на ${RK.mult.toFixed(2)}x 💰`);
+  document.getElementById('rk-status').textContent = 'Забрано '+fmt(win)+' ₽ на '+RK.mult.toFixed(2)+'x! 🎉';
   resetRocketView(1600);
 }
 
 function rocketCrash(){
   clearInterval(RK.timer); RK.running = false;
-  S.rockHist = [{x:RK.crashAt, win:false}, ...(S.rockHist||[])].slice(0,12);
+  S.rockHist = [{x:RK.crashAt, win:false}].concat(S.rockHist||[]).slice(0,12);
   save(); renderRocket();
   const mult = document.getElementById('rk-mult');
   mult.textContent = RK.crashAt.toFixed(2) + 'x';
   mult.classList.add('crashed'); mult.classList.remove('boost');
   document.getElementById('rk-rocket').classList.remove('boost');
   document.getElementById('rk-rocket').style.opacity = '0';
-  document.getElementById('rk-status').textContent = `💥 Улетел! Краш на ${RK.crashAt.toFixed(2)}x`;
+  document.getElementById('rk-status').textContent = '💥 Улетел! Краш на '+RK.crashAt.toFixed(2)+'x';
   const btn = document.getElementById('rk-btn');
   btn.textContent = 'Запустить 🚀'; btn.classList.add('gold'); btn.classList.remove('green');
   resetRocketView(2000);
 }
 
 function resetRocketView(delay){
-  setTimeout(()=>{
+  setTimeout(function(){
     const rk = document.getElementById('rk-rocket');
     rk.style.transition = 'opacity .4s';
     rk.style.opacity = '1';
@@ -997,22 +1047,17 @@ function resetRocketView(delay){
   }, delay);
 }
 
-/* стиль хвоста ракеты */
-const rkStyle = document.createElement('style');
-rkStyle.textContent = '@keyframes fadeTrail{to{opacity:0;transform:scale(2.2)}}';
-document.head.appendChild(rkStyle);
-
 /* ===== СНЕГ ===== */
+const snowStyle = document.createElement('style');
+snowStyle.textContent = '@keyframes fall{to{transform:translateY(105vh) rotate(360deg)}} @keyframes fadeTrail{to{opacity:0;transform:scale(2.2)}}';
+document.head.appendChild(snowStyle);
 for (let i=0;i<30;i++){
   const f = document.createElement('div');
-  f.className='snow';
+  f.className = 'snow';
   const size = 2+Math.random()*4;
-  f.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}vw;animation:fall ${4+Math.random()*6}s linear ${Math.random()*6}s infinite`;
+  f.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+(Math.random()*100)+'vw;animation:fall '+(4+Math.random()*6)+'s linear '+(Math.random()*6)+'s infinite';
   document.body.appendChild(f);
 }
-const snowStyle = document.createElement('style');
-snowStyle.textContent = '@keyframes fall{to{transform:translateY(105vh) rotate(360deg)}}';
-document.head.appendChild(snowStyle);
 
 /* ===== СТАРТ ===== */
 renderHome(); renderCases(); updateBalance(); renderDeposit(); renderRocket();
