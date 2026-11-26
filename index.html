@@ -1,291 +1,318 @@
 <!DOCTYPE html>
-<html lang="ru"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>АвтоКейсы</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:-apple-system,'Segoe UI',Roboto,sans-serif;background:radial-gradient(900px 500px at 50% -10%,#24408f,#0b1026) fixed #0b1026;color:#eaf2ff;min-height:100vh}
-.wrap{max-width:480px;margin:0 auto;padding:14px}
-header{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:14px;margin-bottom:14px}
-.logo{font-size:19px;font-weight:800}.logo span{color:#7cc4ff}
-.bal{background:linear-gradient(135deg,#ffd76e,#ff9d3c);color:#3a2000;font-weight:800;border-radius:22px;padding:9px 16px;cursor:pointer;border:none;font-size:15px}
-.page{display:none}.page.active{display:block;animation:fade .2s}
-@keyframes fade{from{opacity:.5}to{opacity:1}}
-.back{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#eaf2ff;font-weight:800;font-size:13px;padding:10px 16px;border-radius:14px;cursor:pointer;margin-bottom:12px}
-.panel{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:16px;margin-bottom:12px}
-.panel h3{font-size:15px;margin-bottom:8px}.panel p{font-size:13px;color:#cfe0ff;line-height:1.5}
-.stats{display:flex;gap:10px;margin-bottom:14px}
-.stat{flex:1;text-align:center;padding:14px 8px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
-.stat b{display:block;font-size:17px;color:#ffd76e}.stat span{font-size:10px;color:#9fc3ff}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
-.tile{border-radius:18px;padding:18px 14px;cursor:pointer;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);text-align:center;transition:.15s}
-.tile:active{transform:scale(.95)}.tile .ic{font-size:30px}.tile b{display:block;font-size:14px;margin:8px 0 2px}.tile small{color:#9fc3ff;font-size:11px}
-.btn{display:block;width:100%;padding:16px;border:none;border-radius:16px;font-size:15px;font-weight:800;cursor:pointer;margin-top:12px;color:#fff;background:linear-gradient(135deg,#4f8cff,#7cc4ff);box-shadow:0 6px 18px rgba(79,140,255,.3);transition:.12s}
-.btn:active{transform:scale(.96);filter:brightness(.92)}
-.btn.gold{background:linear-gradient(135deg,#ffd76e,#ff9d3c);color:#3a2000;box-shadow:0 6px 18px rgba(255,157,60,.3)}
-.btn.green{background:linear-gradient(135deg,#2fbf71,#7dff9e);color:#04310f;box-shadow:0 6px 18px rgba(47,191,113,.3)}
-.btn.ghost{background:rgba(255,255,255,.1);color:#cfe0ff;box-shadow:none}
-.catbar{display:flex;gap:8px;overflow-x:auto;margin:14px 0 12px;padding-bottom:4px}
-.catbtn{flex-shrink:0;padding:10px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#cfe0ff;font-weight:800;font-size:13px;cursor:pointer}
-.catbtn.sel{background:linear-gradient(135deg,#ffd76e,#ff9d3c);color:#3a2000;border-color:transparent}
-.cases{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.case{border-radius:18px;padding:10px 10px 12px;text-align:center;cursor:pointer;border:1px solid rgba(255,255,255,.15);background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.03));transition:.15s}
-.case:active{transform:scale(.95)}
-.cp{position:relative;height:80px;border-radius:14px;background-size:cover;background-position:center;display:flex;align-items:center;justify-content:center;overflow:hidden}
-.cp::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,16,38,.1),rgba(11,16,38,.7))}
-.cp span{position:relative;z-index:1;font-size:36px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.7))}
-.case .nm{font-size:13px;font-weight:700;margin:10px 0 6px}
-.case .pr{display:inline-block;font-size:12px;font-weight:800;padding:5px 12px;border-radius:12px;color:#ffd76e;background:rgba(255,215,110,.12);border:1px solid rgba(255,215,110,.3)}
-.case .pr.free{color:#7dff9e;background:rgba(47,191,113,.12);border-color:rgba(47,191,113,.3)}
-.balstrip{display:flex;justify-content:space-between;align-items:center;background:rgba(255,215,110,.1);border:1px solid rgba(255,215,110,.3);color:#ffd76e;font-weight:800;font-size:13px;border-radius:12px;padding:10px 14px;margin-top:12px}
-.ov{display:none;position:fixed;inset:0;z-index:70;background:#0b1026;overflow-y:auto;padding:60px 16px 130px}
-.ov.open{display:block}
-.ovb{position:fixed;top:14px;left:14px;z-index:75;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#eaf2ff;font-weight:800;font-size:13px;padding:10px 16px;border-radius:14px;cursor:pointer}
-.ovhead{text-align:center}.ovhead .em{font-size:84px}.ovhead .nm{font-size:22px;font-weight:800;margin-top:8px}
-.ovhead .ds{font-size:12px;color:#9fc3ff;margin-top:6px}
-.pz{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;margin-top:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
-.pz .i{flex:1;min-width:0}.pz .i b{font-size:13px;display:block}.pz .i span{font-size:11px}
-.pz .v{text-align:right}.pz .v b{color:#ffd76e;font-size:13px;display:block}.pz .v small{font-size:10px;color:#9fc3ff}
-.bar{height:5px;border-radius:4px;background:rgba(255,255,255,.1);margin-top:5px;overflow:hidden}.bar i{display:block;height:100%}
-.ph{position:relative;width:64px;height:44px;border-radius:8px;background:rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;font-size:24px;overflow:hidden;flex-shrink:0}
-.ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.ph img.err{display:none}
-.ovbar{position:fixed;left:0;right:0;bottom:0;padding:12px 16px 20px;background:linear-gradient(180deg,transparent,#0b1026)}
-.rl{display:none;position:fixed;inset:0;z-index:80;background:rgba(5,8,25,.96);flex-direction:column;align-items:center;justify-content:center;padding:20px}
-.rl.open{display:flex}
-.rl .tt{font-size:17px;font-weight:800;margin-bottom:18px}
-.win{width:100%;max-width:420px;height:112px;overflow:hidden;position:relative;border-radius:16px;border:2px solid rgba(255,255,255,.25);background:rgba(255,255,255,.05)}
-.track{display:flex;align-items:center;height:100%}
-.ritem{flex:0 0 88px;height:98px;margin:0 4px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;border:1px solid rgba(255,255,255,.15)}
-.ritem .ph{width:64px;height:40px}
-.ritem small{font-size:8px;color:#cfe0ff;text-align:center;padding:0 4px;line-height:1.1;font-weight:600}
-.rl .balstrip{width:100%;max-width:420px;margin-top:18px}
-.res{display:none;position:fixed;inset:0;z-index:90;background:rgba(5,8,25,.96);flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
-.res.open{display:flex}
-.glow{position:absolute;width:280px;height:280px;border-radius:50%;top:16%;left:50%;margin-left:-140px;filter:blur(50px);opacity:.35;animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.25);opacity:.55}}
-.bem{font-size:110px;position:relative;z-index:2}
-.rn{font-size:23px;font-weight:800;margin-top:14px;position:relative;z-index:2}
-.rr{position:relative;z-index:2;display:inline-block;margin-top:8px;font-size:12px;font-weight:800;padding:6px 16px;border-radius:14px;background:rgba(255,255,255,.1)}
-.rv{position:relative;z-index:2;font-size:13px;color:#ffd76e;font-weight:700;margin-top:10px}
-.rb{position:relative;z-index:2;display:flex;gap:10px;margin-top:20px;width:100%;max-width:360px}
-.rb .btn{margin-top:0}
-.wd{display:none;position:fixed;inset:0;z-index:95;background:rgba(5,8,25,.9);align-items:center;justify-content:center;padding:24px}
-.wd.open{display:flex}
-.wdb{width:100%;max-width:340px;text-align:center;background:#182655;border:1px solid rgba(255,255,255,.18);border-radius:22px;padding:24px 20px}
-.wdb input{width:100%;margin-top:16px;padding:13px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.07);color:#fff;font-size:14px;outline:none}
-.it{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;margin-bottom:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12)}
-.it .i{flex:1;min-width:0}.it .i b{font-size:14px;display:block}.it .i span{font-size:11px;color:#9fc3ff}
-.it .a{display:flex;flex-direction:column;gap:6px}
-.it .a button{padding:7px 12px;border:none;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}
-.it .a .s{background:rgba(255,215,110,.2);color:#ffd76e}
-.it .a .w{background:linear-gradient(135deg,#2fbf71,#7dff9e);color:#04310f}
-.dg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
-.dg button{padding:16px 4px;border-radius:14px;border:1px solid rgba(255,215,110,.35);background:rgba(255,215,110,.1);color:#ffd76e;font-weight:800;font-size:13px;cursor:pointer}
-.emp{text-align:center;color:#8fa8d8;font-size:13px;padding:40px 10px}
-.ref{margin-top:10px;padding:10px;border-radius:12px;background:rgba(0,0,0,.3);font-size:12px;color:#7cc4ff;word-break:break-all}
-#toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);background:#1e2c5c;border:1px solid rgba(255,255,255,.25);color:#fff;padding:12px 20px;border-radius:14px;font-size:13px;opacity:0;transition:.3s;z-index:99;max-width:85%;text-align:center}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-.rks{position:relative;height:280px;border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#0a1230,#1e3a8a);border:1px solid rgba(255,255,255,.15)}
-.rkm{position:absolute;top:14px;left:0;right:0;text-align:center;font-size:46px;font-weight:800;color:#ffd76e;z-index:3}
-.rkm.bad{color:#ff6b6b}
-.rkr{position:absolute;left:10px;bottom:14px;z-index:2;font-size:44px;transform:rotate(-45deg)}
-.rkst{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:12px;font-weight:700;color:#cfe0ff;z-index:3}
-.rkb{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px}
-.rkb button{padding:12px 2px;border-radius:12px;border:1px solid rgba(255,215,110,.35);background:rgba(255,215,110,.1);color:#ffd76e;font-weight:800;font-size:12px;cursor:pointer}
-.rkb button.sel{background:linear-gradient(135deg,#ffd76e,#ff9d3c);color:#3a2000}
-</style></head><body>
-<div class="wrap">
-<header><div class="logo">🚗 Авто<span>Кейсы</span></div><button class="bal" onclick="go('dep')">₽ <span id="bal">0</span></button></header>
-<div class="page active" id="p-home">
-<div class="panel"><p>Кейсы с машинами: от «Копейки» до Rolls-Royce. Средний возврат кейса — его полная цена: играем честно!</p></div>
-<div class="stats"><div class="stat"><b id="s-bal">0</b><span>₽ на счету</span></div><div class="stat"><b id="s-op">0</b><span>кейсов открыто</span></div><div class="stat"><b id="s-best">—</b><span>лучший приз</span></div></div>
-<div class="grid2">
-<div class="tile" onclick="go('cases')"><div class="ic">📦</div><b>Кейсы</b><small>машины от 10 ₽</small></div>
-<div class="tile" onclick="bonus()"><div class="ic">🎁</div><b>Бонус</b><small id="bh">+50 ₽ в день</small></div>
-<div class="tile" onclick="go('inv')"><div class="ic">🚙</div><b>Гараж</b><small>продать / вывести</small></div>
-<div class="tile" onclick="go('dep')"><div class="ic">💳</div><b>Пополнить</b><small>+10% бонус</small></div>
-<div class="tile" onclick="go('fr')"><div class="ic">👥</div><b>Друзья</b><small>+25 ₽ за друга</small></div>
-<div class="tile" onclick="go('rk')"><div class="ic">🚀</div><b>Ракета</b><small>забирай до краша</small></div>
-</div></div>
-<div class="page" id="p-cases"><button class="back" onclick="go('home')">← Назад</button><div class="balstrip"><span>💰 Баланс</span><span id="tabBal">0 ₽</span></div><div class="catbar" id="catbar"></div><div id="caseList"></div></div>
-<div class="page" id="p-inv"><button class="back" onclick="go('home')">← Назад</button><div class="panel"><h3>🚙 Гараж</h3><p>Продавай за рубли или выведи в Telegram.</p></div><div id="invList"></div></div>
-<div class="page" id="p-fr"><button class="back" onclick="go('home')">← Назад</button><div class="panel"><h3>👥 Друзья</h3><p>3 друга = доступ к бесплатному кейсу.</p><div class="ref" id="refL"></div><button class="btn green" onclick="invite()">📨 Пригласить друга</button></div><div class="panel"><p id="refP"></p></div></div>
-<div class="page" id="p-dep"><button class="back" onclick="go('home')">← Назад</button><div class="panel"><h3>💳 Пополнение</h3><p>Демо: деньги начисляются сразу, бонус +10%.</p><div class="dg" id="dg"></div></div></div>
-<div class="page" id="p-rk"><button class="back" onclick="go('home')">← Назад</button>
-<div class="rks"><div class="rkm" id="rkm">1.00x</div><div class="rkr" id="rkr">🚀</div><div class="rkst" id="rkst">Сделай ставку и запускай</div></div>
-<div class="rkb" id="rkb"></div><button class="btn gold" id="rkb2" onclick="rkAction()">Запустить 🚀</button></div>
-</div>
-<div class="ov" id="ov">
-<button class="ovb" onclick="document.getElementById('ov').classList.remove('open')">← Назад</button>
-<div class="ovhead"><div class="em" id="ovE">📦</div><div class="nm" id="ovN"></div><div class="ds" id="ovD"></div></div>
-<div class="balstrip"><span>💰 Баланс</span><span id="ovBal">0 ₽</span></div>
-<div id="ovL"></div>
-<div class="ovbar"><button class="btn gold" id="ovB" onclick="openCase()">Открыть</button></div>
-</div>
-<div class="rl" id="rl"><div class="tt" id="rlT"></div><div class="win"><div class="track" id="tr"></div></div>
-<div class="balstrip"><span>💰 Баланс после ставки</span><span id="rlBal">0 ₽</span></div></div>
-<div class="res" id="res"><div class="glow" id="gl"></div><div class="bem" id="rE">🚗</div><div class="rn" id="rN"></div><div><span class="rr" id="rR"></span></div><div class="rv" id="rV"></div>
-<div class="balstrip"><span>💰 Баланс</span><span id="resBal">0 ₽</span></div>
-<div class="rb"><button class="btn gold" onclick="sellP()">💰 Продать</button><button class="btn green" onclick="keepP()">🚙 В гараж</button></div></div>
-<div class="wd" id="wd"><div class="wdb"><div class="bem" style="font-size:60px" id="wdE">🚗</div><div class="rn" style="font-size:17px" id="wdN"></div>
-<input id="wdU" placeholder="@username в Telegram"><button class="btn green" onclick="wdGo()">✅ Вывести</button><button class="btn ghost" onclick="document.getElementById('wd').classList.remove('open')">Отмена</button></div></div>
-<div id="toast"></div>
-<script>
-const CARS=[
-{e:'🚗',n:'Копейка',v:10,t:0,k:'lada'},{e:'🚙',n:'Ока',v:15,t:0,k:'lada'},
-{e:'🚗',n:'ВАЗ-2107',v:20,t:0,k:'lada'},{e:'🚙',n:'Нива',v:25,t:0,k:'niva'},
-{e:'🚗',n:'Гранта',v:30,t:0,k:'lada'},{e:'🚙',n:'Matiz',v:40,t:0,k:'chevrolet'},
-{e:'🚗',n:'Logan',v:50,t:0,k:'renault'},{e:'🚙',n:'Solaris',v:60,t:0,k:'hyundai'},
-{e:'🚗',n:'Polo',v:70,t:0,k:'volkswagen'},{e:'🚙',n:'Kia Rio',v:90,t:0,k:'kia'},
-{e:'🚙',n:'Largus',v:110,t:1,k:'lada'},{e:'🚙',n:'Duster',v:140,t:1,k:'renault'},
-{e:'🚗',n:'Golf',v:160,t:1,k:'volkswagen'},{e:'🚙',n:'Fabia',v:180,t:1,k:'skoda'},
-{e:'🚗',n:'Focus',v:200,t:1,k:'ford'},{e:'🚙',n:'Astra',v:220,t:1,k:'opel'},
-{e:'🚗',n:'Cruze',v:240,t:1,k:'chevrolet'},{e:'🚙',n:'Octavia',v:260,t:1,k:'skoda'},
-{e:'🚗',n:'Vesta',v:290,t:1,k:'lada'},{e:'🚙',n:'Creta',v:350,t:1,k:'hyundai'},
-{e:'🚗',n:'Ceed',v:400,t:1,k:'kia'},{e:'🚙',n:'Jetta',v:450,t:1,k:'volkswagen'},
-{e:'🚙',n:'Rapid',v:500,t:1,k:'skoda'},{e:'🚗',n:'XRAY',v:550,t:1,k:'lada'},
-{e:'🚙',n:'Corolla',v:650,t:1,k:'toyota'},{e:'🚙',n:'Sportage',v:800,t:2,k:'kia'},
-{e:'🚙',n:'Qashqai',v:900,t:2,k:'nissan'},{e:'🚙',n:'Tiguan',v:1000,t:2,k:'volkswagen'},
-{e:'🚙',n:'Camry',v:1300,t:2,k:'toyota'},{e:'🚙',n:'Kodiaq',v:1600,t:2,k:'skoda'},
-{e:'🚙',n:'CR-V',v:1900,t:2,k:'honda'},{e:'🚙',n:'CX-5',v:2200,t:2,k:'mazda'},
-{e:'🚙',n:'BMW 3',v:2600,t:2,k:'bmw'},{e:'🚙',n:'Audi A4',v:3000,t:2,k:'audi'},
-{e:'🚙',n:'C-Class',v:3500,t:2,k:'mercedes'},{e:'🚙',n:'RAV4',v:4200,t:2,k:'toyota'},
-{e:'🚙',n:'BMW X3',v:5000,t:3,k:'bmw'},{e:'🚙',n:'Audi Q5',v:5800,t:3,k:'audi'},
-{e:'🚙',n:'E-Class',v:7000,t:3,k:'mercedes'},{e:'🚙',n:'BMW X5',v:9000,t:3,k:'bmw'},
-{e:'🚙',n:'GLE',v:12000,t:3,k:'mercedes'},{e:'🚙',n:'Audi Q7',v:16000,t:3,k:'audi'},
-{e:'🏎️',n:'Macan',v:22000,t:3,k:'porsche'},{e:'🚙',n:'Range Rover',v:30000,t:4,k:'landrover'},
-{e:'🏎️',n:'Porsche 911',v:45000,t:4,k:'porsche'},{e:'🏎️',n:'BMW M4',v:60000,t:4,k:'bmw'},
-{e:'🏎️',n:'Ferrari 488',v:90000,t:4,k:'ferrari'},{e:'🏎️',n:'Huracan',v:140000,t:4,k:'lamborghini'},
-{e:'🏎️',n:'Rolls Ghost',v:200000,t:4,k:'rollsroyce'}];
-const RAR=[{n:'Развалюха',c:'#cfe0ff'},{n:'Рабочая',c:'#7dff9e'},{n:'Солидная',c:'#7cc4ff'},{n:'Премиум',c:'#c88fff'},{n:'Мечта',c:'#ffd76e'}];
-const SH=[.52,.26,.14,.06,.02];
-const CASES=[
-{id:0,n:'Первый запуск',em:'🎁',pr:0,fr:1,k:'garage',pool:[0,1,2,3,4,5,18]},
-{id:1,n:'Дворник',em:'🧰',pr:50,k:'lada',pool:[0,1,2,3,4,5,6,7]},
-{id:2,n:'Гаражный',em:'🔧',pr:100,k:'lada',pool:[2,3,4,5,6,7,8,9]},
-{id:3,n:'Трасса',em:'🛞',pr:200,k:'car,snow',pool:[4,5,6,7,8,9,10,11]},
-{id:4,n:'Вазовский',em:'🚗',pr:350,k:'lada',pool:[6,7,8,9,10,11,12,13]},
-{id:5,n:'Шоссе',em:'🏁',pr:500,k:'highway',pool:[8,9,10,11,12,13,14,15,16,24]},
-{id:6,n:'Ночная гонка',em:'🚦',pr:800,k:'night,car',pool:[10,11,12,13,14,15,16,17,18,25]},
-{id:7,n:'Семейный',em:'🛣️',pr:1500,k:'road',pool:[12,13,14,15,16,18,19,20,21,26]},
-{id:8,n:'Бизнес',em:'💺',pr:2500,k:'bmw',pool:[13,14,15,16,18,20,21,22,23,27]},
-{id:9,n:'Люкс',em:'💎',pr:5000,k:'mercedes',pool:[16,19,20,21,22,23,24,25,26,36]},
-{id:10,n:'Президентский',em:'👑',pr:10000,k:'audi',pool:[19,21,22,23,24,25,26,27,28,33]},
-{id:11,n:'Шейх',em:'🏆',pr:20000,k:'porsche',pool:[22,24,25,26,27,28,29,30,31,36,37,38]},
-{id:12,n:'Миллионер',em:'🎰',pr:35000,k:'ferrari',pool:[24,26,28,30,31,32,33,34,35,39,40,41]}];
-function img(i){return 'https://loremflickr.com/200/140/'+CARS[i].k+',car?lock='+(i+1)}
-function cpic(c){return 'https://loremflickr.com/300/160/'+c.k+',car?lock='+(c.id+101)}
-function weights(c){
-const ev=c.fr?25:c.pr;
-const tiers=[...new Set(c.pool.map(i=>CARS[i].t))];
-const tot=tiers.reduce((s,t)=>s+SH[t],0);
-const cnt={};tiers.forEach(t=>cnt[t]=c.pool.filter(i=>CARS[i].t===t).length);
-return c.pool.map(i=>((SH[CARS[i].t]/tot)*ev/cnt[CARS[i].t])/CARS[i].v)}
-function pick(c){const w=weights(c),tot=w.reduce((s,x)=>s+x,0);let r=Math.random()*tot;
-for(let i=0;i<c.pool.length;i++){r-=w[i];if(r<=0)return c.pool[i]}return c.pool[c.pool.length-1]}
-function chance(c,i){const w=weights(c);return w[i]/w.reduce((s,x)=>s+x,0)*100}
-let S=JSON.parse(localStorage.getItem('zk')||'null')||{bal:0,frU:'',lsB:'',op:0,best:0,invn:[],pend:null,fr:0,hist:[]};
-function save(){localStorage.setItem('zk',JSON.stringify(S))}
-function fmt(n){return Math.round(n).toLocaleString('ru-RU')}
-function setBal(){const t=fmt(S.bal)+' ₽';
-['bal','s-bal','tabBal','ovBal','rlBal','resBal'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=t})}
-function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2600)}
-function go(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById('p-'+p).classList.add('active');
-if(p==='cases')rCases();if(p==='inv')rInv();if(p==='fr')rFr();if(p==='dep')rDep();if(p==='rk')rRk();if(p==='home')rHome();setBal()}
-function rHome(){document.getElementById('bh').textContent=S.lsB===new Date().toDateString()?'завтра ⏰':'+50 ₽ в день'}
-function bonus(){if(S.lsB===new Date().toDateString())return toast('Бонус уже получен ⏰');S.lsB=new Date().toDateString();S.bal+=50;save();rHome();setBal();toast('+50 ₽ 🎉')}
-let curCat='fr';
-function rCases(){
-const tabs=[['fr','🎁 Бесплатный'],['b','🔧 Бюджетные'],['m','🛣️ Средние'],['p','👑 Премиум']];
-document.getElementById('catbar').innerHTML=tabs.map(t=>'<button class="catbtn'+(curCat===t[0]?' sel':'')+'" onclick="curCat=\''+t[0]+'\';rCases()">'+t[1]+'</button>').join('');
-const f={fr:c=>c.fr,b:c=>!c.fr&&c.pr<=350,m:c=>c.pr>350&&c.pr<5000,p:c=>c.pr>=5000}[curCat];
-document.getElementById('caseList').innerHTML='<div class="cases">'+CASES.filter(f).map(c=>{
-const used=c.fr&&frUsed();
-return '<div class="case" onclick="view('+c.id+')"><div class="cp" style="background-image:url('+cpic(c)+')"><span>'+c.em+'</span></div>'
-+'<div class="nm">'+c.n+'</div><div class="pr'+(c.fr?' free':'')+'">'+(c.fr?(used?'Открыт ⏰':'Бесплатно'):fmt(c.pr)+' ₽')+'</div></div>'}).join('')+'</div>'}
-function frUsed(){return S.frU===new Date().toDateString()}
-let cur=0;
-function view(id){cur=id;const c=CASES[id];
-document.getElementById('ovE').textContent=c.em;document.getElementById('ovN').textContent=c.n;
-document.getElementById('ovD').textContent='Топ-приз: '+fmt(Math.max(...c.pool.map(i=>CARS[i].v)))+' ₽ · возврат ~100%';
-setBal();
-const b=document.getElementById('ovB');
-if(c.fr){b.textContent=frUsed()?'Завтра ⏰':'Открыть бесплатно';b.disabled=frUsed();b.style.opacity=frUsed()?.5:1}
-else{b.textContent='Открыть за '+fmt(c.pr)+' ₽';b.disabled=false;b.style.opacity=1}
-document.getElementById('ovL').innerHTML=c.pool.map((i,k)=>{const p=CARS[i],r=RAR[p.t],ch=chance(c,k);
-return '<div class="pz" style="border-color:'+r.c+'44"><div class="ph">'+p.e+'<img src="'+img(i)+'" loading="lazy" onerror="this.classList.add(\'err\')"></div>'
-+'<div class="i"><b>'+p.n+'</b><span style="color:'+r.c+'">'+r.n+'</span><div class="bar"><i style="width:'+Math.max(1.5,ch)+'%;background:'+r.c+'"></i></div></div>'
-+'<div class="v"><b>'+fmt(p.v)+' ₽</b><small>шанс '+(ch<1?ch.toFixed(3):ch.toFixed(1))+'%</small></div></div>'}).join('');
-document.getElementById('ov').classList.add('open')}
-function openCase(){const c=CASES[cur];
-if(c.fr){if(frUsed())return toast('Уже открыт ⏰');if(S.fr<3)return toast('Нужно 3 друзей (осталось '+(3-S.fr)+') 👥');S.frU=new Date().toDateString()}
-else{if(S.bal<c.pr)return toast('Не хватает рублей 💳');S.bal-=c.pr}
-save();setBal();
-const wi=pick(c);S.pend={...CARS[wi],cn:c.n};S.op++;if(CARS[wi].v>S.best)S.best=CARS[wi].v;save();setBal();
-const tr=document.getElementById('tr');document.getElementById('rlT').textContent=c.n;document.getElementById('rl').classList.add('open');setBal();
-const it=[];for(let i=0;i<45;i++)it.push(c.pool[Math.floor(Math.random()*c.pool.length)]);it[40]=wi;
-tr.innerHTML=it.map(i=>'<div class="ritem" style="background:'+RAR[CARS[i].t].c+'1a"><div class="ph">'+CARS[i].e+'<img src="'+img(i)+'" loading="lazy" onerror="this.classList.add(\'err\')"></div><small>'+CARS[i].n+'</small></div>').join('');
-tr.style.transition='none';tr.style.transform='translateX(0)';
-const w=document.querySelector('.win').clientWidth,off=40*96+44-w/2;
-requestAnimationFrame(()=>requestAnimationFrame(()=>{tr.style.transition='transform 4.2s cubic-bezier(.1,.8,.12,1)';tr.style.transform='translateX(-'+off+'px)'}));
-setTimeout(showRes,4500)}
-function showRes(){const p=S.pend,r=RAR[p.t];
-document.getElementById('rl').classList.remove('open');
-document.getElementById('gl').style.background=r.c;
-document.getElementById('rE').textContent=p.e;document.getElementById('rN').textContent=p.n;
-const rr=document.getElementById('rR');rr.textContent=r.n;rr.style.color=r.c;rr.style.borderColor=r.c+'66';
-document.getElementById('rV').textContent='Стоимость: '+fmt(p.v)+' ₽ · из «'+p.cn+'»';
-document.getElementById('res').classList.add('open');setBal()}
-function sellP(){S.bal+=S.pend.v;toast('«'+S.pend.n+'» продана за '+fmt(S.pend.v)+' ₽ 💰');S.pend=null;save();setBal();closeRes()}
-function keepP(){S.invn.push({e:S.pend.e,n:S.pend.n,t:S.pend.t,v:S.pend.v});toast('В гараже 🚙');S.pend=null;save();closeRes()}
-function closeRes(){document.getElementById('res').classList.remove('open')}
-function rInv(){const h=document.getElementById('invList');
-if(!S.invn.length){h.innerHTML='<div class="emp">Гараж пуст — открой первый кейс! 🕊️</div>';return}
-h.innerHTML=S.invn.map((it,i)=>{const r=RAR[it.t];
-return '<div class="it"><div class="ph">'+it.e+'</div><div class="i"><b>'+it.n+'</b><span style="color:'+r.c+'">'+r.n+'</span> · '+fmt(it.v)+' ₽</div><div class="a"><button class="s" onclick="sellI('+i+')">Продать '+fmt(it.v)+' ₽</button><button class="w" onclick="wdOpen('+i+')">Вывести</button></div></div>'}).join('')}
-function sellI(i){S.bal+=S.invn[i].v;toast('Продано за '+fmt(S.invn[i].v)+' ₽ 💰');S.invn.splice(i,1);save();setBal();rInv()}
-let wdIdx=-1;
-function wdOpen(i){wdIdx=i;const it=S.invn[i];
-document.getElementById('wdE').textContent=it.e;document.getElementById('wdN').textContent=it.n;
-document.getElementById('wd').classList.add('open')}
-function wdGo(){const u=document.getElementById('wdU').value.trim().replace(/^@/,'');
-if(!u||u.length<3)return toast('Укажи @username 📝');
-const it=S.invn[wdIdx];S.invn.splice(wdIdx,1);save();rInv();
-document.getElementById('wd').classList.remove('open');
-toast('Заявка на «'+it.n+'» принята 📦')}
-function rFr(){document.getElementById('refL').textContent='https://t.me/YourBotName?start=ref_guest';
-document.getElementById('refP').innerHTML='Приглашено: <b>'+S.fr+' / 3</b>'+(S.fr>=3?' ✅ Бесплатный кейс доступен!':'')}
-function invite(){
-if(window.Telegram&&Telegram.WebApp.openTelegramLink)Telegram.WebApp.openTelegramLink('https://t.me/share/url?url=https://t.me/YourBotName&text=Играй в АвтоКейсы!');
-else window.open('https://t.me/share/url?url=https://t.me/YourBotName&text=Играй в АвтоКейсы!');
-if(S.fr<3){S.fr++;S.bal+=25;save();rFr();setBal();toast('Друг приглашён! +25 ₽ ('+S.fr+'/3)')}}
-function rDep(){document.getElementById('dg').innerHTML=[10,50,100,500,1000,5000].map(a=>'<button onclick="dep('+a+')">'+fmt(a)+' ₽<br><small>+'+fmt(a+Math.floor(a*.1))+'</small></button>').join('')}
-function dep(a){S.bal+=a+Math.floor(a*.1);save();setBal();rHome();toast('+'+fmt(a+Math.floor(a*.1))+' ₽ 🎉')}
-const RK={run:0,bet:10,m:1,cr:0,t:null};
-function rkAction(){if(RK.run){clearInterval(RK.t);RK.run=0;
-const win=Math.round(RK.bet*RK.m);S.bal+=win;S.hist=[{x:RK.m,w:1},...S.hist].slice(0,10);save();setBal();
-const b=document.getElementById('rkb2');b.textContent='Запустить 🚀';b.classList.add('gold');
-document.getElementById('rkst').textContent='Забрано '+fmt(win)+' ₽ на '+RK.m.toFixed(2)+'x! 🎉';return}
-if(S.bal<RK.bet)return toast('Не хватает на ставку 💳');
-S.bal-=RK.bet;save();setBal();
-RK.run=1;RK.m=1;
-const r=Math.random();RK.cr=r<.03?1.15:Math.min(50,Math.max(1.15,Math.round(.97/(1-Math.random())*100)/100));
-const b=document.getElementById('rkb2');b.textContent='Забрать 💰';b.classList.remove('gold');
-document.getElementById('rkm').classList.remove('bad');document.getElementById('rkm').textContent='1.00x';
-document.getElementById('rkr').style.opacity=1;
-RK.t=setInterval(rkTick,50)}
-function rkTick(){RK.m=Math.round(RK.m*1.0045*100)/100;
-if(RK.m>=RK.cr){clearInterval(RK.t);RK.run=0;S.hist=[{x:RK.cr,w:0},...S.hist].slice(0,10);save();
-const m=document.getElementById('rkm');m.textContent=RK.cr.toFixed(2)+'x';m.classList.add('bad');
-document.getElementById('rkr').style.opacity=0;
-document.getElementById('rkst').textContent='💥 Краш на '+RK.cr.toFixed(2)+'x';
-const b=document.getElementById('rkb2');b.textContent='Запустить 🚀';b.classList.add('gold');
-setTimeout(()=>{document.getElementById('rkr').style.opacity=1;document.getElementById('rkr').style.left='10px';document.getElementById('rkr').style.bottom='14px';m.classList.remove('bad');m.textContent='1.00x';document.getElementById('rkst').textContent='Сделай ставку и запускай'},2000);return}
-document.getElementById('rkm').textContent=RK.m.toFixed(2)+'x';
-const p=Math.min(1,Math.log(RK.m+.2)/Math.log(20)),rk=document.getElementById('rkr');
-rk.style.left=(10+p*75)+'%';rk.style.bottom=(14+p*70)+'%';
-document.getElementById('rkb2').textContent='Забрать '+fmt(RK.bet*RK.m)+' ₽'}
-function rRk(){document.getElementById('rkb').innerHTML=[10,50,100,250,500].map(a=>'<button class="'+(RK.bet===a?'sel':'')+'" onclick="RK.bet='+a+';rRk()">'+fmt(a)+' ₽</button>').join('')}
-rHome();rCases();rDep();rRk();setBal();
-</script></body></html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <title>АвтоКейсы</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body {
+      font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
+      background: radial-gradient(900px 500px at 50% -10%, #24408f, #0b1026) fixed #0b1026;
+      color: #eaf2ff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .wrap {
+      max-width: 480px;
+      width: 100%;
+      padding: 14px;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    .logo {
+      font-size: 19px;
+      font-weight: 800;
+    }
+    .bal {
+      background: linear-gradient(135deg, #ffd76e, #ff9d3c);
+      color: #3a2000;
+      font-weight: 800;
+      border-radius: 22px;
+      padding: 9px 16px;
+      cursor: pointer;
+      border: none;
+      font-size: 15px;
+    }
+    .page {
+      display: none;
+    }
+    .page.active {
+      display: block;
+    }
+    .panel {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .stats {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .stat {
+      flex: 1;
+      text-align: center;
+      padding: 12px 8px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+    @media (max-width: 360px) {
+      .grid2 { grid-template-columns: 1fr; }
+    }
+    .tile {
+      border-radius: 18px;
+      padding: 18px 14px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.14);
+      text-align: center;
+      transition: transform 0.1s ease;
+    }
+    .tile:active {
+      transform: scale(0.96);
+    }
+    .ic {
+      width: 50px;
+      height: 50px;
+      object-fit: contain;
+      display: block;
+      margin: 0 auto 10px auto;
+    }
+    .back {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      border-radius: 12px;
+      padding: 8px 12px;
+      cursor: pointer;
+      margin-bottom: 12px;
+    }
+    .withdraw-form {
+      padding: 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+    }
+    #withdrawAmount {
+      width: 100%;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.3);
+      background: rgba(0,0,0,0.3);
+      color: white;
+      margin-bottom: 8px;
+    }
+    .btn-withdraw {
+      width: 100%;
+      background: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    /* Анимация открытия кейса */
+    @keyframes popIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .case-open-anim {
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    .log-area {
+      margin-top: 12px;
+      font-size: 13px;
+      line-height: 1.4;
+      max-height: 200px;
+      overflow-y: auto;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">🚗 Авто<span>Кейсы</span></div>
+      <button class="bal" onclick="goToHome()">₽ <span id="balance">0</span></button>
+    </header>
+
+    <!-- Главная страница -->
+    <div class="page active" id="page-home">
+      <div class="panel">
+        <p>Кейсы с машинами: от «Копейки» до Rolls‑Royce. Средний возврат кейса — его полная цена: играем честно!</p>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <b id="stat-balance">0</b><span>₽ на счету</span>
+        </div>
+        <div class="stat">
+          <b id="stat-cases">0</b><span>кейсов открыто</span>
+        </div>
+        <div class="stat">
+          <b id="stat-best">—</b><span>лучший приз</span>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="tile" onclick="openCase()">
+          <!-- Заглушка иконки машины -->
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd700'%3E%3Cpath d='M19 11h2V9H8.09L9.5 3.64l-1.42-1.31L5 3v2h2v4H5v2h4v4h4V9h4zm-9-2.07L8.41 14H19V9h-9z'/%3E%3C/svg%3E" alt="Car Icon" class="ic">
+          <b>Открыть кейс</b>
+          <small>Стоимость: 20,000 ₽</small>
+        </div>
+        <div class="tile" onclick="bonus()">
+          <!-- Заглушка иконки подарка -->
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff8a8a'%3E%3Cpath d='M20 8c0-4.42-3.58-8-8-8s-8 3.58-8 8c0 1.99.74 3.82 2 5.09V16h16v-2.91C21.26 11.82 20 9.99 20 8zm-8-6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6 2.69-6 6-6zM4 12c-1.1 0-2 .9-2 2v2h4v-2c0-1.1-.9-2-2-2zm16 0c-1.1 0-2 .9-2 2v2h4v-2c0-1.1-.9-2-2-2z'/%3E%3C/svg%3E" alt="Gift Icon" class="ic">
+          <b>Бонус</b>
+          <small>+25 ₽ ежедневно</small>
+        </div>
+        <div class="tile" onclick="withdrawPage()">
+          <!-- Заглушка иконки кошелька -->
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364b5f6'%3E%3Cpath d='M21 5H8l-6.5 7 6.5 7h13c1.66 0 3-1.34 3-3v-4c0-1.66-1.34-3-3-3zm-1 9H9.83L8 12.18 9.83 10.37H20c.55 0 1 .45 1 1v2c0 .55-.45 1-1 1z'/%3E%3C/svg%3E" alt="Wallet Icon" class="ic">
+          <b>Вывод</b>
+          <small>Мин. вывод: 250 ₽</small>
+        </div>
+      </div>
+      <div class="log-area" id="logArea"></div>
+    </div>
+
+    <!-- Страница вывода -->
+    <div class="page" id="page-withdraw">
+      <button class="back" onclick="goToHome()">← Назад</button>
+      <div class="withdraw-form">
+        <input type="number" id="withdrawAmount" placeholder="Введите сумму вывода (мин. 250 ₽)...">
+        <button class="btn-withdraw" onclick="processWithdrawal()">Вывести</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Состояние
+    let balance = 0;
+    let casesOpened = 0;
+    let bestPrize = '—';
+
+    function updateUI() {
+      document.getElementById('balance').textContent = balance;
+      document.getElementById('stat-balance').textContent = balance;
+      document.getElementById('stat-cases').textContent = casesOpened;
+      document.getElementById('stat-best').textContent = bestPrize;
+    }
+
+    function log(msg) {
+      const area = document.getElementById('logArea');
+      const entry = document.createElement('div');
+      entry.textContent = msg;
+      entry.style.marginBottom = '4px';
+      area.prepend(entry);
+    }
+
+    // Навигация
+    function goToHome() {
+      document.getElementById('page-home').classList.add('active');
+      document.getElementById('page-withdraw').classList.remove('active');
+    }
+    function withdrawPage() {
+      document.getElementById('page-home').classList.remove('active');
+      document.getElementById('page-withdraw').classList.add('active');
+    }
+
+    // Бонус +25 ₽
+    function bonus() {
+      balance += 25;
+      updateUI();
+      log('+25 ₽ (ежедневный бонус)');
+    }
+
+    // Открытие кейса за 20 000 ₽
+    function openCase() {
+      const cost = 20000;
+      if (balance < cost) {
+        alert('Недостаточно средств! Нужно 20 000 ₽.');
+        return;
+      }
+      // Списываем
+      balance -= cost;
+      casesOpened++;
+
+      // Рандомный приз (для демонстрации)
+      const prizes = [
+        { name: 'Копейка', value: 650 },
+        { name: 'BMW 3 серии', value: 18000 },
+        { name: 'Mercedes S-Class', value: 45000 },
+        { name: 'Rolls-Royce', value: 120000 }
+      ];
+      const prize = prizes[Math.floor(Math.random() * prizes.length)];
+
+      // Обновляем лучший приз
+      if (bestPrize === '—' || prize.value > parseFloat(bestPrize.replace(/[^0-9]/g, ''))) {
+        bestPrize = prize.value + ' ₽';
+      }
+
+      updateUI();
+
+      // Анимация
+      const tiles = document.querySelectorAll('.tile');
+      tiles.forEach(t => t.classList.remove('case-open-anim'));
+      setTimeout(() => {
+        tiles[0].classList.add('case-open-anim');
+      }, 10);
+
+      log(`Открыт кейс: ${prize.name} (${prize.value} ₽)`);
+    }
+
+    // Вывод (мин. 250 ₽)
+    function processWithdrawal() {
+      const input = document.getElementById('withdrawAmount');
+      const amount = parseInt(input.value, 10);
+
+      if (!amount || amount <= 0) {
+        alert('Введите корректную сумму.');
+        return;
+      }
+      if (amount < 250) {
+        alert('Минимальная сумма вывода — 250 ₽.');
+        return;
+      }
+      if (amount > balance) {
+        alert('На балансе недостаточно средств.');
+        return;
+      }
+
+      balance -= amount;
+      updateUI();
+      input.value = '';
+      log(`Выведено: ${amount} ₽`);
+      alert('Запрос на вывод отправлен!');
+      goToHome();
+    }
+  </script>
+</body>
+</html>
