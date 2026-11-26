@@ -1,1066 +1,259 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>АвтоКейсы — открывай и выигрывай машины</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<html lang="ru"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>АвтоКейсы</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-  body {
-    font-family:-apple-system,'Segoe UI',Roboto,sans-serif;
-    background:radial-gradient(1200px 600px at 50% -10%, #24408f 0%, #0b1026 60%) fixed, #0b1026;
-    color:#eaf2ff; min-height:100vh; overflow-x:hidden;
-  }
-  .snow { position:fixed; top:-10px; border-radius:50%; background:#fff; opacity:.6; pointer-events:none; z-index:0; }
-  .wrap { max-width:480px; margin:0 auto; padding:14px 14px 40px; position:relative; z-index:1; }
-
-  header {
-    display:flex; align-items:center; justify-content:space-between;
-    background:linear-gradient(160deg,rgba(79,140,255,.18),rgba(255,255,255,.05));
-    border:1px solid rgba(255,255,255,.14);
-    border-radius:18px; padding:14px; margin-bottom:14px; backdrop-filter:blur(8px);
-  }
-  .logo { font-size:19px; font-weight:800; }
-  .logo span { color:#7cc4ff; }
-  .logo small { display:block; font-size:10px; font-weight:400; color:#8fa8d8; }
-  .balance-chip {
-    background:linear-gradient(135deg,#ffd76e,#ff9d3c); color:#3a2000;
-    font-weight:800; border-radius:22px; padding:9px 16px; font-size:15px;
-    display:flex; align-items:center; gap:6px; cursor:pointer;
-    box-shadow:0 4px 18px rgba(255,157,60,.35); white-space:nowrap;
-  }
-  .balance-chip:active { transform:scale(.95); }
-
-  .page-back {
-    display:inline-flex; align-items:center; gap:6px; margin-bottom:12px;
-    background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
-    color:#eaf2ff; font-weight:800; font-size:13px; padding:10px 16px;
-    border-radius:14px; cursor:pointer;
-  }
-  .page-back:active { transform:scale(.95); }
-
-  .welcome {
-    border-radius:20px; padding:18px 16px; margin-bottom:14px;
-    background:linear-gradient(135deg,rgba(255,215,110,.16),rgba(124,92,255,.12));
-    border:1px solid rgba(255,215,110,.35);
-    display:flex; align-items:center; gap:14px;
-  }
-  .welcome .santa { font-size:52px; flex-shrink:0; animation:float 3s ease-in-out infinite; }
-  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
-  .welcome .w-hi { font-size:16px; font-weight:800; }
-  .welcome .w-hi span { color:#ffd76e; }
-  .welcome .w-text { font-size:12px; color:#cfe0ff; margin-top:4px; line-height:1.45; }
-
-  .banner {
-    border-radius:18px; padding:18px 16px; margin-bottom:14px; position:relative; overflow:hidden;
-    background:linear-gradient(135deg,#4f8cff 0%,#7c5cff 55%,#c86dff 100%);
-    box-shadow:0 8px 30px rgba(79,140,255,.35);
-  }
-  .banner h2 { font-size:18px; margin-bottom:4px; }
-  .banner p { font-size:12px; color:#eaf2ffcc; }
-  .banner .big { position:absolute; right:12px; top:50%; transform:translateY(-50%) rotate(-10deg); font-size:52px; opacity:.9; }
-  .banner .btn { margin-top:12px; background:#0b1026; width:auto; display:inline-block; padding:10px 22px; font-size:13px; }
-
-  .home-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
-  .home-tile {
-    border-radius:18px; padding:18px 14px; cursor:pointer;
-    background:linear-gradient(160deg,rgba(79,140,255,.18),rgba(255,255,255,.04));
-    border:1px solid rgba(255,255,255,.14);
-  }
-  .home-tile:active { transform:scale(.96); }
-  .home-tile .ic { font-size:30px; }
-  .home-tile b { display:block; font-size:14px; margin-top:8px; }
-  .home-tile small { color:#9fc3ff; font-size:11px; }
-  .home-tile.gold-tile { background:linear-gradient(160deg,rgba(255,215,110,.2),rgba(255,255,255,.04)); border-color:rgba(255,215,110,.4); }
-  .stat-row { display:flex; gap:10px; margin-bottom:14px; }
-  .stat-box {
-    flex:1; text-align:center; padding:14px 8px; border-radius:16px;
-    background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
-    border:1px solid rgba(255,255,255,.12);
-  }
-  .stat-box b { font-size:17px; display:block; color:#ffd76e; }
-  .stat-box span { font-size:10px; color:#9fc3ff; }
-
-  .page { display:none; } .page.active { display:block; }
-  .cat-title { margin:18px 0 10px; font-size:15px; font-weight:800; display:flex; align-items:center; gap:8px; }
-  .cat-title::after { content:''; flex:1; height:1px; background:rgba(255,255,255,.1); }
-</style>
-<style>
-  .cases-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
-  .case-card {
-    border-radius:18px; padding:16px 10px 12px; text-align:center; cursor:pointer;
-    transition:.15s; position:relative; overflow:hidden;
-  }
-  .case-card:active { transform:scale(.95); }
-  .case-card .glow {
-    position:absolute; width:90px; height:90px; border-radius:50%;
-    top:-30px; left:50%; margin-left:-45px; filter:blur(18px); opacity:.5;
-  }
-  .case-card .emoji { font-size:44px; position:relative; animation:float 3s ease-in-out infinite; }
-  .case-card .name { font-size:13px; font-weight:700; margin:10px 0 6px; position:relative; }
-  .case-card .price { position:relative; display:inline-block; font-size:12px; font-weight:800; padding:5px 12px; border-radius:12px; }
-
-  .cat-free    .case-card { background:linear-gradient(160deg,#2fbf7133,#ffffff0d); border:1px solid #2fbf7155; }
-  .cat-free    .glow { background:#2fbf71; }
-  .cat-free    .price { color:#7dff9e; }
-  .cat-budget  .case-card { background:linear-gradient(160deg,#4f8cff40,#ffffff0d); border:1px solid #4f8cff66; }
-  .cat-budget  .glow { background:#4f8cff; }
-  .cat-mid     .case-card { background:linear-gradient(160deg,#7cc4ff33,#c86dff26); border:1px solid #7cc4ff66; }
-  .cat-mid     .glow { background:#7cc4ff; }
-  .cat-premium .case-card { background:linear-gradient(160deg,#ffd76e40,#ff9d3c26); border:1px solid #ffd76e77; }
-  .cat-premium .glow { background:#ffb84f; }
-
-  .case-view {
-    display:none; position:fixed; inset:0; z-index:70;
-    background:radial-gradient(900px 500px at 50% -10%, #1e3a8a 0%, #0b1026 65%), #0b1026;
-    overflow-y:auto; padding:0 16px 120px;
-  }
-  .case-view.open { display:block; }
-  .cv-back {
-    position:fixed; top:14px; left:14px; z-index:75;
-    background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
-    color:#eaf2ff; font-weight:800; font-size:13px; padding:10px 16px;
-    border-radius:14px; cursor:pointer;
-  }
-  .cv-head { text-align:center; padding-top:64px; }
-  .cv-emoji { font-size:110px; animation:float 3s ease-in-out infinite; }
-  .cv-name { font-size:22px; font-weight:800; margin-top:10px; }
-  .cv-desc { font-size:12px; color:#9fc3ff; margin-top:6px; }
-  .cv-prizes { margin-top:22px; }
-  .cv-prizes h4 { font-size:14px; margin-bottom:10px; color:#cfe0ff; }
-  .cv-prize {
-    display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:14px; margin-bottom:8px;
-    background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
-    border:1px solid rgba(255,255,255,.1);
-  }
-  .cv-prize .pe { font-size:28px; }
-  .cv-prize .pinfo { flex:1; }
-  .cv-prize .pinfo b { font-size:13px; display:block; }
-  .cv-prize .pinfo span { font-size:11px; }
-  .cv-prize .pval { text-align:right; }
-  .cv-prize .pval b { color:#ffd76e; font-size:13px; display:block; }
-  .cv-prize .pval small { font-size:10px; color:#9fc3ff; }
-  .chance-bar { height:5px; border-radius:4px; background:rgba(255,255,255,.1); margin-top:5px; overflow:hidden; }
-  .chance-bar i { display:block; height:100%; border-radius:4px; }
-  .cv-open-bar {
-    position:fixed; left:0; right:0; bottom:0; z-index:75;
-    padding:12px 16px 20px; background:linear-gradient(180deg,transparent,#0b1026 40%);
-  }
-  .cv-open-bar .btn { margin-top:0; }
-
-  .roulette-wrap {
-    display:none; position:fixed; inset:0; z-index:80;
-    background:rgba(5,8,25,.94);
-    flex-direction:column; align-items:center; justify-content:center; padding:20px;
-  }
-  .roulette-wrap.open { display:flex; }
-  .rl-title { font-size:17px; font-weight:800; margin-bottom:18px; color:#cfe0ff; }
-  .rl-window {
-    width:100%; max-width:420px; height:112px; overflow:hidden; position:relative;
-    border-radius:16px; border:2px solid rgba(255,255,255,.25); background:rgba(255,255,255,.05);
-  }
-  .rl-window::before,.rl-window::after { content:''; position:absolute; top:0; bottom:0; width:50px; z-index:2; }
-  .rl-window::before { left:0; background:linear-gradient(90deg,rgba(5,8,25,1),transparent); }
-  .rl-window::after  { right:0; background:linear-gradient(-90deg,rgba(5,8,25,1),transparent); }
-  .rl-line {
-    position:absolute; left:50%; top:-4px; bottom:-4px; width:3px; margin-left:-1.5px;
-    background:linear-gradient(180deg,#ffd76e,#ff9d3c); z-index:3; border-radius:2px; box-shadow:0 0 14px #ffd76e;
-  }
-  .rl-track { display:flex; align-items:center; height:100%; will-change:transform; }
-  .rl-item {
-    flex:0 0 84px; height:92px; margin:0 4px; border-radius:14px;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
-    font-size:32px; border:1px solid rgba(255,255,255,.15);
-<style>
-  .cases-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
-  .case-card {
-    border-radius:18px; padding:16px 10px 12px; text-align:center; cursor:pointer;
-    transition:.15s; position:relative; overflow:hidden;
-  }
-  .case-card:active { transform:scale(.95); }
-  .case-card .glow {
-    position:absolute; width:90px; height:90px; border-radius:50%;
-    top:-30px; left:50%; margin-left:-45px; filter:blur(18px); opacity:.5;
-  }
-  .case-card .emoji { font-size:44px; position:relative; animation:float 3s ease-in-out infinite; }
-  .case-card .name { font-size:13px; font-weight:700; margin:10px 0 6px; position:relative; }
-  .case-card .price { position:relative; display:inline-block; font-size:12px; font-weight:800; padding:5px 12px; border-radius:12px; }
-
-  .cat-free    .case-card { background:linear-gradient(160deg,#2fbf7133,#ffffff0d); border:1px solid #2fbf7155; }
-  .cat-free    .glow { background:#2fbf71; }
-  .cat-free    .price { color:#7dff9e; }
-  .cat-budget  .case-card { background:linear-gradient(160deg,#4f8cff40,#ffffff0d); border:1px solid #4f8cff66; }
-  .cat-budget  .glow { background:#4f8cff; }
-  .cat-mid     .case-card { background:linear-gradient(160deg,#7cc4ff33,#c86dff26); border:1px solid #7cc4ff66; }
-  .cat-mid     .glow { background:#7cc4ff; }
-  .cat-premium .case-card { background:linear-gradient(160deg,#ffd76e40,#ff9d3c26); border:1px solid #ffd76e77; }
-  .cat-premium .glow { background:#ffb84f; }
-
-  .case-view {
-    display:none; position:fixed; inset:0; z-index:70;
-    background:radial-gradient(900px 500px at 50% -10%, #1e3a8a 0%, #0b1026 65%), #0b1026;
-    overflow-y:auto; padding:0 16px 120px;
-  }
-  .case-view.open { display:block; }
-  .cv-back {
-    position:fixed; top:14px; left:14px; z-index:75;
-    background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
-    color:#eaf2ff; font-weight:800; font-size:13px; padding:10px 16px;
-    border-radius:14px; cursor:pointer;
-  }
-  .cv-head { text-align:center; padding-top:64px; }
-  .cv-emoji { font-size:110px; animation:float 3s ease-in-out infinite; }
-  .cv-name { font-size:22px; font-weight:800; margin-top:10px; }
-  .cv-desc { font-size:12px; color:#9fc3ff; margin-top:6px; }
-  .cv-prizes { margin-top:22px; }
-  .cv-prizes h4 { font-size:14px; margin-bottom:10px; color:#cfe0ff; }
-  .cv-prize {
-    display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:14px; margin-bottom:8px;
-    background:linear-gradient(160deg,rgba(255,255,255,.07),rgba(255,255,255,.02));
-    border:1px solid rgba(255,255,255,.1);
-  }
-  .cv-prize .pe { font-size:28px; }
-  .cv-prize .pinfo { flex:1; }
-  .cv-prize .pinfo b { font-size:13px; display:block; }
-  .cv-prize .pinfo span { font-size:11px; }
-  .cv-prize .pval { text-align:right; }
-  .cv-prize .pval b { color:#ffd76e; font-size:13px; display:block; }
-  .cv-prize .pval small { font-size:10px; color:#9fc3ff; }
-  .chance-bar { height:5px; border-radius:4px; background:rgba(255,255,255,.1); margin-top:5px; overflow:hidden; }
-  .chance-bar i { display:block; height:100%; border-radius:4px; }
-  .cv-open-bar {
-    position:fixed; left:0; right:0; bottom:0; z-index:75;
-    padding:12px 16px 20px; background:linear-gradient(180deg,transparent,#0b1026 40%);
-  }
-  .cv-open-bar .btn { margin-top:0; }
-
-  .roulette-wrap {
-    display:none; position:fixed; inset:0; z-index:80;
-    background:rgba(5,8,25,.94);
-    flex-direction:column; align-items:center; justify-content:center; padding:20px;
-  }
-  .roulette-wrap.open { display:flex; }
-  .rl-title { font-size:17px; font-weight:800; margin-bottom:18px; color:#cfe0ff; }
-  .rl-window {
-    width:100%; max-width:420px; height:112px; overflow:hidden; position:relative;
-    border-radius:16px; border:2px solid rgba(255,255,255,.25); background:rgba(255,255,255,.05);
-  }
-  .rl-window::before,.rl-window::after { content:''; position:absolute; top:0; bottom:0; width:50px; z-index:2; }
-  .rl-window::before { left:0; background:linear-gradient(90deg,rgba(5,8,25,1),transparent); }
-  .rl-window::after  { right:0; background:linear-gradient(-90deg,rgba(5,8,25,1),transparent); }
-  .rl-line {
-    position:absolute; left:50%; top:-4px; bottom:-4px; width:3px; margin-left:-1.5px;
-    background:linear-gradient(180deg,#ffd76e,#ff9d3c); z-index:3; border-radius:2px; box-shadow:0 0 14px #ffd76e;
-  }
-  .rl-track { display:flex; align-items:center; height:100%; will-change:transform; }
-  .rl-item {
-    flex:0 0 84px; height:92px; margin:0 4px; border-radius:14px;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
-    font-size:32px; border:1px solid rgba(255,255,255,.15);
-  }
-  .rl-item small { font-size:9px; color:#cfe0ff; text-align:center; padding:0 4px; line-height:1.15; font-weight:600; }
-
-  .result-wrap {
-    display:none; position:fixed; inset:0; z-index:90;
-    background:rgba(5,8,25,.95);
-    flex-direction:column; align-items:center; justify-content:center; padding:24px; text-align:center;
-  }
-  .result-wrap.open { display:flex; }
-  .result-glow {
-    position:absolute; width:280px; height:280px; border-radius:50%;
-    top:16%; left:50%; margin-left:-140px; filter:blur(50px); opacity:.35;
-    animation:pulse 2s ease-in-out infinite;
-  }
-  @keyframes pulse { 0%,100%{transform:scale(1);opacity:.3} 50%{transform:scale(1.25);opacity:.55} }
-  .big-emoji { font-size:110px; position:relative; z-index:2; animation:drop .7s cubic-bezier(.2,1.4,.4,1); }
-  @keyframes drop { 0%{transform:translateY(-140px) scale(.3);opacity:0} 100%{transform:translateY(0) scale(1);opacity:1} }
-  .r-name { font-size:23px; font-weight:800; margin-top:14px; position:relative; z-index:2; }
-  .r-rare {
-    position:relative; z-index:2; display:inline-block; margin-top:8px;
-    font-size:12px; font-weight:800; padding:6px 16px; border-radius:14px;
-    background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
-  }
-  .r-value { position:relative; z-index:2; font-size:13px; color:#ffd76e; font-weight:700; margin-top:10px; }
-  .r-buttons { position:relative; z-index:2; display:flex; gap:10px; margin-top:34px; width:100%; max-width:360px; }
-  .r-buttons .btn { margin-top:0; }
-
-  .wd-modal {
-    display:none; position:fixed; inset:0; z-index:95;
-    background:rgba(5,8,25,.9); align-items:center; justify-content:center; padding:24px;
-  }
-  .wd-modal.open { display:flex; }
-  .wd-box {
-    width:100%; max-width:340px; text-align:center;
-    background:linear-gradient(160deg,#182655,#0e1633); border:1px solid rgba(255,255,255,.18);
-    border-radius:22px; padding:24px 20px;
-  }
-  .wd-box .wd-emoji { font-size:64px; }
-  .wd-box .wd-name { font-size:18px; font-weight:800; margin-top:10px; }
-  .wd-box .wd-val { font-size:13px; color:#ffd76e; font-weight:700; margin-top:4px; }
-  .wd-box input {
-    width:100%; margin-top:16px; padding:13px 14px; border-radius:12px;
-    border:1px solid rgba(255,255,255,.25); background:rgba(255,255,255,.07);
-    color:#fff; font-size:14px; outline:none;
-  }
-
-  .panel { background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:18px; padding:16px; margin-bottom:12px; }
-  .panel h3 { font-size:15px; margin-bottom:8px; }
-  .panel p { font-size:13px; color:#cfe0ff; line-height:1.5; }
-
-  .btn {
-    display:block; width:100%; padding:16px; border:none; border-radius:16px;
-    font-size:15px; font-weight:800; cursor:pointer; margin-top:12px; transition:.18s; color:#fff;
-    background:linear-gradient(135deg,#4f8cff,#7cc4ff);
-    box-shadow:0 6px 20px rgba(79,140,255,.35);
-  }
-  .btn:active { transform:scale(.96); filter:brightness(.95); }
-  .btn.green { background:linear-gradient(135deg,#2fbf71,#7dff9e); color:#04310f; box-shadow:0 6px 20px rgba(47,191,113,.35); }
-  .btn.gold { background:linear-gradient(135deg,#ffd76e,#ff9d3c); color:#3a2000; box-shadow:0 6px 20px rgba(255,157,60,.35); }
-  .btn.ghost { background:rgba(255,255,255,.1); color:#cfe0ff; box-shadow:none; }
-
-  .dep-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px; }
-  .dep-grid button {
-    padding:16px 4px; border-radius:14px; border:1px solid rgba(255,215,110,.35);
-    background:linear-gradient(160deg,rgba(255,215,110,.15),rgba(255,255,255,.04));
-    color:#ffd76e; font-weight:800; font-size:13px; cursor:pointer;
-  }
-  .dep-grid small { font-size:10px; color:#7dff9e; font-weight:600; }
-
-  .inv-empty { text-align:center; color:#8fa8d8; font-size:13px; padding:40px 10px; }
-  .inv-item {
-    display:flex; align-items:center; gap:12px; padding:12px; border-radius:16px; margin-bottom:10px;
-    background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
-    border:1px solid rgba(255,255,255,.12);
-  }
-  .inv-item .emoji { font-size:34px; }
-  .inv-item .info { flex:1; }
-  .inv-item .info b { font-size:14px; display:block; }
-  .inv-item .info span { font-size:11px; color:#9fc3ff; }
-  .inv-item .acts { display:flex; flex-direction:column; gap:6px; }
-  .inv-item .acts button { padding:7px 12px; border:none; border-radius:10px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap; }
-  .inv-item .acts .sell { background:rgba(255,215,110,.2); color:#ffd76e; }
-  .inv-item .acts .wd { background:linear-gradient(135deg,#2fbf71,#7dff9e); color:#04310f; }
-
-  #toast {
-    position:fixed; left:50%; bottom:110px; transform:translateX(-50%) translateY(20px);
-    background:#1e2c5c; border:1px solid rgba(255,255,255,.25); color:#fff;
-    padding:12px 20px; border-radius:14px; font-size:13px; opacity:0; transition:.3s; z-index:99;
-    max-width:85%; text-align:center;
-  }
-  #toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
-  .ref-link { margin-top:10px; padding:10px; border-radius:12px; background:rgba(0,0,0,.3); font-size:12px; color:#7cc4ff; word-break:break-all; }
-
-  .rk-screen {
-    position:relative; height:280px; border-radius:18px; overflow:hidden;
-    background:linear-gradient(180deg,#0a1230 0%,#1e3a8a 70%,#4f8cff22 100%);
-    border:1px solid rgba(255,255,255,.15);
-  }
-  .rk-mult {
-    position:absolute; top:14px; left:0; right:0; text-align:center;
-    font-size:46px; font-weight:800; color:#ffd76e;
-    text-shadow:0 0 24px rgba(255,215,110,.45); z-index:3;
-  }
-  .rk-mult.crashed { color:#ff6b6b; }
-  .rk-mult.boost { color:#7dff9e; }
-  .rk-rocket {
-    position:absolute; left:10px; bottom:14px; z-index:2;
-    display:flex; flex-direction:column; align-items:center; gap:2px;
-    transition:left .05s linear, bottom .05s linear;
-  }
-  .rk-rocket .rk-name {
-    font-size:10px; font-weight:800; letter-spacing:2px; color:#7cc4ff;
-    background:rgba(11,16,38,.7); padding:2px 8px; border-radius:8px;
-    border:1px solid rgba(124,196,255,.4);
-  }
-  .rk-rocket .rk-emoji { font-size:44px; transform:rotate(-45deg); }
-  .rk-rocket.boost .rk-emoji { filter:drop-shadow(0 0 20px #ffd76e); }
-  .rk-trail {
-    position:absolute; width:14px; height:14px; border-radius:50%;
-    background:radial-gradient(circle,#ffd76e,transparent 70%);
-    opacity:.8; z-index:1; pointer-events:none;
-  }
-  .rk-status { position:absolute; bottom:12px; left:0; right:0; text-align:center; font-size:12px; font-weight:700; color:#cfe0ff; z-index:3; }
-  .rk-bets { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-top:12px; }
-  .rk-bets button {
-    padding:12px 2px; border-radius:12px; border:1px solid rgba(255,215,110,.35);
-    background:linear-gradient(160deg,rgba(255,215,110,.15),rgba(255,255,255,.04));
-    color:#ffd76e; font-weight:800; font-size:12px; cursor:pointer;
-  }
-  .rk-bets button.sel { background:linear-gradient(135deg,#ffd76e,#ff9d3c); color:#3a2000; }
-  .rk-hist { display:flex; gap:6px; margin-top:12px; overflow-x:auto; }
-  .rk-hist span {
-    flex-shrink:0; font-size:11px; font-weight:800; padding:6px 10px; border-radius:10px;
-    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12);
-  }
-  .rk-hist span.good { color:#7dff9e; }
-  .rk-hist span.bad  { color:#ff9d9d; }
-</style>
-</head>
-<body>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,'Segoe UI',Roboto,sans-serif;background:radial-gradient(900px 500px at 50% -10%,#24408f,#0b1026) fixed #0b1026;color:#eaf2ff;min-height:100vh}
+.wrap{max-width:480px;margin:0 auto;padding:14px}
+header{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:14px;margin-bottom:14px}
+.logo{font-size:19px;font-weight:800}.logo span{color:#7cc4ff}
+.bal{background:linear-gradient(135deg,#ffd76e,#ff9d3c);color:#3a2000;font-weight:800;border-radius:22px;padding:9px 16px;cursor:pointer;border:none;font-size:15px}
+.page{display:none}.page.active{display:block}
+.back{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#eaf2ff;font-weight:800;font-size:13px;padding:10px 16px;border-radius:14px;cursor:pointer;margin-bottom:12px}
+.panel{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:16px;margin-bottom:12px}
+.panel h3{font-size:15px;margin-bottom:8px}.panel p{font-size:13px;color:#cfe0ff;line-height:1.5}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.tile{border-radius:18px;padding:18px 14px;cursor:pointer;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);text-align:center}
+.tile:active{transform:scale(.95)}.tile .ic{font-size:30px}.tile b{display:block;font-size:14px;margin:8px 0 2px}.tile small{color:#9fc3ff;font-size:11px}
+.btn{display:block;width:100%;padding:16px;border:none;border-radius:16px;font-size:15px;font-weight:800;cursor:pointer;margin-top:12px;color:#fff;background:linear-gradient(135deg,#4f8cff,#7cc4ff)}
+.btn:active{transform:scale(.96)}
+.btn.gold{background:linear-gradient(135deg,#ffd76e,#ff9d3c);color:#3a2000}
+.btn.green{background:linear-gradient(135deg,#2fbf71,#7dff9e);color:#04310f}
+.btn.ghost{background:rgba(255,255,255,.1);color:#cfe0ff}
+.stats{display:flex;gap:10px;margin-bottom:14px}
+.stat{flex:1;text-align:center;padding:14px 8px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+.stat b{display:block;font-size:17px;color:#ffd76e}.stat span{font-size:10px;color:#9fc3ff}
+.cats{margin:18px 0 10px;font-size:15px;font-weight:800}
+.cases{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.case{border-radius:18px;padding:16px 10px;text-align:center;cursor:pointer;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05)}
+.case:active{transform:scale(.95)}
+.case .em{font-size:44px}.case .nm{font-size:13px;font-weight:700;margin:8px 0 6px}
+.case .pr{display:inline-block;font-size:12px;font-weight:800;padding:5px 12px;border-radius:12px;color:#ffd76e}
+.ov{display:none;position:fixed;inset:0;z-index:70;background:#0b1026;overflow-y:auto;padding:60px 16px 120px}
+.ov.open{display:block}
+.ovb{position:fixed;top:14px;left:14px;z-index:75;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#eaf2ff;font-weight:800;font-size:13px;padding:10px 16px;border-radius:14px;cursor:pointer}
+.ovhead{text-align:center}.ovhead .em{font-size:100px}.ovhead .nm{font-size:22px;font-weight:800;margin-top:8px}
+.ovhead .ds{font-size:12px;color:#9fc3ff;margin-top:6px}
+.pz{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;margin-top:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
+.pz .e{font-size:28px}.pz .i{flex:1}.pz .i b{font-size:13px;display:block}.pz .i span{font-size:11px}
+.pz .v{text-align:right}.pz .v b{color:#ffd76e;font-size:13px;display:block}.pz .v small{font-size:10px;color:#9fc3ff}
+.bar{height:5px;border-radius:4px;background:rgba(255,255,255,.1);margin-top:5px;overflow:hidden}.bar i{display:block;height:100%}
+.ovbar{position:fixed;left:0;right:0;bottom:0;padding:12px 16px 20px;background:linear-gradient(180deg,transparent,#0b1026)}
+.rl{display:none;position:fixed;inset:0;z-index:80;background:rgba(5,8,25,.95);flex-direction:column;align-items:center;justify-content:center;padding:20px}
+.rl.open{display:flex}
+.rl .tt{font-size:17px;font-weight:800;margin-bottom:18px}
+.win{width:100%;max-width:420px;height:112px;overflow:hidden;position:relative;border-radius:16px;border:2px solid rgba(255,255,255,.25);background:rgba(255,255,255,.05)}
+.track{display:flex;align-items:center;height:100%}
+.ritem{flex:0 0 84px;height:92px;margin:0 4px;border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:32px;border:1px solid rgba(255,255,255,.15)}
+.ritem small{font-size:9px;color:#cfe0ff;text-align:center;padding:0 4px;line-height:1.15;font-weight:600}
+.res{display:none;position:fixed;inset:0;z-index:90;background:rgba(5,8,25,.95);flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+.res.open{display:flex}
+.glow{position:absolute;width:280px;height:280px;border-radius:50%;top:16%;left:50%;margin-left:-140px;filter:blur(50px);opacity:.35}
+.bem{font-size:110px;position:relative;z-index:2}
+.rn{font-size:23px;font-weight:800;margin-top:14px;position:relative;z-index:2}
+.rr{position:relative;z-index:2;display:inline-block;margin-top:8px;font-size:12px;font-weight:800;padding:6px 16px;border-radius:14px;background:rgba(255,255,255,.1)}
+.rv{position:relative;z-index:2;font-size:13px;color:#ffd76e;font-weight:700;margin-top:10px}
+.rb{position:relative;z-index:2;display:flex;gap:10px;margin-top:30px;width:100%;max-width:360px}
+.rb .btn{margin-top:0}
+.wd{display:none;position:fixed;inset:0;z-index:95;background:rgba(5,8,25,.9);align-items:center;justify-content:center;padding:24px}
+.wd.open{display:flex}
+.wdb{width:100%;max-width:340px;text-align:center;background:#182655;border:1px solid rgba(255,255,255,.18);border-radius:22px;padding:24px 20px}
+.wdb input{width:100%;margin-top:16px;padding:13px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.07);color:#fff;font-size:14px;outline:none}
+.it{display:flex;align-items:center;gap:12px;padding:12px;border-radius:16px;margin-bottom:10px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12)}
+.it .e{font-size:34px}.it .i{flex:1}.it .i b{font-size:14px;display:block}.it .i span{font-size:11px;color:#9fc3ff}
+.it .a{display:flex;flex-direction:column;gap:6px}
+.it .a button{padding:7px 12px;border:none;border-radius:10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}
+.it .a .s{background:rgba(255,215,110,.2);color:#ffd76e}
+.it .a .w{background:linear-gradient(135deg,#2fbf71,#7dff9e);color:#04310f}
+.dg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.dg button{padding:16px 4px;border-radius:14px;border:1px solid rgba(255,215,110,.35);background:rgba(255,215,110,.1);color:#ffd76e;font-weight:800;font-size:13px;cursor:pointer}
+.emp{text-align:center;color:#8fa8d8;font-size:13px;padding:40px 10px}
+#toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);background:#1e2c5c;border:1px solid rgba(255,255,255,.25);color:#fff;padding:12px 20px;border-radius:14px;font-size:13px;opacity:0;transition:.3s;z-index:99;max-width:85%;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.rks{position:relative;height:280px;border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#0a1230,#1e3a8a);border:1px solid rgba(255,255,255,.15)}
+.rkm{position:absolute;top:14px;left:0;right:0;text-align:center;font-size:46px;font-weight:800;color:#ffd76e;z-index:3}
+.rkm.bad{color:#ff6b6b}
+.rkr{position:absolute;left:10px;bottom:14px;z-index:2;font-size:44px;transform:rotate(-45deg)}
+.rkst{position:absolute;bottom:12px;left:0;right:0;text-align:center;font-size:12px;font-weight:700;color:#cfe0ff;z-index:3}
+.rkb{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px}
+.rkb button{padding:12px 2px;border-radius:12px;border:1px solid rgba(255,215,110,.35);background:rgba(255,215,110,.1);color:#ffd76e;font-weight:800;font-size:12px;cursor:pointer}
+.rkb button.sel{background:linear-gradient(135deg,#ffd76e,#ff9d3c);color:#3a2000}
+.ref{margin-top:10px;padding:10px;border-radius:12px;background:rgba(0,0,0,.3);font-size:12px;color:#7cc4ff;word-break:break-all}
+</style></head><body>
 <div class="wrap">
-  <header>
-    <div class="logo">🚗 Авто<span>Кейсы</span><small>открывай · выигрывай · выводи</small></div>
-    <div class="balance-chip" onclick="go('deposit')">₽ <span id="balance">0</span></div>
-  </header>
+<header><div class="logo">🚗 Авто<span>Кейсы</span></div><button class="bal" onclick="go('dep')">₽ <span id="bal">0</span></button></header>
 
-  <div class="page active" id="page-home">
-    <div class="welcome">
-      <div class="santa">🎅</div>
-      <div>
-        <div class="w-hi">Привет, <span id="w-name">друг</span>!</div>
-        <div class="w-text">Автосалон Деда Мороза: кейсы с машинами от «Копейки» за 10 ₽ до Lamborghini за 140 000 ₽. Крути рулетку и забирай ключи!</div>
-      </div>
-    </div>
-    <div class="banner">
-      <h2>🏆 Новогодний автосалон</h2>
-      <p>Машины АвтоВАЗа и иномарки + бонус +10% к пополнению</p>
-      <button class="btn" onclick="go('cases')">Смотреть кейсы →</button>
-      <div class="big">🔑</div>
-    </div>
-    <div class="stat-row">
-      <div class="stat-box"><b id="stat-balance">0</b><span>₽ на счету</span></div>
-      <div class="stat-box"><b id="stat-opened">0</b><span>кейсов открыто</span></div>
-      <div class="stat-box"><b id="stat-best">—</b><span>лучший приз</span></div>
-    </div>
-    <div class="home-grid">
-      <div class="home-tile" onclick="go('cases')"><div class="ic">📦</div><b>Кейсы</b><small>машины от 10 ₽</small></div>
-      <div class="home-tile gold-tile" onclick="claimBonus()"><div class="ic">🎁</div><b>Ежедневный бонус</b><small id="bonus-hint">+50 ₽ каждый день</small></div>
-      <div class="home-tile" onclick="go('inventory')"><div class="ic">🚙</div><b>Мой гараж</b><small>продать или вывести</small></div>
-      <div class="home-tile" onclick="go('friends')"><div class="ic">👥</div><b>Друзья</b><small>пригласи и получай ₽</small></div>
-      <div class="home-tile" onclick="go('rocket')"><div class="ic">🚀</div><b>Ракета ZINI</b><small>забирай икс до краша</small></div>
-    </div>
-  </div>
+<div class="page active" id="p-home">
+<div class="panel"><p>Кейсы с машинами: от «Копейки» до Lamborghini. Крути рулетку, продавай или копи гараж!</p></div>
+<div class="stats"><div class="stat"><b id="s-bal">0</b><span>₽ на счету</span></div><div class="stat"><b id="s-op">0</b><span>кейсов открыто</span></div><div class="stat"><b id="s-best">—</b><span>лучший приз</span></div></div>
+<div class="grid2">
+<div class="tile" onclick="go('cases')"><div class="ic">📦</div><b>Кейсы</b><small>машины от 10 ₽</small></div>
+<div class="tile" onclick="bonus()"><div class="ic">🎁</div><b>Бонус</b><small id="bh">+50 ₽ в день</small></div>
+<div class="tile" onclick="go('inv')"><div class="ic">🚙</div><b>Гараж</b><small>продать / вывести</small></div>
+<div class="tile" onclick="go('dep')"><div class="ic">💳</div><b>Пополнить</b><small>+10% бонус</small></div>
+<div class="tile" onclick="go('fr')"><div class="ic">👥</div><b>Друзья</b><small>+25 ₽ за друга</small></div>
+<div class="tile" onclick="go('rk')"><div class="ic">🚀</div><b>Ракета</b><small>забирай до краша</small></div>
+</div></div>
 
-  <div class="page" id="page-cases">
-    <button class="page-back" onclick="go('home')">← Назад</button>
-  </div>
-
-  <div class="page" id="page-inventory">
-    <button class="page-back" onclick="go('home')">← Назад</button>
-    <div class="panel"><h3>🚙 Мой гараж</h3><p>Машину можно продать за рубли или вывести в Telegram-аккаунт. Вывод обрабатывается до 24 часов.</p></div>
-    <div id="inv-list"></div>
-  </div>
-
-  <div class="page" id="page-friends">
-    <button class="page-back" onclick="go('home')">← Назад</button>
-    <div class="panel">
-      <h3>👥 Пригласите друзей</h3>
-      <p>Пригласите <b>3 друзей</b> — и сможете забрать машину из бесплатного кейса. За каждого друга ещё даём <b>25 ₽</b>.</p>
-      <div class="ref-link" id="ref-link"></div>
-      <button class="btn green" onclick="shareInvite()">📨 Пригласить друзей</button>
-    </div>
-    <div class="panel"><h3>Прогресс</h3><p id="ref-progress"></p></div>
-  </div>
-
-  <div class="page" id="page-deposit">
-    <button class="page-back" onclick="go('home')">← Назад</button>
-    <div class="panel">
-      <h3
-<div class="wrap">
-  <header>
-    <div class="logo">🚗 Авто<span>Кейсы</span><small>открывай · выигрывай · выводи</small></div>
-    <div class="balance-chip" onclick="go('deposit')">₽ <span id="balance">0</span></div>
-  </header>
-
-  <div class="page active" id="page-home">
-    <div class="welcome">
-      <div class="santa">🎅</div>
-      <div>
-        <div class="w-hi">Привет, <span id="w-name">друг</span>!</div>
-        <div class="w-text">Автосалон Деда Мороза: кейсы с машинами от «Копейки» за 10 ₽ до Lamborghini за 140 000 ₽. Крути рулетку и забирай ключи!</div>
-      </div>
-    </div>
-    <div class="banner">
-      <h2>🏆 Новогодний автосалон</h2>
-      <p>Машины АвтоВАЗа и иномарки + бонус +10% к пополнению</p>
-      <button class="btn" onclick="go('cases')">Смотреть кейсы →</button>
-      <div class="big">🔑</div>
-    </div>
-    <div class="stat-row">
-      <div class="stat-box"><b id="stat-balance">0</b><span>₽ на счету</span></div>
-      <div class="stat-box"><b id="stat-opened">0</b><span>кейсов открыто</span></div>
-      <div class="stat-box"><b id="stat-best">—</b><span>лучший приз</span></div>
-    </div>
-    <div class="home-grid">
-      <div class="home-tile" onclick="go('cases')"><div class="ic">📦</div><b>Кейсы</b><small>машины от 10 ₽</small></div>
-      <div class="home-tile gold-tile" onclick="claimBonus()"><div class="ic">🎁</div><b>Ежедневный бонус</b><small id="bonus-hint">+50 ₽ каждый день</small></div>
-      <div class="home-tile" onclick="go('inventory')"><div class="ic">🚙</div><b>Мой гараж</b><small>продать или вывести</small></div>
-      <div class="home-tile" onclick="go('friends')"><div class="ic">👥</div><b>Друзья</b><small>пригласи и получай ₽</small></div>
-      <div class="home-tile" onclick="go('rocket')"><div class="ic">🚀</div><b>Ракета ZINI</b><small>забирай икс до краша</small></div>
-    </div>
-  </div>
-
-  <div class="page" id="page-cases">
-    <button class="page-back" onclick="go('home')">← Назад</button>
-  </div>
-
-  <div class="page" id="page-inventory">
-    <button class="page-back" onclick="go('home')">← Назад</button>
-    <div class="panel"><h3>🚙 Мой гараж</h3><p>Машину можно продать за рубли или вывести в Telegram-аккаунт. Вывод обрабатывается до 24 часов.</p></div>
-    <div id="inv-list"></div>
-  </div>
-
-  <div class="page" id="page-friends">
-    <button class="page-back" onclick="go('home')">← Назад</button>
-    <div class="panel">
-      <h3>👥 Пригласите друзей</h3>
-      <p>Пригласите <b>3 друзей</b> — и сможете забрать машину из бесплатного кейса. За каждого друга ещё даём <b>25 ₽</b>.</p>
-      <div class="ref-link" id="ref-link"></div>
-      <button class="btn green" onclick="shareInvite()">📨 Пригласить друзей</button>
-    </div>
-    <div class="panel"><h3>Прогресс</h3><p id="ref-progress"></p></div>
-  </div>
-
-  <div class="page" id="page-deposit">
-    <button class="page-back" onclick="go('home')">← Назад</button>
-    <div class="panel">
-      <h3>💳 Пополнение</h3>
-      <p>При любом пополнении — бонус <b>+10%</b>! (демо-режим: деньги начисляются сразу)</p>
-      <div class="dep-grid" id="dep-grid"></div>
-    </div>
-  </div>
-
-  <div class="page" id="page-rocket">
-    <button class="page-back" onclick="go('home')">← Назад</button>
-    <div class="panel">
-      <h3>🚀 Ракета ZINI</h3>
-      <p>Ставь рубли, запускай ракету и забирай выигрыш <b>до</b> краша. Икс от 1.15 до 50.00.</p>
-    </div>
-    <div class="rk-screen">
-      <div class="rk-mult" id="rk-mult">1.00x</div>
-      <div class="rk-rocket" id="rk-rocket"><div class="rk-name">ZINI</div><div class="rk-emoji">🚀</div></div>
-      <div class="rk-status" id="rk-status">Сделай ставку и запускай</div>
-    </div>
-    <div class="rk-bets" id="rk-bets"></div>
-    <button class="btn gold" id="rk-btn" onclick="rocketAction()">Запустить 🚀</button>
-    <div class="rk-hist" id="rk-hist"></div>
-  </div>
+<div class="page" id="p-cases"><button class="back" onclick="go('home')">← Назад</button><div id="caseList"></div></div>
+<div class="page" id="p-inv"><button class="back" onclick="go('home')">← Назад</button><div class="panel"><h3>🚙 Гараж</h3><p>Продавай за рубли или выведи в Telegram.</p></div><div id="invList"></div></div>
+<div class="page" id="p-fr"><button class="back" onclick="go('home')">← Назад</button><div class="panel"><h3>👥 Друзья</h3><p>3 друга = доступ к бесплатному кейсу.</p><div class="ref" id="refL"></div><button class="btn green" onclick="invite()">📨 Пригласить</button></div><div class="panel"><p id="refP"></p></div></div>
+<div class="page" id="p-dep"><button class="back" onclick="go('home')">← Назад</button><div class="panel"><h3>💳 Пополнение</h3><p>Демо: деньги начисляются сразу, бонус +10%.</p><div class="dg" id="dg"></div></div></div>
+<div class="page" id="p-rk"><button class="back" onclick="go('home')">← Назад</button>
+<div class="rks"><div class="rkm" id="rkm">1.00x</div><div class="rkr" id="rkr">🚀</div><div class="rkst" id="rkst">Сделай ставку и запускай</div></div>
+<div class="rkb" id="rkb"></div><button class="btn gold" id="rkb2" onclick="rkAction()">Запустить 🚀</button></div>
 </div>
 
-<div class="case-view" id="case-view">
-  <button class="cv-back" onclick="closeCaseView()">← Назад</button>
-  <div class="cv-head">
-    <div class="cv-emoji" id="cv-emoji">📦</div>
-    <div class="cv-name" id="cv-name"></div>
-    <div class="cv-desc" id="cv-desc"></div>
-  </div>
-  <div class="cv-prizes">
-    <h4>🚗 Машины в кейсе</h4>
-    <div id="cv-list"></div>
-  </div>
-  <div class="cv-open-bar"><button class="btn gold" id="cv-open-btn" onclick="openCase(currentCase)">Открыть</button></div>
+<div class="ov" id="ov">
+<button class="ovb" onclick="document.getElementById('ov').classList.remove('open')">← Назад</button>
+<div class="ovhead"><div class="em" id="ovE">📦</div><div class="nm" id="ovN"></div><div class="ds" id="ovD"></div></div>
+<div id="ovL"></div>
+<div class="ovbar"><button class="btn gold" id="ovB" onclick="openCase()">Открыть</button></div>
 </div>
 
-<div class="roulette-wrap" id="roulette">
-  <div class="rl-title" id="rl-title">Открываем кейс...</div>
-  <div class="rl-window"><div class="rl-track" id="rl-track"></div><div class="rl-line"></div></div>
-</div>
+<div class="rl" id="rl"><div class="tt" id="rlT"></div><div class="win"><div class="track" id="tr"></div></div></div>
 
-<div class="result-wrap" id="result-wrap">
-  <div class="result-glow" id="r-glow"></div>
-  <div class="big-emoji" id="r-emoji">🚗</div>
-  <div class="r-name" id="r-name"></div>
-  <div><span class="r-rare" id="r-rare"></span></div>
-  <div class="r-value" id="r-value"></div>
-  <div class="r-buttons">
-    <button class="btn gold" onclick="sellPrize()">💰 Продать</button>
-    <button class="btn green" onclick="keepPrize()">🚙 В гараж</button>
-  </div>
-</div>
+<div class="res" id="res"><div class="glow" id="gl"></div><div class="bem" id="rE">🚗</div><div class="rn" id="rN"></div><div><span class="rr" id="rR"></span></div><div class="rv" id="rV"></div>
+<div class="rb"><button class="btn gold" onclick="sellP()">💰 Продать</button><button class="btn green" onclick="keepP()">🚙 В гараж</button></div></div>
 
-<div class="wd-modal" id="wd-modal">
-  <div class="wd-box">
-    <div class="wd-emoji" id="wd-emoji">🚗</div>
-    <div class="wd-name" id="wd-name"></div>
-    <div class="wd-val" id="wd-val"></div>
-    <input id="wd-user" placeholder="@username в Telegram" maxlength="32">
-    <button class="btn green" onclick="confirmWithdraw()">✅ Подтвердить вывод</button>
-    <button class="btn ghost" onclick="closeWd()">Отмена</button>
-  </div>
-</div>
+<div class="wd" id="wd"><div class="wdb"><div class="bem" style="font-size:60px" id="wdE">🚗</div><div class="rn" style="font-size:17px" id="wdN"></div>
+<input id="wdU" placeholder="@username в Telegram"><button class="btn green" onclick="wdGo()">✅ Вывести</button><button class="btn ghost" onclick="document.getElementById('wd').classList.remove('open')">Отмена</button></div></div>
 
 <div id="toast"></div>
 <script>
-/* ================= НАСТРОЙКИ ================= */
-const BOT_USERNAME = 'YourBotName';
-const HOUSE_EDGE = 0.75;
-const FREE_CASE_EV = 25;
-
-/* ============ МАШИНЫ ============ */
-const CARS = [
-  {e:'🚗', n:'ВАЗ-2101 «Копейка»',   v:10,     t:'common'},
-  {e:'🚙', n:'Ока',                  v:15,     t:'common'},
-  {e:'🚗', n:'ВАЗ-2107',             v:20,     t:'common'},
-  {e:'🚙', n:'Нива 4x4',             v:25,     t:'common'},
-  {e:'🚗', n:'Лада Гранта',          v:30,     t:'common'},
-  {e:'🚙', n:'Daewoo Matiz',         v:40,     t:'common'},
-  {e:'🚗', n:'Renault Logan',        v:50,     t:'common'},
-  {e:'🚙', n:'Hyundai Solaris',      v:60,     t:'common'},
-  {e:'🚗', n:'VW Polo',              v:70,     t:'common'},
-  {e:'🚙', n:'Kia Rio',              v:90,     t:'common'},
-  {e:'🚙', n:'Lada Vesta SW Cross',  v:250,    t:'uncommon'},
-  {e:'🚗', n:'Lada XRAY',            v:300,    t:'uncommon'},
-  {e:'🚙', n:'Hyundai Creta',        v:400,    t:'uncommon'},
-  {e:'🚗', n:'Kia Ceed',             v:500,    t:'uncommon'},
-  {e:'🚙', n:'Skoda Rapid',          v:600,    t:'uncommon'},
-  {e:'🚙', n:'VW Tiguan',            v:900,    t:'uncommon'},
-  {e:'🚙', n:'Toyota Corolla',       v:1200,   t:'uncommon'},
-  {e:'🚙', n:'Kia Sportage',         v:2500,   t:'rare'},
-  {e:'🚙', n:'Toyota Camry',         v:4000,   t:'rare'},
-  {e:'🚙', n:'Honda CR-V',           v:5000,   t:'rare'},
-  {e:'🚙', n:'BMW 3 Series',         v:7000,   t:'rare'},
-  {e:'🚙', n:'Audi A4',              v:9000,   t:'rare'},
-  {e:'🚙', n:'Mercedes C-Class',     v:12000,  t:'rare'},
-  {e:'🚙', n:'BMW X5',               v:20000,  t:'epic'},
-  {e:'🚙', n:'Mercedes GLE',         v:30000,  t:'epic'},
-  {e:'🏎️', n:'Porsche 911',          v:60000,  t:'epic'},
-  {e:'🏎️', n:'Ferrari 488',          v:100000, t:'legend'},
-  {e:'🏎️', n:'Lamborghini Huracan',  v:140000, t:'legend'},
-];
-const RARITIES = [
-  {key:'common',   name:'Развалюха', color:'#cfe0ff'},
-  {key:'uncommon', name:'Рабочая',   color:'#7dff9e'},
-  {key:'rare',     name:'Солидная',  color:'#7cc4ff'},
-  {key:'epic',     name:'Премиум',   color:'#c88fff'},
-  {key:'legend',   name:'Мечта',     color:'#ffd76e'},
-];
-const CATEGORIES = [
-  {id:'free',    cls:'cat-free',    name:'🎁 Бесплатный'},
-  {id:'budget',  cls:'cat-budget',  name:'🔧 Бюджетные'},
-  {id:'mid',     cls:'cat-mid',     name:'🛣️ Средние'},
-  {id:'premium', cls:'cat-premium', name:'👑 Премиум'},
-];
-
-/* ===== ШАНСЫ: чем дороже машина — тем реже ===== */
-const TIER_SHARE = {common:.52, uncommon:.26, rare:.14, epic:.06, legend:.02};
-function buildWeights(price, pool, evOverride){
-  const EV = evOverride ?? price * HOUSE_EDGE;
-  const tiers = [...new Set(pool.map(p=>p.t))];
-  const total = tiers.reduce((s,t)=>s+TIER_SHARE[t],0);
-  const counts = {}; tiers.forEach(t=>counts[t]=pool.filter(p=>p.t===t).length);
-  return pool.map(p=>((TIER_SHARE[p.t]/total)*EV/counts[p.t]) / p.v);
+const CARS=[
+{e:'🚗',n:'Копейка',v:10,t:0},{e:'🚙',n:'Ока',v:15,t:0},{e:'🚗',n:'ВАЗ-2107',v:20,t:0},
+{e:'🚙',n:'Нива',v:25,t:0},{e:'🚗',n:'Гранта',v:30,t:0},{e:'🚙',n:'Matiz',v:40,t:0},
+{e:'🚗',n:'Logan',v:50,t:0},{e:'🚙',n:'Solaris',v:60,t:0},{e:'🚗',n:'Polo',v:70,t:0},
+{e:'🚙',n:'Kia Rio',v:90,t:0},{e:'🚙',n:'Vesta SW',v:250,t:1},{e:'🚗',n:'XRAY',v:300,t:1},
+{e:'🚙',n:'Creta',v:400,t:1},{e:'🚗',n:'Ceed',v:500,t:1},{e:'🚙',n:'Rapid',v:600,t:1},
+{e:'🚙',n:'Tiguan',v:900,t:1},{e:'🚙',n:'Corolla',v:1200,t:1},{e:'🚙',n:'Sportage',v:2500,t:2},
+{e:'🚙',n:'Camry',v:4000,t:2},{e:'🚙',n:'CR-V',v:5000,t:2},{e:'🚙',n:'BMW 3',v:7000,t:2},
+{e:'🚙',n:'Audi A4',v:9000,t:2},{e:'🚙',n:'C-Class',v:12000,t:2},{e:'🚙',n:'BMW X5',v:20000,t:3},
+{e:'🚙',n:'GLE',v:30000,t:3},{e:'🏎️',n:'Porsche 911',v:60000,t:3},{e:'🏎️',n:'Ferrari 488',v:100000,t:4},
+{e:'🏎️',n:'Lamborghini',v:140000,t:4}];
+const RAR=[{n:'Развалюха',c:'#cfe0ff'},{n:'Рабочая',c:'#7dff9e'},{n:'Солидная',c:'#7cc4ff'},{n:'Премиум',c:'#c88fff'},{n:'Мечта',c:'#ffd76e'}];
+const SH=[.52,.26,.14,.06,.02];
+const CASES=[
+{id:0,n:'Первый запуск',em:'🎁',pr:0,fr:1,pool:[0,1,2,3,4,5,10]},
+{id:1,n:'Дворник',em:'🧰',pr:50,pool:[0,1,2,3,4,5,6,7]},
+{id:2,n:'Гаражный',em:'🔧',pr:100,pool:[2,3,4,5,6,7,8,9]},
+{id:3,n:'Трасса',em:'🛞',pr:200,pool:[4,5,6,7,8,9,10,11]},
+{id:4,n:'Вазовский',em:'🚗',pr:350,pool:[6,7,8,9,10,11,12,13]},
+{id:5,n:'Шоссе',em:'🏁',pr:500,pool:[6,7,8,9,10,11,12,13,14,17]},
+{id:6,n:'Ночная гонка',em:'🚦',pr:800,pool:[8,9,10,11,12,13,14,15,16,18]},
+{id:7,n:'Семейный',em:'🛣️',pr:1500,pool:[9,10,11,12,13,14,15,16,18,19]},
+{id:8,n:'Бизнес',em:'💺',pr:2500,pool:[10,11,12,13,14,15,16,18,19,20]},
+{id:9,n:'Люкс',em:'💎',pr:5000,pool:[12,13,14,15,16,17,18,19,20,23]},
+{id:10,n:'Президентский',em:'👑',pr:10000,pool:[14,15,16,17,18,19,20,21,22,24]},
+{id:11,n:'Шейх',em:'🏆',pr:20000,pool:[17,18,19,20,21,22,23,24,25,26]},
+{id:12,n:'Миллионер',em:'🎰',pr:35000,pool:[19,20,21,22,23,24,25,26,26,27]}];
+function weights(c){
+  const ev=c.fr?25:c.pr*0.75;
+  const tiers=[...new Set(c.pool.map(i=>CARS[i].t))];
+  const tot=tiers.reduce((s,t)=>s+SH[t],0);
+  const cnt={};tiers.forEach(t=>cnt[t]=c.pool.filter(i=>CARS[i].t===t).length);
+  return c.pool.map(i=>((SH[CARS[i].t]/tot)*ev/cnt[CARS[i].t])/CARS[i].v);
 }
-function pickPrize(pool, weights){
-  const total = weights.reduce((s,w)=>s+w,0);
-  let r = Math.random()*total;
-  for (let i=0;i<pool.length;i++){ r -= weights[i]; if (r<=0) return pool[i]; }
-  return pool[pool.length-1];
+function pick(c){
+  const w=weights(c),tot=w.reduce((s,x)=>s+x,0);
+  let r=Math.random()*tot;
+  for(let i=0;i<c.pool.length;i++){r-=w[i];if(r<=0)return c.pool[i]}
+  return c.pool[c.pool.length-1];
 }
-function chancePercent(weights, i){
-  const total = weights.reduce((s,w)=>s+w,0);
-  return weights[i]/total*100;
-}
-
-/* ================= КЕЙСЫ ================= */
-const CASES = [];
-(function buildCases(){
-  const prices = {budget:[50,100,200,350], mid:[500,800,1500,2500], premium:[5000,10000,20000,35000]};
-  const nameSets = {
-    budget:['Дворник','Гаражный','Трасса М-5','Вазовский'],
-    mid:['Шоссе','Ночная гонка','Семейный','Бизнес-класс'],
-    premium:['Люкс','Президентский','Шейх','Миллионер'],
-  };
-  const emos = {budget:['🧰','🔧','🛞','🚗'], mid:['🏁','🚦','🛣️','💺'], premium:['💎','👑','🏆','🎰']};
-  const byTier = t => CARS.filter(c=>c.t===t);
-  function pickRandom(arr,n){ const c=[...arr], out=[]; for(let i=0;i<n;i++) out.push(c.splice(Math.floor(Math.random()*c.length),1)[0]); return out; }
-
-  const freePool = [...byTier('common').slice(0,6), {e:'🚙', n:'Lada Vesta SW Cross', v:250, t:'uncommon'}];
-  CASES.push({id:0, cat:'free', name:'Первый запуск', emoji:'🎁', price:0, free:true,
-    pool:freePool, weights:buildWeights(0, freePool, FREE_CASE_EV)});
-
-  const mix = {
-    budget: [...pickRandom(byTier('common'),5), ...pickRandom(byTier('uncommon'),3)],
-    mid:    [...pickRandom(byTier('common'),4), ...pickRandom(byTier('uncommon'),3), ...pickRandom(byTier('rare'),2)],
-    premium:[...pickRandom(byTier('common'),3), ...pickRandom(byTier('uncommon'),3), ...pickRandom(byTier('rare'),2), ...pickRandom(byTier('epic'),1), ...pickRandom(byTier('legend'),1)],
-  };
-  for (const cat of ['budget','mid','premium']) {
-    for (let i=0;i<4;i++) {
-      const price = prices[cat][i];
-      CASES.push({id:CASES.length, cat, name:nameSets[cat][i]+' кейс', emoji:emos[cat][i], price,
-        pool:mix[cat], weights:buildWeights(price, mix[cat])});
-    }
-  }
-})();
-
-/* ================= СОСТОЯНИЕ ================= */
-let S = JSON.parse(localStorage.getItem('zk_state')||'null') || {balance:0, invites:0, freeUsed:'', lastBonus:'', opened:0, best:0, inventory:[], pending:null, wdIdx:-1, rockHist:[]};
-function save(){ localStorage.setItem('zk_state', JSON.stringify(S)); }
-function fmt(n){ return Math.round(n).toLocaleString('ru-RU'); }
-
-/* ================= TELEGRAM ================= */
-const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
-if (tg) { try { tg.ready(); tg.expand(); } catch(e){} }
-const USER_NAME = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? (tg.initDataUnsafe.user.first_name || 'Игрок') : 'Игрок';
-const USER_ID = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.id : 0;
-const REF_URL = 'https://t.me/' + BOT_USERNAME + '?start=ref_' + (USER_ID||'guest');
-
-/* ================= UI ================= */
-function toast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  clearTimeout(t._h); t._h = setTimeout(function(){ t.classList.remove('show'); }, 2600);
-}
-function go(page){
-  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
-  document.getElementById('page-'+page).classList.add('active');
-  if (page==='inventory') renderInventory();
-  if (page==='friends') renderFriends();
-  if (page==='deposit') renderDeposit();
-  if (page==='cases') renderCases();
-  if (page==='home') renderHome();
-  if (page==='rocket') renderRocket();
-  updateBalance();
-  window.scrollTo(0,0);
-}
-function updateBalance(){
-  document.getElementById('balance').textContent = fmt(S.balance);
-  document.getElementById('stat-balance').textContent = fmt(S.balance);
-  document.getElementById('stat-opened').textContent = S.opened;
-  document.getElementById('stat-best').textContent = S.best ? fmt(S.best)+' ₽' : '—';
-}
-function renderHome(){
-  document.getElementById('w-name').textContent = USER_NAME;
-  const used = S.lastBonus === new Date().toDateString();
-  document.getElementById('bonus-hint').textContent = used ? 'Бонус забран, приходи завтра' : '+50 ₽ каждый день';
-}
-function claimBonus(){
-  if (S.lastBonus === new Date().toDateString()) return toast('Бонус уже получен сегодня ⏰');
-  S.lastBonus = new Date().toDateString(); S.balance += 50;
-  save(); renderHome(); updateBalance();
-  toast('Ежедневный бонус: +50 ₽ 🎉');
-}
-
-/* ===== СПИСОК КЕЙСОВ ===== */
-function renderCases(){
-  const host = document.getElementById('page-cases');
-  let html = '';
-  for (const cat of CATEGORIES) {
-    html += '<div class="cat-title">'+cat.name+'</div><div class="cases-grid '+cat.cls+'">';
-    CASES.filter(function(c){ return c.cat===cat.id; }).forEach(function(c){
-      html += '<div class="case-card" onclick="showCaseView('+c.id+')">'
-        + '<div class="glow"></div><div class="emoji">'+c.emoji+'</div>'
-        + '<div class="name">'+c.name+'</div>'
-        + '<div class="price">'+(c.free ? (todayFreeUsed() ? 'Завтра ⏰' : 'Бесплатно') : fmt(c.price)+' ₽')+'</div></div>';
-    });
-    html += '</div>';
-  }
-  host.innerHTML = html;
-}
-function todayFreeUsed(){ return S.freeUsed === new Date().toDateString(); }
-
-/* ===== ПРОСМОТР КЕЙСА ===== */
-let currentCase = 0;
-function showCaseView(id){
-  currentCase = id;
-  const c = CASES[id];
-  document.getElementById('cv-emoji').textContent = c.emoji;
-  document.getElementById('cv-name').textContent = c.name;
-  const maxPrize = Math.max.apply(null, c.pool.map(function(p){ return p.v; }));
-  document.getElementById('cv-desc').textContent = 'Топ-машина: '+fmt(maxPrize)+' ₽ · средний возврат '+fmt(c.free?FREE_CASE_EV:c.price*HOUSE_EDGE)+' ₽';
-  const btn = document.getElementById('cv-open-btn');
-  if (c.free) {
-    btn.textContent = todayFreeUsed() ? 'Завтра ⏰' : 'Открыть бесплатно';
-    btn.disabled = todayFreeUsed();
-    btn.style.opacity = todayFreeUsed() ? '.5' : '1';
-  } else {
-    btn.textContent = 'Открыть за '+fmt(c.price)+' ₽';
-    btn.disabled = false; btn.style.opacity = '1';
-  }
-  document.getElementById('cv-list').innerHTML = c.pool.map(function(p,i){
-    const rar = RARITIES.find(function(r){ return r.key===p.t; });
-    const ch = chancePercent(c.weights, i);
-    return '<div class="cv-prize" style="border-color:'+rar.color+'44">'
-      + '<div class="pe">'+p.e+'</div>'
-      + '<div class="pinfo"><b>'+p.n+'</b><span style="color:'+rar.color+'">'+rar.name+'</span>'
-      + '<div class="chance-bar"><i style="width:'+Math.max(1.5,Math.min(100,ch))+'%;background:'+rar.color+'"></i></div></div>'
-      + '<div class="pval"><b>'+fmt(p.v)+' ₽</b><small>шанс '+(ch<1?ch.toFixed(3):ch.toFixed(1))+'%</small></div></div>';
-  }).join('');
-  document.getElementById('case-view').classList.add('open');
-}
-function closeCaseView(){ document.getElementById('case-view').classList.remove('open'); }
-
-/* ===== ОТКРЫТИЕ ===== */
-function openCase(id){
-  const c = CASES[id];
-  if (c.free) {
-    if (todayFreeUsed()) return toast('Бесплатный кейс уже открыт ⏰');
-    if (S.invites < 3) return toast('Пригласите 3 друзей (осталось '+(3-S.invites)+') 👥');
-  } else if (S.balance < c.price) return toast('Недостаточно рублей 💳');
-  if (!c.free) S.balance -= c.price;
-  else S.freeUsed = new Date().toDateString();
-  save(); updateBalance(); renderCases();
-  spin(c);
-}
-
-/* ===== РУЛЕТКА ===== */
-const ITEM_W = 92;
-function spin(c){
-  const winner = pickPrize(c.pool, c.weights);
-  S.pending = {emoji:winner.e, name:winner.n, rarity:winner.t, value:winner.v, caseName:c.name};
-  S.opened++;
-  if (winner.v > (S.best||0)) S.best = winner.v;
-  save(); updateBalance();
-
-  const track = document.getElementById('rl-track');
-  document.getElementById('rl-title').textContent = c.name;
-  document.getElementById('roulette').classList.add('open');
-
-  const items = [];
-  for (let i=0;i<45;i++) items.push(c.pool[Math.floor(Math.random()*c.pool.length)]);
-  items[40] = winner;
-  track.innerHTML = items.map(function(p){
-    const r = RARITIES.find(function(x){ return x.key===p.t; }) || RARITIES[0];
-    return '<div class="rl-item" style="background:linear-gradient(160deg,'+r.color+'33,rgba(255,255,255,.06));border-color:'+r.color+'66"><span>'+p.e+'</span><small>'+p.n+'</small></div>';
-  }).join('');
-  track.style.transition = 'none';
-  track.style.transform = 'translateX(0)';
-
-  const win = document.querySelector('.rl-window').clientWidth;
-  const offset = 40*ITEM_W + ITEM_W/2 - win/2;
-  requestAnimationFrame(function(){ requestAnimationFrame(function(){
-    track.style.transition = 'transform 4.2s cubic-bezier(.1,.8,.12,1)';
-    track.style.transform = 'translateX(-'+offset+'px)';
-  });});
-
-  setTimeout(showResult, 4500);
-}
-function showResult(){
-  const p = S.pending;
-  const rar = RARITIES.find(function(r){ return r.key===p.rarity; });
-  document.getElementById('roulette').classList.remove('open');
-  document.getElementById('r-glow').style.background = rar.color;
-  document.getElementById('r-emoji').textContent = p.emoji;
-  document.getElementById('r-name').textContent = p.name;
-  const rr = document.getElementById('r-rare');
-  rr.textContent = rar.name; rr.style.color = rar.color; rr.style.borderColor = rar.color+'66';
-  document.getElementById('r-value').textContent = 'Стоимость: '+fmt(p.value)+' ₽ · из «'+p.caseName+'»';
-  document.getElementById('result-wrap').classList.add('open');
-  renderCases();
-}
-function sellPrize(){
-  const p = S.pending;
-  S.balance += p.value; S.pending = null;
-  save(); updateBalance(); renderHome();
-  document.getElementById('result-wrap').classList.remove('open');
-  renderCases();
-  toast('«'+p.name+'» продана за '+fmt(p.value)+' ₽ 💰');
-}
-function keepPrize(){
-  const p = S.pending;
-  S.inventory.push({emoji:p.emoji, name:p.name, rarity:p.rarity, value:p.value, date:Date.now()});
-  S.pending = null;
-  save();
-  document.getElementById('result-wrap').classList.remove('open');
-  toast('Машина отправлена в гараж 🚙');
-}
-<script>
-/* ===== ГАРАЖ + ВЫВОД ===== */
-function renderInventory(){
-  const host = document.getElementById('inv-list');
-  if (!S.inventory.length){ host.innerHTML = '<div class="inv-empty">Гараж пока пуст 🕊️<br>Откройте первый кейс!</div>'; return; }
-  host.innerHTML = S.inventory.map(function(it,i){
-    const rar = RARITIES.find(function(r){ return r.key===it.rarity; });
-    return '<div class="inv-item" style="border-color:'+rar.color+'44">'
-      + '<div class="emoji">'+it.emoji+'</div>'
-      + '<div class="info"><b>'+it.name+'</b><span style="color:'+rar.color+'">'+rar.name+'</span> · <span>'+fmt(it.value)+' ₽ · '+new Date(it.date).toLocaleDateString()+'</span></div>'
-      + '<div class="acts"><button class="sell" onclick="sellInv('+i+')">Продать '+fmt(it.value)+' ₽</button>'
-      + '<button class="wd" onclick="openWd('+i+')">Вывести в TG</button></div></div>';
-  }).join('');
-}
-function sellInv(i){
-  const it = S.inventory[i];
-  S.balance += it.value; S.inventory.splice(i,1);
-  save(); updateBalance(); renderInventory();
-  toast('«'+it.name+'» продана за '+fmt(it.value)+' ₽ 💰');
-}
-function openWd(i){
-  const it = S.inventory[i];
-  S.wdIdx = i;
-  document.getElementById('wd-emoji').textContent = it.emoji;
-  document.getElementById('wd-name').textContent = it.name;
-  document.getElementById('wd-val').textContent = 'К выводу: '+fmt(it.value)+' ₽';
-  document.getElementById('wd-user').value = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.username) ? '@'+tg.initDataUnsafe.user.username : '';
-  document.getElementById('wd-modal').classList.add('open');
-}
-function closeWd(){ document.getElementById('wd-modal').classList.remove('open'); S.wdIdx = -1; }
-function confirmWithdraw(){
-  const u = document.getElementById('wd-user').value.trim().replace(/^@/,'');
-  if (!u || u.length < 3) return toast('Укажите свой @username 📝');
-  const it = S.inventory[S.wdIdx];
-  if (tg && tg.sendData) tg.sendData(JSON.stringify({type:'withdraw', gift:it.name, value:it.value, username:u}));
-  S.inventory.splice(S.wdIdx,1);
-  save(); renderInventory(); closeWd();
-  toast('Заявка на вывод «'+it.name+'» принята 📦');
-}
-
-/* ===== ДРУЗЬЯ ===== */
-function renderFriends(){
-  document.getElementById('ref-link').textContent = REF_URL;
-  document.getElementById('ref-progress').innerHTML = 'Приглашено: <b>'+S.invites+' / 3</b><br>' + (S.invites>=3 ? '✅ Бесплатный кейс доступен!' : 'Осталось пригласить: <b>'+(3-S.invites)+'</b>');
-}
-function shareInvite(){
-  const url = 'https://t.me/share/url?url='+encodeURIComponent(REF_URL)+'&text='+encodeURIComponent('🚗 Играй со мной в АвтоКейсы — машины от Копейки до Lamborghini!');
-  if (tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url,'_blank');
-  if (S.invites < 3) {
-    S.invites++; S.balance += 25;
-    save(); renderFriends(); updateBalance();
-    toast('Друг приглашен! +25 ₽. Друзей: '+S.invites+'/3');
-  }
-}
-
-/* ===== ПОПОЛНЕНИЕ ===== */
-const DEP_AMOUNTS = [10, 50, 100, 500, 1000, 5000];
-function renderDeposit(){
-  document.getElementById('dep-grid').innerHTML = DEP_AMOUNTS.map(function(a){
-    return '<button onclick="deposit('+a+')">'+fmt(a)+' ₽<br><small>+'+fmt(a+Math.floor(a*0.1))+' итого</small></button>';
-  }).join('');
-}
-function deposit(amount){
-  const bonus = Math.floor(amount*0.1);
-  S.balance += amount + bonus;
-  save(); updateBalance(); renderHome();
-  toast('Пополнено '+fmt(amount)+' ₽ + бонус '+fmt(bonus)+' ₽ 🎉');
-}
-
-/* ===== РАКЕТА ZINI — краш починен ===== */
-const RK = {running:false, bet:10, mult:1, crashAt:0, boost:false, timer:null, tick:0};
-
-function rollCrash(){
-  const r = Math.random();
-  if (r < 0.03) return 1.15;                 // редкий ранний краш
-  let m = 0.97 / (1 - Math.random());        // хвост до 50x
-  return Math.min(50, Math.max(1.15, Math.round(m*100)/100));
-}
-
-function renderRocket(){
-  const host = document.getElementById('rk-bets');
-  if (host) host.innerHTML = [10,50,100,250,500].map(function(a){
-    return '<button class="'+(RK.bet===a?'sel':'')+'" onclick="setBet('+a+')">'+fmt(a)+' ₽</button>';
-  }).join('');
-  renderRkHist();
-}
-function setBet(a){ if (RK.running) return; RK.bet = a; renderRocket(); }
-function renderRkHist(){
-  const host = document.getElementById('rk-hist');
-  if (!host) return;
-  host.innerHTML = (S.rockHist||[]).map(function(h){
-    return '<span class="'+(h.win?'good':'bad')+'">'+(h.win?'✅':'💥')+' '+h.x.toFixed(2)+'x</span>';
-  }).join('');
-}
-
-function rocketAction(){
-  if (RK.running) return cashOut();
-  if (S.balance < RK.bet) return toast('Недостаточно рублей для ставки 💳');
-  S.balance -= RK.bet; save(); updateBalance();
-
-  RK.running = true; RK.mult = 1; RK.crashAt = rollCrash();
-  RK.boost = false; RK.tick = 0;
-
-  const btn = document.getElementById('rk-btn');
-  btn.textContent = 'Забрать 💰';
-  btn.classList.remove('gold'); btn.classList.add('green');
-  document.getElementById('rk-status').textContent = 'Летим... забирай до краша!';
-  const mult = document.getElementById('rk-mult');
-  mult.classList.remove('crashed','boost'); mult.textContent = '1.00x';
-  const rk = document.getElementById('rk-rocket');
-  rk.classList.remove('boost');
-  rk.style.left = '10px'; rk.style.bottom = '14px';
-
-  RK.timer = setInterval(rocketTick, 50);
-}
-
-function rocketTick(){
-  RK.mult = Math.round((RK.mult * 1.0045)*100)/100;
-  RK.tick++;
-
-  const mult = document.getElementById('rk-mult');
-  const rk = document.getElementById('rk-rocket');
-
-  if (!RK.boost && RK.mult >= RK.crashAt && Math.random() < 0.10) {
-    RK.boost = true;
-    RK.crashAt = Math.round((RK.crashAt + 4)*100)/100;
-    rk.classList.add('boost');
-    mult.classList.add('boost');
-    toast('✨ Ракета пролетает краш! Летим дальше!');
-  }
-
-  mult.textContent = RK.mult.toFixed(2) + 'x';
-
-  const p = Math.min(1, Math.log(RK.mult+0.2) / Math.log(20));
-  rk.style.left = (10 + p*75) + '%';
-  rk.style.bottom = (14 + p*70) + '%';
-
-  if (RK.tick % 3 === 0) {
-    const tr = document.createElement('div');
-    tr.className = 'rk-trail';
-    tr.style.left = rk.style.left; tr.style.bottom = rk.style.bottom;
-    tr.style.animation = 'fadeTrail 1s forwards';
-    document.querySelector('.rk-screen').appendChild(tr);
-    setTimeout(function(){ tr.remove(); }, 1000);
-  }
-
-  document.getElementById('rk-btn').textContent = 'Забрать '+fmt(RK.bet*RK.mult)+' ₽';
-
-  if (RK.mult >= RK.crashAt) return rocketCrash();
-}
-
-function cashOut(){
-  if (!RK.running) return;
-  clearInterval(RK.timer); RK.running = false;
-  const win = Math.round(RK.bet * RK.mult);
-  S.balance += win;
-  S.rockHist = [{x:RK.mult, win:true}].concat(S.rockHist||[]).slice(0,12);
-  save(); updateBalance(); renderRocket();
-  const btn = document.getElementById('rk-btn');
-  btn.textContent = 'Запустить 🚀'; btn.classList.add('gold'); btn.classList.remove('green');
-  document.getElementById('rk-status').textContent = 'Забрано '+fmt(win)+' ₽ на '+RK.mult.toFixed(2)+'x! 🎉';
-  resetRocketView(1600);
-}
-
-function rocketCrash(){
-  clearInterval(RK.timer); RK.running = false;
-  S.rockHist = [{x:RK.crashAt, win:false}].concat(S.rockHist||[]).slice(0,12);
-  save(); renderRocket();
-  const mult = document.getElementById('rk-mult');
-  mult.textContent = RK.crashAt.toFixed(2) + 'x';
-  mult.classList.add('crashed'); mult.classList.remove('boost');
-  document.getElementById('rk-rocket').classList.remove('boost');
-  document.getElementById('rk-rocket').style.opacity = '0';
-  document.getElementById('rk-status').textContent = '💥 Улетел! Краш на '+RK.crashAt.toFixed(2)+'x';
-  const btn = document.getElementById('rk-btn');
-  btn.textContent = 'Запустить 🚀'; btn.classList.add('gold'); btn.classList.remove('green');
-  resetRocketView(2000);
-}
-
-function resetRocketView(delay){
-  setTimeout(function(){
-    const rk = document.getElementById('rk-rocket');
-    rk.style.transition = 'opacity .4s';
-    rk.style.opacity = '1';
-    rk.style.left = '10px'; rk.style.bottom = '14px';
-    rk.style.transition = 'left .05s linear, bottom .05s linear';
-    const mult = document.getElementById('rk-mult');
-    mult.textContent = '1.00x';
-    mult.classList.remove('crashed','boost');
-    document.getElementById('rk-status').textContent = 'Сделай ставку и запускай';
-  }, delay);
-}
-
-/* ===== СНЕГ ===== */
-const snowStyle = document.createElement('style');
-snowStyle.textContent = '@keyframes fall{to{transform:translateY(105vh) rotate(360deg)}} @keyframes fadeTrail{to{opacity:0;transform:scale(2.2)}}';
-document.head.appendChild(snowStyle);
-for (let i=0;i<30;i++){
-  const f = document.createElement('div');
-  f.className = 'snow';
-  const size = 2+Math.random()*4;
-  f.style.cssText = 'width:'+size+'px;height:'+size+'px;left:'+(Math.random()*100)+'vw;animation:fall '+(4+Math.random()*6)+'s linear '+(Math.random()*6)+'s infinite';
-  document.body.appendChild(f);
-}
-
-/* ===== СТАРТ ===== */
-renderHome(); renderCases(); updateBalance(); renderDeposit(); renderRocket();
-</script>
-</body>
-</html>
+function chance(c,i){const w=weights(c);return w[i]/w.reduce((s,x)=>s+x,0)*100}
+let S=JSON.parse(localStorage.getItem('zk')||'null')||{bal:0,inv:0,frU:'',lsB:'',op:0,best:0,invn:[],pend:null,wdI:-1,fr:0,hist:[]};
+function save(){localStorage.setItem('zk',JSON.stringify(S))}
+function fmt(n){return Math.round(n).toLocaleString('ru-RU')}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),2600)}
+function go(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById('p-'+p).classList.add('active');
+if(p==='cases')rCases();if(p==='inv')rInv();if(p==='fr')rFr();if(p==='dep')rDep();if(p==='rk')rRk();if(p==='home')rHome();upd()}
+function upd(){document.getElementById('bal').textContent=fmt(S.bal);document.getElementById('s-bal').textContent=fmt(S.bal);document.getElementById('s-op').textContent=S.op;document.getElementById('s-best').textContent=S.best?fmt(S.best)+' ₽':'—'}
+function rHome(){document.getElementById('bh').textContent=S.lsB===new Date().toDateString()?'завтра ⏰':'+50 ₽ в день'}
+function bonus(){if(S.lsB===new Date().toDateString())return toast('Бонус уже получен ⏰');S.lsB=new Date().toDateString();S.bal+=50;save();rHome();upd();toast('+50 ₽ 🎉')}
+function rCases(){let h='';const cats=[['Бесплатный',c=>c.fr],['Бюджетные',c=>!c.fr&&c.pr<=350],['Средние',c=>c.pr>350&&c.pr<5000],['Премиум',c=>c.pr>=5000]];
+for(const[n,f]of cats){h+='<div class="cats">'+n+'</div><div class="cases">';
+CASES.filter(f).forEach(c=>{h+='<div class="case" onclick="view('+c.id+')"><div class="em">'+c.em+'</div><div class="nm">'+c.n+'</div><div class="pr">'+(c.fr?(frUsed()?'Завтра ⏰':'Бесплатно'):fmt(c.pr)+' ₽')+'</div></div>'});h+='</div>'}
+document.getElementById('caseList').innerHTML=h}
+function frUsed(){return S.frU===new Date().toDateString()}
+let cur=0;
+function view(id){cur=id;const c=CASES[id];
+document.getElementById('ovE').textContent=c.em;document.getElementById('ovN').textContent=c.n;
+document.getElementById('ovD').textContent='Топ-приз: '+fmt(Math.max(...c.pool.map(i=>CARS[i].v)))+' ₽';
+const b=document.getElementById('ovB');
+if(c.fr){b.textContent=frUsed()?'Завтра ⏰':'Открыть бесплатно';b.disabled=frUsed();b.style.opacity=frUsed()?.5:1}
+else{b.textContent='Открыть за '+fmt(c.pr)+' ₽';b.disabled=false;b.style.opacity=1}
+document.getElementById('ovL').innerHTML=c.pool.map((i,k)=>{const p=CARS[i],r=RAR[p.t],ch=chance(c,k);
+return '<div class="pz" style="border-color:'+r.c+'44"><div class="e">'+p.e+'</div><div class="i"><b>'+p.n+'</b><span style="color:'+r.c+'">'+r.n+'</span><div class="bar"><i style="width:'+Math.max(1.5,ch)+'%;background:'+r.c+'"></i></div></div><div class="v"><b>'+fmt(p.v)+' ₽</b><small>шанс '+(ch<1?ch.toFixed(3):ch.toFixed(1))+'%</small></div></div>'}).join('');
+document.getElementById('ov').classList.add('open')}
+function openCase(){const c=CASES[cur];
+if(c.fr){if(frUsed())return toast('Уже открыт ⏰');if(S.fr<3)return toast('Нужно 3 друзей (осталось '+(3-S.fr)+') 👥');S.frU=new Date().toDateString()}
+else{if(S.bal<c.pr)return toast('Не хватает рублей 💳');S.bal-=c.pr}
+save();upd();rCases();
+const wi=pick(c);S.pend={...CARS[wi],cn:c.n};S.op++;if(CARS[wi].v>S.best)S.best=CARS[wi].v;save();upd();
+const tr=document.getElementById('tr');document.getElementById('rlT').textContent=c.n;document.getElementById('rl').classList.add('open');
+const it=[];for(let i=0;i<45;i++)it.push(c.pool[Math.floor(Math.random()*c.pool.length)]);it[40]=wi;
+tr.innerHTML=it.map(i=>'<div class="ritem" style="background:'+RAR[CARS[i].t].c+'22"><span>'+CARS[i].e+'</span><small>'+CARS[i].n+'</small></div>').join('');
+tr.style.transition='none';tr.style.transform='translateX(0)';
+const w=document.querySelector('.win').clientWidth,off=40*92+46-w/2;
+requestAnimationFrame(()=>requestAnimationFrame(()=>{tr.style.transition='transform 4.2s cubic-bezier(.1,.8,.12,1)';tr.style.transform='translateX(-'+off+'px)'}));
+setTimeout(showRes,4500)}
+function showRes(){const p=S.pend,r=RAR[p.t];
+document.getElementById('rl').classList.remove('open');
+document.getElementById('gl').style.background=r.c;
+document.getElementById('rE').textContent=p.e;document.getElementById('rN').textContent=p.n;
+const rr=document.getElementById('rR');rr.textContent=r.n;rr.style.color=r.c;rr.style.borderColor=r.c+'66';
+document.getElementById('rV').textContent='Стоимость: '+fmt(p.v)+' ₽ · из «'+p.cn+'»';
+document.getElementById('res').classList.add('open')}
+function sellP(){S.bal+=S.pend.v;toast('«'+S.pend.n+'» продана за '+fmt(S.pend.v)+' ₽ 💰');S.pend=null;save();upd();closeRes()}
+function keepP(){S.invn.push({e:S.pend.e,n:S.pend.n,t:S.pend.t,v:S.pend.v});toast('В гараже 🚙');S.pend=null;save();closeRes()}
+function closeRes(){document.getElementById('res').classList.remove('open');rCases()}
+function rInv(){const h=document.getElementById('invList');
+if(!S.invn.length){h.innerHTML='<div class="emp">Гараж пуст — открой первый кейс! 🕊️</div>';return}
+h.innerHTML=S.invn.map((it,i)=>{const r=RAR[it.t];
+return '<div class="it"><div class="e">'+it.e+'</div><div class="i"><b>'+it.n+'</b><span style="color:'+r.c+'">'+r.n+'</span> · '+fmt(it.v)+' ₽</div><div class="a"><button class="s" onclick="sellI('+i+')">Продать '+fmt(it.v)+' ₽</button><button class="w" onclick="wdOpen('+i+')">Вывести</button></div></div>'}).join('')}
+function sellI(i){S.bal+=S.invn[i].v;toast('Продано за '+fmt(S.invn[i].v)+' ₽ 💰');S.invn.splice(i,1);save();upd();rInv()}
+let wdIdx=-1;
+function wdOpen(i){wdIdx=i;const it=S.invn[i];
+document.getElementById('wdE').textContent=it.e;document.getElementById('wdN').textContent=it.n;
+document.getElementById('wd').classList.add('open')}
+function wdGo(){const u=document.getElementById('wdU').value.trim().replace(/^@/,'');
+if(!u||u.length<3)return toast('Укажи @username 📝');
+const it=S.invn[wdIdx];S.invn.splice(wdIdx,1);save();rInv();
+document.getElementById('wd').classList.remove('open');
+toast('Заявка на «'+it.n+'» принята 📦')}
+function rFr(){document.getElementById('refL').textContent='https://t.me/YourBotName?start=ref_guest';
+document.getElementById('refP').innerHTML='Приглашено: <b>'+S.fr+' / 3</b>'}
+function invite(){
+if(window.Telegram&&Telegram.WebApp.openTelegramLink)Telegram.WebApp.openTelegramLink('https://t.me/share/url?url=https://t.me/YourBotName&text=Играй в АвтоКейсы!');
+else window.open('https://t.me/share/url?url=https://t.me/YourBotName&text=Играй в АвтоКейсы!');
+if(S.fr<3){S.fr++;S.bal+=25;save();rFr();upd();toast('Друг приглашён! +25 ₽ ('+S.fr+'/3)')}}
+function rDep(){document.getElementById('dg').innerHTML=[10,50,100,500,1000,5000].map(a=>'<button onclick="dep('+a+')">'+fmt(a)+' ₽<br><small>+'+fmt(a+Math.floor(a*.1))+'</small></button>').join('')}
+function dep(a){S.bal+=a+Math.floor(a*.1);save();upd();rHome();toast('+'+fmt(a+Math.floor(a*.1))+' ₽ 🎉')}
+const RK={run:0,bet:10,m:1,cr:0,t:null,k:0};
+function rkAction(){if(RK.run){clearInterval(RK.t);RK.run=0;
+const win=Math.round(RK.bet*RK.m);S.bal+=win;S.hist=[{x:RK.m,w:1},...S.hist].slice(0,10);save();upd();rRk();
+const b=document.getElementById('rkb2');b.textContent='Запустить 🚀';b.classList.add('gold');
+document.getElementById('rkst').textContent='Забрано '+fmt(win)+' ₽ на '+RK.m.toFixed(2)+'x! 🎉';return}
+if(S.bal<RK.bet)return toast('Не хватает на ставку 💳');
+S.bal-=RK.bet;save();upd();
+RK.run=1;RK.m=1;RK.k=0;
+const r=Math.random();RK.cr=r<.03?1.15:Math.min(50,Math.max(1.15,Math.round(.97/(1-Math.random())*100)/100));
+const b=document.getElementById('rkb2');b.textContent='Забрать 💰';b.classList.remove('gold');
+document.getElementById('rkm').classList.remove('bad');document.getElementById('rkm').textContent='1.00x';
+RK.t=setInterval(rkTick,50)}
+function rkTick(){RK.m=Math.round(RK.m*1.0045*100)/100;RK.k++;
+if(RK.m>=RK.cr){clearInterval(RK.t);RK.run=0;S.hist=[{x:RK.cr,w:0},...S.hist].slice(0,10);save();rRk();
+const m=document.getElementById('rkm');m.textContent=RK.cr.toFixed(2)+'x';m.classList.add('bad');
+document.getElementById('rkr').style.opacity=0;
+document.getElementById('rkst').textContent='💥 Краш на '+RK.cr.toFixed(2)+'x';
+const b=document.getElementById('rkb2');b.textContent='Запустить 🚀';b.classList.add('gold');
+setTimeout(()=>{document.getElementById('rkr').style.opacity=1;document.getElementById('rkr').style.left='10px';document.getElementById('rkr').style.bottom='14px';m.classList.remove('bad');m.textContent='1.00x';document.getElementById('rkst').textContent='Сделай ставку и запускай'},2000);return}
+document.getElementById('rkm').textContent=RK.m.toFixed(2)+'x';
+const p=Math.min(1,Math.log(RK.m+.2)/Math.log(20)),rk=document.getElementById('rkr');
+rk.style.left=(10+p*75)+'%';rk.style.bottom=(14+p*70)+'%';
+document.getElementById('rkb2').textContent='Забрать '+fmt(RK.bet*RK.m)+' ₽'}
+function rRk(){document.getElementById('rkb').innerHTML=[10,50,100,250,500].map(a=>'<button class="'+(RK.bet===a?'sel':'')+'" onclick="RK.bet='+a+';rRk()">'+fmt(a)+' ₽</button>').join('')}
+rHome();rCases();rDep();upd();
+</script></body></html>
