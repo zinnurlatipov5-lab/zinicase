@@ -1,104 +1,48 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Зимний подарок — Кейсы</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-    body {
-      font-family:-apple-system,'Segoe UI',Roboto,sans-serif;
-      background:radial-gradient(1200px 600px at 50% -10%, #1e3a8a 0%, #0b1026 60%) fixed, #0b1026;
-      color:#eaf2ff; min-height:100vh; overflow-x:hidden;
-    }
-    .snow { position:fixed; top:-10px; border-radius:50%; background:#fff; opacity:.6; pointer-events:none; z-index:0; }
-    .wrap { max-width:480px; margin:0 auto; padding:14px 14px 90px; position:relative; z-index:1; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Зимний подарок — Кейсы</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body {
+    font-family:-apple-system,'Segoe UI',Roboto,sans-serif;
+    background:radial-gradient(1200px 600px at 50% -10%, #1e3a8a 0%, #0b1026 60%) fixed, #0b1026;
+    color:#eaf2ff; min-height:100vh; overflow-x:hidden;
+  }
+  .snow { position:fixed; top:-10px; border-radius:50%; background:#fff; opacity:.6; pointer-events:none; z-index:0; }
+  .wrap { max-width:480px; margin:0 auto; padding:14px 14px 90px; position:relative; z-index:1; }
 
-    /* ===== СТИЛИ ДЛЯ ГЛАВНОЙ ===== */
-    header {
-      display:flex; align-items:center; justify-content:space-between;
-      background:linear-gradient(160deg,rgba(79,140,255,.18),rgba(255,255,255,.05));
-      border:1px solid rgba(255,255,255,.14);
-      border-radius:18px; padding:14px; margin-bottom:14px; backdrop-filter:blur(8px);
-    }
-    .logo { font-size:19px; font-weight:800; }
-    .logo span { color:#7cc4ff; }
-    .logo small { display:block; font-size:10px; font-weight:400; color:#8fa8d8; }
+  header {
+    display:flex; align-items:center; justify-content:space-between;
+    background:linear-gradient(160deg,rgba(79,140,255,.18),rgba(255,255,255,.05));
+    border:1px solid rgba(255,255,255,.14);
+    border-radius:18px; padding:14px; margin-bottom:14px; backdrop-filter:blur(8px);
+  }
+  .logo { font-size:19px; font-weight:800; }
+  .logo span { color:#7cc4ff; }
+  .logo small { display:block; font-size:10px; font-weight:400; color:#8fa8d8; }
+  .balance-chip {
+    background:linear-gradient(135deg,#ffd76e,#ff9d3c); color:#3a2000;
+    font-weight:800; border-radius:22px; padding:9px 16px; font-size:15px;
+    display:flex; align-items:center; gap:6px; cursor:pointer; box-shadow:0 4px 18px rgba(255,157,60,.35);
+  }
+  .balance-chip:active { transform:scale(.95); }
 
-    /* ===== ПРИВЕТСТВИЕ С ДЕДОМ МОРОЗОМ ===== */
-    .welcome {
-      border-radius:20px; padding:18px 16px; margin-bottom:14px; position:relative; overflow:hidden;
-      background:linear-gradient(135deg,rgba(255,215,110,.16),rgba(124,92,255,.12));
-      border:1px solid rgba(255,215,110,.35);
-      display:flex; align-items:center; gap:14px;
-    }
-    .welcome .santa { font-size:52px; flex-shrink:0; filter:drop-shadow(0 6px 14px rgba(0,0,0,.4)); animation:float 3s ease-in-out infinite; }
-    .welcome .w-hi { font-size:16px; font-weight:800; }
-    .welcome .w-hi span { color:#ffd76e; }
-    .welcome .w-text { font-size:12px; color:#cfe0ff; margin-top:4px; line-height:1.45; }
+  .welcome {
+    border-radius:20px; padding:18px 16px; margin-bottom:14px; position:relative; overflow:hidden;
+    background:linear-gradient(135deg,rgba(255,215,110,.16),rgba(124,92,255,.12));
+    border:1px solid rgba(255,215,110,.35);
+    display:flex; align-items:center; gap:14px;
+  }
+  .welcome .santa { font-size:52px; flex-shrink:0; filter:drop-shadow(0 6px 14px rgba(0,0,0,.4)); animation:float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-4px)} }
+  .welcome .w-hi { font-size:16px; font-weight:800; }
+  .welcome .w-hi span { color:#ffd76e; }
+  .welcome .w-text { font-size:12px; color:#cfe0ff; margin-top:4px; line-height:1.45; }
 
-    /* ===== КНОПКА НАЗАД ===== */
-    .page-back {
-      display:inline-flex; align-items:center; gap:6px; margin-bottom:12px;
-      background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
-      color:#eaf2ff; font-weight:800; font-size:13px; padding:10px 16px;
-      border-radius:14px; cursor:pointer; backdrop-filter:blur(8px);
-    }
-    .
-/* ===== ИГРА РАКЕТА (ZINI) ===== */
-.rk-screen {
-  position:relative; height:280px; border-radius:18px; overflow:hidden;
-  background:linear-gradient(180deg,#0a1230 0%,#1e3a8a 70%,#4f8cff22 100%);
-  border:1px solid rgba(255,255,255,.15);
-}
-.rk-stars { position:absolute; inset:0; }
-.rk-mult {
-  position:absolute; top:14px; left:0; right:0; text-align:center;
-  font-size:46px; font-weight:800; color:#ffd76e;
-  text-shadow:0 0 24px rgba(255,215,110,.45); z-index:3;
-}
-.rk-mult.crashed { color:#ff6b6b; text-shadow:0 0 24px rgba(255,107,107,.5); }
-.rk-mult.boost { color:#7dff9e; text-shadow:0 0 28px rgba(125,255,158,.6); }
-.rk-rocket {
-  position:absolute; left:10px; bottom:14px; z-index:2;
-  display:flex; flex-direction:column; align-items:center; gap:2px;
-  transition:left .05s linear, bottom .05s linear;
-}
-.rk-rocket .rk-name {
-  font-size:10px; font-weight:800; letter-spacing:2px; color:#7cc4ff;
-  background:rgba(11,16,38,.7); padding:2px 8px; border-radius:8px;
-  border:1px solid rgba(124,196,255,.4);
-}
-.rk-rocket .rk-emoji { font-size:44px; transform:rotate(-45deg); filter:drop-shadow(0 4px 14px rgba(255,157,60,.5)); }
-.rk-rocket.boost .rk-emoji { filter:drop-shadow(0 0 20px #ffd76e) drop-shadow(0 0 40px #ff9d3c); }
-.rk-rocket.boost .rk-name { color:#ffd76e; border-color:rgba(255,215,110,.6); }
-.rk-trail {
-  position:absolute; width:14px; height:14px; border-radius:50%;
-  background:radial-gradient(circle,#ffd76e,transparent 70%);
-  opacity:.8; z-index:1; pointer-events:none;
-}
-.rk-status {
-  position:absolute; bottom:12px; left:0; right:0; text-align:center;
-  font-size:12px; font-weight:700; color:#cfe0ff; z-index:3;
-}
-.rk-bets { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-top:12px; }
-.rk-bets button {
-  padding:12px 2px; border-radius:12px; border:1px solid rgba(255,215,110,.35);
-  background:linear-gradient(160deg,rgba(255,215,110,.15),rgba(255,255,255,.04));
-  color:#ffd76e; font-weight:800; font-size:13px; cursor:pointer;
-}
-.rk-bets button.sel { background:linear-gradient(135deg,#ffd76e,#ff9d3c); color:#3a2000; }
-.rk-hist { display:flex; gap:6px; margin-
-.rk-hist { display:flex; gap:6px; margin-top:12px; overflow-x:auto; padding-bottom:4px; }
-.rk-hist span {
-  flex-shrink:0; font-size:11px; font-weight:800; padding:6px 10px; border-radius:10px;
-  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12);
-}
-.rk-hist span.good { color:#7dff9e; border-color:rgba(125,255,158,.4); }
-.rk-hist span.bad  { color:#ff9d9d; border-color:rgba(255,107,107,.4); }
-
-  /* ===== БАННЕР ===== */
   .banner {
     border-radius:18px; padding:18px 16px; margin-bottom:14px; position:relative; overflow:hidden;
     background:linear-gradient(135deg,#4f8cff 0%,#7c5cff 55%,#c86dff 100%);
@@ -113,7 +57,15 @@
     background:rgba(255,255,255,.15); top:-50px; right:60px; filter:blur(10px);
   }
 
-  /* ===== ГЛАВНЫЙ ЭКРАН ===== */
+  /* ===== КНОПКА НАЗАД ===== */
+  .page-back {
+    display:inline-flex; align-items:center; gap:6px; margin-bottom:12px;
+    background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+    color:#eaf2ff; font-weight:800; font-size:13px; padding:10px 16px;
+    border-radius:14px; cursor:pointer; backdrop-filter:blur(8px);
+  }
+  .page-back:active { transform:scale(.95); }
+
   .home-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
   .home-tile {
     border-radius:18px; padding:18px 14px; cursor:pointer; position:relative; overflow:hidden;
@@ -167,7 +119,8 @@
   .cat-rare    .glow { background:#7cc4ff; }
   .cat-legend  .case-card { background:linear-gradient(160deg,#ffd76e40,#ff9d3c26); border:1px solid #ffd76e77; }
   .cat-legend  .glow { background:#ffb84f; }
-
+</style>
+<style>
   /* ===== ПОЛНОЭКРАННЫЙ ПРОСМОТР КЕЙСА ===== */
   .case-view {
     display:none; position:fixed; inset:0; z-index:70;
@@ -236,7 +189,7 @@
   }
   .rl-item small { font-size:9px; color:#cfe0ff; text-align:center; padding:0 4px; line-height:1.15; font-weight:600; }
 
-  /* ===== ФИНАЛ: ПРИЗ НА ВЕСЬ ЭКРАН ===== */
+  /* ===== ФИНАЛ: ПРИЗ ===== */
   .result-wrap {
     display:none; position:fixed; inset:0; z-index:90;
     background:rgba(5,8,25,.95); backdrop-filter:blur(14px);
@@ -356,6 +309,56 @@
     margin-top:10px; padding:10px; border-radius:12px; background:rgba(0,0,0,.3);
     font-size:12px; color:#7cc4ff; word-break:break-all;
   }
+
+  /* ===== ИГРА РАКЕТА ZINI ===== */
+  .rk-screen {
+    position:relative; height:280px; border-radius:18px; overflow:hidden;
+    background:linear-gradient(180deg,#0a1230 0%,#1e3a8a 70%,#4f8cff22 100%);
+    border:1px solid rgba(255,255,255,.15);
+  }
+  .rk-mult {
+    position:absolute; top:14px; left:0; right:0; text-align:center;
+    font-size:46px; font-weight:800; color:#ffd76e;
+    text-shadow:0 0 24px rgba(255,215,110,.45); z-index:3;
+  }
+  .rk-mult.crashed { color:#ff6b6b; text-shadow:0 0 24px rgba(255,107,107,.5); }
+  .rk-mult.boost { color:#7dff9e; text-shadow:0 0 28px rgba(125,255,158,.6); }
+  .rk-rocket {
+    position:absolute; left:10px; bottom:14px; z-index:2;
+    display:flex; flex-direction:column; align-items:center; gap:2px;
+    transition:left .05s linear, bottom .05s linear;
+  }
+  .rk-rocket .rk-name {
+    font-size:10px; font-weight:800; letter-spacing:2px; color:#7cc4ff;
+    background:rgba(11,16,38,.7); padding:2px 8px; border-radius:8px;
+    border:1px solid rgba(124,196,255,.4);
+  }
+  .rk-rocket .rk-emoji { font-size:44px; transform:rotate(-45deg); filter:drop-shadow(0 4px 14px rgba(255,157,60,.5)); }
+  .rk-rocket.boost .rk-emoji { filter:drop-shadow(0 0 20px #ffd76e) drop-shadow(0 0 40px #ff9d3c); }
+  .rk-rocket.boost .rk-name { color:#ffd76e; border-color:rgba(255,215,110,.6); }
+  .rk-trail {
+    position:absolute; width:14px; height:14px; border-radius:50%;
+    background:radial-gradient(circle,#ffd76e,transparent 70%);
+    opacity:.8; z-index:1; pointer-events:none;
+  }
+  .rk-status {
+    position:absolute; bottom:12px; left:0; right:0; text-align:center;
+    font-size:12px; font-weight:700; color:#cfe0ff; z-index:3;
+  }
+  .rk-bets { display:grid; grid-template-columns:repeat(5,1fr); gap:6px; margin-top:12px; }
+  .rk-bets button {
+    padding:12px 2px; border-radius:12px; border:1px solid rgba(255,215,110,.35);
+    background:linear-gradient(160deg,rgba(255,215,110,.15),rgba(255,255,255,.04));
+    color:#ffd76e; font-weight:800; font-size:13px; cursor:pointer;
+  }
+  .rk-bets button.sel { background:linear-gradient(135deg,#ffd76e,#ff9d3c); color:#3a2000; }
+  .rk-hist { display:flex; gap:6px; margin-top:12px; overflow-x:auto; padding-bottom:4px; }
+  .rk-hist span {
+    flex-shrink:0; font-size:11px; font-weight:800; padding:6px 10px; border-radius:10px;
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12);
+  }
+  .rk-hist span.good { color:#7dff9e; border-color:rgba(125,255,158,.4); }
+  .rk-hist span.bad  { color:#ff9d9d; border-color:rgba(255,107,107,.4); }
 </style>
 </head>
 <body>
@@ -428,7 +431,7 @@
     <button class="page-back" onclick="go('home')">← Назад</button>
     <div class="panel">
       <h3>🚀 Ракета ZINI</h3>
-      <p>Ставь звёзды, запускай ракету и забирай выигрыш <b>до</b> краша. Икс может быть от 1.00 до 50.00 — а иногда ракета пролетает краш и летит дальше!</p>
+      <p>Ставь звёзды, запускай ракету и забирай выигрыш <b>до</b> краша. Икс от 1.00 до 50.00 — а иногда ракета пролетает краш и летит дальше!</p>
     </div>
     <div class="rk-screen">
       <div class="rk-mult" id="rk-mult">1.00x</div>
@@ -489,7 +492,6 @@
 </div>
 
 <div id="toast"></div>
-
 <script>
 /* ================= НАСТРОЙКИ ================= */
 const BOT_USERNAME = 'YourBotName';
@@ -569,10 +571,7 @@ const CASES = [];
   const byTier = t => TG_GIFTS.filter(g=>g.t===t);
   function pickRandom(arr,n){ const c=[...arr], out=[]; for(let i=0;i<n;i++) out.push(c.splice(Math.floor(Math.random()*c.length),1)[0]); return out; }
 
-  const freePool = [
-    ...byTier('common').slice(0,6),
-    {e:'🎩', n:'Santa Hat', v:150, t:'rare'},
-  ];
+  const freePool = [...byTier('common').slice(0,6), {e:'🎩', n:'Santa Hat', v:150, t:'rare'}];
   CASES.push({id:0, cat:'free', name:'Новогодний Подарок', emoji:'🎁', price:0, free:true,
     pool:freePool, weights:buildWeights(0, freePool, FREE_CASE_EV)});
 
@@ -660,7 +659,7 @@ function renderCases(){
 }
 function todayFreeUsed(){ return S.freeUsed === new Date().toDateString(); }
 
-/* ===== ПОЛНОЭКРАННЫЙ ПРОСМОТР КЕЙСА ===== */
+/* ===== ПРОСМОТР КЕЙСА ===== */
 let currentCase = 0;
 function showCaseView(id){
   currentCase = id;
@@ -850,7 +849,7 @@ function deposit(amount){
 }
 
 /* ===== ИГРА РАКЕТА ZINI ===== */
-const RK = {running:false, bet:5, mult:1, crashAt:0, boost:false, boostEnd:0, timer:null, tick:0};
+const RK = {running:false, bet:5, mult:1, crashAt:0, boost:false, timer:null, tick:0};
 
 function rollCrash(){
   const r = Math.random();
@@ -880,13 +879,12 @@ function rocketAction(){
   S.balance -= RK.bet; save(); updateBalance();
 
   RK.running = true; RK.mult = 1; RK.crashAt = rollCrash();
-  RK.boost = false; RK.boostEnd = 0; RK.tick = 0;
+  RK.boost = false; RK.tick = 0;
 
   const btn = document.getElementById('rk-btn');
   btn.textContent = `Забрать ${(RK.bet*RK.mult).toFixed(0)} ⭐`;
   btn.classList.remove('gold'); btn.classList.add('green');
-  const st = document.getElementById('rk-status');
-  st.textContent = 'Летим... забирай до краша!';
+  document.getElementById('rk-status').textContent = 'Летим... забирай до краша!';
   const mult = document.getElementById('rk-mult');
   mult.classList.remove('crashed','boost'); mult.textContent = '1.00x';
   const rk = document.getElementById('rk-rocket');
@@ -906,8 +904,7 @@ function rocketTick(){
   // редкий пролёт: ракета пролетает краш и уверенно летит ещё +4 икса
   if (!RK.boost && RK.mult >= RK.crashAt && Math.random() < 0.10) {
     RK.boost = true;
-    RK.boostEnd = Math.round((RK.crashAt + 4)*100)/100;
-    RK.crashAt = RK.boostEnd;
+    RK.crashAt = Math.round((RK.crashAt + 4)*100)/100;
     rk.classList.add('boost');
     mult.classList.add('boost');
     toast('✨ Ракета пролетает краш! Летим дальше!');
@@ -915,12 +912,10 @@ function rocketTick(){
 
   mult.textContent = RK.mult.toFixed(2) + 'x';
 
-  // движение ракеты по экрану
   const p = Math.min(1, Math.log(RK.mult+0.2) / Math.log(20));
   rk.style.left = (10 + p*75) + '%';
   rk.style.bottom = (14 + p*70) + '%';
 
-  // хвост огня
   if (RK.tick % 3 === 0) {
     const tr = document.createElement('div');
     tr.className = 'rk-trail';
@@ -930,7 +925,6 @@ function rocketTick(){
     setTimeout(()=>tr.remove(), 1000);
   }
 
-  // кнопка "забрать" live-суммой
   document.getElementById('rk-btn').textContent = `Забрать ${Math.round(RK.bet*RK.mult)} ⭐`;
 
   if (RK.mult >= RK.crashAt) return rocketCrash();
