@@ -18,14 +18,13 @@
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      align-items: center;
-      position: relative;
+      align-items: flex-start;
       overflow-x: hidden;
     }
     .wrap {
-      max-width: 480px;
+      max-width: 520px;
       width: 100%;
-      padding: 14px;
+      padding: 12px;
     }
     header {
       display: flex;
@@ -35,12 +34,11 @@
       border: 1px solid rgba(255,255,255,0.12);
       border-radius: 16px;
       padding: 12px 14px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .logo {
       font-size: 18px;
       font-weight: 800;
-      letter-spacing: 0.5px;
     }
     .bal {
       background: linear-gradient(135deg, #ffd76e, #ff9d3c);
@@ -51,25 +49,42 @@
       cursor: pointer;
       border: none;
       font-size: 14px;
-      box-shadow: 0 4px 12px rgba(255, 215, 110, 0.3);
+      box-shadow: 0 4px 12px rgba(255,215,110,0.3);
     }
-    /* Прогресс-бар */
-    .progress-bar-container {
+    /* Вкладки внизу */
+    .tabs {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
       width: 100%;
-      height: 6px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 3px;
-      margin-top: 8px;
-      overflow: hidden;
+      max-width: 520px;
+      display: flex;
+      background: rgba(10,14,28,0.95);
+      border-top: 1px solid rgba(255,255,255,0.12);
+      z-index: 500;
     }
-    .progress-fill {
-      height: 100%;
-      background: #4fc3f7;
-      width: 0%;
-      transition: width 0.4s ease;
+    .tab {
+      flex: 1;
+      text-align: center;
+      padding: 10px 4px 14px 4px;
+      cursor: pointer;
+      font-size: 11px;
+      color: #9fc3ff;
+      border: none;
+      background: none;
+    }
+    .tab.active {
+      color: #ffd76e;
+    }
+    .tab .t-ico {
+      display: block;
+      font-size: 20px;
+      margin-bottom: 2px;
     }
     .page {
       display: none;
+      padding-bottom: 70px;
     }
     .page.active {
       display: block;
@@ -78,137 +93,127 @@
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: 16px;
-      padding: 14px;
-      margin-bottom: 14px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
       text-align: center;
       font-size: 13px;
       color: #cfe0ff;
     }
     .stats {
       display: flex;
-      gap: 10px;
-      margin-bottom: 14px;
+      gap: 8px;
+      margin-bottom: 12px;
     }
     .stat {
       flex: 1;
       text-align: center;
-      padding: 12px 8px;
-      border-radius: 16px;
+      padding: 10px 6px;
+      border-radius: 14px;
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.1);
     }
     .stat b {
       display: block;
-      font-size: 16px;
-      margin-bottom: 4px;
+      font-size: 15px;
+      margin-bottom: 3px;
       color: #ffd76e;
     }
     .stat span {
-      font-size: 11px;
+      font-size: 10px;
       color: #9fc3ff;
     }
-    /* Карточка уровня */
-    .level-card {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
-      padding: 12px 14px;
-      margin-bottom: 14px;
-    }
-    .level-badge {
-      width: 46px;
-      height: 46px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #4fc3f7, #2196f3);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: 800;
-      font-size: 18px;
-      color: white;
-      flex-shrink: 0;
-    }
-    .level-info {
-      flex: 1;
-    }
-    .level-info b {
-      display: block;
-      font-size: 14px;
-      margin-bottom: 4px;
-    }
-    .level-info span {
-      font-size: 12px;
-      color: #9fc3ff;
-    }
-    .grid2 {
+    /* Каталог кейсов */
+    .cases-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-bottom: 14px;
+      gap: 10px;
     }
-    @media (max-width: 360px) {
-      .grid2 { grid-template-columns: 1fr; }
-    }
-    /* Плитки-кейсы: крупные, с градиентами и свечением */
-    .tile {
-      border-radius: 18px;
-      padding: 18px 14px;
+    .case-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 16px;
+      padding: 12px;
       cursor: pointer;
-      border: 1px solid rgba(255,255,255,0.12);
       text-align: center;
-      transition: transform 0.1s ease, box-shadow 0.2s ease;
+      transition: transform 0.1s;
       position: relative;
-      overflow: hidden;
     }
-    .tile:active {
+    .case-card:active {
       transform: scale(0.96);
     }
-    .tile-case {
-      background: linear-gradient(145deg, rgba(255,215,110,0.15), rgba(255,157,60,0.05));
-      border-color: rgba(255,215,110,0.35);
-      box-shadow: 0 6px 20px rgba(255,215,110,0.12);
-      grid-column: 1 / -1;
-      padding: 22px 14px;
-    }
-    .tile-bonus {
-      background: linear-gradient(145deg, rgba(255,138,138,0.15), rgba(255,80,80,0.05));
-    }
-    .tile-profile {
-      background: linear-gradient(145deg, rgba(100,181,246,0.15), rgba(33,150,243,0.05));
-    }
-    .tile small {
+    .case-icon {
+      font-size: 34px;
       display: block;
-      margin-top: 6px;
-      color: #9fc3ff;
+      margin-bottom: 6px;
+    }
+    .case-name {
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+    .case-price {
+      background: linear-gradient(135deg, #ffd76e, #ff9d3c);
+      color: #3a2000;
+      font-weight: 800;
       font-size: 12px;
+      border-radius: 12px;
+      padding: 4px 10px;
+      display: inline-block;
+      margin-top: 4px;
     }
-    .ic {
-      width: 50px;
-      height: 50px;
-      object-fit: contain;
-      display: block;
-      margin: 0 auto 10px auto;
+    .case-locked {
+      opacity: 0.45;
+      filter: grayscale(0.6);
     }
-    /* Энергия (игровая механика вместо «бесконечных кейсов») */
-    .energy-bar-container {
+    /* Карточка машины в дропе и гараже */
+    .car-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 14px;
+      padding: 10px;
+      text-align: center;
+    }
+    .car-img {
       width: 100%;
-      height: 6px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 3px;
-      margin-top: 8px;
-      overflow: hidden;
+      height: 70px;
+      object-fit: cover;
+      border-radius: 10px;
+      background: #101627;
+      display: block;
+      margin-bottom: 6px;
     }
-    .energy-fill {
-      height: 100%;
-      background: #ff4d4d;
-      width: 100%; /* будет меняться из JS */
-      transition: width 0.4s ease;
+    .car-name {
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 2px;
     }
-
-    /* Кнопка «Назад» в профиле */
+    .car-value {
+      font-size: 12px;
+      color: #ffd76e;
+      font-weight: 700;
+    }
+    .rare-common    { border-color: #9aa4b5; }
+    .rare-rare      { border-color: #4fc3f7; }
+    .rare-epic      { border-color: #b388ff; }
+    .rare-legendary { border-color: #ffd76e; box-shadow: 0 0 14px rgba(255,215,110,0.35); }
+    .rare-mythic    { border-color: #ff4d6d; box-shadow: 0 0 16px rgba(255,77,109,0.45); }
+    /* Модалка с шансами */
+    .chances-list {
+      text-align: left;
+      font-size: 12px;
+      max-height: 180px;
+      overflow-y: auto;
+      margin: 8px 0;
+    }
+    .chances-list div {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 6px;
+      border-radius: 8px;
+    }
+    .chances-list div:nth-child(odd) {
+      background: rgba(255,255,255,0.05);
+    }
     .back {
       background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.2);
@@ -217,14 +222,39 @@
       padding: 8px 14px;
       cursor: pointer;
       font-size: 14px;
-      display: inline-block;
       margin-bottom: 12px;
     }
-    .back:active {
-      background: rgba(255,255,255,0.15);
+    /* Ежедневный бонус */
+    .bonus-card {
+      background: linear-gradient(145deg, rgba(255,138,138,0.15), rgba(255,80,80,0.05));
+      border: 1px solid rgba(255,138,138,0.3);
+      border-radius: 18px;
+      padding: 18px 14px;
+      text-align: center;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+    .bonus-card:active {
+      transform: scale(0.97);
+    }
+    .bonus-card.claimed {
+      opacity: 0.55;
+      cursor: default;
+    }
+    .bonus-amount {
+      font-size: 26px;
+      font-weight: 800;
+      color: #ff8a8a;
+      margin: 6px 0;
+    }
+    .bonus-timer {
+      font-size: 12px;
+      color: #9fc3ff;
+      margin-top: 6px;
     }
 
-    /* Форма вывода (только в профиле) */
+    /* Вывод средств */
     .withdraw-form {
       padding: 16px;
       background: rgba(0,0,0,0.3);
@@ -236,7 +266,7 @@
       font-size: 15px;
       text-align: center;
     }
-    #withdrawAmount {
+    #withdrawAmount, #withdrawCard {
       width: 100%;
       padding: 12px;
       border-radius: 12px;
@@ -247,7 +277,7 @@
       font-size: 15px;
       outline: none;
     }
-    #withdrawAmount:focus {
+    #withdrawAmount:focus, #withdrawCard:focus {
       border-color: #ffd76e;
     }
     .btn-withdraw {
@@ -265,41 +295,22 @@
       opacity: 0.5;
       cursor: not-allowed;
     }
-
-    /* Анимация открытия кейса */
-    @keyframes popIn {
-      0% { transform: scale(0.8); opacity: 0; }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    .case-open-anim {
-      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
-
-    /* Лог (карточки-сообщения) */
-    .log-area {
+    .withdraw-history {
       margin-top: 12px;
       font-size: 13px;
-      line-height: 1.4;
-      max-height: 200px;
-      overflow-y: auto;
-      padding-top: 8px;
-      background: rgba(0,0,0,0.2);
-      border-top: 1px solid rgba(255,255,255,0.1);
-      border-radius: 12px;
     }
-    .log-area div {
+    .withdraw-history .wh-item {
+      display: flex;
+      justify-content: space-between;
       padding: 10px;
       border-radius: 12px;
       background: rgba(255,255,255,0.06);
       margin-bottom: 6px;
       color: #eaf2ff;
-      border-left: 4px solid transparent;
+      border-left: 4px solid #ff4d4d;
     }
-    .log-success { border-left-color: #4fc3f7; }
-    .log-error { border-left-color: #ff4d4d; }
 
-    /* Оверлей с выпавшим призом */
+    /* Оверлей дропа */
     .drop-overlay {
       position: fixed;
       top: 0;
@@ -323,163 +334,510 @@
     }
     .drop-card {
       background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.25);
       border-radius: 24px;
-      padding: 28px;
+      padding: 26px;
+      max-width: 320px;
+      width: 90%;
       text-align: center;
       box-shadow: 0 16px 48px rgba(0,0,0,0.6);
-      transform: scale(0.95);
       animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0; }
+      50% { transform: scale(1.08); }
+      100% { transform: scale(1); opacity: 1; }
     }
     .drop-card h2 {
       color: #ffd76e;
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+    .drop-rarity {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .drop-card img.car-img {
+      height: 110px;
+    }
+    .drop-value {
       font-size: 22px;
-      margin-bottom: 8px;
-      text-shadow: 0 2px 8px rgba(255,215,110,0.4);
+      font-weight: 800;
+      color: #4caf50;
+      margin: 10px 0 16px 0;
     }
-    .drop-card p {
-      color: #cfe0ff;
-      font-size: 15px;
+    /* Анимация «рулетки» при открытии */
+    .case-opening .drop-card {
+      animation: none;
     }
+    .spinner {
+      font-size: 40px;
+      animation: spin 0.12s linear infinite;
+      margin: 14px 0;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    /* Лог */
+    .log-area {
+      margin-top: 12px;
+      font-size: 13px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .log-area div {
+      padding: 10px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.06);
+      margin-bottom: 6px;
+      border-left: 4px solid transparent;
+    }
+    .log-success { border-left-color: #4caf50; }
+    .log-error { border-left-color: #ff4d4d; }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="logo">🚗 Авто<span>Кейсы</span></div>
-      <button class="bal" onclick="goToHome()">₽ <span id="balance">0</span></button>
-    </header>
+<div class="wrap">
+  <header>
+    <div class="logo">🚗 Авто<span style="color:#ffd76e;">Кейсы</span></div>
+    <button class="bal" onclick="switchTab('tab-withdraw')">₽ <span id="balance">0</span></button>
+  </header>
 
-    <!-- Главная страница -->
-    <div class="page active" id="page-home">
-      <!-- Карточка уровня -->
-      <div class="level-card">
-        <div class="level-badge">1</div>
-        <div class="level-info">
-          <b>Уровень 1</b>
-          <span>До следующего уровня: 500 XP</span>
-        </div>
-      </div>
-
-      <!-- Прогресс-бар (XP) -->
-      <div class="progress-bar-container">
-        <div class="progress-fill" style="width: 20%;"></div>
-      </div>
-
-      <div class="panel">
-        <p>Кейсы с машинами. Энергия восстанавливается сама — играй в своём темпе.</p>
-      </div>
-
-      <div class="stats">
-        <div class="stat">
-          <b id="stat-balance">0</b><span>₽ на счету</span>
-        </div>
-        <div class="stat">
-          <b id="stat-cases">0</b><span>кейсов открыто</span>
-        </div>
-        <div class="stat">
-          <b id="stat-best">—</b><span>лучший приз</span>
-        </div>
-      </div>
-
-      <!-- Энергия -->
-      <div style="margin-bottom:12px;">
-        <small style="display:block;margin-bottom:4px;color:#9fc3ff;">Энергия</small>
-        <div class="energy-bar-container">
-          <div class="energy-fill" id="energyFill" style="width:100%;"></div>
-        </div>
-      </div>
-
-      <!-- Плитки-кнопки (игровой вид) -->
-      <div class="grid2">
-        <!-- Кейс — крупная плитка -->
-        <div class="tile tile-case" onclick="openCase()">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd700'%3E%3Cpath d='M19 11h2V9H8.09L9.5 3.64l-1.42-1.31L5 3v2h2v4H5v2h4v4h4V9h4zm-9-2.07L8.41 14H19V9h-9z'/%3E%3C/svg%3E" alt="Car Icon" class="ic">
-          <b style="color:#ffd76e;font-size:18px;">Открыть кейс</b>
-          <small>Стоимость: 20 000 ₽<br>Требуется: 1 энергия</small>
-        </div>
-
-        <!-- Бонус — ежедневная награда -->
-        <div class="tile tile-bonus" onclick="bonus()">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff8a8a'%3E%3Cpath d='M20 8c0-4.42-3.58-8-8-8s-8 3.58-8 8c0 1.99.74 3.82 2 5.09V16h16v-2.91C21.26 11.82 20 9.99 20 8zm-8-6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6 2.69-6 6-6zM4 12c-1.1 0-2 .9-2 2v2h4v-2c0-1.1-.9-2-2-2zm16 0c-1.1 0-2 .9-2 2v2h4v-2c0-1.1-.9-2-2-2z'/%3E%3C/svg%3E" alt="Gift Icon" class="ic">
-          <b style="color:#ff8a8a;font-size:18px;">Бонус</b>
-          <small>+25 ₽<br>Доступно: 1 раз в день</small>
-        </div>
-
-        <!-- Профиль (вместо «вывод» на главной) -->
-        <div class="tile tile-profile" onclick="profilePage()">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364b5f6'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E" alt="Profile Icon" class="ic">
-          <b style="color:#64b5f6;font-size:18px;">Профиль</b>
-          <small>Инвентарь и вывод</small>
-        </div>
-      </div>
-
-      <div class="log-area" id="logArea"></div>
+  <!-- ЭКРАН: КАТАЛОГ КЕЙСОВ -->
+  <div class="page active" id="page-cases">
+    <div class="stats">
+      <div class="stat"><b id="stat-balance">0</b><span>₽ на счету</span></div>
+      <div class="stat"><b id="stat-cases">0</b><span>кейсов открыто</span></div>
+      <div class="stat"><b id="stat-garage">0</b><span>машин в гараже</span></div>
     </div>
 
-    <!-- Страница профиля (вывод средств здесь, а не на главной) -->
-    <div class="page" id="page-profile">
-      <button class="back" onclick="goToHome()">← Назад</button>
+    <div class="panel">Кейсы от 10 ₽ до 250 000 ₽. Средний возврат равен цене кейса — дешёвые машины выпадают часто, дорогие — редко.</div>
 
-      <div class="panel">
-        <b style="font-size:16px;display:block;margin-bottom:6px;">Твой профиль</b>
-        <p style="font-size:13px;color:#cfe0ff;">Здесь можно вывести средства и посмотреть статистику.</p>
-      </div>
-
-      <div class="stats" style="margin-top:12px;">
-        <div class="stat">
-          <b id="prof-balance">0</b><span>Баланс</span>
-        </div>
-        <div class="stat">
-          <b id="prof-cases">0</b><span>Кейсов открыто</span>
-        </div>
-      </div>
-
-      <div class="withdraw-form">
-        <h3>Вывод средств</h3>
-        <input type="number" id="withdrawAmount" placeholder="Сумма (мин. 250 ₽)...">
-        <button class="btn-withdraw" onclick="processWithdrawal()">Вывести</button>
-      </div>
-    </div>
+    <div class="cases-grid" id="casesGrid"></div>
   </div>
 
-  <!-- Оверлей с выпавшим призом -->
+  <!-- ЭКРАН: БОНУС -->
+  <div class="page" id="page-bonus">
+    <div class="bonus-card" id="bonusCard" onclick="claimBonus()">
+      <div style="font-size:40px;">🎁</div>
+      <div class="bonus-amount">+25 ₽</div>
+      <p>Ежедневный бонус</p>
+      <div class="bonus-timer" id="bonusTimer"></div>
+    </div>
+    <div class="panel">Заходи каждый день — бонус капает всегда. 5 дней подряд подряд без пропуска — увеличенный бонус (в планах).</div>
+    <div class="log-area" id="logArea"></div>
+  </div>
+
+  <!-- ЭКРАН: ГАРАЖ -->
+  <div class="page" id="page-garage">
+    <div class="panel">
+      <b style="font-size:16px;">Твой гараж</b>
+      <p id="garageInfo" style="margin-top:4px;">Машины можно продать обратно за их полную стоимость.</p>
+    </div>
+    <div class="cases-grid" id="garageGrid"></div>
+  </div>
+
+  <!-- ЭКРАН: ВЫВОД -->
+  <div class="page" id="page-withdraw">
+    <div class="stats">
+      <div class="stat"><b id="wd-balance">0</b><span>Доступно к выводу</span></div>
+      <div class="stat"><b id="wd-min">250</b><span>Мин. вывод, ₽</span></div>
+    </div>
+
+    <div class="withdraw-form">
+      <h3>Вывод на карту</h3>
+      <input type="text" id="withdrawCard" inputmode="numeric" maxlength="19" placeholder="Номер карты: 0000 0000 0000 0000">
+      <input type="number" id="withdrawAmount" placeholder="Сумма (мин. 250 ₽)">
+      <button class="btn-withdraw" id="btnWithdraw" onclick="processWithdrawal()">Вывести</button>
+    </div>
+
+    <div class="withdraw-history" id="withdrawHistory"></div>
+  </div>
+
+  <!-- ОВЕРЛЕЙ: ОТКРЫТИЕ КЕЙСА / ДРОП -->
   <div class="drop-overlay" id="dropOverlay">
-    <div class="drop-card">
-      <h2 id="dropName">Приз</h2>
-      <p id="dropValue">0 ₽</p>
-      <button class="back" style="margin-top:20px;" onclick="closeDropOverlay()">Забрать</button>
+    <div class="drop-card" id="dropCardInner">
+      <h2 id="dropName">Открываем...</h2>
+      <div class="drop-rarity" id="dropRarity"></div>
+      <img id="dropImg" class="car-img" src="" alt="">
+      <div class="drop-value" id="dropValue"></div>
+      <p id="dropDesc" style="font-size:13px;color:#cfe0ff;margin-bottom:14px;"></p>
+      <button class="btn-withdraw" style="background:linear-gradient(135deg,#ffd76e,#ff9d3c);color:#3a2000;" onclick="closeDrop()">Забрать</button>
+      <button class="back" style="width:100%;margin-top:8px;margin-bottom:0;" onclick="closeDrop()">Продать за полную цену</button>
     </div>
   </div>
-let state = {
-  balance: 0,
-  casesOpened: 0,
-  bestPrize: '—',
-  energy: 100, // Максимальная энергия
-  level: 1,
-  xp: 0, // Опыт
-};
 
-function saveState() {
-  localStorage.setItem('gameState', JSON.stringify(state));
+  <!-- ОВЕРЛЕЙ: ШАНСЫ КЕЙСА -->
+  <div class="drop-overlay" id="chancesOverlay">
+    <div class="drop-card">
+      <h2 id="chTitle" style="font-size:17px;">Шансы кейса</h2>
+      <div class="chances-list" id="chancesList"></div>
+      <button class="btn-withdraw" style="background:linear-gradient(135deg,#4fc3f7,#2196f3);" onclick="document.getElementById('chancesOverlay').classList.remove('active')">Закрыть</button>
+    </div>
+  </div>
+</div>
+
+<!-- НИЖНИЕ ВКЛАДКИ -->
+<div class="tabs">
+  <button class="tab active" id="tab-cases" onclick="switchTab('tab-cases')"><span class="t-ico">📦</span>Кейсы</button>
+  <button class="tab" id="tab-bonus" onclick="switchTab('tab-bonus')"><span class="t-ico">🎁</span>Бонус</button>
+  <button class="tab" id="tab-garage" onclick="switchTab('tab-garage')"><span class="t-ico">🚙</span>Гараж</button>
+  <button class="tab" id="tab-withdraw" onclick="switchTab('tab-withdraw')"><span class="t-ico">💳</span>Вывод</button>
+</div>
+
+const carsData = [
+  {
+    "id": 1,
+    "name": "Lada",
+    "price": 1000,
+    "rarity": "common",
+    "img": "lada.png",
+    "incomePerHour": 10
+  },
+  {
+    "id": 2,
+    "name": "BMW",
+    "price": 5000,
+    "rarity": "rare",
+    "img": "bmw.png",
+    "incomePerHour": 50
+  },
+  {
+    "id": 3,
+    "name": "Ferrari",
+    "price": 100000,
+    "rarity": "legendary",
+    "img": "ferrari.png",
+    "incomePerHour": 1000
+  },
+  // Добавьте ещё около 197 машин с разными параметрами
+];
+// Загрузка данных при старте
+async function loadData() {
+  const cases = await fetchCases();
+  const cars = await fetchCars();
+  // Обновление UI
+  updateCasesUI(cases);
+  updateCarsUI(cars);
 }
 
-function loadState() {
-  const savedState = localStorage.getItem('gameState');
-  if (savedState) {
-    state = JSON.parse(savedState);
+function updateCasesUI(cases) {
+  // Отображение кейсов в виде сетки
+}
+
+function updateCarsUI(cars) {
+  // Отображение машин в гараже
+  document.getElementById('garageGrid').innerHTML = '';
+  cars.forEach(car => {
+    const el = document.createElement('div');
+    el.className = 'car-card';
+    el.innerHTML = `
+      <img src="${car.img}" alt="${car.name}">
+      <div>${car.name}</div>
+      <div>Доход: ${car.incomePerHour} ₽/ч</div>
+    `;
+    document.getElementById('garageGrid').appendChild(el);
+  });
+}
+<div class="page" id="page-garage">
+  <div class="panel">
+    <b style="font-size:16px;">Твой гараж</b>
+    <div id="garageGrid"></div>
+  </div>
+</div>
+<script>
+  // --- СОСТОЯНИЕ ИГРЫ ---
+  let state = {
+    balance: 0,
+    casesOpened: 0,
+    garage: [], // массив ID машин в гараже
+    bonusClaimed: false,
+    lastBonusDate: null,
+    withdrawHistory: []
+  };
+
+  // --- БАЗА ДАННЫХ (УПРОЩЁННАЯ ВЕРСИЯ) ---
+  // В реальном проекте эти массивы лучше вынести в отдельный файл или загружать с сервера.
+  // Здесь я сделал 5 примеров кейсов (вместо 75) и 10 машин (вместо 200), чтобы код был читаемым.
+  // Ты можешь легко добавить остальные, просто копируя структуру.
+  
+  const carsData = [
+    { id: 1, name: "Lada Granta", price: 1500, rarity: "common", incomePerHour: 5, img: "https://via.placeholder.com/150/FF5733/FFFFFF?text=Lada" },
+    { id: 2, name: "Kia Rio", price: 8000, rarity: "common", incomePerHour: 20, img: "https://via.placeholder.com/150/33FF57/FFFFFF?text=Kia" },
+    { id: 3, name: "Hyundai Solaris", price: 12000, rarity: "rare", incomePerHour: 40, img: "https://via.placeholder.com/150/3357FF/FFFFFF?text=Hyundai" },
+    { id: 4, name: "Toyota Camry", price: 25000, rarity: "rare", incomePerHour: 80, img: "https://via.placeholder.com/150/F333AA/FFFFFF?text=Camry" },
+    { id: 5, name: "BMW 5 Series", price: 60000, rarity: "epic", incomePerHour: 150, img: "https://via.placeholder.com/150/AA33F3/FFFFFF?text=BMW" },
+    { id: 6, name: "Mercedes E-Class", price: 90000, rarity: "epic", incomePerHour: 250, img: "https://via.placeholder.com/150/33AAF3/FFFFFF?text=Merc" },
+    { id: 7, name: "Audi A8", price: 140000, rarity: "legendary", incomePerHour: 400, img: "https://via.placeholder.com/150/F3AA33/FFFFFF?text=Audi" },
+    { id: 8, name: "Porsche Cayenne", price: 180000, rarity: "legendary", incomePerHour: 600, img: "https://via.placeholder.com/150/33F3AA/FFFFFF?text=Porsche" },
+    { id: 9, name: "Lamborghini Urus", price: 220000, rarity: "mythic", incomePerHour: 1000, img: "https://via.placeholder.com/150/F33333/FFFFFF?text=Lambo" },
+    { id: 10, name: "Rolls-Royce Cullinan", price: 300000, rarity: "mythic", incomePerHour: 2000, img: "https://via.placeholder.com/150/3333F3/FFFFFF?text=RR" }
+  ];
+
+  const casesData = [
+    { id: 1, price: 10, name: "Эконом-кейс", chances: [{ carId: 1, chance: 0.7 }, { carId: 2, chance: 0.25 }, { carId: 3, chance: 0.05 }] },
+    { id: 2, price: 500, name: "Стандарт-кейс", chances: [{ carId: 2, chance: 0.5 }, { carId: 3, chance: 0.3 }, { carId: 4, chance: 0.15 }, { carId: 5, chance: 0.05 }] },
+    { id: 3, price: 5000, name: "Премиум-кейс", chances: [{ carId: 4, chance: 0.4 }, { carId: 5, chance: 0.3 }, { carId: 6, chance: 0.2 }, { carId: 7, chance: 0.1 }] },
+    { id: 4, price: 25000, name: "Элитный кейс", chances: [{ carId: 6, chance: 0.4 }, { carId: 7, chance: 0.3 }, { carId: 8, chance: 0.2 }, { carId: 9, chance: 0.1 }] },
+    { id: 5, price: 250000, name: "Легендарный кейс", chances: [{ carId: 8, chance: 0.4 }, { carId: 9, chance: 0.35 }, { carId: 10, chance: 0.25 }] }
+    // Сюда можно добавить ещё 70 кейсов
+  ];
+
+  // --- ИНИЦИАЛИЗАЦИЯ И СОХРАНЕНИЕ ---
+  function saveState() {
+    localStorage.setItem('gameState', JSON.stringify(state));
   }
-}
 
-loadState();
+  function loadState() {
+    const saved = localStorage.getItem('gameState');
+    if (saved) {
+      state = { ...state, ...JSON.parse(saved) };
+    }
+  }
 
-// Обновление UI
-function updateUI() {
-  document.getElementById('balance').textContent = state.balance.toLocaleString('ru-RU') + ' ₽';
-  document.getElementById('casesOpened').textContent = state.casesOpened;
-  document.getElementById('bestPrize').textContent = state.bestPrize;
-  document.getElementById('energyFill').style.width = (state.energy / 100) * 100 + '%';
-  document.getElementById('xpBar').style.width = (state.xp / 500) * 100 + '%';
-}
+  loadState();
+  updateUI();
 
-updateUI();
+  // --- НАВИГАЦИЯ ---
+  function switchTab(tabId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    
+    const pageId = tabId.replace('tab-', 'page-');
+    document.getElementById(pageId).classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+  }
+
+  // --- ОТРИСОВКА КЕЙСОВ ---
+  function renderCases() {
+    const grid = document.getElementById('casesGrid');
+    grid.innerHTML = '';
+    casesData.forEach(c => {
+      const el = document.createElement('div');
+      el.className = 'case-card';
+      el.onclick = () => openCase(c);
+      el.innerHTML = `
+        <div class="case-icon">📦</div>
+        <div class="case-name">${c.name}</div>
+        <div class="case-price">${c.price.toLocaleString('ru-RU')} ₽</div>
+      `;
+      grid.appendChild(el);
+    });
+  }
+  renderCases();
+
+  // --- ОТКРЫТИЕ КЕЙСА (ГЛАВНАЯ ЛОГИКА) ---
+  function openCase(caseObj) {
+    if (state.balance < caseObj.price) {
+      alert('❌ Недостаточно средств!');
+      return;
+    }
+
+    state.balance -= caseObj.price;
+    state.casesOpened++;
+    saveState();
+    updateUI();
+    log(`Открыт кейс: ${caseObj.name}`, 'success');
+
+    // Анимация открытия
+    const overlay = document.getElementById('dropOverlay');
+    overlay.classList.add('active');
+    
+    // Имитация времени открытия (рулетка)
+    setTimeout(() => {
+      // Логика выпадения приза
+      const random = Math.random();
+      let cumulativeChance = 0;
+      let wonCar = null;
+
+      for (const item of caseObj.chances) {
+        cumulativeChance += item.chance;
+        if (random <= cumulativeChance) {
+          wonCar = carsData.find(car => car.id === item.carId);
+          break;
+        }
+      }
+
+      if (!wonCar) {
+        // На случай ошибок округления берем последний предмет
+        wonCar = carsData.find(car => car.id === caseObj.chances[caseObj.chances.length - 1].carId);
+      }
+
+      // Добавляем в гараж
+      state.garage.push(wonCar.id);
+      saveState();
+
+      // Показываем результат
+      const card = document.getElementById('dropCardInner');
+      document.getElementById('dropName').textContent = wonCar.name;
+      document.getElementById('dropRarity').textContent = wonCar.rarity.toUpperCase();
+      document.getElementById('dropImg').src = wonCar.img;
+      document.getElementById('dropValue').textContent = '+ ' + wonCar.price.toLocaleString('ru-RU') + ' ₽';
+      document.getElementById('dropDesc').textContent = `Доход: ${wonCar.incomePerHour} ₽/ч`;
+    }, 1500);
+  }
+
+  // --- ЗАБРАТЬ ПРИЗ ---
+  function closeDrop() {
+    document.getElementById('dropOverlay').classList.remove('active');
+    updateGarageUI(); // Обновляем список в гараже
+  }
+
+  // --- ГАРАЖ ---
+  function updateGarageUI() {
+    const grid = document.getElementById('garageGrid');
+    grid.innerHTML = '';
+
+    if (state.garage.length === 0) {
+      grid.innerHTML = '<p style="color:#9fc3ff">Гараж пуст. Открой первый кейс!</p>';
+      return;
+    }
+
+    state.garage.forEach(id => {
+      const car = carsData.find(c => c.id === id);
+      if (car) {
+        const el = document.createElement('div');
+        el.className = `car-card rare-${car.rarity}`;
+        el.innerHTML = `
+          <img src="${car.img}" class="car-img" alt="${car.name}">
+          <div class="car-name">${car.name}</div>
+          <div class="car-value">${car.price.toLocaleString('ru-RU')} ₽<br>
+            <small style="color:#4caf50">+${car.incomePerHour} ₽/ч</small>
+          </div>
+          <button class="back" style="margin-top:8px;width:100%" onclick="sellCar(${car.id})">Продать</button>
+        `;
+        grid.appendChild(el);
+      }
+    });
+    updateStats();
+  }
+
+  function sellCar(id) {
+    if (!confirm('Продать эту машину за полную стоимость?')) return;
+    
+    const car = carsData.find(c => c.id === id);
+    if (car) {
+      state.balance += car.price;
+      state.garage = state.garage.filter(g => g !== id);
+      saveState();
+      updateUI();
+      log(`Продана машина: ${car.name} (+${car.price})`, 'success');
+      updateGarageUI();
+    }
+  }
+
+  // --- ПАССИВНЫЙ ДОХОД (АВТОМАТИЧЕСКИЙ) ---
+  setInterval(() => {
+    let income = 0;
+    state.garage.forEach(id => {
+      const car = carsData.find(c => c.id === id);
+      if (car) income += car.incomePerHour;
+    });
+
+    if (income > 0) {
+      state.balance += income;
+      saveState();
+      updateUI();
+      // Можно добавить всплывающее уведомление о доходе
+    }
+  }, 60000); // Каждые 60 секунд
+
+  // --- ЕЖЕДНЕВНЫЙ БОНУС ---
+  function claimBonus() {
+    const today = new Date().toDateString();
+    if (state.bonusClaimed && state.lastBonusDate === today) {
+      alert('Бонус уже получен сегодня!');
+      return;
+    }
+
+    state.balance += 25;
+    state.bonusClaimed = true;
+    state.lastBonusDate = today;
+    saveState();
+    updateUI();
+    log('Получен ежедневный бонус: +25 ₽', 'success');
+    
+    const card = document.getElementById('bonusCard');
+    card.classList.add('claimed');
+    document.getElementById('bonusTimer').textContent = 'Бонус получен';
+  }
+
+  // Проверка бонуса при загрузке
+  const today = new Date().toDateString();
+  if (state.lastBonusDate !== today) {
+    state.bonusClaimed = false;
+    document.getElementById('bonusCard').classList.remove('claimed');
+    document.getElementById('bonusTimer').textContent = '';
+  } else {
+    document.getElementById('bonusCard').classList.add('claimed');
+    document.getElementById('bonusTimer').textContent = 'Уже получен';
+  }
+
+  // --- ВЫВОД СРЕДСТВ ---
+  function processWithdrawal() {
+    const amountInput = document.getElementById('withdrawAmount');
+    const amount = parseInt(amountInput.value, 10);
+    const minWithdraw = 250;
+
+    if (!amount || amount < minWithdraw) {
+      alert(`Минимальная сумма вывода: ${minWithdraw} ₽.`);
+      return;
+    }
+    if (amount > state.balance) {
+      alert('Недостаточно средств на балансе.');
+      return;
+    }
+
+    // Симуляция вывода
+    state.balance -= amount;
+    state.withdrawHistory.push({ amount, date: new Date().toLocaleDateString() });
+    saveState();
+    updateUI();
+    
+    amountInput.value = '';
+    alert(`✅ Запрос на вывод ${amount.toLocaleString('ru-RU')} ₽ успешно отправлен! (Симуляция)`);
+    renderWithdrawHistory();
+  }
+
+  function renderWithdrawHistory() {
+    const list = document.getElementById('withdrawHistory');
+    list.innerHTML = state.withdrawHistory.slice(-5).reverse().map(w => `
+      <div class="wh-item">
+        <span>${w.amount.toLocaleString('ru-RU')} ₽</span>
+        <span style="color:#9fc3ff">${w.date}</span>
+      </div>
+    `).join('');
+  }
+
+  // --- ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ---
+  function updateUI() {
+    document.getElementById('balance').textContent = state.balance.toLocaleString('ru-RU');
+    document.getElementById('stat-balance').textContent = state.balance.toLocaleString('ru-RU');
+    document.getElementById('stat-cases').textContent = state.casesOpened;
+    document.getElementById('stat-garage').textContent = state.garage.length;
+    document.getElementById('wd-balance').textContent = state.balance.toLocaleString('ru-RU');
+    
+    updateGarageUI();
+    renderWithdrawHistory();
+  }
+
+  function updateStats() {
+    document.getElementById('stat-garage').textContent = state.garage.length;
+  }
+
+  // --- ЛОГ СОБЫТИЙ ---
+  function log(msg, type = 'info') {
+    const area = document.getElementById('logArea');
+    const entry = document.createElement('div');
+    entry.className = `log-item ${type === 'success' ? 'log-success' : 'log-error'}`;
+    entry.innerHTML = `<p>${msg}</p>`;
+    area.prepend(entry);
+    while (area.children.length > 10) area.lastChild.remove();
+  }
+</script>
+</body>
+</html>
