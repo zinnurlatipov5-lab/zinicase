@@ -13,13 +13,14 @@
     }
     body {
       font-family: -apple-system, 'Segoe UI', Roboto, sans-serif;
-      background: radial-gradient(900px 500px at 50% -10%, #24408f, #0b1026) fixed #0b1026;
+      background: radial-gradient(900px 500px at 50% -10%, #1a2a4a, #080c14) fixed #080c14;
       color: #eaf2ff;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       position: relative;
+      overflow-x: hidden;
     }
     .wrap {
       max-width: 480px;
@@ -30,25 +31,42 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 18px;
-      padding: 14px;
-      margin-bottom: 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 16px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
     }
     .logo {
-      font-size: 19px;
+      font-size: 18px;
       font-weight: 800;
+      letter-spacing: 0.5px;
     }
     .bal {
       background: linear-gradient(135deg, #ffd76e, #ff9d3c);
       color: #3a2000;
       font-weight: 800;
-      border-radius: 22px;
-      padding: 9px 16px;
+      border-radius: 20px;
+      padding: 8px 14px;
       cursor: pointer;
       border: none;
-      font-size: 15px;
+      font-size: 14px;
+      box-shadow: 0 4px 12px rgba(255, 215, 110, 0.3);
+    }
+    /* Прогресс-бар */
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #4fc3f7;
+      width: 0%;
+      transition: width 0.4s ease;
     }
     .page {
       display: none;
@@ -57,13 +75,13 @@
       display: block;
     }
     .panel {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
       border-radius: 16px;
       padding: 14px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
       text-align: center;
-      font-size: 14px;
+      font-size: 13px;
       color: #cfe0ff;
     }
     .stats {
@@ -76,8 +94,8 @@
       text-align: center;
       padding: 12px 8px;
       border-radius: 16px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
     }
     .stat b {
       display: block;
@@ -89,6 +107,42 @@
       font-size: 11px;
       color: #9fc3ff;
     }
+    /* Карточка уровня */
+    .level-card {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+    }
+    .level-badge {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4fc3f7, #2196f3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: white;
+      flex-shrink: 0;
+    }
+    .level-info {
+      flex: 1;
+    }
+    .level-info b {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 4px;
+    }
+    .level-info span {
+      font-size: 12px;
+      color: #9fc3ff;
+    }
     .grid2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -98,17 +152,32 @@
     @media (max-width: 360px) {
       .grid2 { grid-template-columns: 1fr; }
     }
+    /* Плитки-кейсы: крупные, с градиентами и свечением */
     .tile {
       border-radius: 18px;
       padding: 18px 14px;
       cursor: pointer;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.12);
       text-align: center;
-      transition: transform 0.1s ease;
+      transition: transform 0.1s ease, box-shadow 0.2s ease;
+      position: relative;
+      overflow: hidden;
     }
     .tile:active {
       transform: scale(0.96);
+    }
+    .tile-case {
+      background: linear-gradient(145deg, rgba(255,215,110,0.15), rgba(255,157,60,0.05));
+      border-color: rgba(255,215,110,0.35);
+      box-shadow: 0 6px 20px rgba(255,215,110,0.12);
+      grid-column: 1 / -1;
+      padding: 22px 14px;
+    }
+    .tile-bonus {
+      background: linear-gradient(145deg, rgba(255,138,138,0.15), rgba(255,80,80,0.05));
+    }
+    .tile-profile {
+      background: linear-gradient(145deg, rgba(100,181,246,0.15), rgba(33,150,243,0.05));
     }
     .tile small {
       display: block;
@@ -123,34 +192,58 @@
       display: block;
       margin: 0 auto 10px auto;
     }
-    .back {
+    /* Энергия (игровая механика вместо «бесконечных кейсов») */
+    .energy-bar-container {
+      width: 100%;
+      height: 6px;
       background: rgba(255,255,255,0.1);
+      border-radius: 3px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    .energy-fill {
+      height: 100%;
+      background: #ff4d4d;
+      width: 100%; /* будет меняться из JS */
+      transition: width 0.4s ease;
+    }
+
+    /* Кнопка «Назад» в профиле */
+    .back {
+      background: rgba(255,255,255,0.08);
       border: 1px solid rgba(255,255,255,0.2);
       color: white;
       border-radius: 12px;
-      padding: 8px 12px;
+      padding: 8px 14px;
       cursor: pointer;
-      margin-bottom: 12px;
       font-size: 14px;
+      display: inline-block;
+      margin-bottom: 12px;
     }
+    .back:active {
+      background: rgba(255,255,255,0.15);
+    }
+
+    /* Форма вывода (только в профиле) */
     .withdraw-form {
-      padding: 14px;
-      background: rgba(255,255,255,0.06);
+      padding: 16px;
+      background: rgba(0,0,0,0.3);
       border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 18px;
+      border-radius: 16px;
     }
     .withdraw-form h3 {
       margin-bottom: 12px;
-      font-size: 16px;
+      font-size: 15px;
+      text-align: center;
     }
     #withdrawAmount {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.3);
-      background: rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(0,0,0,0.5);
       color: white;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       font-size: 15px;
       outline: none;
     }
@@ -159,7 +252,7 @@
     }
     .btn-withdraw {
       width: 100%;
-      background: #ff4d4d;
+      background: linear-gradient(135deg, #ff4d4d, #cc0000);
       color: white;
       border: none;
       padding: 12px;
@@ -167,6 +260,10 @@
       cursor: pointer;
       font-weight: 700;
       font-size: 15px;
+    }
+    .btn-withdraw:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     /* Анимация открытия кейса */
@@ -179,7 +276,7 @@
       animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
 
-    /* Стили логов */
+    /* Лог (карточки-сообщения) */
     .log-area {
       margin-top: 12px;
       font-size: 13px;
@@ -187,25 +284,30 @@
       max-height: 200px;
       overflow-y: auto;
       padding-top: 8px;
-      background: rgba(255,255,255,0.06);
+      background: rgba(0,0,0,0.2);
       border-top: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
     }
     .log-area div {
       padding: 10px;
       border-radius: 12px;
-      background: rgba(255,255,255,0.1);
-      margin-bottom: 4px;
+      background: rgba(255,255,255,0.06);
+      margin-bottom: 6px;
       color: #eaf2ff;
+      border-left: 4px solid transparent;
     }
+    .log-success { border-left-color: #4fc3f7; }
+    .log-error { border-left-color: #ff4d4d; }
 
-    /* Оверлей дропа */
+    /* Оверлей с выпавшим призом */
     .drop-overlay {
-      position: absolute;
+      position: fixed;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(11, 16, 38, 0.75);
+      width: 100vw;
+      height: 100vh;
+      background: rgba(11, 16, 38, 0.92);
+      backdrop-filter: blur(4px);
       display: none;
       justify-content: center;
       align-items: center;
@@ -220,18 +322,20 @@
       to { opacity: 1; }
     }
     .drop-card {
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
       border-radius: 24px;
-      padding: 24px;
+      padding: 28px;
       text-align: center;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 12px 48px rgba(0,0,0,0.4);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+      transform: scale(0.95);
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
     .drop-card h2 {
       color: #ffd76e;
       font-size: 22px;
       margin-bottom: 8px;
+      text-shadow: 0 2px 8px rgba(255,215,110,0.4);
     }
     .drop-card p {
       color: #cfe0ff;
@@ -248,9 +352,24 @@
 
     <!-- Главная страница -->
     <div class="page active" id="page-home">
-      <div class="panel">
-        <p>Кейсы с машинами: от «Копейки» до Rolls‑Royce. Средний возврат кейса — его полная цена: играем честно!</p>
+      <!-- Карточка уровня -->
+      <div class="level-card">
+        <div class="level-badge">1</div>
+        <div class="level-info">
+          <b>Уровень 1</b>
+          <span>До следующего уровня: 500 XP</span>
+        </div>
       </div>
+
+      <!-- Прогресс-бар (XP) -->
+      <div class="progress-bar-container">
+        <div class="progress-fill" style="width: 20%;"></div>
+      </div>
+
+      <div class="panel">
+        <p>Кейсы с машинами. Энергия восстанавливается сама — играй в своём темпе.</p>
+      </div>
+
       <div class="stats">
         <div class="stat">
           <b id="stat-balance">0</b><span>₽ на счету</span>
@@ -262,32 +381,63 @@
           <b id="stat-best">—</b><span>лучший приз</span>
         </div>
       </div>
-      <div class="grid2">
-        <div class="tile" onclick="openCase()">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd700'%3E%3Cpath d='M19 11h2V9H8.09L9.5 3.64l-1.42-1.31L5 3v2h2v4H5v2h4v4h4V9h4zm-9-2.07L8.41 14H19V9h-9z'/%3E%3C/svg%3E" alt="Car Icon" class="ic">
-          <b>Открыть кейс</b>
-          <small>Стоимость: 20 000 ₽</small>
-        </div>
-        <div class="tile" onclick="bonus()">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff8a8a'%3E%3Cpath d='M20 8c0-4.42-3.58-8-8-8s-8 3.58-8 8c0 1.99.74 3.82 2 5.09V16h16v-2.91C21.26 11.82 20 9.99 20 8zm-8-6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6 2.69-6 6-6zM4 12c-1.1 0-2 .9-2 2v2h4v-2c0-1.1-.9-2-2-2zm16 0c-1.1 0-2 .9-2 2v2h4v-2c0-1.1-.9-2-2-2z'/%3E%3C/svg%3E" alt="Gift Icon" class="ic">
-          <b>Бонус</b>
-          <small>+25 ₽ ежедневно</small>
-        </div>
-        <div class="tile" onclick="withdrawPage()">
-          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364b5f6'%3E%3Cpath d='M21 5H8l-6.5 7 6.5 7h13c1.66 0 3-1.34 3-3v-4c0-1.66-1.34-3-3-3zm-1 9H9.83L8 12.18 9.83 10.37H20c.55 0 1 .45 1 1v2c0 .55-.45 1-1 1z'/%3E%3C/svg%3E" alt="Wallet Icon" class="ic">
-          <b>Вывод</b>
-          <small>Мин. вывод: 250 ₽</small>
+
+      <!-- Энергия -->
+      <div style="margin-bottom:12px;">
+        <small style="display:block;margin-bottom:4px;color:#9fc3ff;">Энергия</small>
+        <div class="energy-bar-container">
+          <div class="energy-fill" id="energyFill" style="width:100%;"></div>
         </div>
       </div>
+
+      <!-- Плитки-кнопки (игровой вид) -->
+      <div class="grid2">
+        <!-- Кейс — крупная плитка -->
+        <div class="tile tile-case" onclick="openCase()">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd700'%3E%3Cpath d='M19 11h2V9H8.09L9.5 3.64l-1.42-1.31L5 3v2h2v4H5v2h4v4h4V9h4zm-9-2.07L8.41 14H19V9h-9z'/%3E%3C/svg%3E" alt="Car Icon" class="ic">
+          <b style="color:#ffd76e;font-size:18px;">Открыть кейс</b>
+          <small>Стоимость: 20 000 ₽<br>Требуется: 1 энергия</small>
+        </div>
+
+        <!-- Бонус — ежедневная награда -->
+        <div class="tile tile-bonus" onclick="bonus()">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff8a8a'%3E%3Cpath d='M20 8c0-4.42-3.58-8-8-8s-8 3.58-8 8c0 1.99.74 3.82 2 5.09V16h16v-2.91C21.26 11.82 20 9.99 20 8zm-8-6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6 2.69-6 6-6zM4 12c-1.1 0-2 .9-2 2v2h4v-2c0-1.1-.9-2-2-2zm16 0c-1.1 0-2 .9-2 2v2h4v-2c0-1.1-.9-2-2-2z'/%3E%3C/svg%3E" alt="Gift Icon" class="ic">
+          <b style="color:#ff8a8a;font-size:18px;">Бонус</b>
+          <small>+25 ₽<br>Доступно: 1 раз в день</small>
+        </div>
+
+        <!-- Профиль (вместо «вывод» на главной) -->
+        <div class="tile tile-profile" onclick="profilePage()">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364b5f6'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E" alt="Profile Icon" class="ic">
+          <b style="color:#64b5f6;font-size:18px;">Профиль</b>
+          <small>Инвентарь и вывод</small>
+        </div>
+      </div>
+
       <div class="log-area" id="logArea"></div>
     </div>
 
-    <!-- Страница вывода -->
-    <div class="page" id="page-withdraw">
+    <!-- Страница профиля (вывод средств здесь, а не на главной) -->
+    <div class="page" id="page-profile">
       <button class="back" onclick="goToHome()">← Назад</button>
+
+      <div class="panel">
+        <b style="font-size:16px;display:block;margin-bottom:6px;">Твой профиль</b>
+        <p style="font-size:13px;color:#cfe0ff;">Здесь можно вывести средства и посмотреть статистику.</p>
+      </div>
+
+      <div class="stats" style="margin-top:12px;">
+        <div class="stat">
+          <b id="prof-balance">0</b><span>Баланс</span>
+        </div>
+        <div class="stat">
+          <b id="prof-cases">0</b><span>Кейсов открыто</span>
+        </div>
+      </div>
+
       <div class="withdraw-form">
         <h3>Вывод средств</h3>
-        <input type="number" id="withdrawAmount" placeholder="Введите сумму вывода (мин. 250 ₽)...">
+        <input type="number" id="withdrawAmount" placeholder="Сумма (мин. 250 ₽)...">
         <button class="btn-withdraw" onclick="processWithdrawal()">Вывести</button>
       </div>
     </div>
@@ -298,153 +448,38 @@
     <div class="drop-card">
       <h2 id="dropName">Приз</h2>
       <p id="dropValue">0 ₽</p>
+      <button class="back" style="margin-top:20px;" onclick="closeDropOverlay()">Забрать</button>
     </div>
   </div>
-  <script>
-    // Состояние
-    let balance = 0;
-    let casesOpened = 0;
-    let bestPrize = '—';
+let state = {
+  balance: 0,
+  casesOpened: 0,
+  bestPrize: '—',
+  energy: 100, // Максимальная энергия
+  level: 1,
+  xp: 0, // Опыт
+};
 
-    // Сохранение в localStorage — прогресс не сбрасывается при перезагрузке
-    function saveState() {
-      localStorage.setItem('ac_balance', balance);
-      localStorage.setItem('ac_cases', casesOpened);
-      localStorage.setItem('ac_best', bestPrize);
-    }
+function saveState() {
+  localStorage.setItem('gameState', JSON.stringify(state));
+}
 
-    function loadState() {
-      balance = parseInt(localStorage.getItem('ac_balance'), 10) || 0;
-      casesOpened = parseInt(localStorage.getItem('ac_cases'), 10) || 0;
-      bestPrize = localStorage.getItem('ac_best') || '—';
-      updateUI();
-    }
+function loadState() {
+  const savedState = localStorage.getItem('gameState');
+  if (savedState) {
+    state = JSON.parse(savedState);
+  }
+}
 
-    document.addEventListener('DOMContentLoaded', loadState);
+loadState();
 
-    // Обновление интерфейса
-    function updateUI() {
-      document.getElementById('balance').textContent = balance.toLocaleString('ru-RU');
-      document.getElementById('stat-balance').textContent = balance.toLocaleString('ru-RU');
-      document.getElementById('stat-cases').textContent = casesOpened;
-      document.getElementById('stat-best').textContent = bestPrize;
-    }
+// Обновление UI
+function updateUI() {
+  document.getElementById('balance').textContent = state.balance.toLocaleString('ru-RU') + ' ₽';
+  document.getElementById('casesOpened').textContent = state.casesOpened;
+  document.getElementById('bestPrize').textContent = state.bestPrize;
+  document.getElementById('energyFill').style.width = (state.energy / 100) * 100 + '%';
+  document.getElementById('xpBar').style.width = (state.xp / 500) * 100 + '%';
+}
 
-    // Лог — карточки-записи
-    function log(msg) {
-      const area = document.getElementById('logArea');
-      const entry = document.createElement('div');
-      entry.textContent = msg;
-      area.prepend(entry);
-    }
-
-    // Навигация
-    function goToHome() {
-      document.getElementById('page-home').classList.add('active');
-      document.getElementById('page-withdraw').classList.remove('active');
-    }
-
-    function withdrawPage() {
-      document.getElementById('page-home').classList.remove('active');
-      document.getElementById('page-withdraw').classList.add('active');
-    }
-    // Открытие кейса
-    function openCase() {
-      const cost = 20000;
-      if (balance < cost) {
-        log('❌ Недостаточно средств для открытия кейса!');
-        return;
-      }
-
-      // Списываем баланс
-      balance -= cost;
-      casesOpened++;
-      
-      // Анимация: добавляем класс на первую плитку (можно расширить на все)
-      const firstTile = document.querySelector('.tile');
-      firstTile.classList.add('case-open-anim');
-      setTimeout(() => firstTile.classList.remove('case-open-anim'), 300);
-
-      // Случайный приз (простая логика)
-      const prizes = [
-        { name: '🚗 Копейка', value: 18000 },
-        { name: '🚙 Hyundai Solaris', value: 25000 },
-        { name: '🏁 BMW M4', value: 45000 },
-        { name: '💎 Rolls‑Royce Phantom', value: 120000 }
-      ];
-      // Весовая вероятность: чаще дешёвые, реже дорогие
-      const weights = [60, 25, 12, 3];
-      let total = weights.reduce((a, b) => a + b, 0);
-      let r = Math.random() * total;
-      let picked = null;
-      for (let i = 0; i < weights.length; i++) {
-        if (r < weights[i]) {
-          picked = prizes[i];
-          break;
-        }
-        r -= weights[i];
-      }
-      if (!picked) picked = prizes[0];
-
-      // Обновляем баланс и лучший приз
-      balance += picked.value;
-      if (bestPrize === '—' || picked.value > Number(bestPrize.replace(/\D/g, ''))) {
-        bestPrize = picked.name + ' (' + picked.value.toLocaleString('ru-RU') + ' ₽)';
-      }
-
-      saveState();
-      updateUI();
-      log(`✅ Открыт кейс: ${picked.name} (+${picked.value.toLocaleString('ru-RU')} ₽)`);
-
-      // Показываем оверлей с призом
-      document.getElementById('dropName').textContent = picked.name;
-      document.getElementById('dropValue').textContent = '+ ' + picked.value.toLocaleString('ru-RU') + ' ₽';
-      document.getElementById('dropOverlay').classList.add('active');
-    }
-
-    // Бонус
-    function bonus() {
-      const bonusAmount = 25;
-      balance += bonusAmount;
-      saveState();
-      updateUI();
-      log(`🎁 Получен бонус: +${bonusAmount} ₽`);
-    }
-
-    // Вывод средств (симуляция)
-    function processWithdrawal() {
-      const input = document.getElementById('withdrawAmount');
-      const amount = parseInt(input.value, 10);
-      const minWithdraw = 250;
-
-      if (!amount || amount <= 0) {
-        alert('Введите корректную сумму.');
-        return;
-      }
-      if (amount < minWithdraw) {
-        alert(`Минимальная сумма вывода — ${minWithdraw.toLocaleString('ru-RU')} ₽.`);
-        return;
-      }
-      if (amount > balance) {
-        alert('Недостаточно средств на балансе.');
-        return;
-      }
-
-      // Тут была бы отправка на сервер — сейчас просто списываем
-      balance -= amount;
-      saveState();
-      updateUI();
-      log(`💸 Вывод: -${amount.toLocaleString('ru-RU')} ₽`);
-      alert(`Вывод успешно запрошен: ${amount.toLocaleString('ru-RU')} ₽. (Симуляция)`);
-      input.value = '';
-    }
-
-    // Закрытие оверлея по клику вне карточки (или можно добавить кнопку «Забрать»)
-    document.getElementById('dropOverlay').addEventListener('click', (e) => {
-      if (e.target === e.currentTarget) {
-        e.currentTarget.classList.remove('active');
-      }
-    });
-  </script>
-</body>
-</html>
+updateUI();
