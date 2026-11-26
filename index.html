@@ -9,22 +9,23 @@ body{font-family:-apple-system,'Segoe UI',Roboto,sans-serif;background:radial-gr
 header{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:18px;padding:14px;margin-bottom:14px}
 .logo{font-size:19px;font-weight:800}.logo span{color:#7cc4ff}
 .bal{background:linear-gradient(135deg,#ffd76e,#ff9d3c);color:#3a2000;font-weight:800;border-radius:22px;padding:9px 16px;cursor:pointer;border:none;font-size:15px}
-.page{display:none}.page.active{display:block}
+.page{display:none}.page.active{display:block;animation:fade .2s}
+@keyframes fade{from{opacity:.5}to{opacity:1}}
 .back{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#eaf2ff;font-weight:800;font-size:13px;padding:10px 16px;border-radius:14px;cursor:pointer;margin-bottom:12px}
 .panel{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:18px;padding:16px;margin-bottom:12px}
 .panel h3{font-size:15px;margin-bottom:8px}.panel p{font-size:13px;color:#cfe0ff;line-height:1.5}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
-.tile{border-radius:18px;padding:18px 14px;cursor:pointer;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);text-align:center}
-.tile:active{transform:scale(.95)}.tile .ic{font-size:30px}.tile b{display:block;font-size:14px;margin:8px 0 2px}.tile small{color:#9fc3ff;font-size:11px}
-.btn{display:block;width:100%;padding:16px;border:none;border-radius:16px;font-size:15px;font-weight:800;cursor:pointer;margin-top:12px;color:#fff;background:linear-gradient(135deg,#4f8cff,#7cc4ff)}
-.btn:active{transform:scale(.96)}
-.btn.gold{background:linear-gradient(135deg,#ffd76e,#ff9d3c);color:#3a2000}
-.btn.green{background:linear-gradient(135deg,#2fbf71,#7dff9e);color:#04310f}
-.btn.ghost{background:rgba(255,255,255,.1);color:#cfe0ff}
 .stats{display:flex;gap:10px;margin-bottom:14px}
 .stat{flex:1;text-align:center;padding:14px 8px;border-radius:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
 .stat b{display:block;font-size:17px;color:#ffd76e}.stat span{font-size:10px;color:#9fc3ff}
-.catbar{display:flex;gap:8px;overflow-x:auto;margin:16px 0 12px;padding-bottom:4px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.tile{border-radius:18px;padding:18px 14px;cursor:pointer;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);text-align:center;transition:.15s}
+.tile:active{transform:scale(.95)}.tile .ic{font-size:30px}.tile b{display:block;font-size:14px;margin:8px 0 2px}.tile small{color:#9fc3ff;font-size:11px}
+.btn{display:block;width:100%;padding:16px;border:none;border-radius:16px;font-size:15px;font-weight:800;cursor:pointer;margin-top:12px;color:#fff;background:linear-gradient(135deg,#4f8cff,#7cc4ff);box-shadow:0 6px 18px rgba(79,140,255,.3);transition:.12s}
+.btn:active{transform:scale(.96);filter:brightness(.92)}
+.btn.gold{background:linear-gradient(135deg,#ffd76e,#ff9d3c);color:#3a2000;box-shadow:0 6px 18px rgba(255,157,60,.3)}
+.btn.green{background:linear-gradient(135deg,#2fbf71,#7dff9e);color:#04310f;box-shadow:0 6px 18px rgba(47,191,113,.3)}
+.btn.ghost{background:rgba(255,255,255,.1);color:#cfe0ff;box-shadow:none}
+.catbar{display:flex;gap:8px;overflow-x:auto;margin:14px 0 12px;padding-bottom:4px}
 .catbtn{flex-shrink:0;padding:10px 16px;border-radius:14px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:#cfe0ff;font-weight:800;font-size:13px;cursor:pointer}
 .catbtn.sel{background:linear-gradient(135deg,#ffd76e,#ff9d3c);color:#3a2000;border-color:transparent}
 .cases{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -36,12 +37,12 @@ header{display:flex;justify-content:space-between;align-items:center;background:
 .case .nm{font-size:13px;font-weight:700;margin:10px 0 6px}
 .case .pr{display:inline-block;font-size:12px;font-weight:800;padding:5px 12px;border-radius:12px;color:#ffd76e;background:rgba(255,215,110,.12);border:1px solid rgba(255,215,110,.3)}
 .case .pr.free{color:#7dff9e;background:rgba(47,191,113,.12);border-color:rgba(47,191,113,.3)}
+.balstrip{display:flex;justify-content:space-between;align-items:center;background:rgba(255,215,110,.1);border:1px solid rgba(255,215,110,.3);color:#ffd76e;font-weight:800;font-size:13px;border-radius:12px;padding:10px 14px;margin-top:12px}
 .ov{display:none;position:fixed;inset:0;z-index:70;background:#0b1026;overflow-y:auto;padding:60px 16px 130px}
 .ov.open{display:block}
 .ovb{position:fixed;top:14px;left:14px;z-index:75;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#eaf2ff;font-weight:800;font-size:13px;padding:10px 16px;border-radius:14px;cursor:pointer}
 .ovhead{text-align:center}.ovhead .em{font-size:84px}.ovhead .nm{font-size:22px;font-weight:800;margin-top:8px}
 .ovhead .ds{font-size:12px;color:#9fc3ff;margin-top:6px}
-.balstrip{display:flex;justify-content:space-between;align-items:center;background:rgba(255,215,110,.1);border:1px solid rgba(255,215,110,.3);color:#ffd76e;font-weight:800;font-size:13px;border-radius:12px;padding:10px 14px;margin-top:14px}
 .pz{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:14px;margin-top:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1)}
 .pz .i{flex:1;min-width:0}.pz .i b{font-size:13px;display:block}.pz .i span{font-size:11px}
 .pz .v{text-align:right}.pz .v b{color:#ffd76e;font-size:13px;display:block}.pz .v small{font-size:10px;color:#9fc3ff}
@@ -61,12 +62,13 @@ header{display:flex;justify-content:space-between;align-items:center;background:
 .rl .balstrip{width:100%;max-width:420px;margin-top:18px}
 .res{display:none;position:fixed;inset:0;z-index:90;background:rgba(5,8,25,.96);flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
 .res.open{display:flex}
-.glow{position:absolute;width:280px;height:280px;border-radius:50%;top:16%;left:50%;margin-left:-140px;filter:blur(50px);opacity:.35}
+.glow{position:absolute;width:280px;height:280px;border-radius:50%;top:16%;left:50%;margin-left:-140px;filter:blur(50px);opacity:.35;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.3}50%{transform:scale(1.25);opacity:.55}}
 .bem{font-size:110px;position:relative;z-index:2}
 .rn{font-size:23px;font-weight:800;margin-top:14px;position:relative;z-index:2}
 .rr{position:relative;z-index:2;display:inline-block;margin-top:8px;font-size:12px;font-weight:800;padding:6px 16px;border-radius:14px;background:rgba(255,255,255,.1)}
 .rv{position:relative;z-index:2;font-size:13px;color:#ffd76e;font-weight:700;margin-top:10px}
-.rb{position:relative;z-index:2;display:flex;gap:10px;margin-top:30px;width:100%;max-width:360px}
+.rb{position:relative;z-index:2;display:flex;gap:10px;margin-top:20px;width:100%;max-width:360px}
 .rb .btn{margin-top:0}
 .wd{display:none;position:fixed;inset:0;z-index:95;background:rgba(5,8,25,.9);align-items:center;justify-content:center;padding:24px}
 .wd.open{display:flex}
@@ -81,6 +83,7 @@ header{display:flex;justify-content:space-between;align-items:center;background:
 .dg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
 .dg button{padding:16px 4px;border-radius:14px;border:1px solid rgba(255,215,110,.35);background:rgba(255,215,110,.1);color:#ffd76e;font-weight:800;font-size:13px;cursor:pointer}
 .emp{text-align:center;color:#8fa8d8;font-size:13px;padding:40px 10px}
+.ref{margin-top:10px;padding:10px;border-radius:12px;background:rgba(0,0,0,.3);font-size:12px;color:#7cc4ff;word-break:break-all}
 #toast{position:fixed;left:50%;bottom:110px;transform:translateX(-50%) translateY(20px);background:#1e2c5c;border:1px solid rgba(255,255,255,.25);color:#fff;padding:12px 20px;border-radius:14px;font-size:13px;opacity:0;transition:.3s;z-index:99;max-width:85%;text-align:center}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .rks{position:relative;height:280px;border-radius:18px;overflow:hidden;background:linear-gradient(180deg,#0a1230,#1e3a8a);border:1px solid rgba(255,255,255,.15)}
@@ -91,11 +94,9 @@ header{display:flex;justify-content:space-between;align-items:center;background:
 .rkb{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px}
 .rkb button{padding:12px 2px;border-radius:12px;border:1px solid rgba(255,215,110,.35);background:rgba(255,215,110,.1);color:#ffd76e;font-weight:800;font-size:12px;cursor:pointer}
 .rkb button.sel{background:linear-gradient(135deg,#ffd76e,#ff9d3c);color:#3a2000}
-.ref{margin-top:10px;padding:10px;border-radius:12px;background:rgba(0,0,0,.3);font-size:12px;color:#7cc4ff;word-break:break-all}
 </style></head><body>
 <div class="wrap">
 <header><div class="logo">🚗 Авто<span>Кейсы</span></div><button class="bal" onclick="go('dep')">₽ <span id="bal">0</span></button></header>
-
 <div class="page active" id="p-home">
 <div class="panel"><p>Кейсы с машинами: от «Копейки» до Rolls-Royce. Средний возврат кейса — его полная цена: играем честно!</p></div>
 <div class="stats"><div class="stat"><b id="s-bal">0</b><span>₽ на счету</span></div><div class="stat"><b id="s-op">0</b><span>кейсов открыто</span></div><div class="stat"><b id="s-best">—</b><span>лучший приз</span></div></div>
@@ -107,16 +108,14 @@ header{display:flex;justify-content:space-between;align-items:center;background:
 <div class="tile" onclick="go('fr')"><div class="ic">👥</div><b>Друзья</b><small>+25 ₽ за друга</small></div>
 <div class="tile" onclick="go('rk')"><div class="ic">🚀</div><b>Ракета</b><small>забирай до краша</small></div>
 </div></div>
-
 <div class="page" id="p-cases"><button class="back" onclick="go('home')">← Назад</button><div class="balstrip"><span>💰 Баланс</span><span id="tabBal">0 ₽</span></div><div class="catbar" id="catbar"></div><div id="caseList"></div></div>
 <div class="page" id="p-inv"><button class="back" onclick="go('home')">← Назад</button><div class="panel"><h3>🚙 Гараж</h3><p>Продавай за рубли или выведи в Telegram.</p></div><div id="invList"></div></div>
-<div class="page" id="p-fr"><button class="back" onclick="go('home')">← Назад</button><div class="panel"><h3>👥 Друзья</h3><p>3 друга = доступ к бесплатному кейсу.</p><div class="ref" id="refL"></div><button class="btn green" onclick="invite()">📨 Пригласить</button></div><div class="panel"><p id="refP"></p></div></div>
+<div class="page" id="p-fr"><button class="back" onclick="go('home')">← Назад</button><div class="panel"><h3>👥 Друзья</h3><p>3 друга = доступ к бесплатному кейсу.</p><div class="ref" id="refL"></div><button class="btn green" onclick="invite()">📨 Пригласить друга</button></div><div class="panel"><p id="refP"></p></div></div>
 <div class="page" id="p-dep"><button class="back" onclick="go('home')">← Назад</button><div class="panel"><h3>💳 Пополнение</h3><p>Демо: деньги начисляются сразу, бонус +10%.</p><div class="dg" id="dg"></div></div></div>
 <div class="page" id="p-rk"><button class="back" onclick="go('home')">← Назад</button>
 <div class="rks"><div class="rkm" id="rkm">1.00x</div><div class="rkr" id="rkr">🚀</div><div class="rkst" id="rkst">Сделай ставку и запускай</div></div>
 <div class="rkb" id="rkb"></div><button class="btn gold" id="rkb2" onclick="rkAction()">Запустить 🚀</button></div>
 </div>
-
 <div class="ov" id="ov">
 <button class="ovb" onclick="document.getElementById('ov').classList.remove('open')">← Назад</button>
 <div class="ovhead"><div class="em" id="ovE">📦</div><div class="nm" id="ovN"></div><div class="ds" id="ovD"></div></div>
@@ -124,17 +123,13 @@ header{display:flex;justify-content:space-between;align-items:center;background:
 <div id="ovL"></div>
 <div class="ovbar"><button class="btn gold" id="ovB" onclick="openCase()">Открыть</button></div>
 </div>
-
 <div class="rl" id="rl"><div class="tt" id="rlT"></div><div class="win"><div class="track" id="tr"></div></div>
 <div class="balstrip"><span>💰 Баланс после ставки</span><span id="rlBal">0 ₽</span></div></div>
-
 <div class="res" id="res"><div class="glow" id="gl"></div><div class="bem" id="rE">🚗</div><div class="rn" id="rN"></div><div><span class="rr" id="rR"></span></div><div class="rv" id="rV"></div>
 <div class="balstrip"><span>💰 Баланс</span><span id="resBal">0 ₽</span></div>
 <div class="rb"><button class="btn gold" onclick="sellP()">💰 Продать</button><button class="btn green" onclick="keepP()">🚙 В гараж</button></div></div>
-
 <div class="wd" id="wd"><div class="wdb"><div class="bem" style="font-size:60px" id="wdE">🚗</div><div class="rn" style="font-size:17px" id="wdN"></div>
 <input id="wdU" placeholder="@username в Telegram"><button class="btn green" onclick="wdGo()">✅ Вывести</button><button class="btn ghost" onclick="document.getElementById('wd').classList.remove('open')">Отмена</button></div></div>
-
 <div id="toast"></div>
 <script>
 const CARS=[
@@ -182,12 +177,11 @@ const CASES=[
 function img(i){return 'https://loremflickr.com/200/140/'+CARS[i].k+',car?lock='+(i+1)}
 function cpic(c){return 'https://loremflickr.com/300/160/'+c.k+',car?lock='+(c.id+101)}
 function weights(c){
-  const ev=c.fr?25:c.pr;
-  const tiers=[...new Set(c.pool.map(i=>CARS[i].t))];
-  const tot=tiers.reduce((s,t)=>s+SH[t],0);
-  const cnt={};tiers.forEach(t=>cnt[t]=c.pool.filter(i=>CARS[i].t===t).length);
-  return c.pool.map(i=>((SH[CARS[i].t]/tot)*ev/cnt[CARS[i].t])/CARS[i].v);
-}
+const ev=c.fr?25:c.pr;
+const tiers=[...new Set(c.pool.map(i=>CARS[i].t))];
+const tot=tiers.reduce((s,t)=>s+SH[t],0);
+const cnt={};tiers.forEach(t=>cnt[t]=c.pool.filter(i=>CARS[i].t===t).length);
+return c.pool.map(i=>((SH[CARS[i].t]/tot)*ev/cnt[CARS[i].t])/CARS[i].v)}
 function pick(c){const w=weights(c),tot=w.reduce((s,x)=>s+x,0);let r=Math.random()*tot;
 for(let i=0;i<c.pool.length;i++){r-=w[i];if(r<=0)return c.pool[i]}return c.pool[c.pool.length-1]}
 function chance(c,i){const w=weights(c);return w[i]/w.reduce((s,x)=>s+x,0)*100}
@@ -246,7 +240,6 @@ document.getElementById('res').classList.add('open');setBal()}
 function sellP(){S.bal+=S.pend.v;toast('«'+S.pend.n+'» продана за '+fmt(S.pend.v)+' ₽ 💰');S.pend=null;save();setBal();closeRes()}
 function keepP(){S.invn.push({e:S.pend.e,n:S.pend.n,t:S.pend.t,v:S.pend.v});toast('В гараже 🚙');S.pend=null;save();closeRes()}
 function closeRes(){document.getElementById('res').classList.remove('open')}
-<script>
 function rInv(){const h=document.getElementById('invList');
 if(!S.invn.length){h.innerHTML='<div class="emp">Гараж пуст — открой первый кейс! 🕊️</div>';return}
 h.innerHTML=S.invn.map((it,i)=>{const r=RAR[it.t];
