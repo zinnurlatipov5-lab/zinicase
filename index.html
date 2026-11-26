@@ -19,6 +19,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
     }
     .wrap {
       max-width: 480px;
@@ -49,8 +50,12 @@
       border: none;
       font-size: 15px;
     }
-    .page { display: none; }
-    .page.active { display: block; }
+    .page {
+      display: none;
+    }
+    .page.active {
+      display: block;
+    }
     .panel {
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.12);
@@ -163,179 +168,283 @@
       font-weight: 700;
       font-size: 15px;
     }
-/* Анимация открытия кейса */
-@keyframes popIn {
-  0% { transform: scale(0.8); opacity: 0; }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); opacity: 1; }
-}
 
-.case-open-anim {
-  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-}
+    /* Анимация открытия кейса */
+    @keyframes popIn {
+      0% { transform: scale(0.8); opacity: 0; }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .case-open-anim {
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
 
-/* Стили логов */
-.log-area {
-  margin-top: 12px;
-  font-size: 13px;
-  line-height: 1.4;
-  max-height: 200px;
-  overflow-y: auto;
-  padding-top: 8px;
-  background: rgba(255,255,255,0.06);
-  border-top: 1px solid rgba(255,255,255,0.1);
-}
+    /* Стили логов */
+    .log-area {
+      margin-top: 12px;
+      font-size: 13px;
+      line-height: 1.4;
+      max-height: 200px;
+      overflow-y: auto;
+      padding-top: 8px;
+      background: rgba(255,255,255,0.06);
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    .log-area div {
+      padding: 10px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.1);
+      margin-bottom: 4px;
+      color: #eaf2ff;
+    }
 
-.log-area div {
-  padding: 10px;
-  border-radius: 12px;
-  background: rgba(255,255,255,0.1);
-  margin-bottom: 4px;
-  color: #eaf2ff;
-}
+    /* Оверлей дропа */
+    .drop-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(11, 16, 38, 0.75);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .drop-overlay.active {
+      display: flex;
+      animation: fadeIn 0.2s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .drop-card {
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.25);
+      border-radius: 24px;
+      padding: 24px;
+      text-align: center;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 12px 48px rgba(0,0,0,0.4);
+    }
+    .drop-card h2 {
+      color: #ffd76e;
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+    .drop-card p {
+      color: #cfe0ff;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">🚗 Авто<span>Кейсы</span></div>
+      <button class="bal" onclick="goToHome()">₽ <span id="balance">0</span></button>
+    </header>
 
-/* Оверлей дропа */
-.drop-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255,255,255,0.1);
-  display: none;
-  justify-content: center;
-  align-items: center;
-}
+    <!-- Главная страница -->
+    <div class="page active" id="page-home">
+      <div class="panel">
+        <p>Кейсы с машинами: от «Копейки» до Rolls‑Royce. Средний возврат кейса — его полная цена: играем честно!</p>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <b id="stat-balance">0</b><span>₽ на счету</span>
+        </div>
+        <div class="stat">
+          <b id="stat-cases">0</b><span>кейсов открыто</span>
+        </div>
+        <div class="stat">
+          <b id="stat-best">—</b><span>лучший приз</span>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="tile" onclick="openCase()">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ffd700'%3E%3Cpath d='M19 11h2V9H8.09L9.5 3.64l-1.42-1.31L5 3v2h2v4H5v2h4v4h4V9h4zm-9-2.07L8.41 14H19V9h-9z'/%3E%3C/svg%3E" alt="Car Icon" class="ic">
+          <b>Открыть кейс</b>
+          <small>Стоимость: 20 000 ₽</small>
+        </div>
+        <div class="tile" onclick="bonus()">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ff8a8a'%3E%3Cpath d='M20 8c0-4.42-3.58-8-8-8s-8 3.58-8 8c0 1.99.74 3.82 2 5.09V16h16v-2.91C21.26 11.82 20 9.99 20 8zm-8-6c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6 2.69-6 6-6zM4 12c-1.1 0-2 .9-2 2v2h4v-2c0-1.1-.9-2-2-2zm16 0c-1.1 0-2 .9-2 2v2h4v-2c0-1.1-.9-2-2-2z'/%3E%3C/svg%3E" alt="Gift Icon" class="ic">
+          <b>Бонус</b>
+          <small>+25 ₽ ежедневно</small>
+        </div>
+        <div class="tile" onclick="withdrawPage()">
+          <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2364b5f6'%3E%3Cpath d='M21 5H8l-6.5 7 6.5 7h13c1.66 0 3-1.34 3-3v-4c0-1.66-1.34-3-3-3zm-1 9H9.83L8 12.18 9.83 10.37H20c.55 0 1 .45 1 1v2c0 .55-.45 1-1 1z'/%3E%3C/svg%3E" alt="Wallet Icon" class="ic">
+          <b>Вывод</b>
+          <small>Мин. вывод: 250 ₽</small>
+        </div>
+      </div>
+      <div class="log-area" id="logArea"></div>
+    </div>
 
-.drop-overlay.active {
-  display: flex;
-  animation: fadeIn 0.2s ease-out;
-}
+    <!-- Страница вывода -->
+    <div class="page" id="page-withdraw">
+      <button class="back" onclick="goToHome()">← Назад</button>
+      <div class="withdraw-form">
+        <h3>Вывод средств</h3>
+        <input type="number" id="withdrawAmount" placeholder="Введите сумму вывода (мин. 250 ₽)...">
+        <button class="btn-withdraw" onclick="processWithdrawal()">Вывести</button>
+      </div>
+    </div>
+  </div>
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-// Сохранение состояния в localStorage
-function saveState() {
-  localStorage.setItem('balance', balance);
-  localStorage.setItem('casesOpened', casesOpened);
-  localStorage.setItem('bestPrize', bestPrize);
-}
+  <!-- Оверлей с выпавшим призом -->
+  <div class="drop-overlay" id="dropOverlay">
+    <div class="drop-card">
+      <h2 id="dropName">Приз</h2>
+      <p id="dropValue">0 ₽</p>
+    </div>
+  </div>
+  <script>
+    // Состояние
+    let balance = 0;
+    let casesOpened = 0;
+    let bestPrize = '—';
 
-function loadState() {
-  balance = localStorage.getItem('balance') || 0;
-  casesOpened = localStorage.getItem('casesOpened') || 0;
-  bestPrize = localStorage.getItem('bestPrize') || '—';
-  updateUI();
-}
+    // Сохранение в localStorage — прогресс не сбрасывается при перезагрузке
+    function saveState() {
+      localStorage.setItem('ac_balance', balance);
+      localStorage.setItem('ac_cases', casesOpened);
+      localStorage.setItem('ac_best', bestPrize);
+    }
 
-document.addEventListener('DOMContentLoaded', loadState);
+    function loadState() {
+      balance = parseInt(localStorage.getItem('ac_balance'), 10) || 0;
+      casesOpened = parseInt(localStorage.getItem('ac_cases'), 10) || 0;
+      bestPrize = localStorage.getItem('ac_best') || '—';
+      updateUI();
+    }
 
-// Обновление UI
-function updateUI() {
-  // Ваш код updateUI из предыдущей версии
-}
+    document.addEventListener('DOMContentLoaded', loadState);
 
-// Открытие кейса
-function openCase() {
-  // Ваш код openCase из предыдущей версии
-  saveState();
-}
+    // Обновление интерфейса
+    function updateUI() {
+      document.getElementById('balance').textContent = balance.toLocaleString('ru-RU');
+      document.getElementById('stat-balance').textContent = balance.toLocaleString('ru-RU');
+      document.getElementById('stat-cases').textContent = casesOpened;
+      document.getElementById('stat-best').textContent = bestPrize;
+    }
 
-// Бонус +25 ₽
-function bonus() {
-  // Ваш код bonus из предыдущей версии
-  saveState();
-}
+    // Лог — карточки-записи
+    function log(msg) {
+      const area = document.getElementById('logArea');
+      const entry = document.createElement('div');
+      entry.textContent = msg;
+      area.prepend(entry);
+    }
 
-// Вывод средств
-function processWithdrawal() {
-  // Ваш код processWithdrawal из предыдущей версии
-  saveState();
-}
-// Сохранение состояния в localStorage
-function saveState() {
-  localStorage.setItem('balance', balance);
-  localStorage.setItem('casesOpened', casesOpened);
-  localStorage.setItem('bestPrize', bestPrize);
-}
+    // Навигация
+    function goToHome() {
+      document.getElementById('page-home').classList.add('active');
+      document.getElementById('page-withdraw').classList.remove('active');
+    }
 
-function loadState() {
-  balance = localStorage.getItem('balance') || 0;
-  casesOpened = localStorage.getItem('casesOpened') || 0;
-  bestPrize = localStorage.getItem('bestPrize') || '—';
-  updateUI();
-}
+    function withdrawPage() {
+      document.getElementById('page-home').classList.remove('active');
+      document.getElementById('page-withdraw').classList.add('active');
+    }
+    // Открытие кейса
+    function openCase() {
+      const cost = 20000;
+      if (balance < cost) {
+        log('❌ Недостаточно средств для открытия кейса!');
+        return;
+      }
 
-document.addEventListener('DOMContentLoaded', loadState);
+      // Списываем баланс
+      balance -= cost;
+      casesOpened++;
+      
+      // Анимация: добавляем класс на первую плитку (можно расширить на все)
+      const firstTile = document.querySelector('.tile');
+      firstTile.classList.add('case-open-anim');
+      setTimeout(() => firstTile.classList.remove('case-open-anim'), 300);
 
-// Обновление UI
-function updateUI() {
-  document.getElementById('balance').textContent = balance;
-  document.getElementById('stat-balance').textContent = balance;
-  document.getElementById('stat-cases').textContent = casesOpened;
-  document.getElementById('stat-best').textContent = bestPrize;
-}
+      // Случайный приз (простая логика)
+      const prizes = [
+        { name: '🚗 Копейка', value: 18000 },
+        { name: '🚙 Hyundai Solaris', value: 25000 },
+        { name: '🏁 BMW M4', value: 45000 },
+        { name: '💎 Rolls‑Royce Phantom', value: 120000 }
+      ];
+      // Весовая вероятность: чаще дешёвые, реже дорогие
+      const weights = [60, 25, 12, 3];
+      let total = weights.reduce((a, b) => a + b, 0);
+      let r = Math.random() * total;
+      let picked = null;
+      for (let i = 0; i < weights.length; i++) {
+        if (r < weights[i]) {
+          picked = prizes[i];
+          break;
+        }
+        r -= weights[i];
+      }
+      if (!picked) picked = prizes[0];
 
-// Открытие кейса
-function openCase() {
-  const cost = 20000;
-  if (balance < cost) {
-    alert('Недостаточно средств! Нужно 20 000 ₽.');
-    return;
-  }
-  balance -= cost;
-  casesOpened++;
+      // Обновляем баланс и лучший приз
+      balance += picked.value;
+      if (bestPrize === '—' || picked.value > Number(bestPrize.replace(/\D/g, ''))) {
+        bestPrize = picked.name + ' (' + picked.value.toLocaleString('ru-RU') + ' ₽)';
+      }
 
-  const prizes = [
-    { name: 'Копейка', value: 650 },
-    { name: 'BMW 3 серии', value: 18000 },
-    { name: 'Mercedes S-Class', value: 45000 },
-    { name: 'Rolls-Royce', value: 120000 }
-  ];
-  const prize = prizes[Math.floor(Math.random() * prizes.length)];
+      saveState();
+      updateUI();
+      log(`✅ Открыт кейс: ${picked.name} (+${picked.value.toLocaleString('ru-RU')} ₽)`);
 
-  bestPrize = prize.value > parseFloat(bestPrize.replace(/[^0-9]/g, '')) ? prize.value : bestPrize;
-  updateUI();
+      // Показываем оверлей с призом
+      document.getElementById('dropName').textContent = picked.name;
+      document.getElementById('dropValue').textContent = '+ ' + picked.value.toLocaleString('ru-RU') + ' ₽';
+      document.getElementById('dropOverlay').classList.add('active');
+    }
 
-  const tiles = document.querySelectorAll('.tile');
-  tiles.forEach(t => t.classList.remove('case-open-anim'));
-  tiles[0].classList.add('case-open-anim');
+    // Бонус
+    function bonus() {
+      const bonusAmount = 25;
+      balance += bonusAmount;
+      saveState();
+      updateUI();
+      log(`🎁 Получен бонус: +${bonusAmount} ₽`);
+    }
 
-  log(`Открыт кейс: ${prize.name} (${prize.value} ₽)`);
-  document.querySelector('.drop-overlay').classList.add('active');
-  setTimeout(() => {
-    document.querySelector('.drop-overlay').classList.remove('active');
-  }, 2000);
-}
+    // Вывод средств (симуляция)
+    function processWithdrawal() {
+      const input = document.getElementById('withdrawAmount');
+      const amount = parseInt(input.value, 10);
+      const minWithdraw = 250;
 
-// Бонус +25 ₽
-function bonus() {
-  balance += 25;
-  updateUI();
-  log('+25 ₽ (ежедневный бонус)');
-}
+      if (!amount || amount <= 0) {
+        alert('Введите корректную сумму.');
+        return;
+      }
+      if (amount < minWithdraw) {
+        alert(`Минимальная сумма вывода — ${minWithdraw.toLocaleString('ru-RU')} ₽.`);
+        return;
+      }
+      if (amount > balance) {
+        alert('Недостаточно средств на балансе.');
+        return;
+      }
 
-// Вывод средств
-function processWithdrawal() {
-  const input = document.getElementById('withdrawAmount');
-  const amount = parseInt(input.value, 10);
+      // Тут была бы отправка на сервер — сейчас просто списываем
+      balance -= amount;
+      saveState();
+      updateUI();
+      log(`💸 Вывод: -${amount.toLocaleString('ru-RU')} ₽`);
+      alert(`Вывод успешно запрошен: ${amount.toLocaleString('ru-RU')} ₽. (Симуляция)`);
+      input.value = '';
+    }
 
-  if (!amount || amount <= 0) {
-    alert('Введите корректную сумму.');
-    return;
-  }
-  if (amount < 250) {
-    alert('Минимальная сумма вывода — 250 ₽.');
-    return;
-  }
-  if (amount > balance) {
-    alert('На балансе недостаточно средств.');
-    return;
-  }
-
-  balance -= amount;
-  updateUI();
-  input.value = '';
-  log(`Выведено: ${amount} ₽`);
+    // Закрытие оверлея по клику вне карточки (или можно добавить кнопку «Забрать»)
+    document.getElementById('dropOverlay').addEventListener('click', (e) => {
+      if (e.target === e.currentTarget) {
+        e.currentTarget.classList.remove('active');
+      }
+    });
+  </script>
+</body>
+</html>
