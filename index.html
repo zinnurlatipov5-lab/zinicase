@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Зимний подарок — Кейсы</title>
+<title>АвтоКейсы — открывай и выигрывай машины</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   body {
     font-family:-apple-system,'Segoe UI',Roboto,sans-serif;
-    background:radial-gradient(1200px 600px at 50% -10%, #1e3a8a 0%, #0b1026 60%) fixed, #0b1026;
+    background:radial-gradient(1200px 600px at 50% -10%, #24408f 0%, #0b1026 60%) fixed, #0b1026;
     color:#eaf2ff; min-height:100vh; overflow-x:hidden;
   }
   .snow { position:fixed; top:-10px; border-radius:50%; background:#fff; opacity:.6; pointer-events:none; z-index:0; }
@@ -28,8 +28,18 @@
     background:linear-gradient(135deg,#ffd76e,#ff9d3c); color:#3a2000;
     font-weight:800; border-radius:22px; padding:9px 16px; font-size:15px;
     display:flex; align-items:center; gap:6px; cursor:pointer; box-shadow:0 4px 18px rgba(255,157,60,.35);
+    white-space:nowrap;
   }
   .balance-chip:active { transform:scale(.95); }
+
+  /* ===== КНОПКА НАЗАД — во всех разделах ===== */
+  .page-back {
+    display:inline-flex; align-items:center; gap:6px; margin-bottom:12px;
+    background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+    color:#eaf2ff; font-weight:800; font-size:13px; padding:10px 16px;
+    border-radius:14px; cursor:pointer; backdrop-filter:blur(8px);
+  }
+  .page-back:active { transform:scale(.95); }
 
   .welcome {
     border-radius:20px; padding:18px 16px; margin-bottom:14px; position:relative; overflow:hidden;
@@ -51,20 +61,10 @@
   .banner h2 { font-size:18px; margin-bottom:4px; }
   .banner p { font-size:12px; color:#eaf2ffcc; }
   .banner .big { position:absolute; right:12px; top:50%; transform:translateY(-50%) rotate(-10deg); font-size:52px; opacity:.9; }
-  .banner .btn { margin-top:12px; background:#0b1026; width:auto; display:inline-block; padding:10px 22px; font-size:13px; }
   .banner::after {
     content:''; position:absolute; width:120px; height:120px; border-radius:50%;
     background:rgba(255,255,255,.15); top:-50px; right:60px; filter:blur(10px);
   }
-
-  /* ===== КНОПКА НАЗАД ===== */
-  .page-back {
-    display:inline-flex; align-items:center; gap:6px; margin-bottom:12px;
-    background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
-    color:#eaf2ff; font-weight:800; font-size:13px; padding:10px 16px;
-    border-radius:14px; cursor:pointer; backdrop-filter:blur(8px);
-  }
-  .page-back:active { transform:scale(.95); }
 
   .home-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
   .home-tile {
@@ -83,13 +83,14 @@
     background:linear-gradient(160deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
     border:1px solid rgba(255,255,255,.12);
   }
-  .stat-box b { font-size:18px; display:block; color:#ffd76e; }
-  .stat-box span { font-size:11px; color:#9fc3ff; }
+  .stat-box b { font-size:17px; display:block; color:#ffd76e; }
+  .stat-box span { font-size:10px; color:#9fc3ff; }
 
   .page { display:none; } .page.active { display:block; }
   .cat-title { margin:18px 0 10px; font-size:15px; font-weight:800; display:flex; align-items:center; gap:8px; }
   .cat-title::after { content:''; flex:1; height:1px; background:rgba(255,255,255,.1); }
-
+</style>
+<style>
   .cases-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
   .case-card {
     border-radius:18px; padding:16px 10px 12px; text-align:center; cursor:pointer;
@@ -110,18 +111,18 @@
     padding:5px 12px; border-radius:12px;
   }
 
-  .cat-free    .case-card { background:linear-gradient(160deg,#2fbf7133,#ffffff0d); border:1px solid #2fbf7155; }
-  .cat-free    .glow { background:#2fbf71; }
-  .cat-free    .price { background:rgba(255,255,255,.15); color:#7dff9e; }
-  .cat-winter  .case-card { background:linear-gradient(160deg,#4f8cff40,#ffffff0d); border:1px solid #4f8cff66; }
-  .cat-winter  .glow { background:#4f8cff; }
-  .cat-rare    .case-card { background:linear-gradient(160deg,#7cc4ff33,#c86dff26); border:1px solid #7cc4ff66; }
-  .cat-rare    .glow { background:#7cc4ff; }
-  .cat-legend  .case-card { background:linear-gradient(160deg,#ffd76e40,#ff9d3c26); border:1px solid #ffd76e77; }
-  .cat-legend  .glow { background:#ffb84f; }
-</style>
-<style>
-  /* ===== ПОЛНОЭКРАННЫЙ ПРОСМОТР КЕЙСА ===== */
+  .cat-free   .case-card { background:linear-gradient(160deg,#2fbf7133,#ffffff0d); border:1px solid #2fbf7155; }
+  .cat-free   .glow { background:#2fbf71; }
+  .cat-free   .price { background:rgba(255,255,255,.15); color:#7dff9e; }
+  .cat-budget .case-card { background:linear-gradient(160deg,#4f8cff40,#ffffff0d); border:1px solid #4f8cff66; }
+  .cat-budget .glow { background:#4f8cff; }
+  .cat-mid    .case-card { background:linear-gradient(160deg,#7cc4ff33,#c86dff26); border:1px solid #7cc4ff66; }
+  .cat-mid    .glow { background:#7cc4ff; }
+  .cat-premium{ .case-card { background:linear-gradient(160deg,#ffd76e40,#ff9d3c26); } }
+  .cat-premium .case-card { background:linear-gradient(160deg,#ffd76e40,#ff9d3c26); border:1px solid #ffd76e77; }
+  .cat-premium .glow { background:#ffb84f; }
+
+  /* ===== ПРОСМОТР КЕЙСА ===== */
   .case-view {
     display:none; position:fixed; inset:0; z-index:70;
     background:radial-gradient(900px 500px at 50% -10%, #1e3a8a 0%, #0b1026 65%), #0b1026;
@@ -185,7 +186,7 @@
   .rl-item {
     flex:0 0 84px; height:92px; margin:0 4px; border-radius:14px;
     display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
-    font-size:34px; border:1px solid rgba(255,255,255,.15);
+    font-size:32px; border:1px solid rgba(255,255,255,.15);
   }
   .rl-item small { font-size:9px; color:#cfe0ff; text-align:center; padding:0 4px; line-height:1.15; font-weight:600; }
 
@@ -209,12 +210,12 @@
   }
   @keyframes spin { to { transform:rotate(360deg); } }
   .big-emoji {
-    font-size:120px; position:relative; z-index:2;
+    font-size:110px; position:relative; z-index:2;
     filter:drop-shadow(0 10px 30px rgba(0,0,0,.6));
     animation:drop .7s cubic-bezier(.2,1.4,.4,1);
   }
   @keyframes drop { 0%{transform:translateY(-140px) scale(.3);opacity:0} 100%{transform:translateY(0) scale(1);opacity:1} }
-  .r-name { font-size:24px; font-weight:800; margin-top:14px; position:relative; z-index:2; }
+  .r-name { font-size:23px; font-weight:800; margin-top:14px; position:relative; z-index:2; }
   .r-rare {
     position:relative; z-index:2; display:inline-block; margin-top:8px;
     font-size:12px; font-weight:800; padding:6px 16px; border-radius:14px;
@@ -253,7 +254,6 @@
   .panel h3 { font-size:15px; margin-bottom:8px; }
   .panel p { font-size:13px; color:#cfe0ff; line-height:1.5; }
 
-  /* ===== КНОПКИ ===== */
   .btn {
     display:block; width:100%; padding:16px; border:none; border-radius:16px;
     font-size:15px; font-weight:800; letter-spacing:.3px; cursor:pointer; margin-top:12px; transition:.18s;
@@ -277,9 +277,10 @@
   .dep-grid button {
     padding:16px 4px; border-radius:14px; border:1px solid rgba(255,215,110,.35);
     background:linear-gradient(160deg,rgba(255,215,110,.15),rgba(255,255,255,.04));
-    color:#ffd76e; font-weight:800; font-size:14px; cursor:pointer;
+    color:#ffd76e; font-weight:800; font-size:13px; cursor:pointer;
   }
   .dep-grid button:active { transform:scale(.95); }
+  .dep-grid small { font-size:10px; color:#7dff9e; font-weight:600; }
 
   .inv-empty { text-align:center; color:#8fa8d8; font-size:13px; padding:40px 10px; }
   .inv-item {
@@ -293,7 +294,7 @@
   .inv-item .info span { font-size:11px; color:#9fc3ff; }
   .inv-item .acts { display:flex; flex-direction:column; gap:6px; }
   .inv-item .acts button {
-    padding:7px 12px; border:none; border-radius:10px; font-size:11px; font-weight:700; cursor:pointer;
+    padding:7px 12px; border:none; border-radius:10px; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;
   }
   .inv-item .acts .sell { background:rgba(255,215,110,.2); color:#ffd76e; }
   .inv-item .acts .wd { background:linear-gradient(135deg,#2fbf71,#7dff9e); color:#04310f; }
@@ -310,7 +311,7 @@
     font-size:12px; color:#7cc4ff; word-break:break-all;
   }
 
-  /* ===== ИГРА РАКЕТА ZINI ===== */
+  /* ===== РАКЕТА ===== */
   .rk-screen {
     position:relative; height:280px; border-radius:18px; overflow:hidden;
     background:linear-gradient(180deg,#0a1230 0%,#1e3a8a 70%,#4f8cff22 100%);
@@ -349,7 +350,7 @@
   .rk-bets button {
     padding:12px 2px; border-radius:12px; border:1px solid rgba(255,215,110,.35);
     background:linear-gradient(160deg,rgba(255,215,110,.15),rgba(255,255,255,.04));
-    color:#ffd76e; font-weight:800; font-size:13px; cursor:pointer;
+    color:#ffd76e; font-weight:800; font-size:12px; cursor:pointer;
   }
   .rk-bets button.sel { background:linear-gradient(135deg,#ffd76e,#ff9d3c); color:#3a2000; }
   .rk-hist { display:flex; gap:6px; margin-top:12px; overflow-x:auto; padding-bottom:4px; }
@@ -364,8 +365,8 @@
 <body>
 <div class="wrap">
   <header>
-    <div class="logo">🎁 Зимний<span>Подарок</span><small>открывай · выигрывай · выводи</small></div>
-    <div class="balance-chip" onclick="go('deposit')">⭐ <span id="balance">0</span></div>
+    <div class="logo">🚗 Авто<span>Кейсы</span><small>открывай · выигрывай · выводи</small></div>
+    <div class="balance-chip" onclick="go('deposit')">₽ <span id="balance">0</span></div>
   </header>
 
   <!-- ГЛАВНЫЙ ЭКРАН -->
@@ -374,64 +375,69 @@
       <div class="santa">🎅</div>
       <div>
         <div class="w-hi">Привет, <span id="w-name">друг</span>!</div>
-        <div class="w-text">Дед Мороз принёс 31 кейс с настоящими подарками Telegram. Открывай, выигрывай и выводи призы — удача уже ждёт! ❄️</div>
+        <div class="w-text">Автосалон Деда Мороза: кейсы с машинами от «Копейки» за 10 ₽ до Lamborghini за 140 000 ₽. Крути рулетку и забирай ключи! ❄️</div>
       </div>
     </div>
     <div class="banner">
-      <h2>🎄 Новогоднее событие</h2>
-      <p>Реальные подарки Telegram и бонус +10% к пополнению</p>
+      <h2>🏆 Новогодний автосалон</h2>
+      <p>Машины АвтоВАЗа и иномарки + бонус +10% к пополнению</p>
       <button class="btn" onclick="go('cases')">Смотреть кейсы →</button>
-      <div class="big">⭐</div>
+      <div class="big">🔑</div>
     </div>
     <div class="stat-row">
-      <div class="stat-box"><b id="stat-balance">0</b><span>звёзд на счету</span></div>
+      <div class="stat-box"><b id="stat-balance">0</b><span>₽ на счету</span></div>
       <div class="stat-box"><b id="stat-opened">0</b><span>кейсов открыто</span></div>
       <div class="stat-box"><b id="stat-best">—</b><span>лучший приз</span></div>
     </div>
     <div class="home-grid">
-      <div class="home-tile" onclick="go('cases')"><div class="ic">📦</div><b>Кейсы</b><small>открывай и выигрывай</small></div>
-      <div class="home-tile gold-tile" onclick="claimBonus()"><div class="ic">🎁</div><b>Ежедневный бонус</b><small id="bonus-hint">+10 ⭐ каждый день</small></div>
-      <div class="home-tile" onclick="go('inventory')"><div class="ic">🎒</div><b>Инвентарь</b><small>продать или вывести в TG</small></div>
-      <div class="home-tile" onclick="go('friends')"><div class="ic">👥</div><b>Друзья</b><small>пригласи и получай звёзды</small></div>
+      <div class="home-tile" onclick="go('cases')"><div class="ic">📦</div><b>Кейсы</b><small>машины от 10 ₽</small></div>
+      <div class="home-tile gold-tile" onclick="claimBonus()"><div class="ic">🎁</div><b>Ежедневный бонус</b><small id="bonus-hint">+50 ₽ каждый день</small></div>
+      <div class="home-tile" onclick="go('inventory')"><div class="ic">🚙</div><b>Мой гараж</b><small>продать или вывести в TG</small></div>
+      <div class="home-tile" onclick="go('friends')"><div class="ic">👥</div><b>Друзья</b><small>пригласи и получай ₽</small></div>
       <div class="home-tile" onclick="go('rocket')"><div class="ic">🚀</div><b>Ракета ZINI</b><small>забирай икс до краша</small></div>
     </div>
   </div>
 
+  <!-- КЕЙСЫ -->
   <div class="page" id="page-cases">
     <button class="page-back" onclick="go('home')">← Назад</button>
   </div>
 
+  <!-- ГАРАЖ -->
   <div class="page" id="page-inventory">
     <button class="page-back" onclick="go('home')">← Назад</button>
-    <div class="panel"><h3>🎒 Ваш инвентарь</h3><p>Подарок можно продать за звёзды или вывести в Telegram-аккаунт. Вывод обрабатывается до 24 часов.</p></div>
+    <div class="panel"><h3>🚙 Мой гараж</h3><p>Машину можно продать за рубли или вывести в Telegram-аккаунт. Вывод обрабатывается до 24 часов.</p></div>
     <div id="inv-list"></div>
   </div>
 
+  <!-- ДРУЗЬЯ -->
   <div class="page" id="page-friends">
     <button class="page-back" onclick="go('home')">← Назад</button>
     <div class="panel">
       <h3>👥 Пригласите друзей</h3>
-      <p>Пригласите <b>3 друзей</b> — и сможете забрать подарок из бесплатного кейса. За каждого друга ещё даём <b>5 звёзд</b>.</p>
+      <p>Пригласите <b>3 друзей</b> — и сможете забрать машину из бесплатного кейса. За каждого друга ещё даём <b>25 ₽</b>.</p>
       <div class="ref-link" id="ref-link"></div>
       <button class="btn green" onclick="shareInvite()">📨 Пригласить друзей</button>
     </div>
     <div class="panel"><h3>Прогресс</h3><p id="ref-progress"></p></div>
   </div>
 
+  <!-- ПОПОЛНЕНИЕ -->
   <div class="page" id="page-deposit">
     <button class="page-back" onclick="go('home')">← Назад</button>
     <div class="panel">
       <h3>💳 Пополнение</h3>
-      <p>При любом пополнении — бонус <b>+10%</b> к балансу! Оплата через ЮKassa: карта, СБП, ЮMoney.</p>
+      <p>При любом пополнении — бонус <b>+10%</b>! Оплата через ЮKassa: карта, СБП, ЮMoney.</p>
       <div class="dep-grid" id="dep-grid"></div>
     </div>
   </div>
 
+  <!-- РАКЕТА -->
   <div class="page" id="page-rocket">
     <button class="page-back" onclick="go('home')">← Назад</button>
     <div class="panel">
       <h3>🚀 Ракета ZINI</h3>
-      <p>Ставь звёзды, запускай ракету и забирай выигрыш <b>до</b> краша. Икс от 1.00 до 50.00 — а иногда ракета пролетает краш и летит дальше!</p>
+      <p>Ставь рубли, запускай ракету и забирай выигрыш <b>до</b> краша. Икс от 1.10 до 50.00 — а иногда ракета пролетает краш и летит дальше!</p>
     </div>
     <div class="rk-screen">
       <div class="rk-mult" id="rk-mult">1.00x</div>
@@ -444,16 +450,16 @@
   </div>
 </div>
 
-<!-- Полноэкранный просмотр кейса -->
+<!-- Просмотр кейса -->
 <div class="case-view" id="case-view">
   <button class="cv-back" onclick="closeCaseView()">← Назад</button>
   <div class="cv-head">
-    <div class="cv-emoji" id="cv-emoji">🎁</div>
+    <div class="cv-emoji" id="cv-emoji">📦</div>
     <div class="cv-name" id="cv-name"></div>
     <div class="cv-desc" id="cv-desc"></div>
   </div>
   <div class="cv-prizes">
-    <h4>🎁 Призы в кейсе (реальные подарки Telegram)</h4>
+    <h4>🚗 Машины в кейсе</h4>
     <div id="cv-list"></div>
   </div>
   <div class="cv-open-bar"><button class="btn gold" id="cv-open-btn" onclick="openCase(currentCase)">Открыть</button></div>
@@ -465,24 +471,24 @@
   <div class="rl-window"><div class="rl-track" id="rl-track"></div><div class="rl-line"></div></div>
 </div>
 
-<!-- Финальный экран приза -->
+<!-- Финальный экран -->
 <div class="result-wrap" id="result-wrap">
   <div class="rays"></div>
   <div class="result-glow" id="r-glow"></div>
-  <div class="big-emoji" id="r-emoji">🎁</div>
+  <div class="big-emoji" id="r-emoji">🚗</div>
   <div class="r-name" id="r-name"></div>
   <div><span class="r-rare" id="r-rare"></span></div>
   <div class="r-value" id="r-value"></div>
   <div class="r-buttons">
     <button class="btn gold" onclick="sellPrize()">💰 Продать</button>
-    <button class="btn green" onclick="keepPrize()">🎒 В инвентарь</button>
+    <button class="btn green" onclick="keepPrize()">🚙 В гараж</button>
   </div>
 </div>
 
 <!-- Окно вывода -->
 <div class="wd-modal" id="wd-modal">
   <div class="wd-box">
-    <div class="wd-emoji" id="wd-emoji">🎁</div>
+    <div class="wd-emoji" id="wd-emoji">🚗</div>
     <div class="wd-name" id="wd-name"></div>
     <div class="wd-val" id="wd-val"></div>
     <input id="wd-user" placeholder="@username в Telegram" maxlength="32">
@@ -496,46 +502,63 @@
 /* ================= НАСТРОЙКИ ================= */
 const BOT_USERNAME = 'YourBotName';
 const HOUSE_EDGE = 0.75;
-const FREE_CASE_EV = 10;
+const FREE_CASE_EV = 25;
 
-/* ============ РЕАЛЬНЫЕ ПОДАРКИ TELEGRAM ============ */
-const TG_GIFTS = [
-  {e:'🍪', n:'Ginger Cookie',      v:25,    t:'common'},
-  {e:'🧦', n:'Xmas Stocking',      v:50,    t:'common'},
-  {e:'🧣', n:'Snow Mittens',       v:50,    t:'common'},
-  {e:'🔔', n:'Sleigh Bell',        v:50,    t:'common'},
-  {e:'🎂', n:'Birthday Cake',      v:50,    t:'common'},
-  {e:'🥂', n:'Spiced Wine',        v:100,   t:'common'},
-  {e:'🎄', n:'Jingle Bells',       v:100,   t:'common'},
-  {e:'🌟', n:'Snow Globe',         v:100,   t:'common'},
-  {e:'💍', n:'Signet Ring',        v:100,   t:'common'},
-  {e:'🧸', n:'Plush Bear',         v:100,   t:'common'},
-  {e:'🎩', n:'Santa Hat',          v:150,   t:'rare'},
-  {e:'🌸', n:'Skull Flower',       v:200,   t:'rare'},
-  {e:'🚀', n:'Santa Rocket',       v:250,   t:'rare'},
-  {e:'🚬', n:'Vintage Cigar',      v:250,   t:'rare'},
-  {e:'🔮', n:'Crystal Ball',       v:250,   t:'rare'},
-  {e:'🃏', n:'Joker Card',         v:500,   t:'rare'},
-  {e:'🕯️', n:'Eternal Candle',     v:500,   t:'rare'},
-  {e:'🌹', n:'Eternal Rose',       v:1000,  t:'epic'},
-  {e:'🎩', n:"Durov's Cap",        v:2000,  t:'epic'},
-  {e:'🐸', n:'Plush Pepe',         v:25000, t:'legend'},
+/* ============ МАШИНЫ: АвтоВАЗ + иномарки ============ */
+/* v — цена в рублях (10…140000), t — уровень редкости */
+const CARS = [
+  {e:'🚗', n:'ВАЗ-2101 «Копейка»',   v:10,     t:'common'},
+  {e:'🚙', n:'Ока',                  v:15,     t:'common'},
+  {e:'🚗', n:'ВАЗ-2107',             v:20,     t:'common'},
+  {e:'🚙', n:'Нива 4x4',             v:25,     t:'common'},
+  {e:'🚗', n:'Лада Гранта',          v:30,     t:'common'},
+  {e:'🚗', n:'Лада Самара',          v:35,     t:'common'},
+  {e:'🚙', n:'Daewoo Matiz',         v:40,     t:'common'},
+  {e:'🚗', n:'Renault Logan',        v:50,     t:'common'},
+  {e:'🚙', n:'Hyundai Solaris',      v:60,     t:'common'},
+  {e:'🚗', n:'VW Polo',              v:70,     t:'common'},
+  {e:'🚗', n:'Lada Largus',          v:80,     t:'common'},
+  {e:'🚙', n:'Kia Rio',              v:90,     t:'common'},
+  {e:'🚗', n:'Lada Vesta',           v:120,    t:'common'},
+  {e:'🚙', n:'Lada Vesta SW Cross',  v:250,    t:'uncommon'},
+  {e:'🚗', n:'Lada XRAY',            v:300,    t:'uncommon'},
+  {e:'🚙', n:'Hyundai Creta',        v:400,    t:'uncommon'},
+  {e:'🚗', n:'Kia Ceed',             v:500,    t:'uncommon'},
+  {e:'🚙', n:'Skoda Rapid',          v:600,    t:'uncommon'},
+  {e:'🚙', n:'VW Tiguan',            v:900,    t:'uncommon'},
+  {e:'🚙', n:'Toyota Corolla',       v:1200,   t:'uncommon'},
+  {e:'🚙', n:'Mazda 3',              v:1500,   t:'uncommon'},
+  {e:'🚙', n:'Kia Sportage',         v:2500,   t:'rare'},
+  {e:'🚙', n:'Hyundai Tucson',       v:3000,   t:'rare'},
+  {e:'🚙', n:'Toyota Camry',         v:4000,   t:'rare'},
+  {e:'🚙', n:'Honda CR-V',           v:5000,   t:'rare'},
+  {e:'🚙', n:'BMW 3 Series',         v:7000,   t:'rare'},
+  {e:'🚙', n:'Audi A4',              v:9000,   t:'rare'},
+  {e:'🚙', n:'Mercedes C-Class',     v:12000,  t:'rare'},
+  {e:'🚙', n:'BMW X5',               v:20000,  t:'epic'},
+  {e:'🚙', n:'Mercedes GLE',         v:30000,  t:'epic'},
+  {e:'🚙', n:'Porsche Macan',        v:40000,  t:'epic'},
+  {e:'🏎️', n:'Porsche 911',          v:60000,  t:'epic'},
+  {e:'🏎️', n:'Ferrari 488',          v:100000, t:'legend'},
+  {e:'🚘', n:'Rolls-Royce Ghost',    v:120000, t:'legend'},
+  {e:'🏎️', n:'Lamborghini Huracan',  v:140000, t:'legend'},
 ];
 const RARITIES = [
-  {key:'common', name:'Обычный',     color:'#cfe0ff'},
-  {key:'rare',   name:'Редкий',      color:'#7cc4ff'},
-  {key:'epic',   name:'Эпический',   color:'#c88fff'},
-  {key:'legend', name:'Легендарный', color:'#ffd76e'},
+  {key:'common',   name:'Развалюха',    color:'#cfe0ff'},
+  {key:'uncommon', name:'Рабочая',      color:'#7dff9e'},
+  {key:'rare',     name:'Солидная',     color:'#7cc4ff'},
+  {key:'epic',     name:'Премиум',      color:'#c88fff'},
+  {key:'legend',   name:'Мечта',        color:'#ffd76e'},
 ];
 const CATEGORIES = [
-  {id:'free',  cls:'cat-free',   name:'🎁 Бесплатный'},
-  {id:'winter',cls:'cat-winter', name:'🎄 Зимние'},
-  {id:'rare',  cls:'cat-rare',   name:'💎 Средние'},
-  {id:'legend',cls:'cat-legend', name:'👑 Элитные'},
+  {id:'free',    cls:'cat-free',    name:'🎁 Бесплатный'},
+  {id:'budget',  cls:'cat-budget',  name:'🔧 Бюджетные'},
+  {id:'mid',     cls:'cat-mid',     name:'🛣️ Средние'},
+  {id:'premium', cls:'cat-premium', name:'👑 Премиум'},
 ];
 
-/* ===== СИСТЕМА ШАНСОВ ===== */
-const TIER_SHARE = {common:.55, rare:.27, epic:.12, legend:.06};
+/* ===== ШАНСЫ: чем дороже машина — тем реже ===== */
+const TIER_SHARE = {common:.52, uncommon:.26, rare:.14, epic:.06, legend:.02};
 function buildWeights(price, pool, evOverride){
   const EV = evOverride ?? price * HOUSE_EDGE;
   const tiers = [...new Set(pool.map(p=>p.t))];
@@ -554,36 +577,37 @@ function chancePercent(weights, i){
   return weights[i]/total*100;
 }
 
-/* ================= СБОРКА 31 КЕЙСА ================= */
+/* ================= КЕЙСЫ ================= */
 const CASES = [];
 (function buildCases(){
-  const prices = {winter:[15,20,25,30,35,40,45,50,60,75], rare:[100,120,150,180,220,260,300,350,420,500],
-                  legend:[1000,1200,1500,1800,2200,2700,3200,4000,5000,6500]};
+  const prices = {budget:[50,100,200,350], mid:[500,800,1500,2500], premium:[5000,10000,20000,35000]};
   const nameSets = {
-    winter:['Имбирный','Носочный','Варежковый','Колокольный','Тортик','Глинтвейн','Ёлочный','Шариковый','Кольцевой','Мишкин'],
-    rare:['Санта','Цветочный','Ракетный','Винтажный','Хрустальный','Джокер','Свечной','Розовый','Дюрова','Пепе'],
-    legend:['Пепе Люкс','Кап Дюрова','Розовый Элит','Свеча Огня','Морозный','Редкий Шанс','Джекпот','Вечная Роза','Зимний Кучер','Богатый'],
+    budget:['Дворник','Гаражный','Трасса М-5','Вазовский'],
+    mid:['Шоссе','Ночная гонка','Семейный','Бизнес-класс'],
+    premium:['Люкс','Президентский','Шейх','Миллионер'],
   };
-  const emos = {winter:['🍪','🧦','🧣','🔔','🎂','🥂','🎄','🌟','💍','🧸'],
-                rare:['🎩','🌸','🚀','🚬','🔮','🃏','🕯️','🌹','🎩','🔮'],
-                legend:['🐸','🎩','🌹','🕯️','🎩','🃏','🔮','🌹','🐸','🎩']};
-
-  const byTier = t => TG_GIFTS.filter(g=>g.t===t);
+  const emos = {
+    budget:['🧰','🔧','🛞','🚗'],
+    mid:['🏁','🚦','🛣️','💺'],
+    premium:['💎','👑','🏆','🎰'],
+  };
+  const byTier = t => CARS.filter(c=>c.t===t);
   function pickRandom(arr,n){ const c=[...arr], out=[]; for(let i=0;i<n;i++) out.push(c.splice(Math.floor(Math.random()*c.length),1)[0]); return out; }
 
-  const freePool = [...byTier('common').slice(0,6), {e:'🎩', n:'Santa Hat', v:150, t:'rare'}];
-  CASES.push({id:0, cat:'free', name:'Новогодний Подарок', emoji:'🎁', price:0, free:true,
+  const freePool = [...byTier('common').slice(0,6), {e:'🚙', n:'Lada Vesta SW Cross', v:250, t:'uncommon'}];
+  CASES.push({id:0, cat:'free', name:'Первый запуск', emoji:'🎁', price:0, free:true,
     pool:freePool, weights:buildWeights(0, freePool, FREE_CASE_EV)});
 
-  for (const cat of ['winter','rare','legend']) {
-    for (let i=0;i<10;i++) {
+  const mix = {
+    budget: [...pickRandom(byTier('common'),5), ...pickRandom(byTier('uncommon'),3)],
+    mid:    [...pickRandom(byTier('common'),4), ...pickRandom(byTier('uncommon'),3), ...pickRandom(byTier('rare'),2)],
+    premium:[...pickRandom(byTier('common'),3), ...pickRandom(byTier('uncommon'),3), ...pickRandom(byTier('rare'),2), ...pickRandom(byTier('epic'),1), ...pickRandom(byTier('legend'),1)],
+  };
+  for (const cat of ['budget','mid','premium']) {
+    for (let i=0;i<4;i++) {
       const price = prices[cat][i];
-      const pool = [];
-      pool.push(...pickRandom(byTier('common'), cat==='winter'?4:3));
-      pool.push(...pickRandom(byTier('rare'), cat==='legend'?4:2));
-      if (cat==='rare')   pool.push(...pickRandom(byTier('epic'), 1));
-      if (cat==='legend') pool.push(...pickRandom(byTier('epic'), 1), ...pickRandom(byTier('legend'), 1));
-      CASES.push({id:CASES.length, cat, name: nameSets[cat][i]+' кейс', emoji: emos[cat][i], price, pool, weights:buildWeights(price, pool)});
+      CASES.push({id:CASES.length, cat, name:nameSets[cat][i]+' кейс', emoji:emos[cat][i], price,
+        pool:mix[cat], weights:buildWeights(price, mix[cat])});
     }
   }
 })();
@@ -593,6 +617,7 @@ const CASES = [];
 /* ================= СОСТОЯНИЕ ================= */
 let S = JSON.parse(localStorage.getItem('zp_state')||'null') || {balance:0, invites:0, freeUsed:'', lastBonus:'', opened:0, best:0, inventory:[], pending:null, wdIdx:-1, rockHist:[]};
 function save(){ localStorage.setItem('zp_state', JSON.stringify(S)); }
+function fmt(n){ return Math.round(n).toLocaleString('ru-RU'); }
 
 /* ================= TELEGRAM ================= */
 const tg = window.Telegram?.WebApp;
@@ -620,23 +645,21 @@ function go(page){
   window.scrollTo(0,0);
 }
 function updateBalance(){
-  document.getElementById('balance').textContent = S.balance;
-  document.getElementById('stat-balance').textContent = S.balance;
+  document.getElementById('balance').textContent = fmt(S.balance);
+  document.getElementById('stat-balance').textContent = fmt(S.balance);
   document.getElementById('stat-opened').textContent = S.opened;
-  document.getElementById('stat-best').textContent = S.best ? S.best+' ⭐' : '—';
+  document.getElementById('stat-best').textContent = S.best ? fmt(S.best)+' ₽' : '—';
 }
 function renderHome(){
   document.getElementById('w-name').textContent = USER_NAME;
   const used = S.lastBonus === new Date().toDateString();
-  document.getElementById('bonus-hint').textContent = used ? 'Бонус забран, приходи завтра' : '+10 ⭐ каждый день';
+  document.getElementById('bonus-hint').textContent = used ? 'Бонус забран, приходи завтра' : '+50 ₽ каждый день';
 }
-
-/* ===== ЕЖЕДНЕВНЫЙ БОНУС ===== */
 function claimBonus(){
   if (S.lastBonus === new Date().toDateString()) return toast('Бонус уже получен сегодня ⏰ Возвращайся завтра!');
-  S.lastBonus = new Date().toDateString(); S.balance += 10;
+  S.lastBonus = new Date().toDateString(); S.balance += 50;
   save(); renderHome(); updateBalance();
-  toast('Ежедневный бонус: +10 ⭐ 🎉');
+  toast('Ежедневный бонус: +50 ₽ 🎉');
 }
 
 /* ===== СПИСОК КЕЙСОВ ===== */
@@ -650,7 +673,7 @@ function renderCases(){
         <div class="glow"></div>
         <div class="emoji">${c.emoji}</div>
         <div class="name">${c.name}</div>
-        <div class="price">${c.free ? (todayFreeUsed() ? 'Завтра ⏰' : 'Бесплатно') : c.price+' ⭐'}</div>
+        <div class="price">${c.free ? (todayFreeUsed() ? 'Завтра ⏰' : 'Бесплатно') : fmt(c.price)+' ₽'}</div>
       </div>`;
     });
     html += '</div>';
@@ -667,14 +690,14 @@ function showCaseView(id){
   document.getElementById('cv-emoji').textContent = c.emoji;
   document.getElementById('cv-name').textContent = c.name;
   const maxPrize = Math.max(...c.pool.map(p=>p.v));
-  document.getElementById('cv-desc').textContent = `Топ-приз: ${maxPrize} ⭐ · средний возврат ${Math.round(c.free?FREE_CASE_EV:c.price*HOUSE_EDGE)} ⭐`;
+  document.getElementById('cv-desc').textContent = `Топ-машина: ${fmt(maxPrize)} ₽ · средний возврат ${fmt(c.free?FREE_CASE_EV:c.price*HOUSE_EDGE)} ₽`;
   const btn = document.getElementById('cv-open-btn');
   if (c.free) {
     btn.textContent = todayFreeUsed() ? 'Завтра ⏰' : 'Открыть бесплатно';
     btn.disabled = todayFreeUsed();
     btn.style.opacity = todayFreeUsed() ? '.5' : '1';
   } else {
-    btn.textContent = `Открыть за ${c.price} ⭐`;
+    btn.textContent = `Открыть за ${fmt(c.price)} ₽`;
     btn.disabled = false; btn.style.opacity = '1';
   }
   document.getElementById('cv-list').innerHTML = c.pool.map((p,i)=>{
@@ -685,7 +708,7 @@ function showCaseView(id){
       <div class="pinfo"><b>${p.n}</b><span style="color:${rar.color}">${rar.name}</span>
         <div class="chance-bar"><i style="width:${Math.max(1.5,Math.min(100,ch))}%;background:${rar.color}"></i></div>
       </div>
-      <div class="pval"><b>${p.v} ⭐</b><small>шанс ${ch<1?ch.toFixed(2):ch.toFixed(1)}%</small></div>
+      <div class="pval"><b>${fmt(p.v)} ₽</b><small>шанс ${ch<1?ch.toFixed(3):ch.toFixed(1)}%</small></div>
     </div>`;
   }).join('');
   document.getElementById('case-view').classList.add('open');
@@ -693,13 +716,13 @@ function showCaseView(id){
 }
 function closeCaseView(){ document.getElementById('case-view').classList.remove('open'); }
 
-/* ===== ОТКРЫТИЕ КЕЙСА ===== */
+/* ===== ОТКРЫТИЕ ===== */
 function openCase(id){
   const c = CASES[id];
   if (c.free) {
     if (todayFreeUsed()) return toast('Бесплатный кейс уже открыт. Приходите завтра! ⏰');
-    if (S.invites < 3) return toast(`Чтобы забрать подарок, пригласите 3 друзей (осталось ${3-S.invites}) 👥`);
-  } else if (S.balance < c.price) return toast('Недостаточно звёзд. Пополните баланс 💳');
+    if (S.invites < 3) return toast(`Чтобы забрать машину, пригласите 3 друзей (осталось ${3-S.invites}) 👥`);
+  } else if (S.balance < c.price) return toast('Недостаточно рублей. Пополните баланс 💳');
   if (!c.free) S.balance -= c.price;
   else S.freeUsed = new Date().toDateString();
   save(); updateBalance(); renderCases();
@@ -735,8 +758,6 @@ function spin(c){
 
   setTimeout(showResult, 4500);
 }
-
-/* ===== ФИНАЛЬНЫЙ ЭКРАН ПРИЗА ===== */
 function showResult(){
   const p = S.pending;
   const rar = RARITIES.find(r=>r.key===p.rarity);
@@ -747,7 +768,7 @@ function showResult(){
   document.getElementById('r-name').textContent = p.name;
   const rr = document.getElementById('r-rare');
   rr.textContent = rar.name; rr.style.color = rar.color; rr.style.borderColor = rar.color+'66';
-  document.getElementById('r-value').textContent = `Ценность: ${p.value} ⭐ · из «${p.caseName}»`;
+  document.getElementById('r-value').textContent = `Стоимость: ${fmt(p.value)} ₽ · из «${p.caseName}»`;
   const em = document.getElementById('r-emoji');
   em.style.animation='none'; void em.offsetWidth; em.style.animation='';
   wrap.classList.add('open');
@@ -759,7 +780,7 @@ function sellPrize(){
   save(); updateBalance(); renderHome();
   document.getElementById('result-wrap').classList.remove('open');
   renderCases();
-  toast(`Продано за ${p.value} ⭐ — на баланс зачислено! 💰`);
+  toast(`«${p.name}» продана за ${fmt(p.value)} ₽ — деньги на счету! 💰`);
 }
 function keepPrize(){
   const p = S.pending;
@@ -767,24 +788,24 @@ function keepPrize(){
   S.pending = null;
   save();
   document.getElementById('result-wrap').classList.remove('open');
-  toast('Подарок отправлен в инвентарь 🎒');
+  toast('Машина отправлена в гараж 🚙');
 }
 function rarityStyle(p){
   const r = RARITIES.find(r=>r.key===p.t) || RARITIES[0];
   return `background:linear-gradient(160deg,${r.color}33,rgba(255,255,255,.06));border-color:${r.color}66`;
 }
-
-/* ===== ИНВЕНТАРЬ + ВЫВОД ===== */
+<script>
+/* ===== ГАРАЖ + ВЫВОД ===== */
 function renderInventory(){
   const host = document.getElementById('inv-list');
-  if (!S.inventory.length){ host.innerHTML = '<div class="inv-empty">Пока пусто 🕊️<br>Откройте первый кейс!</div>'; return; }
+  if (!S.inventory.length){ host.innerHTML = '<div class="inv-empty">Гараж пока пуст 🕊️<br>Откройте первый кейс!</div>'; return; }
   host.innerHTML = S.inventory.map((it,i)=>{
     const rar = RARITIES.find(r=>r.key===it.rarity);
     return `<div class="inv-item" style="border-color:${rar.color}44">
       <div class="emoji">${it.emoji}</div>
-      <div class="info"><b>${it.name}</b><span style="color:${rar.color}">${rar.name}</span> · <span>${it.value} ⭐ · ${new Date(it.date).toLocaleDateString()}</span></div>
+      <div class="info"><b>${it.name}</b><span style="color:${rar.color}">${rar.name}</span> · <span>${fmt(it.value)} ₽ · ${new Date(it.date).toLocaleDateString()}</span></div>
       <div class="acts">
-        <button class="sell" onclick="sellInv(${i})">Продать ${it.value}⭐</button>
+        <button class="sell" onclick="sellInv(${i})">Продать ${fmt(it.value)} ₽</button>
         <button class="wd" onclick="openWd(${i})">Вывести в TG</button>
       </div>
     </div>`;
@@ -794,14 +815,14 @@ function sellInv(i){
   const it = S.inventory[i];
   S.balance += it.value; S.inventory.splice(i,1);
   save(); updateBalance(); renderInventory();
-  toast(`«${it.name}» продан за ${it.value} ⭐ 💰`);
+  toast(`«${it.name}» продана за ${fmt(it.value)} ₽ 💰`);
 }
 function openWd(i){
   const it = S.inventory[i];
   S.wdIdx = i;
   document.getElementById('wd-emoji').textContent = it.emoji;
   document.getElementById('wd-name').textContent = it.name;
-  document.getElementById('wd-val').textContent = `К выводу: ${it.value} ⭐`;
+  document.getElementById('wd-val').textContent = `К выводу: ${fmt(it.value)} ₽`;
   document.getElementById('wd-user').value = tg?.initDataUnsafe?.user?.username ? '@'+tg.initDataUnsafe.user.username : '';
   document.getElementById('wd-modal').classList.add('open');
 }
@@ -810,12 +831,12 @@ function confirmWithdraw(){
   const u = document.getElementById('wd-user').value.trim().replace(/^@/,'');
   if (!u || u.length < 3) return toast('Укажите свой @username в Telegram 📝');
   const it = S.inventory[S.wdIdx];
-  /* РЕАЛЬНЫЙ ВЫВОД: отправьте данные на сервер и выдайте подарок
-     только после проверки подписи initData на бэкенде. */
+  /* РЕАЛЬНЫЙ ВЫВОД: отправьте на сервер и выдайте подарок только после
+     проверки подписи initData на бэкенде. */
   if (tg && tg.sendData) tg.sendData(JSON.stringify({type:'withdraw', gift:it.name, value:it.value, username:u}));
   S.inventory.splice(S.wdIdx,1);
   save(); renderInventory(); closeWd();
-  toast(`Заявка на вывод «${it.name}» (${it.value} ⭐) для @${u} принята 📦`);
+  toast(`Заявка на вывод «${it.name}» (${fmt(it.value)} ₽) для @${u} принята 📦`);
 }
 
 /* ===== ДРУЗЬЯ ===== */
@@ -825,43 +846,45 @@ function renderFriends(){
     `Привет, <b>${USER_NAME}</b>!<br>Приглашено: <b>${S.invites} / 3</b><br>${S.invites>=3 ? '✅ Бесплатный кейс доступен!' : 'Осталось пригласить: <b>'+(3-S.invites)+'</b>'}`;
 }
 function shareInvite(){
-  const url = `https://t.me/share/url?url=${encodeURIComponent(REF_URL)}&text=${encodeURIComponent('🎁 Играй со мной в Зимний Подарок — открывай кейсы с настоящими подарками Telegram!')}`;
+  const url = `https://t.me/share/url?url=${encodeURIComponent(REF_URL)}&text=${encodeURIComponent('🚗 Играй со мной в АвтоКейсы — открывай кейсы с машинами от Копейки до Lamborghini!')}`;
   if (tg && tg.openTelegramLink) tg.openTelegramLink(url); else window.open(url,'_blank');
   if (S.invites < 3) {
-    S.invites++; S.balance += 5;
+    S.invites++; S.balance += 25;
     save(); renderFriends(); updateBalance();
-    toast(`Друг приглашен! +5 ⭐. Друзей: ${S.invites}/3`);
+    toast(`Друг приглашен! +25 ₽. Друзей: ${S.invites}/3`);
   }
 }
 
 /* ===== ПОПОЛНЕНИЕ ===== */
-const DEP_AMOUNTS = [10, 25, 50, 100, 250, 500];
+const DEP_AMOUNTS = [10, 50, 100, 500, 1000, 5000];
 function renderDeposit(){
   document.getElementById('dep-grid').innerHTML = DEP_AMOUNTS.map(a=>
-    `<button onclick="deposit(${a})">${a} ⭐<br><small style="font-size:10px;color:#7dff9e">+${a+Math.floor(a*0.1)} итого</small></button>`).join('');
+    `<button onclick="deposit(${a})">${fmt(a)} ₽<br><small>+${fmt(a+Math.floor(a*0.1))} итого</small></button>`).join('');
 }
 function deposit(amount){
   const bonus = Math.floor(amount*0.1);
   /* РЕАЛЬНАЯ ОПЛАТА: запрос на сервер → начисление только после вебхука платёжки. Ниже — демо. */
   S.balance += amount + bonus;
   save(); updateBalance(); renderHome();
-  toast(`Пополнено ${amount}⭐ + бонус ${bonus}⭐ (+10%) 🎉`);
+  toast(`Пополнено ${fmt(amount)} ₽ + бонус ${fmt(bonus)} ₽ (+10%) 🎉`);
 }
 
-/* ===== ИГРА РАКЕТА ZINI ===== */
-const RK = {running:false, bet:5, mult:1, crashAt:0, boost:false, timer:null, tick:0};
+/* ===== РАКЕТА ZINI — КРАШ ПОЧИНЕН ===== */
+/* Раньше минимум краша был 1.00 и ракета мгновенно сгорала на 1 иксе.
+   Теперь: минимум 1.15, проверка краша ПОСЛЕ роста икса, пролёт краша +4 икса. */
+const RK = {running:false, bet:10, mult:1, crashAt:0, boost:false, timer:null, tick:0};
 
 function rollCrash(){
   const r = Math.random();
-  if (r < 0.05) return 1.00;                 // мгновенный краш на старте
+  if (r < 0.03) return 1.15;                 // редкий ранний краш
   let m = 0.97 / (1 - Math.random());        // хвост до 50x
-  return Math.min(50, Math.max(1.01, Math.round(m*100)/100));
+  return Math.min(50, Math.max(1.15, Math.round(m*100)/100));
 }
 
 function renderRocket(){
   const host = document.getElementById('rk-bets');
-  if (host) host.innerHTML = [5,10,25,50,100].map(a=>
-    `<button class="${RK.bet===a?'sel':''}" onclick="setBet(${a})">${a} ⭐</button>`).join('');
+  if (host) host.innerHTML = [10,50,100,250,500].map(a=>
+    `<button class="${RK.bet===a?'sel':''}" onclick="setBet(${a})">${fmt(a)} ₽</button>`).join('');
   renderRkHist();
 }
 function setBet(a){ if (RK.running) return; RK.bet = a; renderRocket(); }
@@ -875,14 +898,14 @@ function renderRkHist(){
 
 function rocketAction(){
   if (RK.running) return cashOut();
-  if (S.balance < RK.bet) return toast('Недостаточно звёзд для ставки 💳');
+  if (S.balance < RK.bet) return toast('Недостаточно рублей для ставки 💳');
   S.balance -= RK.bet; save(); updateBalance();
 
   RK.running = true; RK.mult = 1; RK.crashAt = rollCrash();
   RK.boost = false; RK.tick = 0;
 
   const btn = document.getElementById('rk-btn');
-  btn.textContent = `Забрать ${(RK.bet*RK.mult).toFixed(0)} ⭐`;
+  btn.textContent = 'Забрать 💰';
   btn.classList.remove('gold'); btn.classList.add('green');
   document.getElementById('rk-status').textContent = 'Летим... забирай до краша!';
   const mult = document.getElementById('rk-mult');
@@ -895,6 +918,7 @@ function rocketAction(){
 }
 
 function rocketTick(){
+  // сначала растёт икс, только потом проверяем краш — ракета всегда летит
   RK.mult = Math.round((RK.mult * 1.0045)*100)/100;
   RK.tick++;
 
@@ -925,7 +949,7 @@ function rocketTick(){
     setTimeout(()=>tr.remove(), 1000);
   }
 
-  document.getElementById('rk-btn').textContent = `Забрать ${Math.round(RK.bet*RK.mult)} ⭐`;
+  document.getElementById('rk-btn').textContent = `Забрать ${fmt(RK.bet*RK.mult)} ₽`;
 
   if (RK.mult >= RK.crashAt) return rocketCrash();
 }
@@ -939,8 +963,8 @@ function cashOut(){
   save(); updateBalance(); renderRocket();
   const btn = document.getElementById('rk-btn');
   btn.textContent = 'Запустить 🚀'; btn.classList.add('gold'); btn.classList.remove('green');
-  document.getElementById('rk-status').textContent = `Забрано ${win} ⭐ на ${RK.mult.toFixed(2)}x! 🎉`;
-  toast(`Забрал ${win} ⭐ на ${RK.mult.toFixed(2)}x 💰`);
+  document.getElementById('rk-status').textContent = `Забрано ${fmt(win)} ₽ на ${RK.mult.toFixed(2)}x! 🎉`;
+  toast(`Забрал ${fmt(win)} ₽ на ${RK.mult.toFixed(2)}x 💰`);
   resetRocketView(1600);
 }
 
