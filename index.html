@@ -65,7 +65,6 @@ header h1{font-size:20px;background:linear-gradient(90deg,#fbbf24,#fb7185,#a78bf
 .item-name{font-size:18px;font-weight:800;margin:6px 0;text-shadow:0 0 10px rgba(255,255,255,.3)}
 .item-value{font-size:24px;font-weight:900;color:#fbbf24;text-shadow:0 0 14px rgba(251,191,36,.7)}
 .row{display:flex;gap:10px;margin-top:12px}.row .btn{padding:13px 8px;font-size:14px}
-/* --- BIG WIN --- */
 #bigwin{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:150;pointer-events:none}
 #bigwin.show{display:flex}
 #bwText{font-size:52px;font-weight:900;letter-spacing:3px;background:linear-gradient(90deg,#fde047,#fbbf24,#fb7185,#fde047);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 26px rgba(251,191,36,.9)) drop-shadow(0 0 60px rgba(251,113,133,.6));animation:bwIn .7s cubic-bezier(.2,1.8,.3,1),shine 1.2s linear infinite,pulseScale 1s ease-in-out 1s infinite}
@@ -77,7 +76,6 @@ header h1{font-size:20px;background:linear-gradient(90deg,#fbbf24,#fb7185,#a78bf
 @keyframes fall{0%{transform:translateY(-30px) rotate(0)}100%{transform:translateY(110vh) rotate(720deg)}}
 .flash{animation:flash .6s ease}
 @keyframes flash{0%{box-shadow:0 0 0 rgba(255,255,255,0)}20%{box-shadow:0 0 90px rgba(255,240,180,.95),inset 0 0 60px rgba(255,255,255,.5)}100%{box-shadow:0 0 60px rgba(251,191,36,.4),inset 0 0 30px rgba(124,90,255,.15)}}
-/* --- конец BIG WIN --- */
 .parts-bar{display:flex;align-items:center;gap:10px;margin-top:12px;background:linear-gradient(90deg,rgba(124,90,255,.15),rgba(251,191,36,.12));border:1px solid #7c5aff;border-radius:14px;padding:10px 12px;box-shadow:0 0 12px rgba(124,90,255,.3)}
 .parts-bar b{color:#fbbf24;text-shadow:0 0 8px rgba(251,191,36,.6)}
 .pbar{flex:1;height:10px;background:#0e0e20;border-radius:6px;overflow:hidden;border:1px solid #444}
@@ -261,8 +259,8 @@ function partEmoji(n){for(var i=0;i<PARTS.length;i++)if(PARTS[i][0]===n)return P
 function idxRar(i){return["","common","rare","epic","mythic"][i]||"common"}
 
 var state={balance:0,casesOpened:0,garage:[],parts:{},lastBonus:null,reqs:[],reqSeq:1};
-function save(){try{localStorage.setItem("autocases_v6",JSON.stringify(state))}catch(e){}}
-function load(){try{var s=JSON.parse(localStorage.getItem("autocases_v6"));if(s){state.balance=s.balance||0;state.casesOpened=s.casesOpened||0;state.garage=s.garage||[];state.parts=s.parts||{};state.lastBonus=s.lastBonus||null;state.reqs=s.reqs||[];state.reqSeq=s.reqSeq||1}}catch(e){}}
+function save(){try{localStorage.setItem("autocases_v7",JSON.stringify(state))}catch(e){}}
+function load(){try{var s=JSON.parse(localStorage.getItem("autocases_v7"));if(s){state.balance=s.balance||0;state.casesOpened=s.casesOpened||0;state.garage=s.garage||[];state.parts=s.parts||{};state.lastBonus=s.lastBonus||null;state.reqs=s.reqs||[];state.reqSeq=s.reqSeq||1}}catch(e){}}
 
 function switchTab(n){
   var p=document.querySelectorAll(".page");for(var i=0;i<p.length;i++)p[i].classList.remove("active");
@@ -366,7 +364,7 @@ function rollPrize(c){
   return{name:nm2,value:val2,rarity:rar,emoji:"💰",isCar:false,isPart:false,carId:null};
 }
 
-/* --- BIG WIN анимация --- */
+/* --- BIG WIN --- */
 var CONF_COLORS=["#fbbf24","#f97316","#fb7185","#a78bfa","#22d3ee","#22c55e","#fde047","#f472b6"];
 function confetti(count){
   for(var i=0;i<count;i++){
@@ -395,6 +393,22 @@ function showBigWin(isJackpot,subText){
   var card=document.getElementById("dropCard");
   card.classList.remove("flash");void card.offsetWidth;card.classList.add("flash");
   setTimeout(function(){bw.classList.remove("show");document.getElementById("bwSub").textContent=""},2600);
+}
+
+/* --- Авто-забор приза: в гараж или на баланс --- */
+function autoClaim(prize){
+  if(!prize)return null;
+  if(prize.isCar){
+    state.garage.push(prize.carId);
+    return "🚗 "+prize.name+" → в гараж!";
+  }
+  if(prize.isPart){
+    if(!state.parts[prize.name])state.parts[prize.name]={1:0,2:0,3:0,4:0};
+    state.parts[prize.name][prize.rIdx]++;
+    return "🔩 Деталь «"+prize.name+"» ("+rLabel[prize.rarity]+") → в гараж!";
+  }
+  state.balance+=prize.value;
+  return "💰 +"+prize.value.toLocaleString("ru")+" ₽ на баланс!";
 }
 
 function showCase(c){
@@ -445,7 +459,6 @@ function doOpen(){
     else keep.style.display="none";
     document.getElementById("ovSell").textContent="Продать за "+p.value.toLocaleString("ru")+" ₽";
     document.getElementById("ovResult").style.display="block";
-    /* --- проверка на BIG WIN --- */
     var isJackpot=p.isCar&&p.rarity==="mythic";
     var isBigWin=!isJackpot&&(p.value>=currentCase.price*2.5||(p.isPart&&p.rIdx===4));
     if(isJackpot)showBigWin(true,"🏆 "+p.name+" — "+p.value.toLocaleString("ru")+" ₽!");
@@ -454,15 +467,19 @@ function doOpen(){
     updateUI();
   },1600);
 }
+/* Кнопка «Крутить ещё»: приз уходит в гараж/на баланс, затем сразу новый спин */
 function spinAgain(){
   if(!currentCase)return;
   if(state.balance<currentCase.price){toast("Недостаточно средств на ещё один кейс!",true);closeOverlay();return}
+  var msg=autoClaim(currentPrize);
+  if(msg)toast(msg);
+  currentPrize=null;opened=false;
+  updateUI();
   document.getElementById("ovResult").style.display="none";
   document.getElementById("ovReady").style.display="block";
   document.getElementById("ovBox").textContent=currentCase.emoji;
   document.getElementById("ovBox").className="big-box";
   document.getElementById("ovOpen").style.display="none";
-  opened=false;
   doOpen();
 }
 function closeOverlay(){
@@ -473,17 +490,14 @@ document.getElementById("ovOpen").onclick=doOpen;
 document.getElementById("ovAgain").onclick=spinAgain;
 document.getElementById("ovKeep").onclick=function(){
   if(!currentPrize)return;
-  if(currentPrize.isCar){state.garage.push(currentPrize.carId);toast(currentPrize.name+" в гараже! 🎉")}
-  else if(currentPrize.isPart){
-    var ri=currentPrize.rIdx;
-    if(!state.parts[currentPrize.name])state.parts[currentPrize.name]={1:0,2:0,3:0,4:0};
-    state.parts[currentPrize.name][ri]++;
-    toast(rLabel[currentPrize.rarity]+" деталь «"+currentPrize.name+"» в гараже!");
-  }
+  var msg=autoClaim(currentPrize);
+  if(msg)toast(msg);
+  currentPrize=null;
   closeOverlay();
 };
 document.getElementById("ovSell").onclick=function(){
   if(currentPrize){state.balance+=currentPrize.value;toast("Продано за "+currentPrize.value.toLocaleString("ru")+" ₽")}
+  currentPrize=null;
   closeOverlay();
 };
 function sellCar(i){
