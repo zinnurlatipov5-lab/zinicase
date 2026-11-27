@@ -2,214 +2,271 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>АвтоКейсы — Админ-панель</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Админ-панель — АвтоРынок</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif}
-body{background:#12122a;color:#fff;min-height:100vh}
-.wrap{max-width:600px;margin:0 auto;padding:16px 14px 40px}
-h1{font-size:22px;color:#fbbf24;margin-bottom:4px}
-.sub{color:#889;font-size:13px;margin-bottom:16px}
-.btn{background:#fbbf24;color:#000;border:none;border-radius:12px;padding:12px 18px;font-size:15px;font-weight:800;cursor:pointer}
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent}
+body{
+  background-color:#101018;
+  background-image:
+    radial-gradient(ellipse 120% 60% at 50% -10%,rgba(239,68,68,.10),transparent 60%),
+    radial-gradient(ellipse 100% 40% at 50% 110%,rgba(139,92,246,.08),transparent 60%),
+    repeating-linear-gradient(45deg,#14141f 0,#14141f 14px,#12121c 14px,#12121c 28px);
+  background-attachment:fixed;
+  color:#fff;min-height:100vh
+}
+.wrap{max-width:520px;margin:0 auto;padding:16px 12px 40px}
+header{display:flex;justify-content:space-between;align-items:center;padding:10px 0 16px}
+header h1{font-size:19px;color:#f87171}
+header .who{font-size:12px;color:#889}
+.btn{background:#fbbf24;color:#000;border:none;border-radius:14px;padding:13px 16px;font-size:15px;font-weight:800;cursor:pointer;width:100%}
 .btn:active{opacity:.85}
-.btn-dark{background:#23234a;color:#fff;border:1px solid #3d3d6e}
 .btn-red{background:#b91c1c;color:#fff}
-.panel{background:#1c1c38;border:1px solid #3d3d6e;border-radius:18px;padding:16px;margin-bottom:14px}
-.panel h2{font-size:16px;margin-bottom:10px;color:#fde047}
-.adm-line{display:flex;justify-content:space-between;background:#181838;border-radius:10px;padding:10px 12px;margin-top:6px;font-size:14px}
-.adm-line b{color:#fbbf24}
-.req{background:#181838;border:1px solid #3d3d6e;border-radius:14px;padding:12px;margin-top:10px;font-size:14px}
-.req .num{color:#889;font-size:12px}
-.req button{margin:8px 8px 0 0;padding:8px 16px;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px}
-.ok{background:#15803d;color:#fff}
-.no{background:#b91c1c;color:#fff}
-.stat-done{color:#22c55e;font-weight:700}
-.stat-rej{color:#ef4444;font-weight:700}
-.stat-wait{color:#fbbf24;font-weight:700}
+.btn-dark{background:#23234a;color:#fff;border:1px solid #3d3d6e}
+.btn-sm{background:#23234a;color:#fbbf24;border:1px solid #3d3d6e;border-radius:10px;padding:7px 10px;font-size:12px;font-weight:700;cursor:pointer}
+.panel{background:rgba(26,26,46,.92);border:1px solid #3d3d6e;border-radius:18px;padding:16px;margin-bottom:14px}
+.panel h2{font-size:16px;margin-bottom:8px;color:#fde047}
+.statline{display:flex;justify-content:space-between;background:#181838;border-radius:10px;padding:8px 12px;margin-top:6px;font-size:13px}
+.statline b{color:#fbbf24}
+.note{color:#889;font-size:12px;line-height:1.5}
+.req{background:#181838;border:1px solid #3d3d6e;border-radius:14px;padding:12px;margin-top:10px;text-align:left;font-size:13px}
+.req button{margin:6px 6px 0 0;padding:7px 14px;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:12px}
+.ok{background:#15803d;color:#fff}.no{background:#b91c1c;color:#fff}
 .input-field{width:100%;padding:12px;background:#14142a;border:1px solid #3d3d6e;color:#fff;border-radius:12px;font-size:14px;outline:none;margin-top:8px}
-.hint{color:#889;font-size:12px;margin-top:10px;line-height:1.5}
-#loginBox{max-width:360px;margin:80px auto;text-align:center}
-#loginBox input{width:100%;padding:14px;background:#14142a;border:1px solid #3d3d6e;color:#fff;border-radius:12px;font-size:16px;text-align:center;letter-spacing:2px}
-#warn{display:none;background:rgba(239,68,68,.12);border:1px solid #ef4444;color:#fca5a5;border-radius:12px;padding:12px;font-size:13px;margin-top:14px;line-height:1.5}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#22c55e;color:#000;padding:10px 22px;border-radius:22px;font-weight:800;display:none;z-index:200;white-space:nowrap;max-width:92vw}
+#toast.err{background:#ef4444;color:#fff}
+#login{max-width:340px;margin:60px auto 0;text-align:center}
+#login .lock{font-size:64px;margin-bottom:12px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.log-item{display:flex;justify-content:space-between;gap:8px;background:#181838;border-radius:10px;padding:8px 12px;margin-top:6px;font-size:12px}
+.log-item span{color:#778;font-size:11px;flex-shrink:0}
+.log-item b.gain{color:#22c55e}.log-item b.spend{color:#fca5a5}.log-item b.info{color:#fbbf24}
 </style>
 </head>
 <body>
 
-<!-- Экран входа -->
-<div id="loginBox" class="wrap">
-  <h1>🛠 Админ-панель</h1>
-  <p class="sub">АвтоКейсы</p>
-  <input type="password" id="passInput" placeholder="Пароль админа">
-  <div style="height:12px"></div>
-  <button class="btn" style="width:100%" onclick="tryLogin()">Войти</button>
-  <div id="warn"></div>
+<div id="login">
+  <div class="lock">🔐</div>
+  <h2 style="color:#fde047;margin-bottom:8px">Админ-панель</h2>
+  <p class="note">АвтоРынок · доступ только для администратора</p>
+  <input type="password" id="passField" class="input-field" placeholder="Пароль" inputmode="numeric">
+  <button class="btn" style="margin-top:10px" onclick="tryLogin()">Войти</button>
+  <div id="loginErr" style="margin-top:8px;font-size:13px;color:#fca5a5"></div>
 </div>
 
-<!-- Панель -->
-<div id="panel" class="wrap" style="display:none">
-  <h1>🛠 Админ-панель</h1>
-  <p class="sub">АвтоКейсы · данные из браузера игрока</p>
+<div class="wrap" id="panel" style="display:none">
+  <header>
+    <h1>🛠 Админ-панель</h1>
+    <div class="who" id="who">АвтоРынок</div>
+  </header>
 
   <div class="panel">
-    <h2>📊 Финансы</h2>
-    <div class="adm-line"><span>Баланс игрока сейчас</span><b id="admBalance">0 ₽</b></div>
-    <div class="adm-line"><span>Выручка (ставки игроков)</span><b id="admRevenue">0 ₽</b></div>
-    <div class="adm-line"><span>Депозитов зачислено</span><b id="admDep">0 ₽</b></div>
-    <div class="adm-line"><span>Выплачено игрокам</span><b id="admPaid">0 ₽</b></div>
-    <div class="adm-line"><span>Профит на руках (выручка − выплаты)</span><b id="admProfit">0 ₽</b></div>
-    <div class="adm-line"><span>Кейсов открыто</span><b id="admCases">0</b></div>
-    <div class="adm-line"><span>Машин в гараже</span><b id="admGarage">0</b></div>
+    <h2>📊 Финансы игрока</h2>
+    <div class="statline"><span>Кошелёк</span><b id="admCash">0 ₽</b></div>
+    <div class="statline"><span>Звёзды</span><b id="admStars">0 ⭐</b></div>
+    <div class="statline"><span>Транспорт в гараже</span><b id="admGarage">0</b></div>
+    <div class="statline"><span>Активных лотов на рынке</span><b id="admLots">0</b></div>
+    <div class="statline"><span>Комиссия рынка (доход игры)</span><b id="admFee">0 ₽</b></div>
+    <div class="statline"><span>Депозитов зачислено</span><b id="admDep">0 ₽</b></div>
+    <div class="statline"><span>Выплачено игрокам</span><b id="admPaid">0 ₽</b></div>
+    <div class="statline"><span>Открыто кейсов / заказов</span><b id="admActs">0 / 0</b></div>
   </div>
 
-  <div class="panel">
-    <h2>💳 Заявки на пополнение</h2>
-    <p class="hint">Проверь, что деньги реально пришли на твою карту, только потом жми «Зачислить». Отклонённая заявка вернёт игроку право на повтор.</p>
-    <div id="adminDeps"></div>
-  </div>
+  <div class="panel"><h2>💳 Пополнения</h2><div id="adminDeps"></div></div>
+  <div class="panel"><h2>💸 Выводы</h2><div id="adminReqs" style="margin-top:6px"></div></div>
 
   <div class="panel">
-    <h2>💸 Заявки на вывод</h2>
-    <p class="hint">«Выплатить» — ты реально перевёл игроку и помечаешь заявку. «Отклонить» — деньги вернутся на баланс игрока.</p>
-    <div id="adminReqs"></div>
-  </div>
-
-  <div class="panel">
-    <h2>⚙️ Управление балансом</h2>
-    <p class="hint">Ручная корректировка: начислить бонус, исправить баланс после ошибки и т.п. В минус уйти нельзя — проверка на достаточность.</p>
-    <input type="number" id="adjAmount" class="input-field" placeholder="Сумма, ₽ (можно с минусом)" inputmode="numeric">
-    <div style="display:flex;gap:10px;margin-top:10px">
-      <button class="btn" style="flex:1" onclick="adjust(1)">➕ Начислить</button>
-      <button class="btn btn-red" style="flex:1" onclick="adjust(-1)">➖ Списать</button>
+    <h2>🛠 Ручное управление балансом</h2>
+    <p class="note">Начисление или списание: укажи число, минус — списание. Логируется в историю игрока.</p>
+    <div class="row2">
+      <input type="number" id="admAddStars" class="input-field" placeholder="⭐ (можно −)">
+      <input type="number" id="admAddCash" class="input-field" placeholder="₽ (можно −)">
     </div>
+    <button class="btn" style="margin-top:10px" onclick="admApply()">Применить</button>
   </div>
 
   <div class="panel">
-    <h2>🧹 Опасная зона</h2>
-    <button class="btn btn-red" style="width:100%" onclick="resetAll()">🗑 Сбросить все данные игры</button>
-    <p class="hint">Удалит баланс, гараж, детали и заявки игрока. Действие необратимо.</p>
+    <h2>⚡ Последние события игрока</h2>
+    <div id="admLog"><p class="note">Пусто</p></div>
   </div>
 
-  <button class="btn btn-dark" style="width:100%" onclick="logout()">🚪 Выйти</button>
+  <div class="panel">
+    <h2>🧹 Обслуживание</h2>
+    <button class="btn-red" onclick="admReset()">🗑 Сбросить весь прогресс игрока</button>
+    <button class="btn-dark" style="margin-top:8px" onclick="reloadState()">🔄 Обновить данные</button>
+    <p class="note" style="margin-top:8px">Кнопка «Обновить» подтягивает изменения, если игрок в этот момент играется в другой вкладке. Автообновление — каждые 5 секунд.</p>
+  </div>
+
+  <div class="panel">
+    <button class="btn-dark" onclick="logout()">🚪 Выйти</button>
+  </div>
 </div>
+
+<div id="toast"></div>
 
 <script>
 "use strict";
-var ADMIN_PASS="зинурр119";   /* поменяй пароль  */
-var STORE="autocases_v9";     /* тот же ключ, что в игре */
+var ADMIN_PASS="11973";
+var SAVE_KEY="automarket_v7";
+var SAVE_VERSION="v7";
 
-var authed=false;
-try{authed=sessionStorage.getItem("autocases_admin")==="1"}catch(e){}
+var state=null,authed=false,dirty=false;
 
-function getState(){
-  try{return JSON.parse(localStorage.getItem(STORE))}catch(e){return null}
+function toast(m,err){
+  var t=document.getElementById("toast");
+  t.textContent=m;t.className=err?"err":"";t.style.display="block";
+  clearTimeout(toast._h);toast._h=setTimeout(function(){t.style.display="none"},2200);
 }
-function setState(s){
-  try{localStorage.setItem(STORE,JSON.stringify(s))}catch(e){}
-}
-function fmt(v){return (v||0).toLocaleString("ru")+" ₽"}
-
 function tryLogin(){
-  var p=document.getElementById("passInput").value;
+  var p=document.getElementById("passField").value;
   if(p===ADMIN_PASS){
     authed=true;
-    try{sessionStorage.setItem("autocases_admin","1")}catch(e){}
-    showPanel();
+    sessionStorage.setItem("ar_admin_ok","1");
+    document.getElementById("login").style.display="none";
+    document.getElementById("panel").style.display="block";
+    reloadState();
   }else{
-    var w=document.getElementById("warn");
-    w.textContent="❌ Неверный пароль";
-    w.style.display="block";
+    document.getElementById("loginErr").textContent="❌ Неверный пароль";
+    document.getElementById("passField").value="";
   }
 }
 function logout(){
-  authed=false;
-  try{sessionStorage.removeItem("autocases_admin")}catch(e){}
+  authed=false;sessionStorage.removeItem("ar_admin_ok");
   document.getElementById("panel").style.display="none";
-  document.getElementById("loginBox").style.display="block";
+  document.getElementById("login").style.display="block";
+  document.getElementById("passField").value="";
+  document.getElementById("loginErr").textContent="";
 }
-function showPanel(){
-  document.getElementById("loginBox").style.display="none";
-  document.getElementById("panel").style.display="block";
-  render();
+document.getElementById("passField").addEventListener("keydown",function(e){if(e.key==="Enter")tryLogin()});
+
+function readSave(){
+  var parsed;
+  try{parsed=JSON.parse(localStorage.getItem(SAVE_KEY))}catch(e){parsed=null}
+  if(!parsed||typeof parsed!=="object")return false;
+  state=parsed;
+  if(!state.listings)state.listings=[];
+  if(!state.depReqs)state.depReqs=[];
+  if(!state.reqs)state.reqs=[];
+  if(!state.log)state.log=[];
+  if(!state.stats)state.stats={};
+  return true;
 }
-document.getElementById("passInput").addEventListener("keydown",function(e){if(e.key==="Enter")tryLogin()});
-
-function render(){
-  var s=getState();
-  if(!s){
-    document.getElementById("warn").textContent="⚠️ Данные игры не найдены. Открой игру в этом же браузере, чтобы админка видела заявки.";
-    document.getElementById("warn").style.display="block";
-  }
-  s=s||{balance:0,revenue:0,totalDep:0,totalPaid:0,casesOpened:0,garage:[],depReqs:[],reqs:[]};
-
-  document.getElementById("admBalance").textContent=fmt(s.balance);
-  document.getElementById("admRevenue").textContent=fmt(s.revenue);
-  document.getElementById("admDep").textContent=fmt(s.totalDep);
-  document.getElementById("admPaid").textContent=fmt(s.totalPaid);
-  document.getElementById("admProfit").textContent=fmt((s.revenue||0)-(s.totalPaid||0));
-  document.getElementById("admCases").textContent=s.casesOpened||0;
-  document.getElementById("admGarage").textContent=(s.garage||[]).length;
-
+function writeSave(){
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify(state))}catch(e){}
+}
+function reloadState(){
+  if(!readSave()){toast("Сохранение игры не найдено — открой игру на этом же адресе",true);return}
+  var u=state.user||"Игрок";
+  document.getElementById("who").textContent="Игрок: "+u+" · сейв "+SAVE_VERSION;
+  renderAll();
+}
+function renderAll(){
+  if(!state)return;
+  document.getElementById("admCash").textContent=(state.cash||0).toLocaleString("ru")+" ₽";
+  document.getElementById("admStars").textContent=(state.stars||0).toLocaleString("ru")+" ⭐";
+  document.getElementById("admGarage").textContent=(state.garage||[]).length;
+  document.getElementById("admLots").textContent=state.listings.length;
+  document.getElementById("admFee").textContent=(state.feeTotal||0).toLocaleString("ru")+" ₽";
+  document.getElementById("admDep").textContent=(state.totalDep||0).toLocaleString("ru")+" ₽";
+  document.getElementById("admPaid").textContent=(state.totalPaid||0).toLocaleString("ru")+" ₽";
+  document.getElementById("admActs").textContent=(state.casesOpened||0)+" / "+(state.ordersDone||0);
   /* пополнения */
-  var deps=(s.depReqs||[]).filter(function(r){return r.status==="Ожидает проверки"});
-  var db=document.getElementById("adminDeps");
-  if(!deps.length)db.innerHTML='<p class="hint" style="margin-top:8px">Новых заявок на пополнение нет</p>';
-  else db.innerHTML=deps.map(function(r){
-    return '<div class="req"><span class="num">Заявка №'+r.id+' · '+r.ts+'</span><br><b>'+r.user+'</b>: '+fmt(r.amount)+
-      '<br><span class="stat-wait">Ожидает проверки</span><br>'+
-      '<button class="ok" onclick="admDep('+r.id+',1)">✅ Зачислить</button>'+
-      '<button class="no" onclick="admDep('+r.id+',0)">❌ Отклонить</button></div>';
-  }).join("");
-
+  var pend=state.depReqs.filter(function(r){return r.status==="Ожидает проверки"});
+  document.getElementById("adminDeps").innerHTML=pend.length?pend.map(function(r){
+    return '<div class="req">№'+r.id+' | '+(r.user||"Игрок")+'<br>Перевод от: <b>'+(r.fio||"—")+'</b> — <b>'+r.amount.toLocaleString("ru")+' ₽</b><br><span class="note">'+(r.ts||"")+'</span><br><button class="ok" onclick="admDep('+r.id+',1)">Зачислить</button><button class="no" onclick="admDep('+r.id+',0)">Отклонить</button></div>';
+  }).join(""):'<p class="note">Новых нет</p>';
   /* выводы */
-  var wds=(s.reqs||[]).filter(function(r){return r.status==="В обработке"});
-  var wb=document.getElementById("adminReqs");
-  if(!wds.length)wb.innerHTML='<p class="hint" style="margin-top:8px">Новых заявок на вывод нет</p>';
-  else wb.innerHTML=wds.map(function(r){
-    return '<div class="req"><span class="num">Заявка №'+r.id+' · '+r.ts+'</span><br><b>'+r.user+'</b>: '+fmt(r.amount)+' на карту '+r.card+
-      '<br><span class="stat-wait">В обработке</span><br>'+
-      '<button class="ok" onclick="adminDecide('+r.id+',1)">✅ Выплатил</button>'+
-      '<button class="no" onclick="adminDecide('+r.id+',0)">❌ Отклонить</button></div>';
-  }).join("");
+  var wq=state.reqs.filter(function(r){return r.status==="В обработке"});
+  document.getElementById("adminReqs").innerHTML=wq.length?wq.map(function(r){
+    return '<div class="req">№'+r.id+' | '+(r.user||"Игрок")+'<br>Получатель: <b>'+(r.fio||"—")+'</b><br>Карта: <b>'+cardFmt(r.card||"")+'</b><br>Сумма: <b>'+r.amount.toLocaleString("ru")+' ₽</b><br><span class="note">'+(r.ts||"")+'</span><br><button class="ok" onclick="adminDecide('+r.id+',1)">Выплатил</button><button class="no" onclick="adminDecide('+r.id+',0)">Отклонить</button></div>';
+  }).join(""):'<p class="note">Новых нет</p>';
+  /* история */
+  var lh="";
+  for(var i=0;i<state.log.length;i++){
+    var L=state.log[i];
+    lh+='<div class="log-item"><b class="'+(L.ty==="gain"?"gain":(L.ty==="spend"?"spend":"info"))+'">'+L.t+'</b><span>'+(L.ts||"")+'</span></div>';
+  }
+  document.getElementById("admLog").innerHTML=lh||'<p class="note">Пусто</p>';
 }
+function cardFmt(d){return String(d).replace(/(\d{4})(?=\d)/g,"$1 ")}
 
 function admDep(id,ok){
-  var s=getState();if(!s)return;
-  for(var i=0;i<(s.depReqs||[]).length;i++){
-    if(s.depReqs[i].id===id){
-      if(ok){s.depReqs[i].status="Зачислен";s.totalDep=(s.totalDep||0)+s.depReqs[i].amount;s.balance=(s.balance||0)+s.depReqs[i].amount}
-      else s.depReqs[i].status="Отклонён";
-    }
+  if(!state)return;
+  for(var i=0;i<state.depReqs.length;i++)if(state.depReqs[i].id===id){
+    if(ok){
+      state.depReqs[i].status="Зачислен";
+      state.totalDep=(state.totalDep||0)+state.depReqs[i].amount;
+      state.cash=(state.cash||0)+state.depReqs[i].amount;
+      state.log.unshift({t:"Пополнение зачислено админом: +"+state.depReqs[i].amount.toLocaleString("ru")+" ₽",ty:"gain",ts:new Date().toLocaleString("ru").slice(0,-3)});
+    }else state.depReqs[i].status="Отклонён";
   }
-  setState(s);render();
+  writeSave();renderAll();
+  toast(ok?"Зачислено":"Отклонено");
 }
 function adminDecide(id,ok){
-  var s=getState();if(!s)return;
-  for(var i=0;i<(s.reqs||[]).length;i++){
-    if(s.reqs[i].id===id){
-      if(ok){s.reqs[i].status="Выплачено";s.totalPaid=(s.totalPaid||0)+s.reqs[i].amount}
-      else{s.reqs[i].status="Отклонено";s.balance=(s.balance||0)+s.reqs[i].amount}
+  if(!state)return;
+  for(var i=0;i<state.reqs.length;i++)if(state.reqs[i].id===id){
+    if(ok){
+      state.reqs[i].status="Выплачено";
+      state.totalPaid=(state.totalPaid||0)+state.reqs[i].amount;
+      state.log.unshift({t:"Вывод выплачен админом: "+state.reqs[i].amount.toLocaleString("ru")+" ₽",ty:"info",ts:new Date().toLocaleString("ru").slice(0,-3)});
+    }else{
+      state.reqs[i].status="Отклонено";
+      state.cash=(state.cash||0)+state.reqs[i].amount;
+      state.log.unshift({t:"Вывод отклонён: возврат "+state.reqs[i].amount.toLocaleString("ru")+" ₽",ty:"info",ts:new Date().toLocaleString("ru").slice(0,-3)});
     }
   }
-  setState(s);render();
+  writeSave();renderAll();
+  toast(ok?"Отмечено выплаченным":"Отклонено, деньги возвращены");
 }
-function adjust(sign){
-  var v=parseInt(document.getElementById("adjAmount").value,10);
-  if(!v){alert("Введи сумму");return}
-  var s=getState();if(!s){alert("Данные игры не найдены — открой игру в этом браузере");return}
-  var delta=v*sign;
-  if(s.balance+delta<0){alert("Нельзя списать больше текущего баланса ("+fmt(s.balance)+")");return}
-  s.balance+=delta;
-  setState(s);
-  document.getElementById("adjAmount").value="";
-  render();
+function admApply(){
+  if(!state)return;
+  var ds=parseInt(document.getElementById("admAddStars").value,10)||0;
+  var dc=parseInt(document.getElementById("admAddCash").value,10)||0;
+  if(!ds&&!dc){toast("Введи сумму",true);return}
+  state.stars=Math.max(0,(state.stars||0)+ds);
+  state.cash=Math.max(0,(state.cash||0)+dc);
+  var txt="Корректировка админом: "+(ds?((ds>0?"+":"")+ds+" ⭐ "):"")+(dc?((dc>0?"+":"")+dc.toLocaleString("ru")+" ₽"):"");
+  state.log.unshift({t:txt.trim(),ty:ds>0||dc>0?"gain":"spend",ts:new Date().toLocaleString("ru").slice(0,-3)});
+  if(state.log.length>20)state.log.length=20;
+  writeSave();
+  document.getElementById("admAddStars").value="";
+  document.getElementById("admAddCash").value="";
+  renderAll();
+  toast("Применено");
 }
-function resetAll(){
-  if(!confirm("Точно сбросить ВСЕ данные игры? Баланс, гараж, заявки будут удалены."))return;
-  localStorage.removeItem(STORE);
-  render();
+function admReset(){
+  if(!state)return;
+  if(!confirm("Точно сбросить весь прогресс игрока? Это необратимо."))return;
+  if(!confirm("Последнее подтверждение: стереть кейсы, гараж, баланс и историю?"))return;
+  var fresh={
+    stars:0,cash:0,casesOpened:0,ordersDone:0,garage:[],parts:{},listings:[],listSeq:1,
+    lastBonus:null,bonusStreak:0,doneTasks:{},
+    stats:{kur:0,bike:0,taxi:0,del:0,tow:0,gruz:0,night:0,inter:0,earn:0,tune:0,repairs:0,lots:0,built:0,reseller:0},
+    offer:null,reqs:[],depReqs:[],reqSeq:1,depSeq:1,feeTotal:0,totalDep:0,totalPaid:0,log:[]
+  };
+  for(var k in fresh)state[k]=fresh[k];
+  state.log.unshift({t:"Прогресс сброшен администратором",ty:"info",ts:new Date().toLocaleString("ru").slice(0,-3)});
+  writeSave();renderAll();
+  toast("Прогресс сброшен");
 }
 
-if(authed)showPanel();
+/* автообновление, если игрок играет параллельно в другой вкладке */
+setInterval(function(){
+  if(!authed)return;
+  var before=JSON.stringify([state.cash,state.stars,state.depReqs.length,state.reqs.length,state.listings.length]);
+  readSave();
+  var after=JSON.stringify([state.cash,state.stars,state.depReqs.length,state.reqs.length,state.listings.length]);
+  if(before!==after)renderAll();
+},5000);
+
+/* авто-логин, если уже входил в этой сессии */
+if(sessionStorage.getItem("ar_admin_ok")==="1"){
+  authed=true;
+  document.getElementById("login").style.display="none";
+  document.getElementById("panel").style.display="block";
+  reloadState();
+}
 </script>
 </body>
 </html>
