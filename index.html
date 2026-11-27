@@ -7,7 +7,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent}
 body{background:#12122a;color:#fff;min-height:100vh}
-.wrap{max-width:480px;margin:0 auto;padding:14px 12px 92px}
+.wrap{max-width:480px;margin:0 auto;padding:14px 12px 110px}
 header{display:flex;justify-content:space-between;align-items:center;padding:10px 0 14px}
 header h1{font-size:19px;color:#fbbf24}
 .pills{display:flex;gap:8px}
@@ -29,7 +29,7 @@ header h1{font-size:19px;color:#fbbf24}
 .hero h2{font-size:22px;margin:10px 0 6px;color:#fbbf24}
 .hero p{color:#9aa;font-size:13px}
 .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.card{background:#1e1e44;border:1px solid #3d3d6e;border-radius:16px;padding:14px 10px;text-align:center}
+.card{background:#1e1e44;border:1px solid #3d3d6e;border-radius:16px;padding:14px 10px;text-align:center;cursor:pointer}
 .card:active{transform:scale(.97)}
 .card .ic{font-size:36px}
 .card .nm{font-size:13px;font-weight:700;margin:6px 0 2px}
@@ -54,11 +54,12 @@ header h1{font-size:19px;color:#fbbf24}
 .item-value{font-size:22px;font-weight:900;color:#fbbf24}
 .pbar{height:10px;background:#0e0e20;border-radius:6px;overflow:hidden}
 .pfill{height:100%;background:linear-gradient(90deg,#f97316,#fbbf24);border-radius:6px;transition:width .4s}
-#toast{position:fixed;bottom:92px;left:50%;transform:translateX(-50%);background:#22c55e;color:#000;padding:10px 22px;border-radius:22px;font-weight:800;display:none;z-index:200;white-space:nowrap;max-width:92vw}
+#toast{position:fixed;bottom:130px;left:50%;transform:translateX(-50%);background:#22c55e;color:#000;padding:10px 22px;border-radius:22px;font-weight:800;display:none;z-index:200;white-space:nowrap;max-width:92vw}
 #toast.err{background:#ef4444;color:#fff}
 nav{position:fixed;bottom:0;left:0;right:0;background:#0d0d1f;border-top:1px solid #2a2a4a;display:flex;z-index:50}
-nav .tab{flex:1;border:none;background:transparent;padding:10px 2px;font-size:9px;color:#778;cursor:pointer}
-nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24}
+nav .tab{flex:1;border:none;background:transparent;padding:16px 2px;font-size:12px;font-weight:700;color:#778;cursor:pointer;line-height:1.4}
+nav .tab .ti{font-size:22px;display:block}
+nav .tab.active{color:#fbbf24;border-top:3px solid #fbbf24}
 .req{background:#181838;border:1px solid #3d3d6e;border-radius:14px;padding:12px;margin-top:10px;text-align:left;font-size:13px}
 .req button{margin:6px 6px 0 0;padding:7px 14px;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:12px}
 .ok{background:#15803d;color:#fff}.no{background:#b91c1c;color:#fff}
@@ -75,6 +76,11 @@ nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24}
 .tune-row{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 .ord-ic{font-size:28px}
 .cd{color:#22d3ee;font-weight:800}
+.slot-row{background:#181838;border:1px solid #3d3d6e;border-radius:12px;padding:10px;margin-top:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.slot-ic{font-size:26px;width:34px;text-align:center}
+.slot-info{flex:1;min-width:120px}
+.slot-info b{font-size:13px}
+.slot-info span{display:block;font-size:11px;color:#889}
 </style>
 </head>
 <body>
@@ -89,10 +95,10 @@ nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24}
 
 <section class="page active" id="page-home">
   <div class="hero"><div class="logo">🏁</div><h2 id="greet">Привет, игрок!</h2>
-  <p>Кейсы за звёзды, машины на заказах приносят ₽, рынок между игроками.</p></div>
+  <p>Кейсы за звёзды, машины работают на заказах, обменивай ⭐↔₽, продавай на рынке.</p></div>
   <div class="panel">
     <b class="note">Как это устроено:</b>
-    <p class="note" style="margin-top:6px">• Кейсы открываются за ⭐ — заработать их можно бесплатно.<br>• Собрал машину → отправил на заказ (доставка/такси/груз) → капают ₽.<br>• Тюнинг повышает доход, износ снижает — чини за ₽.<br>• Машины и детали можно продавать другим игрокам на рынке (−10%).</p>
+    <p class="note" style="margin-top:6px">• Кейсы за ⭐ — звёзды зарабатываются бесплатно.<br>• Собрал машину → поставил детали в слоты → отправил на заказ → капают ₽.<br>• Обменивай ⭐ на ₽ и обратно (1 ⭐ = 2 ₽ · 1 ₽ = 2 ⭐).<br>• Продавай машины другим игрокам на рынке (−10%).</p>
   </div>
   <div class="grid2">
     <div class="card" onclick="switchTab('cases')"><div class="ic">📦</div><div class="nm">Кейсы за ⭐</div><div class="pr star" id="homeStars">0 ⭐</div></div>
@@ -114,12 +120,30 @@ nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24}
   <button class="btn-back" onclick="switchTab('home')">← Назад</button>
   <div class="panel">
     <h2>💼 Доска заказов</h2>
-    <p class="note">Отправь машину на заказ — через указанное время она вернётся с деньгами. Доход зависит от класса машины и прокачки. После заказа машина теряет 5% состояния.</p>
+    <p class="note">Отправь машину на заказ — через указанное время она вернётся с деньгами. Доход зависит от класса машины, тюнинга и установленных деталей.</p>
     <div id="ordersList"></div>
   </div>
   <div class="panel">
     <h2>🚚 В пути</h2>
     <div id="busyList"><p class="note">Машин в пути нет</p></div>
+  </div>
+</section>
+
+<section class="page" id="page-cardetail">
+  <button class="btn-back" onclick="switchTab('garage')">← В гараж</button>
+  <div class="panel" id="cdHead"></div>
+  <div class="panel">
+    <h2>🔧 Слоты деталей</h2>
+    <p class="note">Поставь деталь из инвентаря — она даёт бонус, пока стоит в слоте. Снять — вернётся в инвентарь.</p>
+    <div id="cdSlots"></div>
+  </div>
+  <div class="panel">
+    <h2>⚙️ Тюнинг за ₽</h2>
+    <div id="cdTune"></div>
+  </div>
+  <div class="panel">
+    <h2>🛠 Действия</h2>
+    <div id="cdActions"></div>
   </div>
 </section>
 
@@ -143,7 +167,7 @@ nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24}
   <button class="btn-back" onclick="switchTab('home')">← Назад</button>
   <div class="panel">
     <h2>🚗 Твой гараж</h2>
-    <p class="note">Тюнинг: ⚙️ двигатель — +15% дохода за уровень · 🛞 шины — быстрее заказы · 📦 багажник — открывает грузоперевозки. Максимум 5 уровней.</p>
+    <p class="note">Нажми на машину — откроется карточка со слотами деталей, тюнингом и продажей.</p>
     <div class="grid2" id="garageGrid"></div>
   </div>
   <div class="panel">
@@ -157,31 +181,37 @@ nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24}
 <section class="page" id="page-market">
   <button class="btn-back" onclick="switchTab('home')">← Назад</button>
   <div class="panel">
-    <h2>🏪 Рынок — продажи игроков</h2>
-    <p class="note">Цены выставляют игроки. Покупаешь за ₽ — деньги уходят продавцу за вычетом комиссии 10%.</p>
-    <div id="marketList" style="margin-top:10px"></div>
+    <h2>🏪 Рынок</h2>
+    <p class="note">Здесь торгуют только настоящие игроки. Выставляй свои вещи по своей цене — покупатель получит вещь, а ты выручку за вычетом комиссии 10%. Когда подключим сервер, тут появятся объявления других игроков.</p>
+    <div id="marketListings" style="margin-top:10px"></div>
   </div>
   <div class="panel">
-    <h2>💰 Продать свою вещь</h2>
-    <p class="note">Выручка идёт в кошелёк ₽ за вычетом комиссии 10%. Комиссию с продаж можно вывести.</p>
+    <h2>📤 Выставить на продажу</h2>
+    <div id="marketCreate"></div>
+  </div>
+  <div class="panel">
+    <h2>⚡ Быстрая продажа (−10%)</h2>
+    <p class="note">Продать сразу по базовой цене за вычетом комиссии — деньги сразу в кошелёк.</p>
     <div id="mySellables"></div>
-  </div>
-</section>
-
-<section class="page" id="page-store">
-  <button class="btn-back" onclick="switchTab('home')">← Назад</button>
-  <div class="panel">
-    <h2>🛒 Магазин — фиксированные цены</h2>
-    <p class="note">Покупаешь конкретную вещь по заранее известной цене за ₽. Никакой случайности.</p>
-    <div id="storeList" style="margin-top:10px"></div>
   </div>
 </section>
 
 <section class="page" id="page-wallet">
   <button class="btn-back" onclick="switchTab('home')">← Назад</button>
   <div class="panel">
+    <h2>💱 Обмен ⭐ ↔ ₽</h2>
+    <p class="note">Курс: 1 ⭐ = 2 ₽ · 1 ₽ = 2 ⭐</p>
+    <div class="row" style="flex-direction:column">
+      <input type="number" id="exStars" class="input-field" placeholder="Сколько ⭐ обменять на ₽" inputmode="numeric">
+      <button class="btn" onclick="exStarsToRub()">⭐ → ₽ (получишь ×2 ₽)</button>
+      <input type="number" id="exRub" class="input-field" placeholder="Сколько ₽ обменять на ⭐" inputmode="numeric">
+      <button class="btn btn-vio" onclick="exRubToStars()">₽ → ⭐ (получишь ×2 ⭐)</button>
+    </div>
+    <div id="exStatus" style="margin-top:10px;font-size:13px;color:#9aa"></div>
+  </div>
+  <div class="panel">
     <h2>💳 Пополнение кошелька</h2>
-    <p class="note">Переведи сумму на карту и создай заявку — админ подтвердит. Депозит идёт только на покупки в магазине и на рынке.</p>
+    <p class="note">Переведи сумму на карту и создай заявку — админ подтвердит.</p>
     <div class="card-box" id="cardDisplay"></div>
     <input type="number" id="depAmount" class="input-field" placeholder="Сумма перевода, ₽" inputmode="numeric">
     <button class="btn" style="margin-top:10px" onclick="makeDeposit()">✅ Я перевёл — создать заявку</button>
@@ -189,7 +219,7 @@ nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24}
   </div>
   <div class="panel">
     <h2>💸 Вывод на карту</h2>
-    <p class="note">Минимум 250 ₽. Выводятся деньги из кошелька: депозиты, выручка с продаж и заказов.</p>
+    <p class="note">Минимум 250 ₽. Выводятся деньги из кошелька.</p>
     <input type="text" id="wCard" class="input-field" placeholder="Номер карты (16 цифр)" inputmode="numeric">
     <input type="number" id="wAmount" class="input-field" placeholder="Сумма, ₽" inputmode="numeric">
     <button class="btn" style="margin-top:10px" onclick="withdraw()">Вывести</button>
@@ -205,646 +235,3 @@ nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24}
 
 <section class="page" id="page-admin">
   <button class="btn-back" onclick="switchTab('wallet')">← Выйти</button>
-  <div class="panel">
-    <h2>📊 Финансы</h2>
-    <div class="statline"><span>Кошелёк игрока</span><b id="admCash">0 ₽</b></div>
-    <div class="statline"><span>Комиссия рынка (доход)</span><b id="admFee">0 ₽</b></div>
-    <div class="statline"><span>Депозитов зачислено</span><b id="admDep">0 ₽</b></div>
-    <div class="statline"><span>Выплачено игрокам</span><b id="admPaid">0 ₽</b></div>
-  </div>
-  <div class="panel"><h2>💳 Пополнения</h2><div id="adminDeps"></div></div>
-  <div class="panel"><h2>💸 Выводы</h2><div id="adminReqs" style="margin-top:6px"></div></div>
-</section>
-</div>
-
-<div id="overlay"><div class="drop-card">
-  <div id="ovReady">
-    <div class="big-box" id="ovBox">📦</div>
-    <h2 id="ovCase" style="margin:12px 0 4px"></h2>
-    <p id="ovPrice" style="color:#9aa;font-size:14px"></p>
-    <div id="ovMsg"></div>
-    <button class="btn" id="ovOpen" style="margin-top:14px">Открыть</button>
-    <div class="row"><button class="btn btn-dark" onclick="closeOverlay()">Закрыть</button></div>
-  </div>
-  <div id="ovResult" style="display:none">
-    <div class="item-img" id="ovImg">🚗</div>
-    <h3 id="ovName" class="item-name"></h3>
-    <div class="r-tag" id="ovRarity"></div>
-    <div class="item-value" id="ovValue"></div>
-    <div class="row"><button class="btn" id="ovKeep">В гараж</button><button class="btn btn-dark" id="ovSell">Продать</button></div>
-    <div class="row"><button class="btn btn-vio" id="ovAgain">🔄 Крутить ещё</button></div>
-    <div class="row"><button class="btn btn-dark" onclick="closeOverlay()">Закрыть</button></div>
-  </div>
-</div></div>
-<div id="toast"></div>
-
-<nav>
-  <button class="tab active" id="tab-home" onclick="switchTab('home')">🏠<br>Главная</button>
-  <button class="tab" id="tab-cases" onclick="switchTab('cases')">📦<br>Кейсы</button>
-  <button class="tab" id="tab-orders" onclick="switchTab('orders')">💼<br>Заказы</button>
-  <button class="tab" id="tab-market" onclick="switchTab('market')">🏪<br>Рынок</button>
-  <button class="tab" id="tab-garage" onclick="switchTab('garage')">🚗<br>Гараж</button>
-  <button class="tab" id="tab-wallet" onclick="switchTab('wallet')">💰<br>Кошелёк</button>
-</nav>
-
-<script>
-"use strict";
-/* === НАСТРОЙКИ === */
-var ADMIN_PASS="admin2026";
-var ADMIN_CARD="2202 2000 0000 0000";
-var MARKET_FEE=0.10;
-
-var tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
-if(tg){tg.ready();tg.expand();}
-var userName=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user?tg.initDataUnsafe.user.first_name:null;
-
-/* --- машины --- */
-var brands=["Lada","Kia","Hyundai","Toyota","BMW","Audi","Mercedes","Ford","Nissan","Volkswagen","Renault","Skoda","Volvo","Lexus","Mazda","Porsche"];
-var models=["Granta","Vesta","Niva","Rio","Solaris","Creta","Camry","Corolla","RAV4","X5","A4","C-Class","Focus","Mustang","Passat","Polo","Duster","911","488","Supra"];
-function rP(v){if(v<1000)return Math.round(v/50)*50;if(v<10000)return Math.round(v/100)*100;if(v<100000)return Math.round(v/1000)*1000;return Math.round(v/5000)*5000}
-function rarOf(p){if(p<5000)return"common";if(p<50000)return"rare";if(p<500000)return"epic";return"mythic"}
-var rLabel={common:"Обычная",rare:"Редкая",epic:"Эпическая",mythic:"Легендарная"};
-var rEmoji={common:"🚗",rare:"🚙",epic:"🏎️",mythic:"👑"};
-var cars=[];
-for(var i=0;i<200;i++){
-  var p=rP(250*Math.pow(60000,i/199));
-  cars.push({id:i,name:brands[i%16]+" "+models[(i*7)%20],price:p,rarity:rarOf(p)});
-}
-/* доход за 1 заказ по классу машины */
-var RAR_INCOME={common:10,rare:35,epic:90,mythic:250};
-/* кейсы за звёзды */
-var CASE_EMOJI=["📦","🎁","🧰","🚚","💰","💼","💎","👑","🏆","🔥","⚡","🌟","🚀","🪙","🔮","🌈"];
-var casesData=[[50,"Стартовый"],[120,"Базовый"],[250,"Новичковый"],[500,"Стандарт"],[1000,"Улучшенный"],[2000,"Серебряный"],[3500,"Премиум"],[6000,"Элитный"],[10000,"Золотой"],[16000,"Платиновый"],[25000,"Титановый"],[40000,"Космический"],[60000,"Ультра"],[90000,"Гипер"],[130000,"Вселенский"],[180000,"Божественный"]];
-var cases=casesData.map(function(a,i){return{price:a[0],name:a[1],emoji:CASE_EMOJI[i]}});
-
-var PARTS=[["Колесо","🛞"],["Двигатель","⚙️"],["Бампер","🛡️"],["Фара","💡"],["Руль","🎮"],["Глушитель","🎺"],["АКБ","🔋"],["Коробка","🔧"],["Тормоза","🛑"],["Фильтр","🌀"],["Радиатор","❄️"],["Капот","🔶"],["Дверь","🚪"],["Крыло","🪶"],["Стекло","🪟"],["Сиденье","💺"],["Багажник","🧳"],["Выхлоп","💨"],["Рессора","🔗"],["Бензобак","⛽"]];
-var PART_NAMES=PARTS.map(function(x){return x[0]});
-function partEmoji(n){for(var i=0;i<PARTS.length;i++)if(PARTS[i][0]===n)return PARTS[i][1];return"🔩"}
-function idxRar(i){return["","common","rare","epic","mythic"][i]||"common"}
-var RAR_BASE_RUB={common:150,rare:700,epic:3500,mythic:15000};
-
-/* --- заказы --- */
-var ORDERS=[
- {type:"Доставка",ic:"📦",mult:1,dur:20,need:0},
- {type:"Такси",ic:"🚕",mult:1.2,dur:15,need:0},
- {type:"Грузоперевозка",ic:"🚚",mult:2,dur:40,need:1},
- {type:"Пробный заказ",ic:"⏱️",mult:0.5,dur:1,need:0}
-];
-
-var state={stars:200,cash:0,casesOpened:0,ordersDone:0,garage:[],parts:{},lastBonus:null,bonusStreak:0,tasks:{share:false,cases5:false,orders3:false},reqs:[],depReqs:[],reqSeq:1,depSeq:1,feeTotal:0,totalDep:0,totalPaid:0};
-function save(){try{localStorage.setItem("automarket_v2",JSON.stringify(state))}catch(e){}}
-function load(){try{var s=JSON.parse(localStorage.getItem("automarket_v2"));if(s)for(var k in state)if(s[k]!==undefined)state[k]=s[k]}catch(e){}}
-
-function newCar(id){return{id:id,wear:100,eng:0,tire:0,trunk:0,busyUntil:null,ord:null}}
-
-function switchTab(n){
-  var p=document.querySelectorAll(".page"),t=document.querySelectorAll("nav .tab"),i;
-  for(i=0;i<p.length;i++)p[i].classList.remove("active");
-  document.getElementById("page-"+n).classList.add("active");
-  for(i=0;i<t.length;i++)t[i].classList.remove("active");
-  var nt=document.getElementById("tab-"+n);if(nt)nt.classList.add("active");
-  if(n==="garage")renderGarage();
-  if(n==="orders")renderOrders();
-  if(n==="market")renderMarket();
-  if(n==="store")renderStore();
-  if(n==="wallet")renderReqs();
-  if(n==="admin")renderAdmin();
-  if(n==="bonus")renderTasks();
-  window.scrollTo(0,0);
-}
-function toast(m,err){
-  var t=document.getElementById("toast");
-  t.textContent=m;t.className=err?"err":"";t.style.display="block";
-  clearTimeout(toast._h);toast._h=setTimeout(function(){t.style.display="none"},2200);
-}
-function partsGot(){var n=0,k,b;for(k in state.parts){b=state.parts[k];if(b&&(b[1]+b[2]+b[3]+b[4])>0)n++}return n}
-function updateUI(){
-  document.getElementById("stars").textContent=state.stars.toLocaleString("ru");
-  document.getElementById("cash").textContent=state.cash.toLocaleString("ru");
-  document.getElementById("homeStars").textContent=state.stars.toLocaleString("ru")+" ⭐";
-  document.getElementById("homeCash").textContent=state.cash.toLocaleString("ru")+" ₽";
-  var busy=0;for(var j=0;j<state.garage.length;j++)if(state.garage[j].busyUntil)busy++;
-  document.getElementById("homeBusy").textContent=busy?("в пути: "+busy):"машины свободны";
-  save();
-}
-function renderHome(){document.getElementById("greet").textContent=userName?"Привет, "+userName+"!":"Привет, игрок!"}
-
-function renderCases(){
-  var g=document.getElementById("casesGrid"),html="",i;
-  for(i=0;i<cases.length;i++){
-    var c=cases[i];
-    html+='<div class="card" data-i="'+i+'"><div class="ic">'+c.emoji+'</div><div class="nm">'+c.name+'</div><div class="pr star">'+c.price.toLocaleString("ru")+' ⭐</div><div class="r-tag r-rare" style="margin-top:6px">🚗 10% · 🔩 30%</div></div>';
-  }
-  g.innerHTML=html;
-  var cs=g.children;
-  for(i=0;i<cs.length;i++)(function(idx){cs[idx].onclick=function(){showCase(cases[idx])}})(i);
-}
-
-/* --- кейсы: только за звёзды --- */
-var currentCase=null,currentPrize=null,opened=false;
-function rollPartRarity(P){
-  var r=Math.random(),m,e;
-  if(P>=60000){m=0.05;e=0.18}
-  else if(P>=10000){m=0.03;e=0.12}
-  else if(P>=1000){m=0.015;e=0.07}
-  else if(P>=250){m=0.006;e=0.03}
-  else{m=0.002;e=0.015}
-  if(r<m)return 4;
-  if(r<m+e)return 3;
-  if(r<m+e+0.28)return 2;
-  return 1;
-}
-function rollPrize(c){
-  var r=Math.random(),i,j;
-  if(r<0.10){
-    var lo=c.price/40,hi=c.price/3;
-    var pool=cars.filter(function(x){return x.price>=lo&&x.price<=hi});
-    if(!pool.length)pool=cars.slice(0,12);
-    var w=pool.map(function(x){return 1/x.price}),tot=0;
-    for(i=0;i<w.length;i++)tot+=w[i];
-    var x=Math.random()*tot;
-    for(j=0;j<pool.length;j++){
-      if(x<w[j]){var cc=pool[j];return{name:cc.name,value:cc.price,rarity:cc.rarity,emoji:rEmoji[cc.rarity],isCar:true,carId:cc.id}}
-      x-=w[j];
-    }
-    var c0=pool[0];return{name:c0.name,value:c0.price,rarity:c0.rarity,emoji:rEmoji[c0.rarity],isCar:true,carId:c0.id};
-  }
-  if(r<0.40){
-    var nm=PART_NAMES[Math.floor(Math.random()*PART_NAMES.length)];
-    var ri=rollPartRarity(c.price);
-    var mult=[0,1,2.5,6,14][ri];
-    var val=Math.min(Math.round(c.price/10),Math.round(RAR_BASE_RUB[idxRar(ri)]*mult*(0.7+Math.random()*0.6)));
-    val=Math.max(50,val);
-    return{name:nm,rarity:idxRar(ri),rubValue:val,isPart:true,rIdx:ri};
-  }
-  var st=Math.round(c.price*(0.5+Math.random()*1.2));
-  return{name:"Звёзды",stars:st,isStars:true};
-}
-function showCase(c){
-  currentCase=c;opened=false;currentPrize=null;
-  document.getElementById("ovBox").textContent=c.emoji;
-  document.getElementById("ovCase").textContent="Кейс «"+c.name+"»";
-  document.getElementById("ovPrice").textContent="Цена: "+c.price.toLocaleString("ru")+" ⭐";
-  var msg=document.getElementById("ovMsg");
-  if(state.stars<c.price){
-    msg.textContent="❌ Не хватает "+(c.price-state.stars).toLocaleString("ru")+" ⭐. Звёзды даёт бонус и задания.";
-    msg.style.display="block";
-    document.getElementById("ovOpen").style.display="none";
-  }else{
-    msg.style.display="none";
-    document.getElementById("ovOpen").textContent="Открыть за "+c.price.toLocaleString("ru")+" ⭐";
-    document.getElementById("ovOpen").style.display="block";
-  }
-  document.getElementById("ovReady").style.display="block";
-  document.getElementById("ovResult").style.display="none";
-  document.getElementById("overlay").classList.add("show");
-}
-function doOpen(){
-  if(opened||!currentCase)return;
-  if(state.stars<currentCase.price){toast("Не хватает звёзд!",true);return}
-  opened=true;
-  state.stars-=currentCase.price;state.casesOpened++;save();
-  var box=document.getElementById("ovBox");
-  box.classList.add("shake");
-  document.getElementById("ovOpen").style.display="none";
-  currentPrize=rollPrize(currentCase);
-  setTimeout(function(){
-    box.classList.remove("shake");
-    document.getElementById("ovReady").style.display="none";
-    var p=currentPrize,img=document.getElementById("ovImg");
-    if(p.isStars){
-      img.className="item-img";img.textContent="⭐";
-      document.getElementById("ovName").textContent="Звёзды";
-      document.getElementById("ovRarity").textContent="";
-      document.getElementById("ovRarity").className="r-tag";
-      document.getElementById("ovValue").textContent="+"+p.stars.toLocaleString("ru")+" ⭐";
-      document.getElementById("ovKeep").style.display="none";
-      document.getElementById("ovSell").style.display="none";
-    }else{
-      var rar=p.rarity;
-      img.className="item-img";img.style.borderColor=rar==="mythic"?"#fbbf24":(rar==="epic"?"#a855f7":(rar==="rare"?"#3b82f6":"#9ca3af"));
-      img.textContent=p.emoji;
-      img.classList.add("pop");
-      document.getElementById("ovName").textContent=p.name;
-      document.getElementById("ovRarity").textContent=p.isCar?rLabel[rar]:"Деталь · "+rLabel[rar];
-      document.getElementById("ovRarity").className="r-tag r-"+rar;
-      document.getElementById("ovValue").textContent=(p.isCar?p.value:p.rubValue).toLocaleString("ru")+" ₽";
-      document.getElementById("ovKeep").style.display="block";
-      document.getElementById("ovKeep").textContent=p.isCar?"В гараж":"Забрать деталь";
-      document.getElementById("ovSell").style.display="block";
-      document.getElementById("ovSell").textContent="Продать на рынке";
-    }
-    document.getElementById("ovResult").style.display="block";
-    if(p.isCar&&p.rarity==="mythic")toast("🏆 Легендарная машина: "+p.name+"!");
-    updateUI();
-  },1200);
-}
-function claimPrize(keep){
-  if(!currentPrize)return;
-  var p=currentPrize;
-  if(keep){
-    if(p.isCar){state.garage.push(newCar(p.carId));toast(p.name+" в гараже 🎉")}
-    else if(p.isPart){
-      if(!state.parts[p.name])state.parts[p.name]={1:0,2:0,3:0,4:0};
-      state.parts[p.name][p.rIdx]++;
-      toast("Деталь «"+p.name+"» забрана 🔩");
-    }
-    if(p.isStars){state.stars+=p.stars;toast("+"+p.stars.toLocaleString("ru")+" ⭐")}
-  }else{
-    if(p.isCar){state.cash+=Math.round(p.value*(1-MARKET_FEE));toast("Продано: +"+Math.round(p.value*(1-MARKET_FEE)).toLocaleString("ru")+" ₽ (−10%)")}
-    else if(p.isPart){state.cash+=Math.round(p.rubValue*(1-MARKET_FEE));toast("Продано: +"+Math.round(p.rubValue*(1-MARKET_FEE)).toLocaleString("ru")+" ₽ (−10%)")}
-    else if(p.isStars){state.stars+=p.stars;toast("+"+p.stars.toLocaleString("ru")+" ⭐")}
-  }
-  currentPrize=null;updateUI();closeOverlay();
-}
-function spinAgain(){
-  if(!currentCase)return;
-  if(state.stars<currentCase.price){toast("Не хватает звёзд!",true);return}
-  var p=currentPrize;
-  if(p){
-    if(p.isCar)state.garage.push(newCar(p.carId));
-    else if(p.isStars)state.stars+=p.stars;
-    else{if(!state.parts[p.name])state.parts[p.name]={1:0,2:0,3:0,4:0};state.parts[p.name][p.rIdx]++}
-  }
-  currentPrize=null;opened=false;
-  document.getElementById("ovResult").style.display="none";
-  document.getElementById("ovReady").style.display="block";
-  document.getElementById("ovBox").textContent=currentCase.emoji;
-  document.getElementById("ovOpen").style.display="none";
-  doOpen();
-}
-function closeOverlay(){
-  document.getElementById("overlay").classList.remove("show");
-  currentCase=null;opened=false;currentPrize=null;updateUI();
-}
-document.getElementById("ovOpen").onclick=doOpen;
-document.getElementById("ovAgain").onclick=spinAgain;
-document.getElementById("ovKeep").onclick=function(){claimPrize(true)};
-document.getElementById("ovSell").onclick=function(){claimPrize(false)};
-
-/* --- гараж, тюнинг, ремонт --- */
-function bestRarOf(nm){var b=state.parts[nm];if(!b)return 0;if(b[4]>0)return 4;if(b[3]>0)return 3;if(b[2]>0)return 2;if(b[1]>0)return 1;return 0}
-function tuneCost(price,lvl){return Math.max(5,Math.round(price*0.05*(lvl+1)))}
-function repairCost(g){
-  var car=cars[g.id],need=100-g.wear;
-  return Math.max(1,Math.round(car.price*0.001*need));
-}
-function renderGarage(){
-  var g=document.getElementById("garageGrid"),html="",i;
-  if(!state.garage.length)html='<p class="note" style="grid-column:1/-1;text-align:center;padding:12px">Машин нет. Открывай кейсы за ⭐ или покупай в магазине.</p>';
-  else for(i=0;i<state.garage.length;i++){
-    var gc=state.garage[i],car=cars[gc.id];
-    var busy=gc.busyUntil&&gc.busyUntil>Date.now();
-    var wcol=gc.wear>60?"#22c55e":(gc.wear>25?"#fbbf24":"#ef4444");
-    html+='<div class="card"><div class="ic">'+rEmoji[car.rarity]+'</div><div class="nm">'+car.name+'</div><div class="r-tag r-'+car.rarity+'">'+rLabel[car.rarity]+'</div>'
-      +'<div class="pr cash" style="margin-top:6px">'+car.price.toLocaleString("ru")+' ₽</div>'
-      +'<div class="wbar"><div class="wfill" style="width:'+gc.wear+'%;background:'+wcol+'"></div></div>'
-      +'<div style="font-size:11px;color:'+wcol+'">Состояние: '+gc.wear+'%</div>'
-      +'<div class="tune-row">'
-      +'<button class="btn-sm" onclick="tuneCar('+i+',\'eng\')">⚙️ '+gc.eng+'/5 · '+tuneCost(car.price,gc.eng)+' ₽</button>'
-      +'<button class="btn-sm" onclick="tuneCar('+i+',\'tire\')">🛞 '+gc.tire+'/5 · '+tuneCost(car.price,gc.tire)+' ₽</button>'
-      +'<button class="btn-sm" onclick="tuneCar('+i+',\'trunk\')">📦 '+gc.trunk+'/5 · '+tuneCost(car.price,gc.trunk)+' ₽</button>'
-      +'</div>'
-      +(gc.wear<100?'<button class="btn-sm" style="margin-top:6px;width:100%" onclick="repairCar('+i+')">🔧 Ремонт — '+repairCost(gc)+' ₽</button>':'')
-      +(busy?'<div class="cd" style="margin-top:8px">⏳ в пути: '+fmtTime(gc.busyUntil-Date.now())+'</div>'
-            :'<button class="btn-sm" style="margin-top:6px;width:100%" onclick="marketSellCar('+i+')">На рынок (−10%)</button>')
-      +'</div>';
-  }
-  g.innerHTML=html;
-  var pl=document.getElementById("partsList"),ph="";
-  for(i=0;i<PARTS.length;i++){
-    var nm=PARTS[i][0],b=state.parts[nm],tot=b?b[1]+b[2]+b[3]+b[4]:0;
-    ph+='<div class="p-chip'+(tot>0?" have":"")+'">'+PARTS[i][1]+" "+nm+(tot>0?" ×"+tot:"")+'</div>';
-  }
-  document.getElementById("partsList").innerHTML=ph;
-  document.getElementById("partsCount2").textContent=partsGot();
-  var bb=document.getElementById("buildBtn");
-  if(partsGot()<20){bb.disabled=true;bb.textContent="Нужно ещё "+(20-partsGot())+" разных деталей"}
-  else{bb.disabled=false;bb.textContent="🔧 Собрать машину"}
-  updateUI();
-}
-function buildCar(){
-  if(partsGot()<20){toast("Сначала собери 20 разных деталей!",true);return}
-  var score=0,i,ri,b,used;
-  for(i=0;i<PART_NAMES.length;i++){
-    b=state.parts[PART_NAMES[i]];used=0;
-    for(ri=1;ri<=4;ri++){if(b[ri]>0){used=ri;b[ri]--;break}}
-    score+=used;
-  }
-  var price=Math.round(250*Math.pow(5,(score-20)/20));
-  var best=cars[0];
-  for(i=0;i<cars.length;i++)if(Math.abs(cars[i].price-price)<Math.abs(best.price-price))best=cars[i];
-  state.garage.push(newCar(best.id));
-  toast("🔧 Собрана: "+best.name+"!");
-  renderGarage();
-}
-function tuneCar(idx,kind){
-  var g=state.garage[idx],car=cars[g.id];
-  var cur=g[kind];
-  if(cur>=5){toast("Максимальный уровень",true);return}
-  if(g.busyUntil&&g.busyUntil>Date.now()){toast("Машина в пути!",true);return}
-  var cost=tuneCost(car.price,cur);
-  if(state.cash<cost){toast("Не хватает ₽! Нужно "+cost.toLocaleString("ru")+" ₽",true);return}
-  state.cash-=cost;g[kind]=cur+1;
-  var label={eng:"двигатель ⚙️",tire:"шины 🛞",trunk:"багажник 📦"}[kind];
-  toast("Тюнинг: "+label+" → уровень "+(cur+1));
-  renderGarage();
-}
-function repairCar(idx){
-  var g=state.garage[idx],cost=repairCost(g);
-  if(g.wear>=100){toast("Машина в полном порядке",true);return}
-  if(state.cash<cost){toast("Не хватает ₽ на ремонт!",true);return}
-  state.cash-=cost;g.wear=100;
-  toast("🔧 Машина отремонтирована");
-  renderGarage();
-}
-
-/* --- заказы --- */
-function fmtTime(ms){
-  var s=Math.max(0,Math.ceil(ms/1000)),m=Math.floor(s/60);
-  return m>0?(m+" мин "+(s%60)+" с"):(s+" с");
-}
-function orderReward(car,o){
-  var base=RAR_INCOME[cars[car.id].rarity];
-  return Math.round(base*o.mult*(1+car.eng*0.15));
-}
-function orderDur(car,o){
-  return Math.max(1,o.dur-car.tire*3);
-}
-function freeCar(){
-  for(var i=0;i<state.garage.length;i++){
-    var g=state.garage[i];
-    if(g.wear>0&&(!g.busyUntil||g.busyUntil<=Date.now()))return i;
-  }
-  return -1;
-}
-function renderOrders(){
-  var h="",i;
-  for(i=0;i<ORDERS.length;i++){
-    var o=ORDERS[i];
-    var needTxt=o.need>0?' · <span style="color:#fca5a5">нужен 📦 багажник</span>':'';
-    h+='<div class="req"><span class="ord-ic">'+o.ic+'</span> <b>'+o.type+'</b> · '+fmtDur(o.dur)+needTxt
-      +'<br>Доход: обычная ~'+Math.round(RAR_INCOME.common*o.mult)+' ₽ · редкая ~'+Math.round(RAR_INCOME.rare*o.mult)+' ₽ · эпическая ~'+Math.round(RAR_INCOME.epic*o.mult)+' ₽ · легендарная ~'+Math.round(RAR_INCOME.mythic*o.mult)+' ₽'
-      +'<br><button class="ok" onclick="sendCar('+i+')">🚗 Отправить машину</button></div>';
-  }
-  document.getElementById("ordersList").innerHTML=h;
-  renderBusy();
-}
-function fmtDur(min){return min>=60?Math.round(min/60*10)/10+" ч":min+" мин"}
-function renderBusy(){
-  var h="",any=false,i;
-  for(i=0;i<state.garage.length;i++){
-    var g=state.garage[i];
-    if(g.busyUntil&&g.busyUntil>Date.now()){
-      any=true;
-      var car=cars[g.id],o=ORDERS[g.ord];
-      h+='<div class="req">'+o.ic+' '+car.name+' — '+o.type+'<br><span class="cd">⏳ '+fmtTime(g.busyUntil-Date.now())+'</span> · награда ~'+orderReward(g,o)+' ₽</div>';
-    }
-  }
-  document.getElementById("busyList").innerHTML=h||'<p class="note">Машин в пути нет</p>';
-}
-function sendCar(oi){
-  var o=ORDERS[oi];
-  var idx=freeCar();
-  if(idx<0){toast("Нет свободных машин! Купи или собери.",true);return}
-  var g=state.garage[idx];
-  if(o.need>0&&g.trunk<1){toast("Для грузоперевозок нужен багажник (тюнинг 📦)",true);return}
-  g.ord=oi;
-  g.busyUntil=Date.now()+orderDur(g,o)*60000;
-  toast(o.ic+" "+cars[g.id].name+" → "+o.type+", вернётся через "+fmtDur(orderDur(g,o)));
-  renderOrders();updateUI();
-}
-function completeOrder(g){
-  var car=cars[g.id],o=ORDERS[g.ord];
-  var pay=orderReward(g,o);
-  state.cash+=pay;
-  state.ordersDone++;
-  g.wear=Math.max(0,g.wear-5);
-  g.busyUntil=null;g.ord=null;
-  toast("✅ "+o.type+": "+car.name+" заработала "+pay.toLocaleString("ru")+" ₽"+(g.wear<=25?" (износ! отремонтируй)":""));
-}
-setInterval(function(){
-  var changed=false,i;
-  for(i=0;i<state.garage.length;i++){
-    var g=state.garage[i];
-    if(g.busyUntil&&g.busyUntil<=Date.now()){completeOrder(g);changed=true}
-  }
-  if(changed){updateUI();if(document.getElementById("page-orders").classList.contains("active"))renderOrders();if(document.getElementById("page-garage").classList.contains("active"))renderGarage()}
-  else if(document.getElementById("page-orders").classList.contains("active"))renderBusy();
-},1000);
-
-/* --- рынок --- */
-var demoListings=null;
-function seedMarket(){
-  demoListings=[];
-  var names=["Артём","Милана","Данил","София","Марк","Ева","Тимур","Лиза"];
-  var i,k,n;
-  for(k=0;k<8;k++){
-    n=names[k%8];
-    for(i=0;i<2;i++){
-      var car=cars[Math.floor(Math.random()*60)];
-      demoListings.push({type:"car",ref:car.id,name:car.name,price:Math.round(car.price*(0.85+Math.random()*0.4)),seller:n});
-    }
-    var pn=PART_NAMES[Math.floor(Math.random()*PART_NAMES.length)],ri=1+Math.floor(Math.random()*3);
-    var val=Math.round(RAR_BASE_RUB[idxRar(ri)]*(0.8+Math.random()*0.5));
-    demoListings.push({type:"part",ref:pn,ri:ri,name:pn+" ("+rLabel[idxRar(ri)]+")",price:Math.max(100,Math.round(val*(0.85+Math.random()*0.4))),seller:n});
-  }
-  demoListings.sort(function(a,b){return a.price-b.price});
-}
-function renderMarket(){
-  if(!demoListings)seedMarket();
-  var h="",i;
-  for(i=0;i<demoListings.length;i++){
-    var L=demoListings[i];
-    h+='<div class="req"><b>'+(L.type==="car"?rEmoji[cars[L.ref].rarity]+" ":"🔩 ")+'</b> '+L.name+' — <b class="cash">'+L.price.toLocaleString("ru")+' ₽</b> <span class="note">продавец: '+L.seller+'</span><br><button class="ok" onclick="marketBuy('+i+')">Купить</button></div>';
-  }
-  document.getElementById("marketList").innerHTML=h||'<p class="note">Пока пусто</p>';
-  var ms="",j;
-  for(j=0;j<state.garage.length;j++){
-    var g=state.garage[j],car=cars[g.id];
-    if(g.busyUntil&&g.busyUntil>Date.now())continue;
-    ms+='<div class="req">'+rEmoji[car.rarity]+' '+car.name+' (сост. '+g.wear+'%) — выручка ~'+Math.round(car.price*(1-MARKET_FEE)).toLocaleString("ru")+' ₽<br><button class="ok" onclick="marketSellCar('+j+')">Продать −10%</button></div>';
-  }
-  for(var k in state.parts){
-    var bb=state.parts[k],tot=bb[1]+bb[2]+bb[3]+bb[4];
-    if(tot>0){
-      var br=bestRarOf(k),val=Math.round(RAR_BASE_RUB[idxRar(br)]*[0,1,2.5,6,14][br]);
-      ms+='<div class="req">🔩 '+partEmoji(k)+' '+k+' ('+rLabel[idxRar(br)]+') ×'+tot+'<br><button class="ok" onclick="marketSellPart(\''+k+'\')">Продать −10%</button></div>';
-    }
-  }
-  document.getElementById("mySellables").innerHTML=ms||'<p class="note">Нечего продавать — открой кейсы за ⭐</p>';
-  updateUI();
-}
-function marketBuy(i){
-  var L=demoListings[i];
-  if(state.cash<L.price){toast("Не хватает ₽ в кошельке!",true);return}
-  state.cash-=L.price;
-  state.feeTotal+=Math.round(L.price*MARKET_FEE/(1-MARKET_FEE));
-  if(L.type==="car")state.garage.push(newCar(L.ref));
-  else{if(!state.parts[L.ref])state.parts[L.ref]={1:0,2:0,3:0,4:0};state.parts[L.ref][L.ri]++}
-  demoListings.splice(i,1);
-  toast("Куплено: "+L.name+" за "+L.price.toLocaleString("ru")+" ₽");
-  renderMarket();
-}
-function marketSellCar(idx){
-  var g=state.garage[idx],car=cars[g.id];
-  if(g.busyUntil&&g.busyUntil>Date.now()){toast("Машина в пути!",true);return}
-  var payout=Math.round(car.price*(1-MARKET_FEE)*(g.wear/100));
-  state.cash+=payout;
-  state.feeTotal+=Math.round(car.price*(1-MARKET_FEE))-payout;
-  state.garage.splice(idx,1);
-  toast("Продано: +"+payout.toLocaleString("ru")+" ₽");
-  renderGarage();updateUI();
-}
-function marketSellPart(nm){
-  var b=state.parts[nm],br=bestRarOf(nm);
-  var val=Math.round(RAR_BASE_RUB[idxRar(br)]*[0,1,2.5,6,14][br]);
-  var payout=Math.round(val*(1-MARKET_FEE));
-  state.cash+=payout;state.feeTotal+=val-payout;
-  b[br]--;
-  toast("Продано: +"+payout.toLocaleString("ru")+" ₽");
-  renderMarket();
-}
-
-/* --- магазин --- */
-function renderStore(){
-  var h="",i;
-  h+='<div class="statline"><span>🔩 Детали — по одной</span><b>цена зависит от редкости</b></div>';
-  var rarOrder=[1,2,3,4];
-  for(i=0;i<rarOrder.length;i++){
-    var ri=rarOrder[i];
-    var val=Math.round(RAR_BASE_RUB[idxRar(ri)]);
-    h+='<div class="req"><span class="r-tag r-'+idxRar(ri)+'">'+rLabel[idxRar(ri)]+'</span> — любая из 20 деталей, <b class="cash">'+val.toLocaleString("ru")+' ₽</b><br><button class="ok" onclick="storeBuyPart('+ri+')">Купить</button></div>';
-  }
-  h+='<div class="statline" style="margin-top:12px"><span>🚗 Машины из магазина</span><b>фиксированная цена</b></div>';
-  for(i=0;i<6;i++){
-    var car=cars[i*10];
-    h+='<div class="req">'+rEmoji[car.rarity]+' <b>'+car.name+'</b> <span class="r-tag r-'+car.rarity+'">'+rLabel[car.rarity]+'</span><br><b class="cash">'+car.price.toLocaleString("ru")+' ₽</b><br><button class="ok" onclick="storeBuyCar('+car.id+')">Купить</button></div>';
-  }
-  document.getElementById("storeList").innerHTML=h;
-}
-function storeBuyPart(ri){
-  var val=Math.round(RAR_BASE_RUB[idxRar(ri)]);
-  if(state.cash<val){toast("Не хватает ₽!",true);return}
-  var nm=PART_NAMES[Math.floor(Math.random()*PART_NAMES.length)];
-  if(!state.parts[nm])state.parts[nm]={1:0,2:0,3:0,4:0};
-  state.parts[nm][ri]++;
-  state.cash-=val;
-  toast("Куплена деталь «"+nm+"» ("+rLabel[idxRar(ri)]+") за "+val.toLocaleString("ru")+" ₽");
-  renderStore();
-}
-function storeBuyCar(id){
-  var car=cars[id];
-  if(state.cash<car.price){toast("Не хватает ₽!",true);return}
-  state.cash-=car.price;
-  state.garage.push(newCar(id));
-  toast("Куплена машина: "+car.name+"!");
-  renderStore();
-}
-
-/* --- бонус, задания --- */
-function claimBonus(){
-  var today=new Date().toDateString();
-  if(state.lastBonus===today){document.getElementById("bonusMsg").textContent="Уже получено! Возвращайся завтра.";return}
-  state.bonusStreak=(state.bonusStreak||0)+1;
-  var amt=50+Math.min(150,(state.bonusStreak-1)*10);
-  state.stars+=amt;state.lastBonus=today;
-  document.getElementById("bonusMsg").textContent="+"+amt+" ⭐ зачислено (серия: "+state.bonusStreak+" дн.)";
-  updateUI();
-}
-function renderTasks(){
-  document.getElementById("taskShare").textContent=state.tasks.share?"✅":"";
-  document.getElementById("taskC5").textContent=state.tasks.cases5?"✅":("открыто: "+state.casesOpened+"/5");
-  document.getElementById("taskO3").textContent=state.tasks.orders3?"✅":("выполнено: "+state.ordersDone+"/3");
-}
-function doTask(t){
-  if(t==="share"){
-    if(state.tasks.share){toast("Уже выполнено",true);return}
-    state.tasks.share=true;state.stars+=100;
-    try{if(tg&&tg.HapticFeedback)tg.HapticFeedback.impactOccurred("light")}catch(e){}
-  }
-  if(t==="cases5"){
-    if(state.tasks.cases5){toast("Уже выполнено",true);return}
-    if(state.casesOpened<5){toast("Открой ещё "+(5-state.casesOpened)+" кейсов",true);return}
-    state.tasks.cases5=true;state.stars+=150;
-  }
-  if(t==="orders3"){
-    if(state.tasks.orders3){toast("Уже выполнено",true);return}
-    if(state.ordersDone<3){toast("Выполни ещё "+(3-state.ordersDone)+" заказа",true);return}
-    state.tasks.orders3=true;state.stars+=200;
-  }
-  toast("+⭐ задание выполнено!");
-  save();renderTasks();updateUI();
-}
-
-/* --- кошелёк --- */
-function makeDeposit(){
-  var amount=parseInt(document.getElementById("depAmount").value,10),st=document.getElementById("depStatus");
-  if(!amount||amount<100){st.textContent="❌ Минимум — 100 ₽.";return}
-  state.depReqs.unshift({id:state.depSeq++,user:userName||"Игрок",amount:amount,status:"Ожидает проверки",ts:new Date().toLocaleString("ru")});
-  st.textContent="✅ Заявка №"+(state.depSeq-1)+" создана. Админ зачислит после проверки перевода.";
-  document.getElementById("depAmount").value="";
-  save();
-}
-function withdraw(){
-  var digits=document.getElementById("wCard").value.replace(/\D/g,"");
-  var amount=parseInt(document.getElementById("wAmount").value,10),st=document.getElementById("wdStatus");
-  if(digits.length!==16){st.textContent="❌ Нужны 16 цифр карты.";return}
-  if(!amount||amount<250){st.textContent="❌ Минимум — 250 ₽.";return}
-  if(amount>state.cash){st.textContent="❌ Недостаточно средств.";return}
-  state.cash-=amount;
-  state.reqs.unshift({id:state.reqSeq++,user:userName||"Игрок",card:"••"+digits.slice(-4),amount:amount,status:"В обработке",ts:new Date().toLocaleString("ru")});
-  st.textContent="✅ Заявка №"+(state.reqSeq-1)+" отправлена админу.";
-  document.getElementById("wCard").value="";document.getElementById("wAmount").value="";
-  save();renderReqs();updateUI();
-}
-function renderReqs(){
-  var h="";
-  state.depReqs.forEach(function(r){
-    var col=r.status==="Зачислен"?"#22c55e":(r.status==="Отклонён"?"#ef4444":"#fbbf24");
-    h+='<div class="req">Пополнение №'+r.id+' — <b style="color:'+col+'">'+r.status+'</b><br>'+r.amount.toLocaleString("ru")+' ₽ · '+r.ts+'</div>';
-  });
-  state.reqs.forEach(function(r){
-    var col=r.status==="Выплачено"?"#22c55e":(r.status==="Отклонено"?"#ef4444":"#fbbf24");
-    h+='<div class="req">Вывод №'+r.id+' — <b style="color:'+col+'">'+r.status+'</b><br>'+r.amount.toLocaleString("ru")+' ₽ на карту '+r.card+' · '+r.ts+'</div>';
-  });
-  document.getElementById("myReqs").innerHTML=h||'<p class="note">Заявок нет</p>';
-}
-function renderAdmin(){
-  document.getElementById("admCash").textContent=state.cash.toLocaleString("ru")+" ₽";
-  document.getElementById("admFee").textContent=state.feeTotal.toLocaleString("ru")+" ₽";
-  document.getElementById("admDep").textContent=state.totalDep.toLocaleString("ru")+" ₽";
-  document.getElementById("admPaid").textContent=state.totalPaid.toLocaleString("ru")+" ₽";
-  var pend=state.depReqs.filter(function(r){return r.status==="Ожидает проверки"});
-  document.getElementById("adminDeps").innerHTML=pend.length?pend.map(function(r){
-    return '<div class="req">№'+r.id+' | '+r.user+' | <b>'+r.amount.toLocaleString("ru")+' ₽</b><br><button class="ok" onclick="admDep('+r.id+',1)">Зачислить</button><button class="no" onclick="admDep('+r.id+',0)">Отклонить</button></div>';
-  }).join(""):'<p class="note">Новых нет</p>';
-  var wq=state.reqs.filter(function(r){return r.status==="В обработке"});
-  document.getElementById("adminReqs").innerHTML=wq.length?wq.map(function(r){
-    return '<div class="req">№'+r.id+' | '+r.user+' | '+r.amount.toLocaleString("ru")+' ₽ | '+r.card+'<br><button class="ok" onclick="adminDecide('+r.id+',1)">Выплатил</button><button class="no" onclick="adminDecide('+r.id+',0)">Отклонить</button></div>';
-  }).join(""):'<p class="note">Новых нет</p>';
-}
-function admDep(id,ok){
-  for(var i=0;i<state.depReqs.length;i++)if(state.depReqs[i].id===id){
-    if(ok){state.depReqs[i].status="Зачислен";state.totalDep+=state.depReqs[i].amount;state.cash+=state.depReqs[i].amount}
-    else state.depReqs[i].status="Отклонён";
-  }
-  save();renderAdmin();updateUI();
-}
-function adminDecide(id,ok){
-  for(var i=0;i<state.reqs.length;i++)if(state.reqs[i].id===id){
-    if(ok){state.reqs[i].status="Выплачено";state.totalPaid+=state.reqs[i].amount}
-    else{state.reqs[i].status="Отклонено";state.cash+=state.reqs[i].amount}
-  }
-  save();renderAdmin();updateUI();
-}
-function adminLogin(){
-  var p=prompt("Пароль админа:");
-  if(p===ADMIN_PASS)switchTab("admin");
-  else if(p!==null)toast("Неверный пароль!",true);
-}
-document.getElementById("cardDisplay").textContent=ADMIN_CARD;
-load();renderHome();renderCases();renderGarage();updateUI();
-</script>
-</body>
-</html>
