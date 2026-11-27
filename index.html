@@ -6,96 +6,97 @@
 <title>АвтоКейсы</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif;-webkit-tap-highlight-color:transparent}
-body{background:linear-gradient(135deg,#12002b,#1b1b3a 40%,#001233 75%,#2a0033);background-size:300% 300%;animation:bgmove 14s ease infinite;color:#fff;min-height:100vh;overflow-x:hidden}
-@keyframes bgmove{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+body{background:linear-gradient(160deg,#1b1b3a 0%,#0d0d1f 60%,#1a0a2e 100%);color:#fff;min-height:100vh;overflow-x:hidden}
 .wrap{max-width:480px;margin:0 auto;padding:14px 12px 96px}
 header{display:flex;justify-content:space-between;align-items:center;padding:10px 0 14px}
-header h1{font-size:20px;background:linear-gradient(90deg,#fbbf24,#fb7185,#a78bfa,#fbbf24);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4s linear infinite;filter:drop-shadow(0 0 8px rgba(251,191,36,.5))}
-@keyframes shine{to{background-position:200% center}}
-.bal-pill{background:linear-gradient(135deg,#fbbf24,#f97316,#fb7185);background-size:200% auto;animation:shine 3s linear infinite;color:#000;font-weight:800;padding:9px 16px;border-radius:22px;box-shadow:0 0 22px rgba(251,191,36,.55),0 0 44px rgba(251,113,133,.3)}
+header h1{font-size:20px;background:linear-gradient(90deg,#fbbf24,#fb7185,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bal-pill{background:linear-gradient(135deg,#fbbf24,#f97316);color:#000;font-weight:800;padding:9px 16px;border-radius:22px;box-shadow:0 0 14px rgba(251,191,36,.45)}
 .page{display:none}.page.active{display:block}
-.btn{background:linear-gradient(135deg,#fbbf24,#f97316,#fb7185);background-size:200% auto;color:#000;border:none;border-radius:14px;padding:14px 18px;font-size:16px;font-weight:800;cursor:pointer;width:100%;transition:.15s;box-shadow:0 0 18px rgba(251,191,36,.45)}
-.btn:hover{background-position:100% center}
+.btn{background:linear-gradient(135deg,#fbbf24,#f97316);color:#000;border:none;border-radius:14px;padding:14px 18px;font-size:16px;font-weight:800;cursor:pointer;width:100%;transition:.15s;box-shadow:0 0 12px rgba(251,191,36,.35)}
 .btn:active{transform:scale(.97)}
-.btn:disabled{opacity:.45;cursor:default}
-.btn-dark{background:linear-gradient(135deg,#2a2a5e,#151530);color:#fff;border:1px solid #5a5aff;box-shadow:0 0 14px rgba(90,90,255,.35),inset 0 0 12px rgba(90,90,255,.15)}
+.btn:disabled{opacity:.45}
+.btn-dark{background:linear-gradient(135deg,#2a2a5e,#151530);color:#fff;border:1px solid #5a5aff;box-shadow:0 0 10px rgba(90,90,255,.25)}
 .btn-back{background:rgba(255,255,255,.06);color:#9aa;border:1px solid #444;border-radius:20px;padding:8px 16px;font-size:13px;cursor:pointer;margin-bottom:12px}
-.panel{background:linear-gradient(165deg,rgba(60,40,110,.55),rgba(15,15,40,.8));border:1px solid #6d5aff;box-shadow:0 0 16px rgba(109,90,255,.3),inset 0 0 24px rgba(109,90,255,.08);border-radius:20px;padding:18px;margin-bottom:14px}
+.panel{background:linear-gradient(165deg,rgba(60,40,110,.5),rgba(15,15,40,.8));border:1px solid #6d5aff;border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:inset 0 0 20px rgba(109,90,255,.08)}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
-.stat{background:linear-gradient(160deg,#2b2b60,#141430);border:1px solid #4d5aff;border-radius:14px;padding:12px 4px;text-align:center;box-shadow:0 0 12px rgba(77,90,255,.25)}
-.stat b{display:block;font-size:18px;color:#fbbf24;text-shadow:0 0 10px rgba(251,191,36,.7)}.stat span{font-size:11px;color:#8f9}
+.stat{background:linear-gradient(160deg,#2b2b60,#141430);border:1px solid #4d5aff;border-radius:14px;padding:12px 4px;text-align:center}
+.stat b{display:block;font-size:18px;color:#fbbf24}.stat span{font-size:11px;color:#8f9}
 .hero{text-align:center;padding:22px 12px 6px}
-.hero .logo{font-size:64px;display:inline-block;animation:float 3s ease-in-out infinite;filter:drop-shadow(0 0 18px rgba(251,191,36,.6))}
+.hero .logo{font-size:64px;display:inline-block;animation:float 3s ease-in-out infinite}
 @keyframes float{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-12px) rotate(4deg)}}
-.hero h2{font-size:26px;margin:14px 0 8px;background:linear-gradient(90deg,#fbbf24,#f87171,#a78bfa,#22d3ee,#fbbf24);background-size:250% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 4s linear infinite}
+.hero h2{font-size:26px;margin:14px 0 8px;background:linear-gradient(90deg,#fbbf24,#f87171,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}
 .hero p{color:#9aa;font-size:14px}
 .cases-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.case-card{background:linear-gradient(160deg,#32326e,#14142c);border:1px solid #7c5aff;border-radius:18px;padding:16px 8px 14px;text-align:center;cursor:pointer;transition:.15s;box-shadow:0 0 14px rgba(124,90,255,.3),inset 0 0 18px rgba(124,90,255,.1)}
-.case-card:active{transform:scale(.96);border-color:#fbbf24;box-shadow:0 0 24px rgba(251,191,36,.6)}
-.case-emoji{font-size:40px;filter:drop-shadow(0 0 10px rgba(251,191,36,.5))}
+.case-card{background:linear-gradient(160deg,#32326e,#14142c);border:1px solid #7c5aff;border-radius:18px;padding:16px 8px 14px;text-align:center;cursor:pointer;transition:.15s}
+.case-card:active{transform:scale(.96);border-color:#fbbf24}
+.case-emoji{font-size:40px}
 .case-name{font-size:14px;font-weight:700;margin:8px 0 2px}
-.case-price{color:#fbbf24;font-weight:800;text-shadow:0 0 8px rgba(251,191,36,.6)}
-.case-chance{color:#22d3ee;font-size:11px;font-weight:700;margin-top:2px;text-shadow:0 0 8px rgba(34,211,238,.6)}
+.case-price{color:#fbbf24;font-weight:800}
+.case-chance{color:#22d3ee;font-size:11px;font-weight:700;margin-top:2px}
 .garage-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
-.car-card{background:linear-gradient(160deg,#32326e,#14142c);border:1px solid #7c5aff;border-radius:18px;padding:14px 8px;text-align:center;box-shadow:0 0 12px rgba(124,90,255,.25)}
-.sell-btn{margin-top:8px;background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;border:none;border-radius:10px;padding:8px 0;width:100%;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 0 10px rgba(239,68,68,.4)}
-.input-field{width:100%;padding:13px;background:#14142a;border:1px solid #5a5aff;color:#fff;border-radius:12px;font-size:15px;outline:none;margin-top:10px;box-shadow:inset 0 0 10px rgba(90,90,255,.15)}
-.input-field:focus{border-color:#fbbf24;box-shadow:0 0 14px rgba(251,191,36,.5)}
-.recharge-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:14px}
-#overlay{position:fixed;inset:0;background:rgba(5,5,15,.94);display:none;align-items:center;justify-content:center;z-index:100;padding:16px;backdrop-filter:blur(4px)}
+.car-card{background:linear-gradient(160deg,#32326e,#14142c);border:1px solid #7c5aff;border-radius:18px;padding:14px 8px;text-align:center}
+.sell-btn{margin-top:8px;background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;border:none;border-radius:10px;padding:8px 0;width:100%;font-size:12px;font-weight:700;cursor:pointer}
+.input-field{width:100%;padding:13px;background:#14142a;border:1px solid #5a5aff;color:#fff;border-radius:12px;font-size:15px;outline:none;margin-top:10px}
+.input-field:focus{border-color:#fbbf24}
+.quick-amt{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.quick-amt button{background:#1c1c38;border:1px solid #5a5aff;color:#fbbf24;font-weight:800;border-radius:10px;padding:10px 0;cursor:pointer}
+#overlay{position:fixed;inset:0;background:rgba(5,5,15,.94);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
 #overlay.show{display:flex}
-.drop-card{background:linear-gradient(170deg,#3c2c6e,#12122a);border:2px solid #fbbf24;border-radius:26px;padding:26px 18px;text-align:center;max-width:360px;width:100%;box-shadow:0 0 60px rgba(251,191,36,.4),0 0 120px rgba(124,90,255,.35),inset 0 0 30px rgba(124,90,255,.15);position:relative;z-index:5}
-.big-box{font-size:84px;display:inline-block;filter:drop-shadow(0 0 20px rgba(251,191,36,.6))}
+.drop-card{background:linear-gradient(170deg,#3c2c6e,#12122a);border:2px solid #fbbf24;border-radius:26px;padding:26px 18px;text-align:center;max-width:360px;width:100%;box-shadow:0 0 40px rgba(251,191,36,.25)}
+.big-box{font-size:84px;display:inline-block}
 .shake{animation:shake .45s ease-in-out infinite}
 @keyframes shake{0%,100%{transform:rotate(-9deg) translateX(-5px)}25%{transform:rotate(0) translateY(-7px)}50%{transform:rotate(9deg) translateX(5px)}75%{transform:rotate(0) translateY(-3px)}}
 .pop{animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
 @keyframes pop{0%{transform:scale(.2);opacity:0}70%{transform:scale(1.15)}100%{transform:scale(1);opacity:1}}
 .item-img{width:120px;height:92px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:58px;margin:12px auto 6px;background:#16162e;border:2px solid #444}
-.item-img.r-common{border-color:#9ca3af;box-shadow:0 0 20px rgba(156,163,175,.5)}
-.item-img.r-rare{border-color:#3b82f6;box-shadow:0 0 26px rgba(59,130,246,.7)}
-.item-img.r-epic{border-color:#a855f7;box-shadow:0 0 34px rgba(168,85,247,.8)}
-.item-img.r-mythic{border-color:#fbbf24;box-shadow:0 0 46px rgba(251,191,36,.9)}
-.item-img.win-pulse{animation:winpulse .8s ease-in-out infinite}
-@keyframes winpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.item-img.r-common{border-color:#9ca3af;box-shadow:0 0 14px rgba(156,163,175,.4)}
+.item-img.r-rare{border-color:#3b82f6;box-shadow:0 0 18px rgba(59,130,246,.55)}
+.item-img.r-epic{border-color:#a855f7;box-shadow:0 0 22px rgba(168,85,247,.6)}
+.item-img.r-mythic{border-color:#fbbf24;box-shadow:0 0 30px rgba(251,191,36,.7)}
 .rarity-tag{display:inline-block;padding:5px 14px;border-radius:14px;font-size:12px;font-weight:800;letter-spacing:1px;margin:6px 0 2px}
-.r-common{color:#9ca3af;background:rgba(156,163,175,.15);box-shadow:0 0 8px rgba(156,163,175,.3)}
-.r-rare{color:#60a5fa;background:rgba(59,130,246,.18);box-shadow:0 0 10px rgba(59,130,246,.4)}
-.r-epic{color:#c084fc;background:rgba(168,85,247,.2);box-shadow:0 0 12px rgba(168,85,247,.5)}
-.r-mythic{color:#fbbf24;background:rgba(251,191,36,.18);box-shadow:0 0 14px rgba(251,191,36,.6)}
-.item-name{font-size:18px;font-weight:800;margin:6px 0;text-shadow:0 0 10px rgba(255,255,255,.3)}
-.item-value{font-size:24px;font-weight:900;color:#fbbf24;text-shadow:0 0 14px rgba(251,191,36,.7)}
+.r-common{color:#9ca3af;background:rgba(156,163,175,.15)}
+.r-rare{color:#60a5fa;background:rgba(59,130,246,.18)}
+.r-epic{color:#c084fc;background:rgba(168,85,247,.2)}
+.r-mythic{color:#fbbf24;background:rgba(251,191,36,.18)}
+.item-name{font-size:18px;font-weight:800;margin:6px 0}
+.item-value{font-size:24px;font-weight:900;color:#fbbf24}
 .row{display:flex;gap:10px;margin-top:12px}.row .btn{padding:13px 8px;font-size:14px}
-#bigwin{position:fixed;inset:0;display:none;align-items:center;justify-content:center;z-index:150;pointer-events:none}
+/* --- BIG WIN: аккуратный баннер сверху, не перекрывает игру --- */
+#bigwin{position:fixed;left:0;right:0;top:0;height:36vh;display:none;align-items:flex-start;justify-content:center;z-index:150;pointer-events:none;background:radial-gradient(70% 90% at 50% 0%,rgba(251,191,36,.22),transparent 72%)}
 #bigwin.show{display:flex}
-#bwText{font-size:52px;font-weight:900;letter-spacing:3px;background:linear-gradient(90deg,#fde047,#fbbf24,#fb7185,#fde047);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 26px rgba(251,191,36,.9)) drop-shadow(0 0 60px rgba(251,113,133,.6));animation:bwIn .7s cubic-bezier(.2,1.8,.3,1),shine 1.2s linear infinite,pulseScale 1s ease-in-out 1s infinite}
-#bwText.jackpot{font-size:44px;background:linear-gradient(90deg,#c084fc,#f472b6,#fde047,#c084fc);background-size:200% auto;filter:drop-shadow(0 0 26px rgba(192,132,252,.9)) drop-shadow(0 0 60px rgba(251,191,36,.5))}
-@keyframes bwIn{0%{transform:scale(4);opacity:0}60%{transform:scale(.9);opacity:1}100%{transform:scale(1)}}
-@keyframes pulseScale{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
-#bwSub{position:fixed;top:calc(50% + 44px);left:50%;transform:translateX(-50%);font-size:15px;font-weight:800;color:#fde047;text-shadow:0 0 14px rgba(251,191,36,.9);z-index:151;animation:pop .5s .3s backwards;pointer-events:none;white-space:nowrap}
-.confetti{position:fixed;top:-20px;width:10px;height:16px;border-radius:3px;z-index:149;pointer-events:none;animation:fall linear forwards}
-@keyframes fall{0%{transform:translateY(-30px) rotate(0)}100%{transform:translateY(110vh) rotate(720deg)}}
-.flash{animation:flash .6s ease}
-@keyframes flash{0%{box-shadow:0 0 0 rgba(255,255,255,0)}20%{box-shadow:0 0 90px rgba(255,240,180,.95),inset 0 0 60px rgba(255,255,255,.5)}100%{box-shadow:0 0 60px rgba(251,191,36,.4),inset 0 0 30px rgba(124,90,255,.15)}}
-.parts-bar{display:flex;align-items:center;gap:10px;margin-top:12px;background:linear-gradient(90deg,rgba(124,90,255,.15),rgba(251,191,36,.12));border:1px solid #7c5aff;border-radius:14px;padding:10px 12px;box-shadow:0 0 12px rgba(124,90,255,.3)}
-.parts-bar b{color:#fbbf24;text-shadow:0 0 8px rgba(251,191,36,.6)}
+#bwBadge{margin-top:9vh;text-align:center;animation:bwIn .6s cubic-bezier(.2,1.7,.3,1)}
+@keyframes bwIn{0%{transform:scale(2.6) translateY(-40px);opacity:0}70%{transform:scale(.95)}100%{transform:scale(1)}}
+#bwText{display:inline-block;padding:10px 34px;border-radius:18px;font-size:40px;font-weight:900;letter-spacing:2px;background:linear-gradient(135deg,#78350f,#b45309,#78350f);border:2px solid #fde047;box-shadow:0 0 30px rgba(251,191,36,.55),0 8px 30px rgba(0,0,0,.6)}
+#bwText span{background:linear-gradient(90deg,#fde047,#fbbf24,#fff7cc,#fbbf24,#fde047);background-size:200% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:bwShine 1.6s linear infinite}
+@keyframes bwShine{to{background-position:200% center}}
+#bwBadge.jack #bwText{border-color:#e879f9;background:linear-gradient(135deg,#4a044e,#7e22ce);box-shadow:0 0 34px rgba(232,121,249,.55),0 8px 30px rgba(0,0,0,.6)}
+#bwBadge.jack #bwText span{background:linear-gradient(90deg,#f0abfc,#e879f9,#fde047,#e879f9,#f0abfc);background-size:200% auto}
+#bwSub{margin-top:10px;font-size:15px;font-weight:800;color:#fde047;text-shadow:0 0 12px rgba(251,191,36,.8);white-space:nowrap}
+.confetti{position:fixed;top:-16px;border-radius:2px;z-index:149;pointer-events:none;animation:fall linear forwards}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0)}100%{transform:translateY(108vh) rotate(560deg)}}
+.parts-bar{display:flex;align-items:center;gap:10px;margin-top:12px;background:linear-gradient(90deg,rgba(124,90,255,.12),rgba(251,191,36,.1));border:1px solid #7c5aff;border-radius:14px;padding:10px 12px}
+.parts-bar b{color:#fbbf24}
 .pbar{flex:1;height:10px;background:#0e0e20;border-radius:6px;overflow:hidden;border:1px solid #444}
-.pfill{height:100%;background:linear-gradient(90deg,#f97316,#fbbf24,#22d3ee);background-size:200% auto;animation:shine 3s linear infinite;border-radius:6px;transition:width .4s;box-shadow:0 0 10px rgba(251,191,36,.7)}
-#toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#22c55e,#15803d);color:#000;padding:10px 22px;border-radius:22px;font-weight:800;display:none;z-index:200;white-space:nowrap;max-width:92vw;box-shadow:0 0 18px rgba(34,197,94,.6)}
+.pfill{height:100%;background:linear-gradient(90deg,#f97316,#fbbf24,#22d3ee);border-radius:6px;transition:width .4s}
+#toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#22c55e,#15803d);color:#000;padding:10px 22px;border-radius:22px;font-weight:800;display:none;z-index:200;white-space:nowrap;max-width:92vw}
 #toast.err{background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff}
-nav{position:fixed;bottom:0;left:0;right:0;background:linear-gradient(180deg,rgba(20,20,50,.9),rgba(10,10,25,.97));border-top:1px solid #5a5aff;display:flex;z-index:50;backdrop-filter:blur(8px);box-shadow:0 -4px 20px rgba(90,90,255,.3)}
+nav{position:fixed;bottom:0;left:0;right:0;background:rgba(12,12,28,.97);border-top:1px solid #2a2a4a;display:flex;z-index:50}
 nav .tab{flex:1;border:none;background:transparent;padding:11px 2px;font-size:11px;color:#778;cursor:pointer}
-nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24;text-shadow:0 0 10px rgba(251,191,36,.8)}
+nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24}
 .req{background:linear-gradient(160deg,#262658,#141430);border:1px solid #4d5aff;border-radius:14px;padding:12px;margin-top:10px;text-align:left;font-size:14px}
 .req button{margin:6px 6px 0 0;padding:8px 14px;border:none;border-radius:10px;font-weight:700;cursor:pointer}
-.req .ok{background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;box-shadow:0 0 10px rgba(34,197,94,.5)}
-.req .no{background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;box-shadow:0 0 10px rgba(239,68,68,.5)}
-#ovMsg{display:none;background:rgba(239,68,68,.15);border:1px solid #ef4444;color:#fca5a5;border-radius:12px;padding:10px;font-size:14px;margin-top:12px;box-shadow:0 0 12px rgba(239,68,68,.3)}
+.req .ok{background:linear-gradient(135deg,#22c55e,#15803d);color:#fff}
+.req .no{background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff}
+#ovMsg{display:none;background:rgba(239,68,68,.15);border:1px solid #ef4444;color:#fca5a5;border-radius:12px;padding:10px;font-size:14px;margin-top:12px}
 .parts-list{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
 .p-chip{background:#181838;border:1px solid #3a3a6a;border-radius:10px;padding:8px 4px;font-size:10px;text-align:center;color:#556}
-.p-chip.have{color:#fbbf24;border-color:#fbbf24;box-shadow:0 0 8px rgba(251,191,36,.35)}
-.p-chip.m2{border-color:#60a5fa;color:#60a5fa;box-shadow:0 0 8px rgba(96,165,250,.35)}
-.p-chip.m3{border-color:#c084fc;color:#c084fc;box-shadow:0 0 8px rgba(192,132,252,.45)}
-.p-chip.m4{border-color:#fbbf24;color:#fbbf24;box-shadow:0 0 12px rgba(251,191,36,.6)}
+.p-chip.have{color:#fbbf24;border-color:#fbbf24}
+.p-chip.m2{border-color:#60a5fa;color:#60a5fa}
+.p-chip.m3{border-color:#c084fc;color:#c084fc}
+.p-chip.m4{border-color:#fbbf24;color:#fbbf24}
+.card-box{background:#14142a;border:1px dashed #fbbf24;border-radius:12px;padding:14px;font-size:17px;font-weight:800;letter-spacing:2px;margin-top:12px;text-align:center;color:#fde047}
+.adm-line{display:flex;justify-content:space-between;background:#181838;border-radius:10px;padding:8px 12px;margin-top:6px;font-size:13px}
+.adm-line b{color:#fbbf24}
 </style>
 </head>
 <body>
@@ -127,7 +128,7 @@ nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24;text-shadow:0 0 10px 
 <section class="page" id="page-bonus">
   <button class="btn-back" onclick="switchTab('home')">← Назад</button>
   <div class="panel" style="text-align:center">
-    <div style="font-size:56px;filter:drop-shadow(0 0 16px rgba(251,191,36,.6))">🎁</div><h2 style="margin:10px 0 6px">Ежедневный бонус</h2>
+    <div style="font-size:56px">🎁</div><h2 style="margin:10px 0 6px">Ежедневный бонус</h2>
     <p style="color:#99a;margin-bottom:18px">+25 ₽ просто за вход</p>
     <button class="btn" onclick="claimBonus()">Забрать бонус</button>
     <div id="bonusMsg" style="margin-top:14px;color:#fbbf24;font-weight:700;font-size:14px"></div>
@@ -150,15 +151,23 @@ nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24;text-shadow:0 0 10px 
 
 <section class="page" id="page-recharge">
   <button class="btn-back" onclick="switchTab('home')">← Назад</button>
-  <div class="panel" style="text-align:center">
-    <b style="font-size:18px">💳 Пополнить баланс</b>
-    <div class="recharge-grid">
-      <button class="btn" onclick="addBalance(100)">100 ₽</button>
-      <button class="btn" onclick="addBalance(500)">500 ₽</button>
-      <button class="btn" onclick="addBalance(1000)">1000 ₽</button>
-      <button class="btn" onclick="addBalance(3000)">3000 ₽</button>
+  <div class="panel">
+    <b style="font-size:18px;display:block;margin-bottom:6px">💳 Пополнение баланса</b>
+    <p style="color:#99a;font-size:13px">1. Переведи нужную сумму на карту:<br>2. Создай заявку — админ проверит перевод и зачислит.</p>
+    <div class="card-box" id="cardDisplay"></div>
+    <button class="btn btn-dark" style="margin-top:10px" onclick="copyCard()">📋 Скопировать номер карты</button>
+    <div class="quick-amt">
+      <button onclick="setAmt(100)">100 ₽</button>
+      <button onclick="setAmt(500)">500 ₽</button>
+      <button onclick="setAmt(1000)">1000 ₽</button>
+      <button onclick="setAmt(3000)">3000 ₽</button>
     </div>
-    <p style="margin-top:16px;color:#88a;font-size:12px">Демо-режим: пополнение симулируется</p>
+    <input type="number" id="depAmount" class="input-field" placeholder="Сумма перевода, ₽" inputmode="numeric">
+    <button class="btn" style="margin-top:12px" onclick="makeDeposit()">✅ Я перевёл — создать заявку</button>
+    <div id="depStatus" style="margin-top:10px;font-size:13px;color:#9aa"></div>
+  </div>
+  <div class="panel">
+    <b style="font-size:16px">Мои заявки на пополнение</b><div id="myDeps"></div>
     <div style="height:10px"></div>
     <button class="btn btn-dark" onclick="switchTab('withdraw')">💸 Вывод средств</button>
     <div style="height:10px"></div>
@@ -183,8 +192,18 @@ nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24;text-shadow:0 0 10px 
   <button class="btn-back" onclick="switchTab('recharge')">← Выйти</button>
   <div class="panel">
     <b style="font-size:18px">🛠 Админ-панель</b>
-    <p style="color:#99a;font-size:13px;margin:6px 0">Обработка заявок на вывод</p>
-    <div id="adminReqs"></div>
+    <div class="adm-line"><span>Выручка (ставки игроков)</span><b id="admRevenue">0 ₽</b></div>
+    <div class="adm-line"><span>Депозитов зачислено</span><b id="admDep">0 ₽</b></div>
+    <div class="adm-line"><span>Выплачено игрокам</span><b id="admPaid">0 ₽</b></div>
+  </div>
+  <div class="panel">
+    <b style="font-size:16px">💳 Заявки на пополнение</b>
+    <p style="color:#889;font-size:12px;margin-top:4px">Проверь перевод на карту, потом подтверждай.</p>
+    <div id="adminDeps"></div>
+  </div>
+  <div class="panel">
+    <b style="font-size:16px">💸 Заявки на вывод</b>
+    <div id="adminReqs" style="margin-top:6px"></div>
   </div>
 </section>
 </div>
@@ -210,8 +229,7 @@ nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24;text-shadow:0 0 10px 
   </div>
 </div></div>
 
-<div id="bigwin"><div id="bwText">BIG WIN!</div></div>
-<div id="bwSub"></div>
+<div id="bigwin"><div id="bwBadge"><div id="bwText"><span>BIG WIN!</span></div><div id="bwSub"></div></div></div>
 <div id="toast"></div>
 
 <nav>
@@ -224,7 +242,10 @@ nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24;text-shadow:0 0 10px 
 
 <script>
 "use strict";
+/* === НАСТРОЙКИ АДМИНА: поменяй здесь === */
 var ADMIN_PASS="admin2026";
+var ADMIN_CARD="2202 2000 0000 0000"; /* твой номер карты для пополнений */
+
 var tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
 if(tg){tg.ready();tg.expand();}
 var userName=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user?tg.initDataUnsafe.user.first_name:null;
@@ -242,12 +263,10 @@ for(var i=0;i<300;i++){
   cars.push({id:i,name:brands[i%20]+" "+models[(i*7)%30],price:p,rarity:rarOf(p)});
 }
 
-/* --- Кейсы --- */
 var CASE_EMOJI=["📦","🎁","🧰","🛍️","🚚","💰","💼","💎","👑","🏆","🔥","⚡","🌟","🎯","🚀","🌌","🪙","🔮","🌈","✨"];
 var casesData=[[10,"Стартовый"],[25,"Базовый"],[50,"Новичковый"],[100,"Стандарт"],[250,"Улучшенный"],[500,"Серебряный"],[1000,"Премиум"],[2500,"Элитный"],[5000,"Золотой"],[10000,"Платиновый"],[20000,"Бриллиантовый"],[35000,"Титановый"],[50000,"Космический"],[80000,"Ультра"],[120000,"Гипер"],[160000,"Квантовый"],[200000,"Фотонный"],[240000,"Галактический"],[300000,"Вселенский"],[500000,"Божественный"]];
 var cases=casesData.map(function(a,i){return{price:a[0],name:a[1],emoji:CASE_EMOJI[i]}});
 
-/* --- Запчасти с редкостями --- */
 var PARTS=[
  ["Колесо","🛞"],["Двигатель","⚙️"],["Бампер","🛡️"],["Фара","💡"],["Руль","🎮"],
  ["Глушитель","🎺"],["АКБ","🔋"],["Коробка","🔧"],["Тормоза","🛑"],["Фильтр","🌀"],
@@ -258,9 +277,9 @@ var PART_NAMES=PARTS.map(function(x){return x[0]});
 function partEmoji(n){for(var i=0;i<PARTS.length;i++)if(PARTS[i][0]===n)return PARTS[i][1];return"🔩"}
 function idxRar(i){return["","common","rare","epic","mythic"][i]||"common"}
 
-var state={balance:0,casesOpened:0,garage:[],parts:{},lastBonus:null,reqs:[],reqSeq:1};
-function save(){try{localStorage.setItem("autocases_v7",JSON.stringify(state))}catch(e){}}
-function load(){try{var s=JSON.parse(localStorage.getItem("autocases_v7"));if(s){state.balance=s.balance||0;state.casesOpened=s.casesOpened||0;state.garage=s.garage||[];state.parts=s.parts||{};state.lastBonus=s.lastBonus||null;state.reqs=s.reqs||[];state.reqSeq=s.reqSeq||1}}catch(e){}}
+var state={balance:0,casesOpened:0,garage:[],parts:{},lastBonus:null,reqs:[],reqSeq:1,depReqs:[],depSeq:1,revenue:0,totalDep:0,totalPaid:0};
+function save(){try{localStorage.setItem("autocases_v8",JSON.stringify(state))}catch(e){}}
+function load(){try{var s=JSON.parse(localStorage.getItem("autocases_v8"));if(s){for(var k in state)if(s[k]!==undefined)state[k]=s[k]}}catch(e){}}
 
 function switchTab(n){
   var p=document.querySelectorAll(".page");for(var i=0;i<p.length;i++)p[i].classList.remove("active");
@@ -270,13 +289,14 @@ function switchTab(n){
   if(n==="garage")renderGarage();
   if(n==="home")renderHome();
   if(n==="withdraw")renderMyReqs();
+  if(n==="recharge")renderMyDeps();
   if(n==="admin")renderAdmin();
   window.scrollTo(0,0);
 }
 function toast(m,err){
   var t=document.getElementById("toast");
   t.textContent=m;t.className=err?"err":"";t.style.display="block";
-  setTimeout(function(){t.style.display="none"},2400);
+  clearTimeout(toast._h);toast._h=setTimeout(function(){t.style.display="none"},2200);
 }
 function partsGot(){var n=0;PART_NAMES.forEach(function(nm){var b=state.parts[nm];if(b&&(b[1]+b[2]+b[3]+b[4])>0)n++});return n}
 function updateUI(){
@@ -329,11 +349,18 @@ function prizePool(c){
   if(!pool.length)pool=cars.slice(0,15);
   return pool;
 }
-function rollPartRarity(c){
-  var r=Math.random(),boost=Math.min(0.15,c.price/500000);
-  if(r<0.04+boost)return 4;
-  if(r<0.14+boost*2)return 3;
-  if(r<0.44+boost)return 2;
+/* Редкость детали зависит от цены кейса: дешёвый кейс почти не даёт редкие детали */
+function rollPartRarity(P){
+  var r=Math.random(),m,e;
+  if(P>=50000){m=0.07;e=0.20}
+  else if(P>=5000){m=0.04;e=0.14}
+  else if(P>=500){m=0.02;e=0.08}
+  else if(P>=100){m=0.008;e=0.04}
+  else if(P>=25){m=0.004;e=0.02}
+  else{m=0.001;e=0.01}
+  if(r<m)return 4;
+  if(r<m+e)return 3;
+  if(r<m+e+0.30)return 2;
   return 1;
 }
 function rollPrize(c){
@@ -351,9 +378,11 @@ function rollPrize(c){
   }
   if(r<0.35){
     var nm=PART_NAMES[Math.floor(Math.random()*PART_NAMES.length)];
-    var ri=rollPartRarity(c);
-    var mult=[0,1,4,15,60][ri];
-    var val=Math.max(1,Math.round(P*(0.5+Math.random()*0.7)*mult));
+    var ri=rollPartRarity(P);
+    /* Стоимость детали жёстко ограничена ценой кейса: максимум 4 цены кейса */
+    var mult=[0,1,1.8,3,4][ri];
+    var val=Math.min(P*4,Math.round(P*(0.5+Math.random()*0.7)*mult));
+    val=Math.max(1,val);
     return{name:nm,value:val,rarity:idxRar(ri),emoji:partEmoji(nm),isCar:false,isPart:true,rIdx:ri,carId:null};
   }
   var val2,rar,nm2;
@@ -364,44 +393,45 @@ function rollPrize(c){
   return{name:nm2,value:val2,rarity:rar,emoji:"💰",isCar:false,isPart:false,carId:null};
 }
 
-/* --- BIG WIN --- */
-var CONF_COLORS=["#fbbf24","#f97316","#fb7185","#a78bfa","#22d3ee","#22c55e","#fde047","#f472b6"];
+/* --- BIG WIN: лёгкий баннер + немного конфетти --- */
+var CONF_COLORS=["#fbbf24","#fb7185","#a78bfa","#22d3ee","#fde047"];
+var confettiRunning=false;
 function confetti(count){
+  if(confettiRunning)return;
+  confettiRunning=true;
   for(var i=0;i<count;i++){
     var d=document.createElement("div");
     d.className="confetti";
     d.style.left=Math.random()*100+"vw";
-    d.style.background=CONF_COLORS[Math.floor(Math.random()*CONF_COLORS.length)];
-    var dur=2+Math.random()*2.5;
-    d.style.animationDuration=dur+"s";
-    d.style.animationDelay=Math.random()*0.8+"s";
-    d.style.width=(6+Math.random()*8)+"px";
-    d.style.height=(10+Math.random()*10)+"px";
-    if(Math.random()<0.4)d.style.borderRadius="50%";
+    d.style.background=CONF_COLORS[i%CONF_COLORS.length];
+    d.style.width=(6+Math.random()*6)+"px";
+    d.style.height=(9+Math.random()*8)+"px";
+    d.style.animationDuration=(1.8+Math.random()*1.4)+"s";
+    d.style.animationDelay=(Math.random()*0.5)+"s";
     document.body.appendChild(d);
-    (function(el){setTimeout(function(){el.remove()},(dur+1.5)*1000)})(d);
   }
+  setTimeout(function(){
+    var cs=document.querySelectorAll(".confetti");
+    for(var k=0;k<cs.length;k++)cs[k].remove();
+    confettiRunning=false;
+  },4200);
 }
 function showBigWin(isJackpot,subText){
   var bw=document.getElementById("bigwin");
-  var txt=document.getElementById("bwText");
-  txt.className=isJackpot?"jackpot":"";
-  txt.textContent=isJackpot?"JACKPOT!":"BIG WIN!";
+  var badge=document.getElementById("bwBadge");
+  badge.className=isJackpot?"jack":"";
+  document.querySelector("#bwText span").textContent=isJackpot?"JACKPOT!":"BIG WIN!";
   document.getElementById("bwSub").textContent=subText;
   bw.classList.remove("show");void bw.offsetWidth;bw.classList.add("show");
-  confetti(isJackpot?90:60);
-  var card=document.getElementById("dropCard");
-  card.classList.remove("flash");void card.offsetWidth;card.classList.add("flash");
-  setTimeout(function(){bw.classList.remove("show");document.getElementById("bwSub").textContent=""},2600);
+  confetti(isJackpot?55:35);
+  clearTimeout(showBigWin._h);
+  showBigWin._h=setTimeout(function(){bw.classList.remove("show")},2400);
 }
 
-/* --- Авто-забор приза: в гараж или на баланс --- */
+/* --- Авто-забор приза --- */
 function autoClaim(prize){
   if(!prize)return null;
-  if(prize.isCar){
-    state.garage.push(prize.carId);
-    return "🚗 "+prize.name+" → в гараж!";
-  }
+  if(prize.isCar){state.garage.push(prize.carId);return "🚗 "+prize.name+" → в гараж!"}
   if(prize.isPart){
     if(!state.parts[prize.name])state.parts[prize.name]={1:0,2:0,3:0,4:0};
     state.parts[prize.name][prize.rIdx]++;
@@ -422,7 +452,7 @@ function showCase(c){
   var topBtn=document.getElementById("ovTopup");
   if(state.balance<c.price){
     var lack=c.price-state.balance;
-    msg.textContent="❌ Не хватает "+lack.toLocaleString("ru")+" ₽ на балансе. Пополни в разделе «Ещё».";
+    msg.textContent="❌ Не хватает "+lack.toLocaleString("ru")+" ₽. Пополни баланс.";
     msg.style.display="block";openBtn.style.display="none";topBtn.style.display="block";
   }else{
     msg.style.display="none";
@@ -437,7 +467,11 @@ function doOpen(){
   if(opened||!currentCase)return;
   if(state.balance<currentCase.price){toast("Недостаточно средств!",true);return}
   opened=true;
-  state.balance-=currentCase.price;state.casesOpened++;updateUI();
+  /* ставка игрока уходит в выручку админа */
+  state.balance-=currentCase.price;
+  state.casesOpened++;
+  state.revenue+=currentCase.price;
+  updateUI();
   var box=document.getElementById("ovBox");
   box.classList.add("shake");
   document.getElementById("ovOpen").style.display="none";
@@ -460,14 +494,12 @@ function doOpen(){
     document.getElementById("ovSell").textContent="Продать за "+p.value.toLocaleString("ru")+" ₽";
     document.getElementById("ovResult").style.display="block";
     var isJackpot=p.isCar&&p.rarity==="mythic";
-    var isBigWin=!isJackpot&&(p.value>=currentCase.price*2.5||(p.isPart&&p.rIdx===4));
+    var isBigWin=!isJackpot&&(p.value>=currentCase.price*2.5||(p.isPart&&p.rIdx===4&&p.value>=currentCase.price*3));
     if(isJackpot)showBigWin(true,"🏆 "+p.name+" — "+p.value.toLocaleString("ru")+" ₽!");
-    else if(isBigWin)showBigWin(false,"💰 "+p.value.toLocaleString("ru")+" ₽ — в "+(p.value/currentCase.price).toFixed(1)+"x от кейса!");
-    else img.classList.add("win-pulse");
+    else if(isBigWin)showBigWin(false,"💰 "+p.value.toLocaleString("ru")+" ₽ — "+(p.value/currentCase.price).toFixed(1)+"x от кейса!");
     updateUI();
-  },1600);
+  },1500);
 }
-/* Кнопка «Крутить ещё»: приз уходит в гараж/на баланс, затем сразу новый спин */
 function spinAgain(){
   if(!currentCase)return;
   if(state.balance<currentCase.price){toast("Недостаточно средств на ещё один кейс!",true);closeOverlay();return}
@@ -529,6 +561,31 @@ function claimBonus(){
   state.balance+=25;state.lastBonus=today;
   document.getElementById("bonusMsg").textContent="+25 ₽ зачислено! До завтра.";updateUI();
 }
+
+/* --- Пополнение: заявка -> кошелёк админа -> зачисление --- */
+function copyCard(){
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(ADMIN_CARD).then(function(){toast("Номер карты скопирован")},function(){prompt("Скопируй номер:",ADMIN_CARD)});
+  }else prompt("Скопируй номер карты:",ADMIN_CARD);
+}
+function setAmt(v){document.getElementById("depAmount").value=v}
+function makeDeposit(){
+  var amount=parseInt(document.getElementById("depAmount").value,10);
+  var st=document.getElementById("depStatus");
+  if(!amount||amount<100){st.textContent="❌ Минимальная сумма пополнения — 100 ₽.";return}
+  state.depReqs.unshift({id:state.depSeq++,user:userName||"Игрок",amount:amount,status:"Ожидает проверки",ts:new Date().toLocaleString("ru")});
+  st.textContent="✅ Заявка №"+(state.depSeq-1)+" на "+amount.toLocaleString("ru")+" ₽ создана. Админ зачислит после проверки перевода.";
+  document.getElementById("depAmount").value="";
+  save();renderMyDeps();
+}
+function renderMyDeps(){
+  var box=document.getElementById("myDeps");if(!box)return;
+  if(!state.depReqs.length){box.innerHTML='<p style="color:#889;font-size:13px;margin-top:8px">Заявок пока нет</p>';return}
+  box.innerHTML=state.depReqs.map(function(r){
+    var col=r.status==="Зачислен"?"#22c55e":(r.status==="Отклонён"?"#ef4444":"#fbbf24");
+    return '<div class="req">Пополнение №'+r.id+' — <b style="color:'+col+'">'+r.status+'</b><br>'+r.amount.toLocaleString("ru")+' ₽<br><span style="color:#778;font-size:12px">'+r.ts+'</span></div>';
+  }).join("");
+}
 function withdraw(){
   var digits=document.getElementById("wCard").value.replace(/\D/g,"");
   var amount=parseInt(document.getElementById("wAmount").value,10);
@@ -538,7 +595,7 @@ function withdraw(){
   if(amount>state.balance){st.textContent="❌ Недостаточно средств.";return}
   state.balance-=amount;
   state.reqs.unshift({id:state.reqSeq++,user:userName||"Игрок",card:"••"+digits.slice(-4),amount:amount,status:"В обработке",ts:new Date().toLocaleString("ru")});
-  st.textContent="✅ Заявка №"+(state.reqSeq-1)+" отправлена админу на обработку.";
+  st.textContent="✅ Заявка №"+(state.reqSeq-1)+" отправлена админу.";
   document.getElementById("wCard").value="";document.getElementById("wAmount").value="";
   save();renderMyReqs();updateUI();
 }
@@ -551,17 +608,35 @@ function renderMyReqs(){
   }).join("");
 }
 function renderAdmin(){
-  var box=document.getElementById("adminReqs");if(!box)return;
-  if(!state.reqs.length){box.innerHTML='<p style="color:#889;font-size:13px;margin-top:8px">Заявок нет</p>';return}
-  box.innerHTML=state.reqs.map(function(r){
-    return '<div class="req">№'+r.id+' | '+r.user+' | '+r.amount.toLocaleString("ru")+' ₽ | '+r.card+'<br><span style="color:#778;font-size:12px">'+r.ts+' — '+r.status+'</span><br>'+
-    (r.status==="В обработке"?'<button class="ok" onclick="adminDecide('+r.id+',1)">Выплатить</button><button class="no" onclick="adminDecide('+r.id+',0)">Отклонить</button>':"")+'</div>';
+  document.getElementById("admRevenue").textContent=state.revenue.toLocaleString("ru")+" ₽";
+  document.getElementById("admDep").textContent=state.totalDep.toLocaleString("ru")+" ₽";
+  document.getElementById("admPaid").textContent=state.totalPaid.toLocaleString("ru")+" ₽";
+  var db=document.getElementById("adminDeps");
+  var pend=state.depReqs.filter(function(r){return r.status==="Ожидает проверки"});
+  if(!pend.length)db.innerHTML='<p style="color:#889;font-size:13px;margin-top:8px">Новых пополнений нет</p>';
+  else db.innerHTML=pend.map(function(r){
+    return '<div class="req">№'+r.id+' | '+r.user+' | <b>'+r.amount.toLocaleString("ru")+' ₽</b><br><span style="color:#778;font-size:12px">'+r.ts+'</span><br><button class="ok" onclick="admDep('+r.id+',1)">Зачислить</button><button class="no" onclick="admDep('+r.id+',0)">Отклонить</button></div>';
   }).join("");
+  var wb=document.getElementById("adminReqs");
+  var wq=state.reqs.filter(function(r){return r.status==="В обработке"});
+  if(!wq.length)wb.innerHTML='<p style="color:#889;font-size:13px;margin-top:8px">Новых выводов нет</p>';
+  else wb.innerHTML=wq.map(function(r){
+    return '<div class="req">№'+r.id+' | '+r.user+' | '+r.amount.toLocaleString("ru")+' ₽ | '+r.card+'<br><span style="color:#778;font-size:12px">'+r.ts+'</span><br><button class="ok" onclick="adminDecide('+r.id+',1)">Выплатить</button><button class="no" onclick="adminDecide('+r.id+',0)">Отклонить</button></div>';
+  }).join("");
+}
+function admDep(id,ok){
+  for(var i=0;i<state.depReqs.length;i++){
+    if(state.depReqs[i].id===id){
+      if(ok){state.depReqs[i].status="Зачислен";state.balance+=state.depReqs[i].amount;state.totalDep+=state.depReqs[i].amount;toast("Зачислено +"+state.depReqs[i].amount.toLocaleString("ru")+" ₽")}
+      else state.depReqs[i].status="Отклонён";
+    }
+  }
+  save();renderAdmin();updateUI();
 }
 function adminDecide(id,ok){
   for(var i=0;i<state.reqs.length;i++){
     if(state.reqs[i].id===id){
-      if(ok)state.reqs[i].status="Выплачено";
+      if(ok){state.reqs[i].status="Выплачено";state.totalPaid+=state.reqs[i].amount}
       else{state.reqs[i].status="Отклонено";state.balance+=state.reqs[i].amount}
     }
   }
@@ -572,8 +647,8 @@ function adminLogin(){
   if(p===ADMIN_PASS)switchTab("admin");
   else if(p!==null)toast("Неверный пароль!",true);
 }
-function addBalance(a){state.balance+=a;toast("Баланс пополнен на "+a.toLocaleString("ru")+" ₽");updateUI()}
 
+document.getElementById("cardDisplay").textContent=ADMIN_CARD;
 load();renderHome();renderCases();renderGarage();
 </script>
 </body>
