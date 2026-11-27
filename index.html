@@ -1,469 +1,86 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>АвтоКейсы</title>
-<style>
-* { box-sizing:border-box; margin:0; padding:0; user-select:none; }
-body { background:radial-gradient(ellipse at top, #1b1b33, #0d0d18); color:#fff; font-family:'Segoe UI', Arial, sans-serif; }
-.wrap { max-width:420px; margin:auto; padding-bottom:30px; }
-header { display:flex; justify-content:space-between; align-items:center; padding:14px 16px; background:#16162a; border-bottom:1px solid #2a2a45; position:sticky; top:0; z-index:10; }
-.logo { font-size:20px; font-weight:800; letter-spacing:0.5px; }
-.bal { background:linear-gradient(135deg,#ffd76e,#f59e0b); color:#1a1a00; border:none; padding:9px 16px; border-radius:24px; font-weight:800; cursor:pointer; font-size:15px; box-shadow:0 4px 14px rgba(245,158,11,0.4); }
-.tabs { display:flex; gap:6px; padding:10px 12px; overflow-x:auto; background:#12122a; }
-.tab { flex:1 1 auto; min-width:70px; background:#1e1e3a; border:1px solid #33335a; color:#bbb; padding:9px 8px; border-radius:12px; cursor:pointer; white-space:nowrap; font-size:13px; font-weight:600; transition:0.2s; }
-.tab.active { background:linear-gradient(135deg,#ffd76e,#f59e0b); color:#1a1a00; border-color:transparent; box-shadow:0 3px 12px rgba(245,158,11,0.35); }
-.page { display:none; padding:16px; }
-.page.active { display:block; animation:fadeIn 0.25s ease; }
-@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
-.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:14px; }
-.stat { text-align:center; background:linear-gradient(160deg,#23234a,#1a1a35); border:1px solid #34345c; border-radius:14px; padding:12px 4px; }
-.stat b { display:block; font-size:17px; color:#ffd76e; }
-.stat span { font-size:11px; color:#8899bb; }
-.cases-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
-.case-card { position:relative; background:linear-gradient(160deg,#23234a,#16162e); border:1px solid #34345c; border-radius:16px; padding:16px 10px; text-align:center; cursor:pointer; transition:0.2s; overflow:hidden; }
-.case-card::before { content:''; position:absolute; top:-40px; left:-40px; width:100px; height:100px; border-radius:50%; opacity:0.35; filter:blur(20px); }
-.case-card:active { transform:scale(0.96); }
-.case-icon { font-size:38px; margin-bottom:8px; filter:drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
-.case-name { font-size:14px; font-weight:700; margin-bottom:4px; }
-.case-price { color:#ffd76e; font-weight:800; font-size:14px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АвтоКейсы</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f0f0f0;
+        }
+
+        .container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page {
+            background: #fff;
+            padding: 24px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .btn-back {
+            background: transparent;
+            color: #aaa;
+            border: 1px solid #333;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 12px;
+            transition: 0.2s;
+        }
+
+        .btn-back:hover {
+            background: #222;
+            color: #fff;
+            border-color: #555;
+        }
+    </style>
 </head>
 <body>
-<div class="wrap">
-<header>
-    <div class="logo">🚗 Авто<span style="color:#ffd76e;">Кейсы</span></div>
-    <button class="bal" onclick="switchTab('recharge')">₽ <span id="balance">0</span> ➕</button>
-</header>
-<div class="tabs">
-    <button class="tab active" id="tab-cases" onclick="switchTab('cases')">📦 Кейсы</button>
-    <button class="tab" id="tab-bonus" onclick="switchTab('bonus')">🎁 Бонус</button>
-    <button class="tab" id="tab-garage" onclick="switchTab('garage')">🚙 Гараж</button>
-    <button class="tab" id="tab-withdraw" onclick="switchTab('withdraw')">💳 Вывод</button>
-    <button class="tab" id="tab-recharge" onclick="switchTab('recharge')">➕ Пополнить</button>
-</div>
-    <!-- ЭКРАН: КЕЙСЫ -->
-    <div class="page active" id="page-cases">
-        <div class="stats">
-            <div class="stat"><b id="stat-balance">0</b><span>₽ на счету</span></div>
-            <div class="stat"><b id="stat-cases">0</b><span>кейсов открыто</span></div>
-            <div class="stat"><b id="stat-garage">0</b><span>машин в гараже</span></div>
+    <div class="container">
+        <div class="page active" id="page-cases">
+            <button class="btn-back" onclick="switchTab('cases')">← Главная</button>
+            <h2>Открыть кейс</h2>
+            <button class="bal" style="width:100%; margin-top:16px;">Открыть случай</button>
         </div>
-        <div class="cases-grid" id="casesGrid"></div>
-    </div>
 
-    <!-- ЭКРАН: БОНУС -->
-    <div class="page" id="page-bonus">
-        <button class="btn-back" onclick="switchTab('cases')">← Назад</button>
-        <div style="text-align:center; margin-top:24px;">
-            <div style="font-size:56px; margin-bottom:12px;">🎁</div>
+        <div class="page" id="page-bonus">
+            <button class="btn-back" onclick="switchTab('cases')">← Главная</button>
             <h2>Ежедневный бонус</h2>
             <p style="color:#aaa; margin-bottom:20px;">+25 ₽ просто за вход</p>
-            <button class="bal" id="bonusCard" onclick="claimBonus()" style="padding:14px 28px; font-size:17px;">Забрать бонус</button>
-            <div id="bonusTimer" style="margin-top:16px; color:#fbbf24; font-weight:700;"></div>
+            <button class="bal" id="bonusCard" onclick="claimBonus()">Забрать бонус</button>
         </div>
-    </div>
-    <!-- ЭКРАН: ГАРАЖ -->
-    <div class="page" id="page-garage">
-        <button class="btn-back" onclick="switchTab('cases')">← Назад</button>
-        <div class="panel" style="margin-top:12px;">
-            <b style="font-size:18px; display:block; margin-bottom:12px;">Твой гараж</b>
-            <div id="garageGrid"></div>
-        </div>
-    </div>
 
-    <!-- ЭКРАН: ВЫВОД -->
-    <div class="page" id="page-withdraw">
-        <button class="btn-back" onclick="switchTab('garage')">← Назад</button>
-        <div style="margin-top:16px;">
-            <h3>Вывод на карту</h3>
-            <p style="color:#aaa; font-size:13px; margin-bottom:10px;">Минимальный вывод — 250 ₽</p>
-            <input type="text" id="withdrawCard" class="input-field" placeholder="Номер карты (16 цифр)">
-            <input type="number" id="withdrawAmount" class="input-field" placeholder="Сумма (₽)" style="margin-top:8px;">
-            <button class="bal" style="width:100%; margin-top:14px;" onclick="processWithdrawal()">Вывести средства</button>
-            <div id="wdStatus" style="margin-top:10px; font-size:13px;"></div>
-        </div>
-    </div>
-
-    <!-- ЭКРАН: ПОПОЛНИТЬ -->
-    <div class="page" id="page-recharge">
-        <button class="btn-back" onclick="switchTab('cases')">← Назад</button>
-        <div style="margin-top:16px; text-align:center;">
-            <h3>Пополнить баланс</h3>
-            <p style="color:#aaa;">Выберите сумму</p>
-            <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:12px;">
-                <button class="bal" onclick="addBalance(100)">100 ₽</button>
-                <button class="bal" onclick="addBalance(500)">500 ₽</button>
-                <button class="bal" onclick="addBalance(1000)">1000 ₽</button>
-                <button class="bal" onclick="addBalance(3000)">3000 ₽</button>
-            </div>
-            <p style="margin-top:20px; color:#888; font-size:12px;">(это симуляция баланса)</p>
-        </div>
-    </div>
-
-    <!-- ОВЕРЛЕЙ ВЫПАДЕНИЯ ПРИЗА (АНИМАЦИЯ) -->
-    <div id="dropOverlay" class="overlay">
-        <div class="drop-card">
-            <div class="drop-spin">📦</div>
-            <div style="text-align:center; padding:20px 16px;">
-                <h2 id="dropName" style="color:#ffd76e; margin:0 0 10px 0;"></h2>
-                <div style="font-size:24px; margin:10px 0; color:#fff;">${}</div>
-                <div id="dropRarity" style="font-weight:700; text-transform:uppercase; margin-bottom:8px;"></div>
-                <div id="dropValue" style="color:#fbbf24; font-weight:800; font-size:18px;"></div>
-                <button class="bal" style="margin-top:22px; width:100%;" onclick="closeDrop()">Забрать приз</button>
+        <div class="page" id="page-garage">
+            <button class="btn-back" onclick="switchTab('cases')">← Главная</button>
+            <div class="panel">
+                <b style="font-size:18px; display:block; margin-bottom:12px;">Твой гараж</b>
+                <div id="garageGrid"></div>
             </div>
         </div>
     </div>
+
     <script>
-        // --- ДАННЫЕ МАШИН (около 300 марок — делаем вариативность через префиксы и типы) ---
-        const carBrands = [
-            "Lada", "Kia", "Hyundai", "Toyota", "BMW", "Audi", "Mercedes", "Ford", "Chevrolet", "Nissan",
-            "Volkswagen", "Renault", "Peugeot", "Opel", "Skoda", "Seat", "Volvo", "Lexus", "Infiniti", "Mitsubishi"
-        ];
-        const carModels = [
-            "Granta", "Vesta", "XRay", "Rio", "Solaris", "Creta", "Camry", "Corolla", "5 Series", "3 Series",
-            "A3", "A4", "A6", "A8", "C-Class", "E-Class", "S-Class", "Focus", "Mustang", "Explorer",
-            "Cruze", "Malibu", "Altima", "Maxima", "Passat", "Jetta", "Polo", "Logan", "Sandero", "Kaptur"
-        ];
-
-        // Генерируем массив машин с разной редкостью и ценами
-        const carsData = [];
-        for (let i = 0; i < 300; i++) {
-            const brand = carBrands[Math.floor(Math.random() * carBrands.length)];
-            const model = carModels[Math.floor(Math.random() * carModels.length)];
-            const name = `${brand} ${model}`;
-
-            // Умное распределение цен и редкости
-            const r = Math.random();
-            let price, rarity;
-            if (r < 0.005) { // 0.5% — легендарные (очень дорогие)
-                price = Math.floor(Math.random() * 50000) + 100000; // 100k–150k
-                rarity = "mythic";
-            } else if (r < 0.02) { // 1.5% — эпические (дорогие)
-                price = Math.floor(Math.random() * 40000) + 50000; // 50k–90k
-                rarity = "epic";
-            } else if (r < 0.1) { // 8% — редкие (средние)
-                price = Math.floor(Math.random() * 25000) + 20000; // 20k–45k
-                rarity = "rare";
-            } else { // 90% — обычные (дешёвые)
-                price = Math.floor(Math.random() * 15000) + 1000; // 1k–16k
-                rarity = "common";
-            }
-
-            carsData.push({ id: i, name, price, rarity });
-        }
-
-        // --- 20 КЕЙСОВ с ценами от 10 до 240 000 ₽ ---
-        const casesData = [
-            { id: 1, price: 10, name: "Стартовый", chances: [["common", 85], ["rare", 14], ["epic", 1]] },
-            { id: 2, price: 50, name: "Базовый", chances: [["common", 75], ["rare", 22], ["epic", 3]] },
-            { id: 3, price: 100, name: "Стандарт", chances: [["common", 65], ["rare", 30], ["epic", 5]] },
-            { id: 4, price: 200, name: "Улучшенный", chances: [["common", 55], ["rare", 35], ["epic", 9], ["mythic", 1]] },
-            { id: 5, price: 500, name: "Премиум", chances: [["rare", 50], ["epic", 40], ["mythic", 10]] },
-            { id: 6, price: 1000, name: "Элитный", chances: [["rare", 40], ["epic", 45], ["mythic", 15]] },
-            { id: 7, price: 2000, name: "Золотой", chances: [["rare", 30], ["epic", 50], ["mythic", 20]] },
-            { id: 8, price: 5000, name: "Платиновый", chances: [["epic", 60], ["mythic", 40]] },
-            { id: 9, price: 10000, name: "Бриллиантовый", chances: [["epic", 40], ["mythic", 60]] },
-            { id: 10, price: 20000, name: "Титановый", chances: [["mythic", 100]] },
-            { id: 11, price: 30000, name: "Космический", chances: [["mythic", 100]] },
-            { id: 12, price: 40000, name: "Ультра", chances: [["mythic", 100]] },
-            { id: 13, price: 50000, name: "Гипер", chances: [["mythic", 100]] },
-            { id: 14, price: 60000, name: "Квантовый", chances: [["mythic", 100]] },
-            { id: 15, price: 80000, name: "Фотонный", chances: [["mythic", 100]] },
-            { id: 16, price: 100000, name: "Галактический", chances: [["mythic", 100]] },
-            { id: 17, price: 120000, name: "Космо-Элит", chances: [["mythic", 100]] },
-            { id: 18, price: 160000, name: "Вселенский", chances: [["mythic", 100]] },
-            { id: 19, price: 200000, name: "Абсолют", chances: [["mythic", 100]] },
-            { id: 20, price: 240000, name: "Божественный", chances: [["mythic", 100]] }
-        ];
-
-        // --- СОСТОЯНИЕ ИГРЫ ---
-        let state = {
-            balance: 0,
-            casesOpened: 0,
-            garage: [],
-            lastBonusDate: null,
-            withdrawHistory: []
-        };
-
-        // --- ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ---
         function switchTab(tabName) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-
-            const tabBtn = document.getElementById('tab-' + tabName);
-            if (tabBtn) tabBtn.classList.add('active');
-
-            const page = document.getElementById('page-' + tabName);
-            if (page) page.classList.add('active');
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.getElementById(tabName).classList.add('active');
+            document.querySelectorAll('.btn-back').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`tab-${tabName}`).classList.add('active');
         }
-
-        // --- ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ---
-        function updateUI() {
-            document.getElementById('balance').textContent = state.balance;
-            document.getElementById('stat-balance').textContent = state.balance;
-            document.getElementById('stat-cases').textContent = state.casesOpened;
-            document.getElementById('stat-garage').textContent = state.garage.length;
-
-            saveState();
-        }
-
-        // --- РЕНДЕР КЕЙСОВ ---
-        function renderCases() {
-            const grid = document.getElementById('casesGrid');
-            grid.innerHTML = '';
-            casesData.forEach(c => {
-                const div = document.createElement('div');
-                div.className = 'case-card';
-                div.innerHTML = `
-                    <div class="case-icon">📦</div>
-                    <div class="case-name">${c.name}</div>
-                    <div class="case-price">${c.price.toLocaleString()} ₽</div>
-                `;
-                div.onclick = () => openCase(c);
-                grid.appendChild(div);
-            });
-        }
-        // --- ОТКРЫТИЕ КЕЙСА: ПРОВЕРКА БАЛАНСА И АНИМАЦИЯ ---
-        let currentCase = null;
-        let rolledCar = null;
-
-        function openCase(c) {
-            if (state.balance < c.price) {
-                alert('Не хватает средств! Пополните баланс.');
-                return;
-            }
-            currentCase = c;
-            // выбираем приз по шансам кейса
-            rolledCar = rollCar(c.chances);
-            // показываем экран анимации
-            const anim = document.getElementById('caseAnimOverlay');
-            anim.classList.add('active');
-            document.getElementById('animCaseName').textContent = c.name;
-            document.getElementById('animPrice').textContent = 'Цена: ' + c.price.toLocaleString() + ' ₽';
-            const box = document.getElementById('animBox');
-            box.classList.remove('opened');
-            box.textContent = '📦';
-            document.getElementById('animResult').style.display = 'none';
-        }
-
-        function rollCar(chances) {
-            // собираем пул машин по редкости и выбираем случайную
-            const total = chances.reduce((s, x) => s + x[1], 0);
-            let roll = Math.random() * total;
-            let rarity = chances[0][0];
-            for (const [r, chance] of chances) {
-                if (roll < chance) { rarity = r; break; }
-                roll -= chance;
-            }
-            // внутри редкости — чем дороже машина, тем реже она выпадает
-            const pool = carsData.filter(x => x.rarity === rarity);
-            const weights = pool.map(x => 1 / (x.price + 1));
-            const wTotal = weights.reduce((s, w) => s + w, 0);
-            let wr = Math.random() * wTotal;
-            for (let i = 0; i < pool.length; i++) {
-                if (wr < weights[i]) return pool[i];
-                wr -= weights[i];
-            }
-            return pool[0];
-        }
-
-        function startOpen() {
-            // списываем баланс и запускаем анимацию тряски коробки
-            state.balance -= currentCase.price;
-            state.casesOpened++;
-            updateUI();
-
-            const box = document.getElementById('animBox');
-            box.classList.add('shake');
-            document.getElementById('btnOpenCase').disabled = true;
-
-            setTimeout(() => {
-                box.classList.remove('shake');
-                box.textContent = '🎉';
-                document.getElementById('animResult').style.display = 'block';
-                document.getElementById('resName').textContent = rolledCar.name;
-                document.getElementById('resRarity').textContent = rarityLabel(rolledCar.rarity);
-                document.getElementById('resValue').textContent = rolledCar.price.toLocaleString() + ' ₽';
-                document.getElementById('btnOpenCase').disabled = false;
-                state.garage.push(rolledCar.id);
-                updateUI();
-            }, 1800);
-        }
-
-        function rarityLabel(r) {
-            return { common: 'Обычная', rare: 'Редкая', epic: 'Эпическая', mythic: 'Легендарная' }[r];
-        }
-
-        function closeCaseAnim() {
-            document.getElementById('caseAnimOverlay').classList.remove('active');
-            renderGarage();
-        }
-
-        // --- РЕНДЕР ГАРАЖА ---
-        function renderGarage() {
-            const grid = document.getElementById('garageGrid');
-            grid.innerHTML = '';
-            if (!state.garage.length) {
-                grid.innerHTML = '<p style="color:#888; text-align:center;">Гараж пуст. Открывай кейсы!</p>';
-                return;
-            }
-            state.garage.forEach((carId, i) => {
-                const car = carsData.find(x => x.id === carId);
-                const div = document.createElement('div');
-                div.className = 'car-card';
-                div.innerHTML = `
-                    <div style="font-size:36px;">🚗</div>
-                    <div class="car-name">${car.name}</div>
-                    <div class="car-value">${car.price.toLocaleString()} ₽</div>
-                    <button class="bal" style="padding:6px 12px; font-size:12px;" onclick="sellCar(${i})">Продать</button>
-                `;
-                grid.appendChild(div);
-            });
-        }
-
-        // --- ПРОДАЖА МАШИНЫ (80% от цены) ---
-        function sellCar(i) {
-            const car = carsData.find(x => x.id === state.garage[i]);
-            const sellPrice = Math.floor(car.price * 0.8);
-            if (confirm('Продать ' + car.name + ' за ' + sellPrice.toLocaleString() + ' ₽?')) {
-                state.balance += sellPrice;
-                state.garage.splice(i, 1);
-                updateUI();
-                renderGarage();
-            }
-        }
-
-        // --- ЕЖЕДНЕВНЫЙ БОНУС (25 ₽) ---
-        function claimBonus() {
-            const today = new Date().toDateString();
-            if (state.lastBonusDate === today) {
-                document.getElementById('bonusTimer').textContent = 'Уже получено! Приходи завтра.';
-                return;
-            }
-            state.balance += 25;
-            state.lastBonusDate = today;
-            updateUI();
-            document.getElementById('bonusTimer').textContent = 'Бонус получен! Возвращайся завтра.';
-        }
-
-        // --- ВЫВОД СРЕДСТВ НА КАРТУ ---
-        function processWithdrawal() {
-            const digits = document.getElementById('withdrawCard').value.replace(/\D/g, '');
-            const amount = parseInt(document.getElementById('withdrawAmount').value);
-            if (digits.length !== 16) {
-                document.getElementById('wdStatus').textContent = '❌ Введите 16 цифр номера карты.';
-                return;
-            }
-            if (!amount || amount < 250) {
-                document.getElementById('wdStatus').textContent = '❌ Минимум для вывода — 250 ₽.';
-                return;
-            }
-            if (amount > state.balance) {
-                document.getElementById('wdStatus').textContent = '❌ Недостаточно средств на балансе.';
-                return;
-            }
-            state.balance -= amount;
-            state.withdrawHistory.unshift({ card: digits.slice(-4), amount: amount, date: new Date().toLocaleString() });
-            document.getElementById('wdStatus').textContent = '✅ Заявка на вывод ' + amount.toLocaleString() + ' ₽ создана!';
-            updateUI();
-        }
-
-        // --- ПОПОЛНЕНИЕ (СИМУЛЯЦИЯ) ---
-        function addBalance(amount) {
-            state.balance += amount;
-            updateUI();
-            alert('Баланс пополнен на ' + amount.toLocaleString() + ' ₽ (симуляция).');
-        }
-
-        // --- СОХРАНЕНИЕ И ЗАГРУЗКА ---
-        function saveState() {
-            localStorage.setItem('autocases_state', JSON.stringify(state));
-        }
-        function loadState() {
-            const saved = localStorage.getItem('autocases_state');
-            if (saved) {
-                try {
-                    const l = JSON.parse(saved);
-                    state.balance = l.balance || 0;
-                    state.casesOpened = l.casesOpened || 0;
-                    state.garage = l.garage || [];
-                    state.lastBonusDate = l.lastBonusDate || null;
-                    state.withdrawHistory = l.withdrawHistory || [];
-                } catch (e) { console.error('Ошибка загрузки', e); }
-            }
-        }
-        /* ДОБАВИТЬ В СТИЛИ (Часть 1) ИЛИ В ЭТОТ БЛОК */
-        .btn-back {
-            background:transparent; color:#aaa; border:1px solid #333;
-            padding:8px 16px; border-radius:20px; cursor:pointer;
-            font-size:14px; margin-bottom:12px; transition:0.2s;
-        }
-        .btn-back:hover { background:#222; color:#fff; border-color:#555; }
-        .input-field {
-            width:100%; padding:12px; margin-top:8px; background:#1a1a2e;
-            border:1px solid #333; color:#fff; border-radius:12px;
-            box-shadow:0 2px 8px rgba(0,0,0,0.3);
-        }
-        .car-card {
-            background:linear-gradient(160deg,#23234a,#16162e);
-            border:1px solid #34345c; border-radius:16px;
-            padding:14px; text-align:center;
-        }
-        .car-name { font-size:15px; font-weight:700; margin:8px 0 4px 0; color:#ddd; }
-        .car-value { color:#fbbf24; font-weight:800; }
-
-        /* АНИМАЦИЯ ОТКРЫТИЯ КЕЙСА */
-        #caseAnimOverlay {
-            position:fixed; top:0; left:0; width:100%; height:100%;
-            background:rgba(0,0,0,0.85); z-index:999;
-            display:none; align-items:center; justify-content:center;
-        }
-        #caseAnimOverlay.active { display:flex; }
-        #animBox {
-            font-size:64px; animation:spin 1.8s linear infinite;
-            filter:drop-shadow(0 0 12px rgba(255,215,30,0.6));
-        }
-        @keyframes spin { 0% { transform:rotate(0deg); } 100% { transform:rotate(720deg); } }
-        .shake { animation:shake 0.5s cubic-bezier(.36,.07,.19,.97) both infinite; }
-        @keyframes shake {
-            10%, 30%, 50%, 70%, 90% { transform:translateX(-5px); }
-            20%, 40%, 60%, 80%, 100% { transform:translateX(5px); }
-        }
-
-        /* ОВЕРЛЕЙ ВЫПАДЕНИЯ ПРИЗА */
-        .overlay { position:fixed; top:0; left:0; width:100%; height:100%;
-            background:rgba(0,0,0,0.9); z-index:1000; display:none;
-            align-items:center; justify-content:center; }
-        .drop-card { background:#1e1e3a; padding:32px; border-radius:24px;
-            text-align:center; border:2px solid #fbbf24; box-shadow:0 0 32px rgba(251,191,38,0.4); }
-        .drop-spin { font-size:80px; animation:spin 2s linear infinite; }
-    </style>
-
-    <!-- АНИМАЦИОННЫЙ ЭКРАН ОТКРЫТИЯ КЕЙСА -->
-    <div id="caseAnimOverlay">
-        <div style="text-align:center;">
-            <div style="font-size:72px; margin:0 0 20px 0;" id="animBox">📦</div>
-            <h2 id="animCaseName" style="color:#fff; margin:0 0 8px 0;"></h2>
-            <p id="animPrice" style="color:#aaa; margin:0 0 24px 0;"></p>
-            <button class="bal" id="btnOpenCase" onclick="startOpen()" style="padding:12px 32px; font-size:18px;">Открыть кейс</button>
-            <div id="animResult" style="margin-top:24px; display:none;">
-                <h3 id="resName" style="color:#fbbf24; margin:0 0 8px 0;"></h3>
-                <div id="resRarity" style="text-transform:uppercase; font-weight:700; color:#88aaff; margin:0 0 10px 0;"></div>
-                <div id="resValue" style="font-size:22px; color:#fff;"></div>
-                <button class="bal" onclick="closeCaseAnim()" style="margin-top:16px; width:100%;">Забрать приз</button>
-            </div>
-        </div>
-    </div>
-
-</div> <!-- .wrap -->
-
-<script>
-    // Запуск при загрузке
-    loadState();
-    renderCases();
-    renderGarage();
-</script>
+    </script>
 </body>
 </html>
