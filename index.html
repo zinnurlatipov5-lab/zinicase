@@ -64,6 +64,7 @@ header h1{font-size:20px;background:linear-gradient(90deg,#fbbf24,#fb7185);-webk
 .pbar{flex:1;height:10px;background:#0e0e20;border-radius:6px;overflow:hidden}
 .pfill{height:100%;background:linear-gradient(90deg,#f97316,#fbbf24);border-radius:6px;transition:width .4s}
 #toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%);background:#22c55e;color:#000;padding:10px 22px;border-radius:22px;font-weight:800;display:none;z-index:200;white-space:nowrap;max-width:92vw}
+#toast.err{background:#ef4444;color:#fff}
 nav{position:fixed;bottom:0;left:0;right:0;background:rgba(14,14,26,.95);border-top:1px solid #2a2a4a;display:flex;z-index:50;backdrop-filter:blur(8px)}
 nav .tab{flex:1;border:none;background:transparent;padding:11px 2px;font-size:11px;color:#778;cursor:pointer}
 nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24}
@@ -71,6 +72,10 @@ nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24}
 .req button{margin:6px 6px 0 0;padding:8px 14px;border:none;border-radius:10px;font-weight:700;cursor:pointer}
 .req .ok{background:linear-gradient(135deg,#22c55e,#15803d);color:#fff}
 .req .no{background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff}
+#ovMsg{display:none;background:rgba(239,68,68,.15);border:1px solid #ef4444;color:#fca5a5;border-radius:12px;padding:10px;font-size:14px;margin-top:12px}
+.parts-list{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:12px}
+.p-chip{background:#1a1a30;border:1px solid #33336a;border-radius:10px;padding:8px 4px;font-size:11px;text-align:center;color:#556}
+.p-chip.have{color:#fbbf24;border-color:#fbbf24}
 </style>
 </head>
 <body>
@@ -118,7 +123,7 @@ nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24}
   <div class="panel">
     <b style="font-size:18px">🔩 Запчасти: <span id="partsCount2">0</span>/20</b>
     <div class="pbar" style="margin-top:10px"><div class="pfill" id="pfill2" style="width:0%"></div></div>
-    <div id="partsList" style="margin-top:12px;font-size:13px;color:#9aa"></div>
+    <div class="parts-list" id="partsList"></div>
     <button class="btn" id="buildBtn" style="margin-top:14px" onclick="buildCar()">🔧 Собрать машину за 250 ₽</button>
   </div>
 </section>
@@ -171,7 +176,9 @@ nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24}
     <div class="big-box" id="ovBox">📦</div>
     <h2 id="ovCase" style="margin:12px 0 4px"></h2>
     <p id="ovPrice" style="color:#99a;font-size:14px"></p>
+    <div id="ovMsg"></div>
     <button class="btn" id="ovOpen" style="margin-top:16px">Открыть</button>
+    <div class="row"><button class="btn btn-dark" id="ovTopup" style="display:none" onclick="closeOverlay();switchTab('recharge')">Пополнить баланс</button></div>
     <div class="row"><button class="btn btn-dark" onclick="closeOverlay()">Отмена</button></div>
   </div>
   <div id="ovResult" style="display:none">
@@ -179,7 +186,6 @@ nav .tab.active{color:#fbbf24;border-top:2px solid #fbbf24}
     <h3 id="ovName" class="item-name"></h3>
     <div class="rarity-tag" id="ovRarity"></div>
     <div class="item-value" id="ovValue"></div>
-    <div id="ovPart" style="color:#9aa;font-size:13px;margin-top:4px"></div>
     <div class="row"><button class="btn" id="ovKeep">В гараж</button><button class="btn btn-dark" id="ovSell">Продать</button></div>
     <div class="row"><button class="btn btn-dark" onclick="closeOverlay()">Закрыть</button></div>
   </div>
@@ -217,8 +223,8 @@ var cases=casesData.map(function(a,i){return{price:a[0],name:a[1],emoji:CASE_EMO
 var PART_NAMES=["Колесо","Двигатель","Бампер","Фара","Руль","Глушитель","АКБ","Коробка","Тормоза","Фильтр","Радиатор","Капот","Дверь","Крыло","Стекло","Сиденье","Багажник","Выхлоп","Рессора","Бензобак"];
 
 var state={balance:0,casesOpened:0,garage:[],parts:{},lastBonus:null,reqs:[],reqSeq:1};
-function save(){try{localStorage.setItem("autocases_v2",JSON.stringify(state))}catch(e){}}
-function load(){try{var s=JSON.parse(localStorage.getItem("autocases_v2"));if(s){state.balance=s.balance||0;state.casesOpened=s.casesOpened||0;state.garage=s.garage||[];state.parts=s.parts||{};state.lastBonus=s.lastBonus||null;state.reqs=s.reqs||[];state.reqSeq=s.reqSeq||1}}catch(e){}}
+function save(){try{localStorage.setItem("autocases_v3",JSON.stringify(state))}catch(e){}}
+function load(){try{var s=JSON.parse(localStorage.getItem("autocases_v3"));if(s){state.balance=s.balance||0;state.casesOpened=s.casesOpened||0;state.garage=s.garage||[];state.parts=s.parts||{};state.lastBonus=s.lastBonus||null;state.reqs=s.reqs||[];state.reqSeq=s.reqSeq||1}}catch(e){}}
 
 function switchTab(n){
   var p=document.querySelectorAll(".page");for(var i=0;i<p.length;i++)p[i].classList.remove("active");
@@ -231,7 +237,13 @@ function switchTab(n){
   if(n==="admin")renderAdmin();
   window.scrollTo(0,0);
 }
-function toast(m){var t=document.getElementById("toast");t.textContent=m;t.style.display="block";setTimeout(function(){t.style.display="none"},2200)}
+function toast(m,err){
+  var t=document.getElementById("toast");
+  t.textContent=m;
+  t.className=err?"err":"";
+  t.style.display="block";
+  setTimeout(function(){t.style.display="none"},2400);
+}
 function partsGot(){var n=0;for(var k in state.parts)if(state.parts[k]>0)n++;return n}
 function updateUI(){
   document.getElementById("balance").textContent=state.balance.toLocaleString("ru");
@@ -251,23 +263,29 @@ function renderCases(){
   cases.forEach(function(c){
     var d=document.createElement("div");d.className="case-card";
     d.innerHTML='<span class="case-emoji">'+c.emoji+'</span><div class="case-name">'+c.name+'</div><div class="case-price">'+c.price.toLocaleString("ru")+' ₽</div>';
-    d.onclick=function(){showCase(c)};g.appendChild(d);
+    d.onclick=function(){showCase(c)};
+    g.appendChild(d);
   });
 }
 function renderGarage(){
   var g=document.getElementById("garageGrid");g.innerHTML="";
-  if(!state.garage.length)g.innerHTML='<p style="color:#889;grid-column:1/-1;text-align:center;padding:12px">Гараж пуст. Открывай кейсы!</p>';
+  if(!state.garage.length)g.innerHTML='<p style="color:#889;grid-column:1/-1;text-align:center;padding:12px">Машин нет. Открывай кейсы или собирай из запчастей!</p>';
   state.garage.forEach(function(cid,idx){
     var car=cars[cid];var d=document.createElement("div");d.className="car-card";
     d.innerHTML='<div style="font-size:34px">'+rEmoji[car.rarity]+'</div><div style="font-size:13px;font-weight:700;margin:8px 0 2px">'+car.name+'</div><div class="rarity-tag r-'+car.rarity+'">'+rLabel[car.rarity]+'</div><div style="font-weight:800;margin-top:6px">'+car.price.toLocaleString("ru")+' ₽</div><button class="sell-btn">Продать за '+car.price.toLocaleString("ru")+' ₽</button>';
-    d.querySelector(".sell-btn").onclick=function(){sellCar(idx)};g.appendChild(d);
+    d.querySelector(".sell-btn").onclick=function(){sellCar(idx)};
+    g.appendChild(d);
   });
-  var list=document.getElementById("partsList");var got=partsGot();var html=[];
-  PART_NAMES.forEach(function(nm){html.push('<span style="'+(state.parts[nm]?"color:#fbbf24":"color:#556")+'">'+(state.parts[nm]?"✅":"⬜")+" "+nm+"</span>")});
-  if(list)list.innerHTML=html.join(" · ");
+  var list=document.getElementById("partsList");
+  var html="";
+  PART_NAMES.forEach(function(nm){
+    var cnt=state.parts[nm]||0;
+    html+='<div class="p-chip'+(cnt>0?" have":"")+'">🔩 '+nm+(cnt>0?" ×"+cnt:"")+'</div>';
+  });
+  list.innerHTML=html;
   var bb=document.getElementById("buildBtn");
-  if(bb)bb.disabled=got<20;
-  if(bb)bb.textContent=got<20?("Нужно ещё "+(20-g)+" запч."):("🔧 Собрать машину за 250 ₽");
+  if(partsGot()<20){bb.disabled=true;bb.textContent="Нужно ещё "+(20-partsGot())+" разных запчастей"}
+  else{bb.disabled=false;bb.textContent="🔧 Собрать машину за 250 ₽"}
   updateUI();
 }
 
@@ -284,38 +302,58 @@ function rollPrize(c){
     var w=pool.map(function(x){return 1/x.price});
     var tot=0;for(var i=0;i<w.length;i++)tot+=w[i];
     var x=Math.random()*tot;
-    for(var j=0;j<pool.length;j++){if(x<w[j]){var cc=pool[j];return{name:cc.name,value:cc.price,rarity:cc.rarity,emoji:rEmoji[cc.rarity],isCar:true,carId:cc.id}}x-=w[j]}
-    var c0=pool[0];return{name:c0.name,value:c0.price,rarity:c0.rarity,emoji:rEmoji[c0.rarity],isCar:true,carId:c0.id};
+    for(var j=0;j<pool.length;j++){
+      if(x<w[j]){var cc=pool[j];return{name:cc.name,value:cc.price,rarity:cc.rarity,emoji:rEmoji[cc.rarity],isCar:true,isPart:false,carId:cc.id}}
+      x-=w[j];
+    }
+    var c0=pool[0];return{name:c0.name,value:c0.price,rarity:c0.rarity,emoji:rEmoji[c0.rarity],isCar:true,isPart:false,carId:c0.id};
   }
-  var val,rar;
-  if(r<0.55){val=P*(0.25+Math.random()*0.35);rar="common"}
-  else if(r<0.87){val=P*(0.7+Math.random()*0.6);rar="rare"}
-  else{val=P*(1.4+Math.random()*1.3);rar="epic"}
-  val=Math.max(1,Math.round(val));
-  var pn=PART_NAMES[Math.floor(Math.random()*PART_NAMES.length)];
-  return{name:pn,value:val,rarity:rar,emoji:"🔧",isCar:false,carId:null};
+  if(r<0.30){
+    var nm=PART_NAMES[Math.floor(Math.random()*PART_NAMES.length)];
+    var val=Math.max(1,Math.round(P*(0.5+Math.random()*0.7)));
+    return{name:nm,value:val,rarity:rarOf(val),emoji:"🔩",isCar:false,isPart:true,carId:null};
+  }
+  var val2,rar,nm2;
+  if(r<0.72){val2=P*(0.25+Math.random()*0.35);rar="common";nm2="Мелкий приз"}
+  else if(r<0.93){val2=P*(0.7+Math.random()*0.6);rar="rare";nm2="Хороший приз"}
+  else{val2=P*(1.4+Math.random()*1.3);rar="epic";nm2="Крупный приз"}
+  val2=Math.max(1,Math.round(val2));
+  return{name:nm2,value:val2,rarity:rar,emoji:"💰",isCar:false,isPart:false,carId:null};
 }
 function showCase(c){
-  if(state.balance<c.price){toast("Недостаточно средств!");return}
   currentCase=c;opened=false;currentPrize=null;
   document.getElementById("ovBox").textContent=c.emoji;
   document.getElementById("ovBox").className="big-box";
   document.getElementById("ovCase").textContent="Кейс «"+c.name+"»";
   document.getElementById("ovPrice").textContent="Цена: "+c.price.toLocaleString("ru")+" ₽";
-  document.getElementById("ovOpen").textContent="Открыть за "+c.price.toLocaleString("ru")+" ₽";
+  var msg=document.getElementById("ovMsg");
+  var openBtn=document.getElementById("ovOpen");
+  var topBtn=document.getElementById("ovTopup");
+  if(state.balance<c.price){
+    var lack=c.price-state.balance;
+    msg.textContent="❌ Не хватает "+lack.toLocaleString("ru")+" ₽ на балансе. Пополни в разделе «Ещё».";
+    msg.style.display="block";
+    openBtn.style.display="none";
+    topBtn.style.display="block";
+  }else{
+    msg.style.display="none";
+    openBtn.textContent="Открыть за "+c.price.toLocaleString("ru")+" ₽";
+    openBtn.style.display="block";
+    topBtn.style.display="none";
+  }
   document.getElementById("ovReady").style.display="block";
   document.getElementById("ovResult").style.display="none";
   document.getElementById("overlay").classList.add("show");
 }
 function doOpen(){
   if(opened||!currentCase)return;
+  if(state.balance<currentCase.price){toast("Недостаточно средств!",true);return}
   opened=true;
   state.balance-=currentCase.price;state.casesOpened++;updateUI();
   var box=document.getElementById("ovBox");
   box.classList.add("shake");
   document.getElementById("ovOpen").style.display="none";
   currentPrize=rollPrize(currentCase);
-  var partDrop=Math.random()<0.45?PART_NAMES[Math.floor(Math.random()*PART_NAMES.length)]:null;
   setTimeout(function(){
     box.classList.remove("shake");
     document.getElementById("ovReady").style.display="none";
@@ -324,14 +362,13 @@ function doOpen(){
     img.classList.remove("pop");void img.offsetWidth;img.classList.add("pop");
     document.getElementById("ovName").textContent=p.name;
     var tag=document.getElementById("ovRarity");
-    tag.textContent=p.isCar?rLabel[p.rarity]:"Запчасть";
+    tag.textContent=p.isCar?rLabel[p.rarity]:(p.isPart?"Запчасть":"Приз");
     tag.className="rarity-tag r-"+p.rarity;
     document.getElementById("ovValue").textContent=p.value.toLocaleString("ru")+" ₽";
-    var op=document.getElementById("ovPart");
-    if(partDrop){state.parts[partDrop]=(state.parts[partDrop]||0)+1;op.textContent="🔩 Бонус: запчасть «"+partDrop+"»!"}
-    else op.textContent="";
     var keep=document.getElementById("ovKeep");
-    keep.style.display=p.isCar?"block":"none";
+    if(p.isCar){keep.textContent="В гараж";keep.style.display="block"}
+    else if(p.isPart){keep.textContent="Забрать деталь";keep.style.display="block"}
+    else keep.style.display="none";
     document.getElementById("ovSell").textContent="Продать за "+p.value.toLocaleString("ru")+" ₽";
     document.getElementById("ovResult").style.display="block";
     updateUI();
@@ -343,11 +380,21 @@ function closeOverlay(){
 }
 document.getElementById("ovOpen").onclick=doOpen;
 document.getElementById("ovKeep").onclick=function(){
-  if(currentPrize&&currentPrize.isCar){state.garage.push(currentPrize.carId);toast(currentPrize.name+" в гараже! 🎉")}
+  if(!currentPrize)return;
+  if(currentPrize.isCar){
+    state.garage.push(currentPrize.carId);
+    toast(currentPrize.name+" в гараже! 🎉");
+  }else if(currentPrize.isPart){
+    state.parts[currentPrize.name]=(state.parts[currentPrize.name]||0)+1;
+    toast("Запчасть «"+currentPrize.name+"» добавлена в гараж 🔩");
+  }
   closeOverlay();
 };
 document.getElementById("ovSell").onclick=function(){
-  if(currentPrize){state.balance+=currentPrize.value;toast("Продано за "+currentPrize.value.toLocaleString("ru")+" ₽")}
+  if(currentPrize){
+    state.balance+=currentPrize.value;
+    toast("Продано за "+currentPrize.value.toLocaleString("ru")+" ₽");
+  }
   closeOverlay();
 };
 function sellCar(i){
@@ -357,12 +404,13 @@ function sellCar(i){
   renderGarage();updateUI();
 }
 function buildCar(){
-  if(partsGot()<20){toast("Сначала собери 20 запчастей!");return}
-  for(var i=0;i<PART_NAMES.length;i++)state.parts[PART_NAMES[i]]=0;
-  var car=cars[Math.floor(Math.random()*cars.length)];
-  state.garage.push(car.id);
-  toast("🔧 Машина собрана: "+car.name+"!");
-  renderGarage();updateUI();
+  if(partsGot()<20){toast("Сначала собери 20 разных запчастей!",true);return}
+  PART_NAMES.forEach(function(nm){if(state.parts[nm]>0)state.parts[nm]--});
+  var best=cars[0];
+  for(var i=0;i<cars.length;i++)if(Math.abs(cars[i].price-250)<Math.abs(best.price-250))best=cars[i];
+  state.garage.push(best.id);
+  toast("🔧 Машина собрана: "+best.name+"!");
+  renderGarage();switchTab("garage");
 }
 function claimBonus(){
   var today=new Date().toDateString();
@@ -411,7 +459,7 @@ function adminDecide(id,ok){
 function adminLogin(){
   var p=prompt("Пароль админа:");
   if(p===ADMIN_PASS)switchTab("admin");
-  else if(p!==null)toast("Неверный пароль!");
+  else if(p!==null)toast("Неверный пароль!",true);
 }
 function addBalance(a){state.balance+=a;toast("Баланс пополнен на "+a.toLocaleString("ru")+" ₽");updateUI()}
 
