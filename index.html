@@ -78,7 +78,7 @@ header h1{font-size:20px;font-weight:900;background:linear-gradient(90deg,#fbbf2
 .chips{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 .chips button{background:var(--panel2);border:1px solid var(--line);color:var(--amber);border-radius:10px;padding:8px 12px;font-size:12px;font-weight:800;cursor:pointer}
 .subnav{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.subnav button{flex:1;border:1px solid var(--line);background:var(--panel2);color:var(--mut);border-radius:12px;padding:11px 4px;font-size:13px;font-weight:700;cursor:pointer;min-width:90px}
+.subnav button{flex:1;border:1px solid var(--line);background:var(--panel2);color:var(--mut);border-radius:12px;padding:11px 4px;font-size:13px;font-weight:700;cursor:pointer;min-width:60px}
 .subnav button.on{background:linear-gradient(135deg,#fcd34d,#f59e0b);color:#1a1408;border-color:transparent}
 .wsec{display:none}.wsec.on{display:block}
 .case-card{border-radius:18px;padding:1px}
@@ -87,9 +87,14 @@ header h1{font-size:20px;font-weight:900;background:linear-gradient(90deg,#fbbf2
 .case-cap{font-size:10px;color:var(--mut);margin-top:5px}
 .fee-note{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.5);border-radius:10px;padding:8px 10px;font-size:12px;margin-top:8px;color:#fca5a5}
 .adm-cmt{color:#6ee7b7;font-size:12px;margin-top:4px;background:rgba(16,185,129,.1);border-radius:8px;padding:6px 8px}
+.offer-card{background:linear-gradient(135deg,rgba(234,88,12,.24),rgba(120,53,15,.28));border:1px solid #ea580c;border-radius:16px;padding:14px;margin-bottom:14px;font-size:13px}
+.offer-card .ob{color:#fdba74;font-weight:800;font-size:14px;margin-bottom:4px}
+.auc-card{background:linear-gradient(135deg,rgba(59,130,246,.2),rgba(30,58,138,.3));border:1px solid #3b82f6;border-radius:16px;padding:14px;font-size:13px;text-align:center}
+.auc-card .ab{color:#93c5fd;font-weight:800;font-size:14px;margin-bottom:4px}
+.salon-chip{background:linear-gradient(160deg,#20203e,#141428);border:1px solid var(--line);border-radius:14px;padding:10px 6px;text-align:center}
 nav{position:fixed;bottom:0;left:0;right:0;z-index:70;display:flex;background:linear-gradient(180deg,rgba(10,10,20,.94),rgba(6,6,14,.98));border-top:1px solid var(--line2);padding-bottom:env(safe-area-inset-bottom)}
-nav .tab{flex:1;border:none;background:transparent;padding:10px 2px 12px;font-size:10.5px;font-weight:700;color:var(--mut);cursor:pointer;line-height:1.3}
-nav .tab .ti{font-size:21px;display:block;margin-bottom:2px;filter:grayscale(.7) opacity(.75)}
+nav .tab{flex:1;border:none;background:transparent;padding:10px 2px 12px;font-size:10px;font-weight:700;color:var(--mut);cursor:pointer;line-height:1.3}
+nav .tab .ti{font-size:20px;display:block;margin-bottom:2px;filter:grayscale(.7) opacity(.75)}
 nav .tab.active{color:var(--amber)}
 nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px rgba(251,191,36,.6)}
 #overlay{position:fixed;inset:0;background:rgba(4,4,10,.94);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
@@ -108,18 +113,12 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
 .login-card .li{font-size:68px}
 .login-card h2{font-size:25px;margin:12px 0 6px;background:linear-gradient(90deg,#fbbf24,#fde68a,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
 .login-card p{color:var(--mut);font-size:13px;margin-bottom:14px}
-/* колесо фортуны */
 .wheel-wrap{position:relative;width:260px;height:260px;margin:14px auto}
-#wheel{width:260px;height:260px;border-radius:50%;position:relative;
-  background:conic-gradient(#7c3aed 0deg 45deg,#1e1e3c 45deg 90deg,#0ea5e9 90deg 135deg,#1e1e3c 135deg 180deg,#d97706 180deg 225deg,#1e1e3c 225deg 270deg,#16a34a 270deg 315deg,#1e1e3c 315deg 360deg);
-  box-shadow:0 0 0 6px #2a2a52,0 0 30px rgba(139,92,246,.35);
-  transition:transform 3.2s cubic-bezier(.15,.75,.25,1)}
-.wseg{position:absolute;left:50%;top:50%;transform-origin:0 0;font-size:12px;font-weight:900;color:#fff;white-space:nowrap}
-.wpointer{position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:30px;z-index:5;filter:drop-shadow(0 3px 6px rgba(0,0,0,.6))}
-.whub{position:absolute;top:50%;left:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:linear-gradient(135deg,#fcd34d,#f59e0b);color:#1a1408;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;z-index:4;box-shadow:0 3px 12px rgba(0,0,0,.6)}
+#wheel{width:260px;height:260px;border-radius:50%;position:relative;background:conic-gradient(#7c3aed 0deg 45deg,#1e1e3c 45deg 90deg,#0ea5e9 90deg 135deg,#1e1e3c 135deg 180deg,#d97706 180deg 225deg,#1e1e3c 225deg 270deg,#16a34a 270deg 315deg,#1e1e3c 315deg 360deg);box-shadow:0 0 0 6px #2a2a52,0 0 30px rgba(139,92,246,.35);transition:transform 3.2s cubic-bezier(.15,.75,.25,1)}
+.wpointer{position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:30px;z-index:5}
+.whub{position:absolute;top:50%;left:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:linear-gradient(135deg,#fcd34d,#f59e0b);color:#1a1408;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;z-index:4}
 .wl-msg{text-align:center;font-weight:800;font-size:14px;margin-top:12px;min-height:20px}
-.wl-msg.win{color:#6ee7b7}
-.wl-msg.free{color:#fde047}
+.wl-msg.win{color:#6ee7b7}.wl-msg.free{color:#fde047}
 </style>
 </head>
 <body>
@@ -128,8 +127,7 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   <div class="login-card">
     <div class="li">🚗</div>
     <h2>АВТОРЫНОК</h2>
-    <p>Работа — реальные ₽ · Кейсы и покупки — вирты 💰</p>
-    <div id="loginTg"></div>
+    <p>Салон, кейсы и аукцион — вирты 💰 · Работа — реальные ₽ · Рынок — перепродажа</p>
     <div id="loginGuest" style="display:none">
       <input type="text" id="guestName" class="input-field" placeholder="Как тебя звать?" maxlength="20">
       <button class="btn" style="margin-top:10px" onclick="guestLogin()">🎮 Войти</button>
@@ -156,30 +154,26 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   <div class="hero">
     <div class="hero-ico">🧑‍🔧</div>
     <h2 id="greet">Привет!</h2>
-    <p>Крути кейсы и колесо за вирты → работай на реальных ₽ → выводи</p>
+    <p>Салон → работа → барахолка → вывод</p>
   </div>
   <div class="stat-grid">
-    <div class="stat-box"><b class="cash" id="hVirt">0 💰</b><span>вирты<br>кейсы, покупки, пополнения</span></div>
+    <div class="stat-box"><b class="cash" id="hVirt">0 💰</b><span>вирты<br>салон, кейсы, пополнения</span></div>
     <div class="stat-box"><b class="real" id="hReal">0 ₽</b><span>реальные<br>заработок с заказов</span></div>
   </div>
   <div class="panel">
     <h2>Как это работает</h2>
-    <div class="step"><div class="si">💰</div><div><b>Вирты</b> — игровая валюта: призы кейсов и колеса, пополнения (1 ₽ = 20 виртов), продажа транспорта. На них: кейсы, транспорт, тюнинг, ремонт.</div></div>
-    <div class="step"><div class="si">💵</div><div><b>Реальные ₽</b> — только заработок с заказов: такси, курьеры, грузы. Вывод на карту: минимум 100 ₽, комиссия 10%. Вирты на реальные не меняются.</div></div>
+    <div class="step"><div class="si">💰</div><div><b>Вирты</b> — игровая валюта: салон, кейсы, аукцион, тюнинг, ремонт. Откуда: пополнения (1 ₽ = 20 виртов), бонусы, колесо, продажи.</div></div>
+    <div class="step"><div class="si">💵</div><div><b>Реальные ₽</b> — только заработок с заказов. Вывод: минимум 100 ₽, комиссия 10%. Вирты на реальные не меняются.</div></div>
+    <div class="step"><div class="si">🏢</div><div><b>Салон</b> — покупай транспорт сразу за вирты. <b>Доноры</b> — дёшево, но под разбор на детали. <b>Аукцион</b> — каждый час проблемный лот: купил, починил, продал дороже.</div></div>
+    <div class="step"><div class="si">🏪</div><div><b>Рынок</b> — выставляй свои вещи по своей цене, перекупщики выкупают. Лишние детали продавай там же.</div></div>
   </div>
-  <div class="panel">
-    <h2>Что делать дальше</h2>
-    <div id="homeSteps"></div>
-  </div>
-  <div class="panel">
-    <h2>Последние события</h2>
-    <div id="homeLog"><p class="note">Пока пусто — начни с бонусов!</p></div>
-  </div>
+  <div class="panel"><h2>Что делать дальше</h2><div id="homeSteps"></div></div>
+  <div class="panel"><h2>Последние события</h2><div id="homeLog"><p class="note">Пока пусто!</p></div></div>
 </section>
 
 <section class="page" id="page-cases">
   <button class="btn-back" onclick="switchTab('home')">← Назад</button>
-  <div class="panel"><p class="note">📦 Кейсы за вирты 💰. Внутри — транспорт и детали в виртах. Приз: 50–140% цены кейса. Пополнение: 1 ₽ = 20 виртов.</p></div>
+  <div class="panel"><p class="note">📦 Кейсы за вирты 💰. Приз: 50–140% цены кейса. Пополнение: 1 ₽ = 20 виртов.</p></div>
   <div class="grid2" id="casesGrid"></div>
 </section>
 
@@ -193,7 +187,7 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   </div>
   <div class="panel">
     <h2>🎡 Колесо фортуны</h2>
-    <p class="note" style="text-align:center">Бесплатный спин раз в день. Дальше — за вирты (половина цены спина теряется, срежется выигрыш — крутить выгодно только бесплатно).</p>
+    <p class="note" style="text-align:center">Бесплатный спин раз в день. Дальше — за 2000 💰.</p>
     <div class="wheel-wrap">
       <div class="wpointer">🔻</div>
       <div id="wheel"></div>
@@ -202,11 +196,7 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
     <button class="btn btn-vio" id="spinBtn" onclick="spinWheel()">Крутить бесплатно</button>
     <div class="wl-msg" id="wlMsg"></div>
   </div>
-  <div class="panel">
-    <h2>Задания</h2>
-    <p class="note">Прогресс копится сам — как только выполнено, забирай 💰.</p>
-    <div id="tasksList"></div>
-  </div>
+  <div class="panel"><h2>Задания</h2><p class="note">Прогресс копится сам.</p><div id="tasksList"></div></div>
 </section>
 
 <section class="page" id="page-orders">
@@ -230,14 +220,49 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
 <section class="page" id="page-garage">
   <button class="btn-back" onclick="switchTab('home')">← Назад</button>
   <div class="panel">
+    <h2>🔨 Аукцион NPC</h2>
+    <div id="aucBox"></div>
+  </div>
+  <div class="panel">
+    <h2>🏢 Автосалон</h2>
+    <p class="note">Покупай транспорт сразу за вирты — без сборки и ожидания.</p>
+    <div class="subnav" id="salonFilters" style="margin-top:10px"></div>
+    <div class="grid2" id="salonGrid" style="margin-top:10px"></div>
+  </div>
+  <div class="panel">
+    <h2>🔧 Доноры под разбор</h2>
+    <p class="note">Битые машины по заниженной цене. Разбираешь — получаешь 1–3 детали, редкость зависит от цены донора.</p>
+    <div class="grid2" id="donorGrid" style="margin-top:10px"></div>
+  </div>
+  <div class="panel">
     <h2>Твой гараж</h2>
-    <p class="note">Нажми на транспорт — слоты деталей, тюнинг, продажа за вирты.</p>
+    <p class="note">Нажми на транспорт — слоты деталей, тюнинг, продажа, разбор.</p>
     <div class="grid2" id="garageGrid"></div>
   </div>
   <div class="panel">
-    <h2>Запчасти: <span id="partsCount2">0</span>/20</h2>
+    <h2>Запчасти: <span id="partsCount2">0</span> видов</h2>
     <div class="grid2" id="partsList" style="grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px"></div>
-    <button class="btn" id="buildBtn" style="margin-top:12px" onclick="buildVehicle()">🔧 Собрать транспорт</button>
+    <p class="note" style="margin-top:10px">Детали ставятся в слоты транспорта. Лишние — на рынок или в разбор.</p>
+  </div>
+</section>
+
+<section class="page" id="page-market">
+  <button class="btn-back" onclick="switchTab('home')">← Назад</button>
+  <div id="marketOffer"></div>
+  <div class="panel">
+    <h2>🏪 Мои лоты</h2>
+    <p class="note">Перекупщики выкупают твои лоты по твоей цене за вычетом комиссии 10%. Чем ближе цена к рыночной — тем быстрее продастся.</p>
+    <div id="marketListings" style="margin-top:10px"></div>
+  </div>
+  <div class="panel">
+    <h2>Выставить на продажу</h2>
+    <p class="note">Укажи свою цену рядом с вещью и нажми «Выставить». Совет: цена чуть ниже базовой — лот быстрее выкупят.</p>
+    <div id="marketCreate"></div>
+  </div>
+  <div class="panel">
+    <h2>⚡ Быстрая продажа (−10%)</h2>
+    <p class="note">Сразу по базовой цене за вычетом комиссии — вирты моментально.</p>
+    <div id="mySellables"></div>
   </div>
 </section>
 
@@ -295,7 +320,7 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
     <div class="statline"><span>💰 вирты</span><b id="admVirt">0</b></div>
     <div class="statline"><span>💵 заработано реальных</span><b id="admReal">0 ₽</b></div>
     <div class="statline"><span>Уровень</span><b id="admLvl">1</b></div>
-    <div class="statline"><span>Пополнений зачислено (в вирты)</span><b id="admDep">0 ₽</b></div>
+    <div class="statline"><span>Пополнений зачислено</span><b id="admDep">0 ₽</b></div>
     <div class="statline"><span>Выплачено игрокам</span><b id="admPaid">0 ₽</b></div>
   </div>
   <div class="panel">
@@ -342,7 +367,8 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   <button class="tab active" id="tab-home" onclick="switchTab('home')"><span class="ti">🏠</span>Главная</button>
   <button class="tab" id="tab-cases" onclick="switchTab('cases')"><span class="ti">📦</span>Кейсы</button>
   <button class="tab" id="tab-orders" onclick="switchTab('orders')"><span class="ti">💼</span>Заказы</button>
-  <button class="tab" id="tab-garage" onclick="switchTab('garage')"><span class="ti">🚲</span>Гараж</button>
+  <button class="tab" id="tab-garage" onclick="switchTab('garage')"><span class="ti">🚲</span>Салон</button>
+  <button class="tab" id="tab-market" onclick="switchTab('market')"><span class="ti">🏪</span>Рынок</button>
   <button class="tab" id="tab-bonus" onclick="switchTab('bonus')"><span class="ti">🎁</span>Бонусы</button>
   <button class="tab" id="tab-wallet" onclick="switchTab('wallet')"><span class="ti">💱</span>Кошелёк</button>
 </nav>
@@ -359,8 +385,12 @@ var DEP_MIN=25;
 var WD_MIN=100;
 var CASE_MIN_PCT=0.5, CASE_MAX_MULT=1.4;
 var BONUS_BASE=500, BONUS_MAX=2000;
-var WHEEL_COST=2000; /* платный спин, если бесплатный уже был */
+var WHEEL_COST=2000;
 var ADMIN_DEFAULT_CMT="Спасибо, что вы с нами!";
+var AUC_DISCOUNT_MIN=0.40, AUC_DISCOUNT_MAX=0.55; /* цена лота от базы */
+var AUC_WEAR_MIN=20, AUC_WEAR_MAX=40;             /* износ лота, % */
+var AUC_LIFETIME=60;                               /* минут до смены лота */
+function lotBuyChance(price,base){var r=price/base;if(r<=0.9)return 0.14;if(r<=1.2)return 0.07;return 0.02}
 
 /* === ВХОД === */
 var tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
@@ -368,7 +398,7 @@ if(tg){try{tg.ready();tg.expand();}catch(e){}}
 var tgUser=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user?tg.initDataUnsafe.user:null;
 var userName=tgUser?(tgUser.first_name||tgUser.username||"Игрок"):"Игрок";
 var userId=tgUser?tgUser.id:null;
-var SAVE_KEY=userId?("automarket_v11_"+userId):"automarket_v11";
+var SAVE_KEY=userId?("automarket_v13_"+userId):"automarket_v13";
 
 /* === ДАННЫЕ === */
 var rLabel={common:"Обычный",rare:"Редкий",epic:"Эпический",mythic:"Легендарный"};
@@ -409,9 +439,7 @@ function pickVehicleNear(target,n){
   for(i=0;i<sorted.length;i++){if(x<w[i])return sorted[i];x-=w[i]}
   return sorted[0];
 }
-/* Оплата заказов — реальные ₽ */
 var RAR_PAY_RUB={common:2,rare:6,epic:15,mythic:40};
-/* Кейсы — за вирты */
 var CASE_PRICES=[500,1000,2000,4000,8000,15000,30000,60000,120000,240000,500000,1000000];
 var CASE_NAMES=["Бюджетный","Стартовый","Рабочий","Мото-бокс","Мотопремиум","Серебряный","Золотой","Платиновый","Титановый","Авто-люкс","Спорт","Божественный"];
 var CASE_EMOJI=["📦","🎁","🧰","🛴","🚲","🏍️","💰","💼","💎","👑","🏆","👑"];
@@ -448,16 +476,30 @@ var TASKS=[
  {id:"gruz1",ic:"🚚",txt:"Выполни грузоперевозку",rw:600,p:1,k:"gruz"},
  {id:"night1",ic:"🌙",txt:"Отработай ночную смену",rw:800,p:1,k:"night"},
  {id:"inter1",ic:"🛣️",txt:"Съезди в междугородний рейс",rw:1000,p:1,k:"inter"},
- {id:"build1",ic:"🚗",txt:"Собери транспорт из 20 деталей",rw:1000,p:1,k:"built"},
+ {id:"salon1",ic:"🏢",txt:"Купи транспорт в автосалоне",rw:500,p:1,k:"salon"},
+ {id:"dis1",ic:"🔧",txt:"Разбери транспорт на детали",rw:500,p:1,k:"dis"},
+ {id:"auc1",ic:"🔨",txt:"Выкупи лот на аукционе NPC",rw:600,p:1,k:"auc"},
  {id:"case10",ic:"📦",txt:"Открой 10 кейсов",rw:800,p:10,k:"cases"},
- {id:"garage3",ic:"🚲",txt:"Собери 3 единицы транспорта",rw:800,p:3,k:"garage"}
+ {id:"garage3",ic:"🚙",txt:"Имей 3 единицы транспорта в гараже",rw:800,p:3,k:"garage"},
+ {id:"lot1",ic:"🏪",txt:"Выстави лот на рынок",rw:300,p:1,k:"lots"},
+ {id:"resell1",ic:"🤝",txt:"Продай вещь перекупщику",rw:400,p:1,k:"reseller"}
 ];
-/* Колесо фортуны: 8 секторов, средний выигрыш ~1000 виртов */
 var WHEEL_PRIZES=[250,500,1000,2500,500,10000,1000,5000];
+var RESELLERS=["Перекуп Гоша","Серёга с базы","Дядя Ашот","Люба «Тачки»","Марат Барыга","Витя «Шиномонтаж»","Костя «По-быстрому»","Толик Автосвет"];
+var HAGGLE_SALES=["«Отдай по-тихому, оформим как за запчасти»","«Смотри, последний раз предлагаю!»","«Пацаны на базе как раз просят»","«Быстрее оформим — быстрее деньги»","«Не гони цену, я всё равно скину»"];
+/* Доноры: дешёвые машины под разбор */
+var DONORS=[];
+(function(){
+  var ids=[2,9,28,45,72,105,135,165];
+  for(var i=0;i<ids.length;i++){
+    var v=vehicles[ids[i]%vehicles.length];
+    DONORS.push({vid:v.id,price:Math.max(50,Math.round(v.price*0.45)),wear:30+((i*7)%31)});
+  }
+})();
 
 /* === СОСТОЯНИЕ === */
 var state=null;
-function freshState(){return{virt:0,real:0,level:1,xp:0,casesOpened:0,ordersDone:0,garage:[],parts:{},lastBonus:null,bonusStreak:0,lastWheel:null,spinsBought:0,winsTotal:0,doneTasks:{},stats:{kur:0,bike:0,taxi:0,del:0,tow:0,gruz:0,night:0,inter:0,earnR:0,tune:0,repairs:0,built:0},reqs:[],depReqs:[],reqSeq:1,depSeq:1,totalDep:0,totalPaid:0,log:[]}}
+function freshState(){return{virt:0,real:0,level:1,xp:0,casesOpened:0,ordersDone:0,garage:[],parts:{},listings:[],listSeq:1,lastBonus:null,bonusStreak:0,lastWheel:null,doneTasks:{},stats:{kur:0,bike:0,taxi:0,del:0,tow:0,gruz:0,night:0,inter:0,earnR:0,tune:0,repairs:0,salon:0,dis:0,auc:0,lots:0,reseller:0},offer:null,auction:null,reqs:[],depReqs:[],reqSeq:1,depSeq:1,totalDep:0,totalPaid:0,feeTotal:0,log:[]}}
 function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(state))}catch(e){}}
 function load(){
   state=freshState();
@@ -466,10 +508,12 @@ function load(){
     if(!state.garage[j].slots)state.garage[j].slots={eng:null,tire:null,trunk:null,brake:null};
     if(state.garage[j].wear===undefined)state.garage[j].wear=100;
   }
+  if(!state.listings)state.listings=[];
   if(!state.log)state.log=[];
   if(!state.level)state.level=1;
   if(state.xp===undefined)state.xp=0;
   if(!state.stats)state.stats=freshState().stats;
+  if(state.auction&&state.auction.endsAt<=Date.now())state.auction=null;
 }
 function newVehicle(id){return{vid:id,wear:100,eng:0,tire:0,trunk:0,busyUntil:null,ord:null,slots:{eng:null,tire:null,trunk:null,brake:null}}}
 function addLog(text,type){
@@ -501,8 +545,9 @@ function switchTab(n){
   document.getElementById("page-"+n).classList.add("active");
   for(i=0;i<t.length;i++)t[i].classList.remove("active");
   var nt=document.getElementById("tab-"+n);if(nt)nt.classList.add("active");
-  if(n==="garage")renderGarage();
+  if(n==="garage"){renderGarage();renderSalon();renderAuction()}
   if(n==="orders")renderOrders();
+  if(n==="market")renderMarket();
   if(n==="cardetail")renderCarDetail();
   if(n==="wallet")renderReqs();
   if(n==="admin")renderAdmin();
@@ -523,18 +568,18 @@ function renderHome(){
   document.getElementById("greet").textContent="Привет, "+userName+"!";
   document.getElementById("hVirt").textContent=state.virt.toLocaleString("ru")+" 💰";
   document.getElementById("hReal").textContent=state.real.toLocaleString("ru")+" ₽";
-  var steps="",i;
+  var steps="",i,busyN=0;
+  for(i=0;i<state.garage.length;i++)if(state.garage[i].busyUntil&&state.garage[i].busyUntil>Date.now())busyN++;
   function step(ic,txt,done){steps+='<div class="step'+(done?" done":"")+'"><div class="si">'+(done?"✅":ic)+'</div><div>'+txt+'</div></div>'}
-  if(state.lastBonus===null)step("🎁","Забери дневной бонус и крутани колесо — первые вирты.",false);
+  if(state.lastBonus===null)step("🎁","Забери дневной бонус и крутани колесо.",false);
   else step("🎁","Бонус получен. Серия: "+(state.bonusStreak||0)+" дн.",true);
-  if(state.lastWheel===null)step("🎡","Бесплатный спин колеса ждёт тебя в разделе Бонусы!",false);
-  else step("🎡","Колесо крутилось сегодня. Заходи завтра!",true);
-  step("📦","Крути кейсы за вирты — внутри транспорт и детали.",state.casesOpened>0);
-  if(state.garage.length===0)step("🚲","Собери транспорт из 20 разных деталей или кручи кейсы.",false);
-  else step("🚲","В гараже: "+state.garage.length+". Отправляй на заказы — платят реальными ₽!",true);
-  if(state.garage.length>0&&state.ordersDone===0)step("💼","Отправь транспорт на заказ — заработок идёт на реальный баланс.",false);
-  else if(state.ordersDone>0)step("💼","Выполнено заказов: "+state.ordersDone+". Заработано: "+(state.stats.earnR||0).toLocaleString("ru")+" ₽.",true);
-  step("💵","Накопи 100 ₽ — и выводи заработок на карту.",state.real>=100);
+  step("🏢","Купи первый транспорт в салоне или выкупи лот на аукционе.",state.stats.salon>0||state.stats.auc>0||state.garage.length>0);
+  if(state.garage.length>0&&state.ordersDone===0)step("💼","Заказы платят реальными ₽ — отправь транспорт.",false);
+  else if(state.ordersDone>0)step("💼","Заказов выполнено: "+state.ordersDone+". Заработано: "+(state.stats.earnR||0).toLocaleString("ru")+" ₽.",true);
+  step("🔨","Следи за аукционом: дешёвые лоты каждый час.",state.stats.auc>0);
+  step("🏪","Лишнее — на рынок по своей цене.",state.stats.lots>0);
+  step("💵","Накопи 100 ₽ — и выводи на карту.",state.real>=100);
+  if(busyN>0)steps+='<div class="step"><div class="si">⏳</div><div>В пути: '+busyN+' — деньги придут автоматически.</div></div>';
   document.getElementById("homeSteps").innerHTML=steps;
   var lh="";
   for(i=0;i<state.log.length;i++){
@@ -582,7 +627,7 @@ function showCase(c){
   if(state.virt<c.price){
     msg.style.display="block";
     msg.style.cssText="background:rgba(239,68,68,.15);border:1px solid #ef4444;color:#fca5a5;border-radius:12px;padding:10px;font-size:13px;margin-top:12px";
-    msg.textContent="❌ Не хватает "+(c.price-state.virt).toLocaleString("ru")+" 💰. Вирты: пополнение (1 ₽ = 20 💰), бонус, колесо, задания, продажа вещей.";
+    msg.textContent="❌ Не хватает "+(c.price-state.virt).toLocaleString("ru")+" 💰. Вирты: пополнение (1 ₽ = 20 💰), бонус, колесо, задания, рынок.";
     document.getElementById("ovOpen").style.display="none";
   }else{
     msg.style.display="none";
@@ -631,7 +676,7 @@ function claimPrize(keep){
   if(keep){
     autoTake();
     toast((p.isVeh?"🚗 ":"🔩 ")+p.name+" забран");
-    addLog("Приз кейса: "+p.name+" ("+p.value.toLocaleString("ru")+" 💰)","info");
+    addLog("Приз кейса: "+p.name,"info");
   }else{
     var g=Math.round(p.value*(1-MARKET_FEE));
     state.virt+=g;
@@ -663,10 +708,10 @@ document.getElementById("ovSell").onclick=function(){claimPrize(false)};
 /* === ГАРАЖ === */
 function bestRarOf(nm){var b=state.parts[nm];if(!b)return 0;if(b[4]>0)return 4;if(b[3]>0)return 3;if(b[2]>0)return 2;if(b[1]>0)return 1;return 0}
 function partValue(ri){return Math.round([0,60,250,900,4000][ri]*[0,1,2.5,6,14][ri])}
-function partsGot(){var n=0,k,b;for(k in state.parts){b=state.parts[k];if(b&&(b[1]+b[2]+b[3]+b[4])>0)n++}return n}
+function partsCount(){var n=0,k,b;for(k in state.parts){b=state.parts[k];if(b&&(b[1]+b[2]+b[3]+b[4])>0)n++}return n}
 function renderGarage(){
   var g=document.getElementById("garageGrid"),html="",i;
-  if(!state.garage.length)html='<p class="note" style="grid-column:1/-1;text-align:center;padding:12px">Пусто. Открывай кейсы!</p>';
+  if(!state.garage.length)html='<p class="note" style="grid-column:1/-1;text-align:center;padding:12px">Пусто. Купи транспорт в салоне или на аукционе!</p>';
   else for(i=0;i<state.garage.length;i++){
     var gc=state.garage[i],v=vById(gc.vid);
     var busy=gc.busyUntil&&gc.busyUntil>Date.now();
@@ -684,26 +729,107 @@ function renderGarage(){
     ph+='<div class="p-chip'+(tot>0?" have":"")+'">'+PARTS[i][1]+" "+nm+(tot>0?" ×"+tot:"")+'</div>';
   }
   document.getElementById("partsList").innerHTML=ph;
-  document.getElementById("partsCount2").textContent=partsGot();
-  var bb=document.getElementById("buildBtn");
-  if(partsGot()<20){bb.disabled=true;bb.textContent="Нужно ещё "+(20-partsGot())+" разных деталей"}
-  else{bb.disabled=false;bb.textContent="🔧 Собрать транспорт"}
+  document.getElementById("partsCount2").textContent=partsCount();
   updateUI();
 }
-function buildVehicle(){
-  if(partsGot()<20){toast("Сначала 20 разных деталей!",true);return}
-  var sum=0,i,ri,b;
-  for(i=0;i<PART_NAMES.length;i++){
-    b=state.parts[PART_NAMES[i]];
-    for(ri=4;ri>=1;ri--){if(b[ri]>0){sum+=partValue(ri);b[ri]--;break}}
+
+/* === САЛОН === */
+var salonFilter="all";
+function renderSalon(){
+  var fl=document.getElementById("salonFilters");
+  fl.innerHTML='<button class="'+(salonFilter==="all"?"on":"")+'" onclick="setSalonFilter(\'all\')">Все</button>'
+    +'<button class="'+(salonFilter==="bike"?"on":"")+'" onclick="setSalonFilter(\'bike\')">🚲</button>'
+    +'<button class="'+(salonFilter==="scooter"?"on":"")+'" onclick="setSalonFilter(\'scooter\')">🛴</button>'
+    +'<button class="'+(salonFilter==="moto"?"on":"")+'" onclick="setSalonFilter(\'moto\')">🏍️</button>'
+    +'<button class="'+(salonFilter==="car"?"on":"")+'" onclick="setSalonFilter(\'car\')">🚗</button>';
+  var g=document.getElementById("salonGrid"),html="",shown=0;
+  for(var i=0;i<vehicles.length&&shown<30;i++){
+    var v=vehicles[i];
+    if(salonFilter!=="all"&&v.kind!==salonFilter)continue;
+    shown++;
+    html+='<div class="salon-chip"><div style="font-size:24px">'+KIND_EMOJI[v.kind]+'</div>'
+      +'<div class="nm" style="font-size:12px;font-weight:700;margin:4px 0 2px">'+v.name+'</div>'
+      +'<div class="r-tag r-'+v.rarity+'">'+rLabel[v.rarity]+'</div>'
+      +'<div class="cash" style="font-weight:800;margin-top:4px">'+v.price.toLocaleString("ru")+' 💰</div>'
+      +'<button class="'+(state.virt>=v.price?"ok":"no")+'" style="margin-top:6px" onclick="buySalon('+v.id+')">Купить</button></div>';
   }
-  var price=Math.round(sum*0.95);
-  var best=pickVehicleNear(price,1);
-  state.garage.push(newVehicle(best.id));
-  state.stats.built++;
-  toast("🔧 Собран: "+KIND_EMOJI[best.kind]+" "+best.name+"!");
-  addLog("Собран транспорт: "+best.name,"info");
-  renderGarage();
+  if(!shown)html='<p class="note" style="grid-column:1/-1;text-align:center">В этой категории пусто</p>';
+  g.innerHTML=html;
+  var dg=document.getElementById("donorGrid"),dh="";
+  for(i=0;i<DONORS.length;i++){
+    var d=DONORS[i],dv=vById(d.vid);
+    dh+='<div class="salon-chip" style="border-color:#ea580c"><div style="font-size:24px">'+KIND_EMOJI[dv.kind]+'</div>'
+      +'<div class="nm" style="font-size:12px;font-weight:700;margin:4px 0 2px">'+dv.name+'</div>'
+      +'<div style="font-size:11px;color:#fdba74">износ '+d.wear+'%</div>'
+      +'<div style="text-decoration:line-through;color:var(--mut);font-size:11px">'+dv.price.toLocaleString("ru")+' 💰</div>'
+      +'<div class="cash" style="font-weight:800">'+d.price.toLocaleString("ru")+' 💰</div>'
+      +'<button class="'+(state.virt>=d.price?"ok":"no")+'" style="margin-top:6px" onclick="buyDonor('+i+')">Купить донора</button></div>';
+  }
+  dg.innerHTML=dh;
+  updateUI();
+}
+function setSalonFilter(f){salonFilter=f;renderSalon()}
+function buySalon(vid){
+  var v=vById(vid);
+  if(state.virt<v.price){toast("Не хватает виртов!",true);return}
+  state.virt-=v.price;
+  state.garage.push(newVehicle(vid));
+  state.stats.salon++;
+  toast("🏢 Куплено: "+v.name);
+  addLog("Салон: "+v.name+" за "+v.price.toLocaleString("ru")+" 💰","spend");
+  renderSalon();renderGarage();updateUI();
+}
+function buyDonor(i){
+  var d=DONORS[i],dv=vById(d.vid);
+  if(state.virt<d.price){toast("Не хватает виртов!",true);return}
+  state.virt-=d.price;
+  var g=newVehicle(d.vid);g.wear=d.wear;
+  state.garage.push(g);
+  toast("🔧 Донор в гараже: "+dv.name);
+  addLog("Куплен донор: "+dv.name+" за "+d.price.toLocaleString("ru")+" 💰","spend");
+  renderSalon();renderGarage();updateUI();
+}
+
+/* === АУКЦИОН NPC === */
+function newAuction(){
+  var v=vehicles[Math.floor(Math.random()*vehicles.length)];
+  var wear=AUC_WEAR_MIN+Math.floor(Math.random()*(AUC_WEAR_MAX-AUC_WEAR_MIN+1));
+  var price=Math.round(v.price*(AUC_DISCOUNT_MIN+Math.random()*(AUC_DISCOUNT_MAX-AUC_DISCOUNT_MIN)));
+  price=Math.max(50,price);
+  state.auction={vid:v.id,price:price,wear:wear,endsAt:Date.now()+AUC_LIFETIME*60000};
+}
+function renderAuction(){
+  var box=document.getElementById("aucBox");
+  if(!state.auction)newAuction();
+  var a=state.auction,v=vById(a.vid);
+  var left=a.endsAt-Date.now();
+  if(left<=0){newAuction();a=state.auction;v=vById(a.vid);left=a.endsAt-Date.now()}
+  var wcol=a.wear>60?"#22c55e":(a.wear>25?"#fbbf24":"#ef4444");
+  var cheap=a.price<=v.price*0.5?'<span style="color:#6ee7b7">🔥 ниже рынка вдвое!</span>':'<span style="color:#93c5fd">выгодная цена</span>';
+  box.innerHTML='<div class="auc-card"><div class="ab">🔨 Проблемный лот на торги</div>'
+    +'<div style="font-size:40px">'+KIND_EMOJI[v.kind]+'</div>'
+    +'<div style="font-weight:800;margin:4px 0">'+v.name+'</div>'
+    +'<div class="r-tag r-'+v.rarity+'">'+rLabel[v.rarity]+'</div>'
+    +'<div style="font-size:12px;color:'+wcol+';margin-top:4px">Состояние: '+a.wear+'% — нужен ремонт</div>'
+    +'<div style="text-decoration:line-through;color:var(--mut);font-size:12px;margin-top:2px">рынок: '+v.price.toLocaleString("ru")+' 💰</div>'
+    +'<div class="cash" style="font-size:18px;font-weight:900">'+a.price.toLocaleString("ru")+' 💰</div>'
+    +'<div class="cd" style="margin-top:4px">⏳ Смена лота через '+fmtTime(left)+'</div>'
+    +'<div style="margin-top:8px"><button class="'+(state.virt>=a.price?"ok":"no")+'" onclick="buyAuction()">Выкупить лот</button></div>'
+    +'<p class="note" style="margin-top:8px">Отремонтируй за копейки — и цена вернётся к рыночной. Продавай на рынке с наценкой.</p></div>';
+}
+function buyAuction(){
+  var a=state.auction;
+  if(!a||a.endsAt<=Date.now()){toast("Лот уже ушёл!",true);return}
+  if(state.virt<a.price){toast("Не хватает виртов!",true);return}
+  var v=vById(a.vid);
+  state.virt-=a.price;
+  var g=newVehicle(a.vid);g.wear=a.wear;
+  state.garage.push(g);
+  state.stats.auc++;
+  toast("🔨 Лот выкуплен: "+v.name);
+  addLog("Аукцион: "+v.name+" за "+a.price.toLocaleString("ru")+" 💰 (износ "+a.wear+"%)","spend");
+  state.auction=null;newAuction();
+  renderAuction();renderGarage();updateUI();
 }
 
 /* === КАРТОЧКА ТРАНСПОРТА === */
@@ -745,11 +871,12 @@ function renderCarDetail(){
   document.getElementById("cdTune").innerHTML=
     '<div class="req">⚙️ Мотор '+g.eng+'/5 — <button class="ok" onclick="tuneCar('+cdIdx+',\'eng\')">Качать за '+tcost(g.eng)+' 💰</button></div>'
     +'<div class="req">🛞 Колёса '+g.tire+'/5 — <button class="ok" onclick="tuneCar('+cdIdx+',\'tire\')">Качать за '+tcost(g.tire)+' 💰</button></div>'
-    +'<div class="req">📦 Багажник '+g.trunk+'/5 — <button class="ok" onclick="tuneCar('+cdIdx+',\'trunk\')">Качать за '+tcost(g.trunk)+' 💰</button></div>'
-    +'<p class="note" style="margin-top:6px">Мотор +15% дохода за уровень · колёса −3 мин · багажник открывает грузы</p>';
+    +'<div class="req">📦 Багажник '+g.trunk+'/5 — <button class="ok" onclick="tuneCar('+cdIdx+',\'trunk\')">Качать за '+tcost(g.trunk)+' 💰</button></div>';
   document.getElementById("cdActions").innerHTML=
     (g.wear<100?'<div class="req">🔧 Ремонт — <button class="ok" onclick="repairCar('+cdIdx+')">За '+Math.max(1,Math.round(v.price*0.001*(100-g.wear)))+' 💰</button></div>':'<p class="note">В полном порядке</p>')
-    +(busy?'':'<div class="req">⚡ Продать за вирты: <button class="ok" onclick="quickSellCar('+cdIdx+')">+'+Math.round(v.price*(1-MARKET_FEE)*(g.wear/100)).toLocaleString("ru")+' 💰</button></div>');
+    +(busy?'':'<div class="req">🏪 Выставить на рынок: <button class="ok" onclick="goListingCar('+cdIdx+')">По своей цене</button></div>')
+    +(busy?'':'<div class="req">⚡ Продать быстро: <button class="ok" onclick="quickSellCar('+cdIdx+')">+'+Math.round(v.price*(1-MARKET_FEE)*(g.wear/100)).toLocaleString("ru")+' 💰</button></div>')
+    +(busy?'':'<div class="req">🔧 Разобрать на детали — <button class="no" onclick="disassembleCar('+cdIdx+')">Разобрать</button><br><span class="note">Транспорт исчезнет, вместо него 1–3 детали. Редкость зависит от цены.</span></div>');
   updateUI();
 }
 function installPart(slotKey,ri){
@@ -795,11 +922,37 @@ function repairCar(idx){
 function quickSellCar(idx){
   var g=state.garage[idx],v=vById(g.vid);
   if(g.busyUntil&&g.busyUntil>Date.now()){toast("В пути!",true);return}
-  var payout=Math.round(v.price*(1-MARKET_FEE)*(g.wear/100));
-  state.virt+=payout;state.garage.splice(idx,1);
+  var gross=Math.round(v.price*(g.wear/100));
+  var payout=Math.round(gross*(1-MARKET_FEE));
+  state.virt+=payout;state.feeTotal+=gross-payout;
+  state.garage.splice(idx,1);
   toast("Продано: +"+payout.toLocaleString("ru")+" 💰");
-  addLog("Продажа "+v.name+": +"+payout.toLocaleString("ru")+" 💰","gain");
+  addLog("Быстрая продажа: "+v.name+" → +"+payout.toLocaleString("ru")+" 💰","gain");
   renderGarage();updateUI();
+}
+/* Разбор на детали: редкость зависит от цены */
+function disassembleCar(idx){
+  var g=state.garage[idx],v=vById(g.vid);
+  if(g.busyUntil&&g.busyUntil>Date.now()){toast("В пути!",true);return}
+  var p=v.price;
+  var n=1+(Math.random()<0.55?1:0)+(p>=20000&&Math.random()<0.5?1:0);
+  var got=[],i;
+  for(i=0;i<n;i++){
+    var r;
+    if(p<3000)r=Math.random()<0.8?1:2;
+    else if(p<30000){var x=Math.random();r=x<0.45?1:(x<0.85?2:3)}
+    else if(p<500000){var y=Math.random();r=y<0.3?2:(y<0.85?3:4)}
+    else r=Math.random()<0.5?3:4;
+    var nm=PART_NAMES[Math.floor(Math.random()*PART_NAMES.length)];
+    if(!state.parts[nm])state.parts[nm]={1:0,2:0,3:0,4:0};
+    state.parts[nm][r]++;
+    got.push(partEmoji(nm)+" "+nm+" ("+rLabel[idxRar(r)]+")");
+  }
+  state.garage.splice(idx,1);
+  state.stats.dis++;
+  toast("🔧 Разобрано: "+got.length+" дет.");
+  addLog("Разбор "+v.name+": "+got.join(", "),"info");
+  cdIdx=-1;renderGarage();updateUI();
 }
 
 /* === ЗАКАЗЫ (реальные ₽) === */
@@ -837,7 +990,7 @@ function renderOrders(){
     if(o.need==="eng2")need=' · <span class="note">⚙️ ур.2</span>';
     if(o.need==="car+eng3+trunk")need=' · <span class="note">🚗 ⚙️3 📦</span>';
     h+='<div class="req">'+o.ic+' <b>'+o.type+'</b> · '+fmtDur(o.dur)+need
-      +'<br>Плата (обычный): 🚲 '+byKind.bike+' ₽ · 🛴 '+byKind.scooter+' ₽ · 🏍️ '+byKind.moto+' ₽ · 🚗 '+byKind.car+' ₽'
+      +'<br>Плата: 🚲 '+byKind.bike+' ₽ · 🛴 '+byKind.scooter+' ₽ · 🏍️ '+byKind.moto+' ₽ · 🚗 '+byKind.car+' ₽'
       +'<br><button class="ok" onclick="sendCar('+i+')">Отправить</button></div>';
   }
   document.getElementById("ordersList").innerHTML=h;
@@ -866,7 +1019,7 @@ function sendCar(oi){
   renderOrders();updateUI();
 }
 function completeOrder(g){
-  var v=vById(g.vid),o=ORDERS[g.ord];
+  var o=ORDERS[g.ord];
   var pay=orderReward(g,o);
   state.real+=pay;state.ordersDone++;
   if(state.stats[o.id]!==undefined)state.stats[o.id]++;
@@ -875,7 +1028,7 @@ function completeOrder(g){
   var wearHit=5-slotBrk(g);
   g.wear=Math.max(0,g.wear-Math.max(1,wearHit));
   g.busyUntil=null;g.ord=null;
-  toast("✅ "+o.type+": +"+pay.toLocaleString("ru")+" ₽ на баланс");
+  toast("✅ "+o.type+": +"+pay.toLocaleString("ru")+" ₽");
   addLog("Заказ «"+o.type+"»: +"+pay.toLocaleString("ru")+" ₽","gain");
 }
 setInterval(function(){
@@ -884,14 +1037,207 @@ setInterval(function(){
     var g=state.garage[i];
     if(g.busyUntil&&g.busyUntil<=Date.now()){completeOrder(g);changed=true}
   }
+  for(i=state.listings.length-1;i>=0;i--){
+    var L=state.listings[i];
+    var base=L.type==="veh"?vById(L.ref).price*(L.wear/100):partValue(L.ri);
+    var ch=lotBuyChance(L.price,base);
+    if(Math.random()<ch){
+      var payout=Math.round(L.price*(1-MARKET_FEE));
+      state.virt+=payout;state.feeTotal+=L.price-payout;
+      state.listings.splice(i,1);
+      var who=RESELLERS[Math.floor(Math.random()*RESELLERS.length)];
+      addLog("🏪 "+who+" купил лот «"+L.name+"»: +"+payout.toLocaleString("ru")+" 💰","gain");
+      toast("🏪 "+who+" купил твой лот: +"+payout.toLocaleString("ru")+" 💰");
+      changed=true;
+    }
+  }
+  /* аукцион: смена лота */
+  if(!state.auction||state.auction.endsAt<=Date.now()){
+    if(state.auction)addLog("🔨 Лот аукциона никто не выкупил — новый уже на витрине","info");
+    newAuction();changed=true;
+  }
   if(changed){
     updateUI();
     if(document.getElementById("page-orders").classList.contains("active"))renderOrders();
-    if(document.getElementById("page-garage").classList.contains("active"))renderGarage();
+    if(document.getElementById("page-garage").classList.contains("active")){renderGarage();renderAuction()}
     if(document.getElementById("page-cardetail").classList.contains("active"))renderCarDetail();
     if(document.getElementById("page-home").classList.contains("active"))renderHome();
+    if(document.getElementById("page-market").classList.contains("active"))renderMarket();
+  }
+  else if(document.getElementById("page-orders").classList.contains("active"))renderBusy();
+},30000);
+
+/* === ОФЕРТЫ ПЕРЕКУПЩИКОВ === */
+function genOffer(){
+  if(state.offer)return;
+  var options=[],i;
+  for(i=0;i<state.garage.length;i++){
+    var g=state.garage[i];
+    if(!g.busyUntil||g.busyUntil<=Date.now())options.push({kind:"veh",idx:i});
+  }
+  var k;
+  for(k in state.parts){
+    var b=state.parts[k],tot=b[1]+b[2]+b[3]+b[4];
+    if(tot>0)options.push({kind:"part",name:k});
+  }
+  if(!options.length)return;
+  var pick=options[Math.floor(Math.random()*options.length)];
+  var buyer=RESELLERS[Math.floor(Math.random()*RESELLERS.length)];
+  var phrase=HAGGLE_SALES[Math.floor(Math.random()*HAGGLE_SALES.length)];
+  var base,name;
+  if(pick.kind==="veh"){
+    var gc=state.garage[pick.idx],v=vById(gc.vid);
+    base=Math.round(v.price*(gc.wear/100));
+    name=KIND_EMOJI[v.kind]+" "+v.name;
+    state.offer={kind:"veh",idx:pick.idx,price:Math.round(base*(0.75+Math.random()*0.15)),buyer:buyer,phrase:phrase,exp:Date.now()+5*60000};
+  }else{
+    var br=bestRarOf(pick.name);
+    base=partValue(br);
+    name=partEmoji(pick.name)+" "+pick.name;
+    state.offer={kind:"part",ref:pick.name,price:Math.round(base*(0.75+Math.random()*0.15)),buyer:buyer,phrase:phrase,exp:Date.now()+5*60000};
+  }
+  state.offer.name=name;
+  addLog("🤝 "+buyer+" предлагает купить: "+name+" за "+state.offer.price.toLocaleString("ru")+" 💰","info");
+  if(document.getElementById("page-home").classList.contains("active"))renderHome();
+  if(document.getElementById("page-market").classList.contains("active"))renderMarket();
+}
+function renderOffer(containerId){
+  var el=document.getElementById(containerId);
+  if(!el)return;
+  var o=state.offer;
+  if(!o){el.innerHTML="";return}
+  var left=o.exp-Date.now();
+  if(left<=0){state.offer=null;el.innerHTML="";return}
+  el.innerHTML='<div class="offer-card"><div class="ob">🤝 '+o.buyer+' предлагает сделку</div>'
+    +o.name+' — <b class="cash">'+o.price.toLocaleString("ru")+' 💰</b> · время: <span class="cd">'+fmtTime(left)+'</span><br><i style="color:#fdba74">'+o.phrase+'</i><br>'
+    +'<button class="ok" style="margin-top:8px" onclick="acceptOffer()">🤝 Продать</button>'
+    +'<button class="no" style="margin-top:8px" onclick="declineOffer()">Отказать</button></div>';
+}
+function acceptOffer(){
+  var o=state.offer;
+  if(!o)return;
+  if(o.kind==="veh"){
+    var g=state.garage[o.idx];
+    if(!g||(g.busyUntil&&g.busyUntil>Date.now())){state.offer=null;return}
+    state.garage.splice(o.idx,1);
+  }else{
+    var b=state.parts[o.ref],br=bestRarOf(o.ref);
+    if(!b||!b[br]){state.offer=null;return}
+    b[br]--;
+  }
+  state.virt+=o.price;state.stats.reseller++;
+  addLog("🤝 Сделка с "+o.buyer+": "+o.name+" → +"+o.price.toLocaleString("ru")+" 💰","gain");
+  toast("🤝 Продано: +"+o.price.toLocaleString("ru")+" 💰");
+  state.offer=null;updateUI();renderHome();renderMarket();
+}
+function declineOffer(){
+  if(!state.offer)return;
+  addLog("Отказ от оферты: "+state.offer.name,"info");
+  state.offer=null;renderHome();renderMarket();
+}
+setInterval(function(){
+  if(state.offer&&state.offer.exp<=Date.now()){
+    addLog(state.offer.buyer+" ушёл искать другого продавца","info");
+    state.offer=null;
+    if(document.getElementById("page-home").classList.contains("active"))renderHome();
+    if(document.getElementById("page-market").classList.contains("active"))renderMarket();
   }
 },15000);
+setInterval(genOffer,90000);
+
+/* === РЫНОК === */
+function goListingCar(idx){cdIdx=idx;switchTab("market");renderMarket()}
+function renderMarket(){
+  renderOffer("marketOffer");
+  var h="",i;
+  if(!state.listings.length)h='<p class="note">Лотов нет. Выстави свою вещь ниже — перекупщики их выкупают, но не сразу: заниженная цена продаётся быстрее.</p>';
+  else for(i=0;i<state.listings.length;i++){
+    var L=state.listings[i];
+    var base=L.type==="veh"?vById(L.ref).price*(L.wear/100):partValue(L.ri);
+    var hint=L.price<=base*0.9?'<span style="color:#22c55e">лучшая цена — быстро продастся</span>':(L.price<=base*1.2?'<span style="color:#fbbf24">около рынка</span>':'<span style="color:#fca5a5">дорого — может висеть долго</span>');
+    h+='<div class="req"><b>🏪 Лот №'+L.id+'</b> · '+L.name+'<br><b class="cash">'+L.price.toLocaleString("ru")+' 💰</b> · '+hint+'<br><span class="note">Выставлено: '+L.ts+'</span><br><button class="no" onclick="cancelListing('+L.id+')">Снять</button></div>';
+  }
+  document.getElementById("marketListings").innerHTML=h;
+  var cr="",j;
+  for(j=0;j<state.garage.length;j++){
+    var g=state.garage[j],v=vById(g.vid);
+    if(g.busyUntil&&g.busyUntil>Date.now())continue;
+    var suggested=Math.max(50,Math.round(v.price*(g.wear/100)));
+    cr+='<div class="req">'+KIND_EMOJI[v.kind]+' <b>'+v.name+'</b> (сост. '+g.wear+'%)<br>'
+      +'<input type="number" id="lp-'+j+'" class="input-field" placeholder="Цена, 💰 (совет: ~'+suggested.toLocaleString("ru")+')" inputmode="numeric">'
+      +'<button class="ok" style="margin-top:8px" onclick="createVehListing('+j+')">Выставить</button></div>';
+  }
+  for(var k in state.parts){
+    var bb=state.parts[k],tot=bb[1]+bb[2]+bb[3]+bb[4];
+    if(tot>0){
+      var br=bestRarOf(k),val=partValue(br);
+      cr+='<div class="req">🔩 '+partEmoji(k)+' '+k+' ('+rLabel[idxRar(br)]+') ×'+tot+'<br>'
+        +'<input type="number" id="lpp-'+k+'" class="input-field" placeholder="Цена, 💰 (совет: ~'+val.toLocaleString("ru")+')" inputmode="numeric">'
+        +'<button class="ok" style="margin-top:8px" onclick="createPartListing(\''+k+'\')">Выставить</button></div>';
+    }
+  }
+  document.getElementById("marketCreate").innerHTML=cr||'<p class="note">Нечего выставлять — загляни в салон</p>';
+  var ms="";
+  for(j=0;j<state.garage.length;j++){
+    var g2=state.garage[j],v2=vById(g2.vid);
+    if(g2.busyUntil&&g2.busyUntil>Date.now())continue;
+    ms+='<div class="req">'+KIND_EMOJI[v2.kind]+' '+v2.name+' — выручка ~'+Math.round(v2.price*(1-MARKET_FEE)*(g2.wear/100)).toLocaleString("ru")+' 💰<br><button class="ok" onclick="quickSellCar('+j+')">Продать −10%</button></div>';
+  }
+  for(k in state.parts){
+    var bb2=state.parts[k],tot2=bb2[1]+bb2[2]+bb2[3]+bb2[4];
+    if(tot2>0){
+      var br2=bestRarOf(k),val2=partValue(br2);
+      ms+='<div class="req">🔩 '+partEmoji(k)+' '+k+' ('+rLabel[idxRar(br2)]+') ×'+tot2+'<br><button class="ok" onclick="marketSellPart(\''+k+'\')">Продать −10%</button></div>';
+    }
+  }
+  document.getElementById("mySellables").innerHTML=ms||'<p class="note">Нечего продавать</p>';
+  updateUI();
+}
+function createVehListing(idx){
+  var g=state.garage[idx],v=vById(g.vid);
+  var el=document.getElementById("lp-"+idx);
+  var price=parseInt(el?el.value:"",10);
+  if(!price||price<50){toast("Введи цену (минимум 50 💰)",true);return}
+  state.listings.unshift({id:state.listSeq++,type:"veh",ref:g.vid,name:v.name,price:price,wear:g.wear,ts:new Date().toLocaleString("ru").slice(0,-3)});
+  state.garage.splice(idx,1);
+  state.stats.lots++;
+  toast("🏪 Выставлено: "+v.name);
+  addLog("Лот на рынке: "+v.name+" за "+price.toLocaleString("ru")+" 💰","info");
+  renderMarket();
+}
+function createPartListing(nm){
+  var br=bestRarOf(nm),val=partValue(br);
+  var el=document.getElementById("lpp-"+nm);
+  var price=parseInt(el?el.value:"",10);
+  if(!price||price<50){toast("Введи цену (минимум 50 💰)",true);return}
+  state.listings.unshift({id:state.listSeq++,type:"part",ref:nm,ri:br,name:partEmoji(nm)+" "+nm+" ("+rLabel[idxRar(br)]+")",price:price,ts:new Date().toLocaleString("ru").slice(0,-3)});
+  state.parts[nm][br]--;
+  state.stats.lots++;
+  toast("🏪 Выставлено: "+nm);
+  addLog("Лот на рынке: "+nm+" за "+price.toLocaleString("ru")+" 💰","info");
+  renderMarket();
+}
+function cancelListing(id){
+  for(var i=0;i<state.listings.length;i++)if(state.listings[i].id===id){
+    var L=state.listings[i];
+    if(L.type==="veh"){var g=newVehicle(L.ref);g.wear=L.wear;state.garage.push(g)}
+    else{if(!state.parts[L.ref])state.parts[L.ref]={1:0,2:0,3:0,4:0};state.parts[L.ref][L.ri]++}
+    state.listings.splice(i,1);
+    toast("Лот снят, вещь вернулась");
+    break;
+  }
+  renderMarket();
+}
+function marketSellPart(nm){
+  var b=state.parts[nm],br=bestRarOf(nm);
+  var val=partValue(br);
+  var payout=Math.round(val*(1-MARKET_FEE));
+  state.virt+=payout;state.feeTotal+=val-payout;
+  b[br]--;
+  toast("Продано: +"+payout.toLocaleString("ru")+" 💰");
+  addLog("Быстрая продажа: "+nm+" → +"+payout.toLocaleString("ru")+" 💰","gain");
+  renderMarket();
+}
 
 /* === УРОВНИ === */
 function lvlNeed(l){return 300+l*150}
@@ -902,7 +1248,7 @@ function addXp(amount){
     state.level++;
     var bonus=250*state.level;
     state.virt+=bonus;
-    addLog("🎉 Уровень "+state.level+" («"+lvlName(state.level)+"»): +"+bonus+" 💰","gain");
+    addLog("🎉 Уровень "+state.level+": +"+bonus+" 💰","gain");
     toast("🎉 Уровень "+state.level+"! +"+bonus+" 💰");
   }
 }
@@ -920,15 +1266,13 @@ function claimBonus(){
   toast("🎁 +"+amt+" 💰");
   updateUI();renderHome();
 }
-
-/* Колесо фортуны */
 function renderWheel(){
   var today=new Date().toDateString();
   var free=(state.lastWheel!==today);
   var btn=document.getElementById("spinBtn"),msg=document.getElementById("wlMsg");
   if(!free){
     btn.textContent="Крутить за "+WHEEL_COST.toLocaleString("ru")+" 💰";
-    msg.className="wl-msg";msg.textContent="Бесплатный спин уже был — возвращайся завтра!";
+    msg.className="wl-msg";msg.textContent="Бесплатный спин уже был — завтра снова бесплатно!";
   }else{
     btn.textContent="🎡 Крутить бесплатно";
     msg.className="wl-msg free";msg.textContent="Бесплатный спин доступен!";
@@ -946,7 +1290,6 @@ function spinWheel(){
   state.lastWheel=today;
   var idx=Math.floor(Math.random()*WHEEL_PRIZES.length);
   var prize=WHEEL_PRIZES[idx];
-  /* сектор: 45° на сектор, указатель сверху; добиваем 4 полных оборота */
   var seg=360/8;
   var target=360*4+(360-(idx*seg+seg/2));
   wheelAngle=(wheelAngle%360)+target;
@@ -960,10 +1303,10 @@ function spinWheel(){
   setTimeout(function(){
     wheelSpinning=false;
     btn.disabled=false;
-    state.virt+=prize;state.winsTotal++;
+    state.virt+=prize;
     msg.className="wl-msg win";
     msg.textContent="🎉 Выигрыш: +"+prize.toLocaleString("ru")+" 💰!";
-    addLog("🎡 Колесо фортуны: +"+prize.toLocaleString("ru")+" 💰","gain");
+    addLog("🎡 Колесо: +"+prize.toLocaleString("ru")+" 💰","gain");
     try{if(tg&&tg.HapticFeedback)tg.HapticFeedback.notificationOccurred("success")}catch(e){}
     renderWheel();renderTasks();updateUI();renderHome();
   },3300);
@@ -1015,7 +1358,7 @@ function makeDeposit(){
   if(fio.length<3){st.textContent="❌ Укажи ФИО.";return}
   if(!amount||amount<DEP_MIN){st.textContent="❌ Минимум "+DEP_MIN+" ₽.";return}
   state.depReqs.unshift({id:state.depSeq++,user:userName+(userId?(" ID"+userId):""),fio:fio,amount:amount,status:"Ожидает проверки",ts:new Date().toLocaleString("ru")});
-  st.textContent="✅ Заявка №"+(state.depSeq-1)+". После проверки админом получишь "+(amount*REAL_TO_VIRT).toLocaleString("ru")+" 💰.";
+  st.textContent="✅ Заявка №"+(state.depSeq-1)+". После проверки получишь "+(amount*REAL_TO_VIRT).toLocaleString("ru")+" 💰.";
   addLog("Заявка на пополнение: "+amount.toLocaleString("ru")+" ₽ → вирты","info");
   document.getElementById("depFio").value="";document.getElementById("depAmount").value="";
   save();renderReqs();
@@ -1036,14 +1379,14 @@ function withdraw(){
   var payout=Math.round(amount*(1-WD_FEE));
   state.real-=amount;
   state.reqs.unshift({id:state.reqSeq++,user:userName+(userId?(" ID"+userId):""),fio:fio,card:digits,amount:amount,payout:payout,status:"В обработке",ts:new Date().toLocaleString("ru")});
-  st.textContent="✅ Заявка №"+(state.reqSeq-1)+". На карту придёт "+payout.toLocaleString("ru")+" ₽ (комиссия 10%).";
-  addLog("Заявка на вывод: "+amount.toLocaleString("ru")+" ₽ (к выплате "+payout.toLocaleString("ru")+" ₽)","spend");
+  st.textContent="✅ Заявка №"+(state.reqSeq-1)+". На карту придёт "+payout.toLocaleString("ru")+" ₽.";
+  addLog("Заявка на вывод: "+amount.toLocaleString("ru")+" ₽","spend");
   document.getElementById("wFio").value="";document.getElementById("wCard").value="";document.getElementById("wAmount").value="";
   save();renderReqs();updateUI();
 }
 function cardFmt(d){return String(d).replace(/(\d{4})(?=\d)/g,"$1 ")}
 
-/* === ЗАЯВКИ ИГРОКА === */
+/* === ЗАЯВКИ === */
 function renderReqs(){
   var h="";
   state.depReqs.forEach(function(r){
@@ -1072,8 +1415,8 @@ function renderAdmin(){
   document.getElementById("admPaid").textContent=state.totalPaid.toLocaleString("ru")+" ₽";
   var pend=state.depReqs.filter(function(r){return r.status==="Ожидает проверки"});
   document.getElementById("adminDeps").innerHTML=pend.length?pend.map(function(r){
-    return '<div class="req">№'+r.id+' | '+r.user+'<br>От: <b>'+r.fio+'</b> — <b class="real">'+r.amount.toLocaleString("ru")+' ₽</b> → '+(r.amount*REAL_TO_VIRT).toLocaleString("ru")+' 💰<br><span class="note">'+r.ts+'</span><br>'
-      +'<span style="font-size:11px">Реальная сумма (₽, столько же виртов ×20):</span><br><input type="number" id="admAmt-'+r.id+'" class="amt-in" value="'+r.amount+'" inputmode="numeric"> ₽<br>'
+    return '<div class="req">№'+r.id+' | '+r.user+'<br>От: <b>'+r.fio+'</b> — <b class="real">'+r.amount.toLocaleString("ru")+' ₽</b><br><span class="note">'+r.ts+'</span><br>'
+      +'<span style="font-size:11px">Реальная сумма:</span><br><input type="number" id="admAmt-'+r.id+'" class="amt-in" value="'+r.amount+'" inputmode="numeric"> ₽<br>'
       +'<input type="text" id="admCmt-'+r.id+'" class="cmt-in" placeholder="Сообщение игроку">'
       +'<button class="btn-sm" onclick="fillCmt('+r.id+')">Вставить «'+ADMIN_DEFAULT_CMT+'»</button><br>'
       +'<button class="ok" onclick="admDep('+r.id+',1)">Зачислить вирты</button><button class="no" onclick="admDep('+r.id+',0)">Отклонить</button></div>';
@@ -1112,7 +1455,7 @@ function admDep(id,ok){
       if(cmt)r.adminCmt=cmt;
       state.totalDep+=amt;
       state.virt+=amt*REAL_TO_VIRT;
-      addLog("Пополнение зачислено: "+amt.toLocaleString("ru")+" ₽ → "+(amt*REAL_TO_VIRT).toLocaleString("ru")+" 💰","gain");
+      addLog("Пополнение: "+amt.toLocaleString("ru")+" ₽ → "+(amt*REAL_TO_VIRT).toLocaleString("ru")+" 💰","gain");
       if(cmt)addLog("💬 Админ: «"+cmt+"»","info");
     }else{r.status="Отклонён";if(cmt)r.adminCmt=cmt;addLog("Пополнение №"+r.id+" отклонено","info")}
   }
@@ -1155,7 +1498,8 @@ function startGame(){
   renderHeader();
   document.getElementById("cardDisplay").textContent=ADMIN_CARD;
   renderWheel();
-  renderHome();renderCases();renderGarage();renderReqs();renderTasks();updateUI();
+  if(!state.auction)newAuction();
+  renderHome();renderCases();renderGarage();renderSalon();renderAuction();renderMarket();renderReqs();renderTasks();updateUI();
 }
 (function initLogin(){
   if(userId){
