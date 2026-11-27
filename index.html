@@ -32,6 +32,7 @@ header h1{font-size:20px;background:linear-gradient(90deg,#fbbf24,#fb7185);-webk
 .case-emoji{font-size:40px;filter:drop-shadow(0 4px 10px rgba(0,0,0,.5))}
 .case-name{font-size:14px;font-weight:700;margin:8px 0 2px}
 .case-price{color:#fbbf24;font-weight:800}
+.case-chance{color:#22c55e;font-size:11px;font-weight:700;margin-top:2px}
 .garage-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px}
 .car-card{background:linear-gradient(160deg,#2b2b5e,#15152c);border:1px solid #3d3d78;border-radius:18px;padding:14px 8px;text-align:center}
 .sell-btn{margin-top:8px;background:linear-gradient(135deg,#ef4444,#b91c1c);color:#fff;border:none;border-radius:10px;padding:8px 0;width:100%;font-size:12px;font-weight:700;cursor:pointer}
@@ -223,8 +224,8 @@ var cases=casesData.map(function(a,i){return{price:a[0],name:a[1],emoji:CASE_EMO
 var PART_NAMES=["Колесо","Двигатель","Бампер","Фара","Руль","Глушитель","АКБ","Коробка","Тормоза","Фильтр","Радиатор","Капот","Дверь","Крыло","Стекло","Сиденье","Багажник","Выхлоп","Рессора","Бензобак"];
 
 var state={balance:0,casesOpened:0,garage:[],parts:{},lastBonus:null,reqs:[],reqSeq:1};
-function save(){try{localStorage.setItem("autocases_v3",JSON.stringify(state))}catch(e){}}
-function load(){try{var s=JSON.parse(localStorage.getItem("autocases_v3"));if(s){state.balance=s.balance||0;state.casesOpened=s.casesOpened||0;state.garage=s.garage||[];state.parts=s.parts||{};state.lastBonus=s.lastBonus||null;state.reqs=s.reqs||[];state.reqSeq=s.reqSeq||1}}catch(e){}}
+function save(){try{localStorage.setItem("autocases_v4",JSON.stringify(state))}catch(e){}}
+function load(){try{var s=JSON.parse(localStorage.getItem("autocases_v4"));if(s){state.balance=s.balance||0;state.casesOpened=s.casesOpened||0;state.garage=s.garage||[];state.parts=s.parts||{};state.lastBonus=s.lastBonus||null;state.reqs=s.reqs||[];state.reqSeq=s.reqSeq||1}}catch(e){}}
 
 function switchTab(n){
   var p=document.querySelectorAll(".page");for(var i=0;i<p.length;i++)p[i].classList.remove("active");
@@ -262,7 +263,7 @@ function renderCases(){
   var g=document.getElementById("casesGrid");g.innerHTML="";
   cases.forEach(function(c){
     var d=document.createElement("div");d.className="case-card";
-    d.innerHTML='<span class="case-emoji">'+c.emoji+'</span><div class="case-name">'+c.name+'</div><div class="case-price">'+c.price.toLocaleString("ru")+' ₽</div>';
+    d.innerHTML='<span class="case-emoji">'+c.emoji+'</span><div class="case-name">'+c.name+'</div><div class="case-price">'+c.price.toLocaleString("ru")+' ₽</div><div class="case-chance">🚗 10% · 🔩 25%</div>';
     d.onclick=function(){showCase(c)};
     g.appendChild(d);
   });
@@ -291,13 +292,14 @@ function renderGarage(){
 
 var currentCase=null,currentPrize=null,opened=false;
 function prizePool(c){
-  var pool=cars.filter(function(x){return x.price>=c.price*0.6&&x.price<=c.price*5});
+  var pool=cars.filter(function(x){return x.price>=c.price*0.6&&x.price<=c.price*6});
   if(!pool.length)pool=cars.slice(0,10);
   return pool;
 }
 function rollPrize(c){
   var P=c.price,r=Math.random();
-  if(r<0.05){
+  /* 10% — машина (0.6–6 цен кейса) */
+  if(r<0.10){
     var pool=prizePool(c);
     var w=pool.map(function(x){return 1/x.price});
     var tot=0;for(var i=0;i<w.length;i++)tot+=w[i];
@@ -308,15 +310,17 @@ function rollPrize(c){
     }
     var c0=pool[0];return{name:c0.name,value:c0.price,rarity:c0.rarity,emoji:rEmoji[c0.rarity],isCar:true,isPart:false,carId:c0.id};
   }
-  if(r<0.30){
+  /* 25% — запчасть (0.5–1.2 цены) */
+  if(r<0.35){
     var nm=PART_NAMES[Math.floor(Math.random()*PART_NAMES.length)];
     var val=Math.max(1,Math.round(P*(0.5+Math.random()*0.7)));
     return{name:nm,value:val,rarity:rarOf(val),emoji:"🔩",isCar:false,isPart:true,carId:null};
   }
+  /* 30% мелкий / 25% средний / 10% крупный */
   var val2,rar,nm2;
-  if(r<0.72){val2=P*(0.25+Math.random()*0.35);rar="common";nm2="Мелкий приз"}
-  else if(r<0.93){val2=P*(0.7+Math.random()*0.6);rar="rare";nm2="Хороший приз"}
-  else{val2=P*(1.4+Math.random()*1.3);rar="epic";nm2="Крупный приз"}
+  if(r<0.65){val2=P*(0.35+Math.random()*0.35);rar="common";nm2="Мелкий приз"}
+  else if(r<0.90){val2=P*(0.8+Math.random()*0.6);rar="rare";nm2="Хороший приз"}
+  else{val2=P*(1.6+Math.random()*1.4);rar="epic";nm2="Крупный приз"}
   val2=Math.max(1,Math.round(val2));
   return{name:nm2,value:val2,rarity:rar,emoji:"💰",isCar:false,isPart:false,carId:null};
 }
