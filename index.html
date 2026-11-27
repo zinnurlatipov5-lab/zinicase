@@ -19,7 +19,6 @@ header{position:sticky;top:0;z-index:60;display:flex;justify-content:space-betwe
 header h1{font-size:20px;font-weight:900;background:linear-gradient(90deg,#fbbf24,#fde68a,#a78bfa);-webkit-background-clip:text;background-clip:text;color:transparent}
 .pills{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
 .pill{font-weight:800;padding:6px 10px;border-radius:16px;font-size:12px;box-shadow:0 2px 10px rgba(0,0,0,.45)}
-.p-star{background:linear-gradient(135deg,#8b5cf6,#6d28d9);color:#fff}
 .p-virt{background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#1a1408}
 .p-real{background:linear-gradient(135deg,#34d399,#059669);color:#fff}
 .page{display:none}.page.active{display:block;animation:fadein .22s ease}
@@ -28,7 +27,8 @@ header h1{font-size:20px;font-weight:900;background:linear-gradient(90deg,#fbbf2
 .panel h2{font-size:16px;margin-bottom:10px;color:#fde047;display:flex;align-items:center;gap:8px}
 .panel h2::before{content:"";width:4px;height:16px;border-radius:2px;background:linear-gradient(180deg,var(--amber),var(--violet))}
 .btn{background:linear-gradient(135deg,#fcd34d,#f59e0b);color:#1a1408;border:none;border-radius:14px;padding:13px 16px;font-size:15px;font-weight:800;cursor:pointer;width:100%}
-.btn:active{opacity:.85}.btn:disabled{opacity:.4}
+.btn:active{opacity:.85;transform:scale(.98)}
+.btn:disabled{opacity:.4}
 .btn-dark{background:linear-gradient(135deg,#2a2a52,#1e1e3c);color:#e5e5f5;border:1px solid var(--line)}
 .btn-vio{background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff}
 .btn-grn{background:linear-gradient(135deg,#34d399,#059669);color:#fff}
@@ -39,20 +39,20 @@ header h1{font-size:20px;font-weight:900;background:linear-gradient(90deg,#fbbf2
 @keyframes wave{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(8deg)}}
 .hero h2{font-size:22px;margin:6px 0 2px;background:linear-gradient(90deg,#fbbf24,#fde68a,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
 .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:14px 0}
 .stat-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:12px 6px;text-align:center}
-.stat-box b{display:block;font-size:17px}
+.stat-box b{display:block;font-size:19px}
 .stat-box span{font-size:10px;color:var(--mut)}
-.step{display:flex;gap:10px;background:var(--panel2);border:1px solid var(--line2);border-radius:14px;padding:11px 12px;margin-top:8px;font-size:13px}
+.step{display:flex;gap:10px;background:var(--panel2);border:1px solid var(--line2);border-radius:14px;padding:11px 12px;margin-top:8px;font-size:13px;line-height:1.4}
 .step.done{border-color:rgba(34,197,94,.6);opacity:.65}
 .step .si{font-size:20px}
-.log-item{display:flex;justify-content:space-between;gap:8px;background:var(--panel2);border-radius:10px;padding:9px 12px;margin-top:6px;font-size:12px}
+.log-item{display:flex;justify-content:space-between;gap:8px;background:var(--panel2);border-radius:10px;padding:9px 12px;margin-top:6px;font-size:12px;line-height:1.35}
 .log-item span{color:var(--mut);font-size:11px;flex-shrink:0}
 .log-item b.gain{color:var(--green)}.log-item b.spend{color:#fca5a5}.log-item b.info{color:var(--amber)}
 .card{background:linear-gradient(160deg,#20203e,#141428);border:1px solid var(--line);border-radius:18px;padding:14px 8px;text-align:center;cursor:pointer}
 .card:active{transform:scale(.97)}
 .card .ic{font-size:36px}.card .nm{font-size:13px;font-weight:700;margin:6px 0 2px}
-.star{color:#c4b5fd}.cash{color:var(--amber)}.real{color:#6ee7b7}
+.cash{color:var(--amber)}.real{color:#6ee7b7}
 .r-tag{display:inline-block;padding:3px 10px;border-radius:12px;font-size:10px;font-weight:800;margin-top:4px}
 .r-common{color:#9ca3af;background:rgba(156,163,175,.15)}.r-rare{color:#60a5fa;background:rgba(59,130,246,.18)}
 .r-epic{color:#c084fc;background:rgba(168,85,247,.2)}.r-mythic{color:#fde047;background:rgba(251,191,36,.2)}
@@ -83,11 +83,12 @@ header h1{font-size:20px;font-weight:900;background:linear-gradient(90deg,#fbbf2
 .wsec{display:none}.wsec.on{display:block}
 .case-card{border-radius:18px;padding:1px}
 .case-card .inner{background:linear-gradient(165deg,#1e1e3c,#131324);border-radius:17px;padding:16px 10px;text-align:center;cursor:pointer}
+.case-card .inner:active{transform:scale(.97)}
 .case-cap{font-size:10px;color:var(--mut);margin-top:5px}
 .fee-note{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.5);border-radius:10px;padding:8px 10px;font-size:12px;margin-top:8px;color:#fca5a5}
 .adm-cmt{color:#6ee7b7;font-size:12px;margin-top:4px;background:rgba(16,185,129,.1);border-radius:8px;padding:6px 8px}
 nav{position:fixed;bottom:0;left:0;right:0;z-index:70;display:flex;background:linear-gradient(180deg,rgba(10,10,20,.94),rgba(6,6,14,.98));border-top:1px solid var(--line2);padding-bottom:env(safe-area-inset-bottom)}
-nav .tab{flex:1;border:none;background:transparent;padding:10px 2px 12px;font-size:10.5px;font-weight:700;color:var(--mut);cursor:pointer}
+nav .tab{flex:1;border:none;background:transparent;padding:10px 2px 12px;font-size:10.5px;font-weight:700;color:var(--mut);cursor:pointer;line-height:1.3}
 nav .tab .ti{font-size:21px;display:block;margin-bottom:2px;filter:grayscale(.7) opacity(.75)}
 nav .tab.active{color:var(--amber)}
 nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px rgba(251,191,36,.6)}
@@ -107,6 +108,18 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
 .login-card .li{font-size:68px}
 .login-card h2{font-size:25px;margin:12px 0 6px;background:linear-gradient(90deg,#fbbf24,#fde68a,#c4b5fd);-webkit-background-clip:text;background-clip:text;color:transparent}
 .login-card p{color:var(--mut);font-size:13px;margin-bottom:14px}
+/* колесо фортуны */
+.wheel-wrap{position:relative;width:260px;height:260px;margin:14px auto}
+#wheel{width:260px;height:260px;border-radius:50%;position:relative;
+  background:conic-gradient(#7c3aed 0deg 45deg,#1e1e3c 45deg 90deg,#0ea5e9 90deg 135deg,#1e1e3c 135deg 180deg,#d97706 180deg 225deg,#1e1e3c 225deg 270deg,#16a34a 270deg 315deg,#1e1e3c 315deg 360deg);
+  box-shadow:0 0 0 6px #2a2a52,0 0 30px rgba(139,92,246,.35);
+  transition:transform 3.2s cubic-bezier(.15,.75,.25,1)}
+.wseg{position:absolute;left:50%;top:50%;transform-origin:0 0;font-size:12px;font-weight:900;color:#fff;white-space:nowrap}
+.wpointer{position:absolute;top:-12px;left:50%;transform:translateX(-50%);font-size:30px;z-index:5;filter:drop-shadow(0 3px 6px rgba(0,0,0,.6))}
+.whub{position:absolute;top:50%;left:50%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:linear-gradient(135deg,#fcd34d,#f59e0b);color:#1a1408;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;z-index:4;box-shadow:0 3px 12px rgba(0,0,0,.6)}
+.wl-msg{text-align:center;font-weight:800;font-size:14px;margin-top:12px;min-height:20px}
+.wl-msg.win{color:#6ee7b7}
+.wl-msg.free{color:#fde047}
 </style>
 </head>
 <body>
@@ -115,7 +128,7 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   <div class="login-card">
     <div class="li">🚗</div>
     <h2>АВТОРЫНОК</h2>
-    <p>Работа — реальные ₽ · Кейсы и покупки — вирты · Бонусы — звёзды</p>
+    <p>Работа — реальные ₽ · Кейсы и покупки — вирты 💰</p>
     <div id="loginTg"></div>
     <div id="loginGuest" style="display:none">
       <input type="text" id="guestName" class="input-field" placeholder="Как тебя звать?" maxlength="20">
@@ -133,7 +146,6 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   <div>
     <h1>АВТОРЫНОК</h1>
     <div class="pills">
-      <div class="pill p-star"><span id="sStars">0</span> ⭐</div>
       <div class="pill p-virt"><span id="sVirt">0</span> 💰</div>
       <div class="pill p-real"><span id="sReal">0</span> ₽</div>
     </div>
@@ -144,18 +156,16 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   <div class="hero">
     <div class="hero-ico">🧑‍🔧</div>
     <h2 id="greet">Привет!</h2>
-    <p>Работай на заказах → копи реальные ₽ → выводи на карту</p>
+    <p>Крути кейсы и колесо за вирты → работай на реальных ₽ → выводи</p>
   </div>
   <div class="stat-grid">
-    <div class="stat-box"><b class="star" id="hStars">0 ⭐</b><span>звёзды<br>бонусы и задания</span></div>
-    <div class="stat-box"><b class="cash" id="hVirt">0 💰</b><span>вирты<br>кейсы и пополнения</span></div>
-    <div class="stat-box"><b class="real" id="hReal">0 ₽</b><span>реальные<br>заказы</span></div>
+    <div class="stat-box"><b class="cash" id="hVirt">0 💰</b><span>вирты<br>кейсы, покупки, пополнения</span></div>
+    <div class="stat-box"><b class="real" id="hReal">0 ₽</b><span>реальные<br>заработок с заказов</span></div>
   </div>
   <div class="panel">
     <h2>Как это работает</h2>
-    <div class="step"><div class="si">⭐</div><div><b>Звёзды</b> — только бесплатно: дневной бонус, задания, уровни. Тратятся на кейсы.</div></div>
-    <div class="step"><div class="si">💰</div><div><b>Вирты</b> — игровая валюта: призы кейсов, пополнения (сразу в вирты), продажа транспорта. На них покупается транспорт, тюнинг, ремонт.</div></div>
-    <div class="step"><div class="si">💵</div><div><b>Реальные ₽</b> — капают только с заказов: такси, курьеры, грузы. Это твой заработок — выводи на карту (минимум 100 ₽, комиссия 10%).</div></div>
+    <div class="step"><div class="si">💰</div><div><b>Вирты</b> — игровая валюта: призы кейсов и колеса, пополнения (1 ₽ = 20 виртов), продажа транспорта. На них: кейсы, транспорт, тюнинг, ремонт.</div></div>
+    <div class="step"><div class="si">💵</div><div><b>Реальные ₽</b> — только заработок с заказов: такси, курьеры, грузы. Вывод на карту: минимум 100 ₽, комиссия 10%. Вирты на реальные не меняются.</div></div>
   </div>
   <div class="panel">
     <h2>Что делать дальше</h2>
@@ -163,21 +173,47 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   </div>
   <div class="panel">
     <h2>Последние события</h2>
-    <div id="homeLog"><p class="note">Пока пусто — начни с бонуса!</p></div>
+    <div id="homeLog"><p class="note">Пока пусто — начни с бонусов!</p></div>
   </div>
 </section>
 
 <section class="page" id="page-cases">
   <button class="btn-back" onclick="switchTab('home')">← Назад</button>
-  <div class="panel"><p class="note">📦 Кейсы за ⭐. Внутри — транспорт и детали в виртах. Приз: 50–140% цены кейса.</p></div>
+  <div class="panel"><p class="note">📦 Кейсы за вирты 💰. Внутри — транспорт и детали в виртах. Приз: 50–140% цены кейса. Пополнение: 1 ₽ = 20 виртов.</p></div>
   <div class="grid2" id="casesGrid"></div>
+</section>
+
+<section class="page" id="page-bonus">
+  <button class="btn-back" onclick="switchTab('home')">← Назад</button>
+  <div class="panel" style="text-align:center">
+    <div style="font-size:44px">🎁</div><h2>Ежедневный бонус</h2>
+    <p class="note">+500 💰 за вход, серия — до +2000 💰</p>
+    <button class="btn" onclick="claimBonus()">Забрать</button>
+    <div id="bonusMsg" style="margin-top:10px;color:#c4b5fd;font-weight:700;font-size:13px"></div>
+  </div>
+  <div class="panel">
+    <h2>🎡 Колесо фортуны</h2>
+    <p class="note" style="text-align:center">Бесплатный спин раз в день. Дальше — за вирты (половина цены спина теряется, срежется выигрыш — крутить выгодно только бесплатно).</p>
+    <div class="wheel-wrap">
+      <div class="wpointer">🔻</div>
+      <div id="wheel"></div>
+      <div class="whub">SPIN</div>
+    </div>
+    <button class="btn btn-vio" id="spinBtn" onclick="spinWheel()">Крутить бесплатно</button>
+    <div class="wl-msg" id="wlMsg"></div>
+  </div>
+  <div class="panel">
+    <h2>Задания</h2>
+    <p class="note">Прогресс копится сам — как только выполнено, забирай 💰.</p>
+    <div id="tasksList"></div>
+  </div>
 </section>
 
 <section class="page" id="page-orders">
   <button class="btn-back" onclick="switchTab('home')">← Назад</button>
   <div class="panel">
     <h2>Доска заказов</h2>
-    <p class="note">💵 Все заказы платят РЕАЛЬНЫМИ ₽: курьеры для великов и самокатов, такси и грузы — для авто. Заработок идёт сразу на реальный баланс.</p>
+    <p class="note">💵 Все заказы платят РЕАЛЬНЫМИ ₽: курьеры для великов и самокатов, такси и грузы — для авто.</p>
     <div id="ordersList"></div>
   </div>
   <div class="panel"><h2>В пути</h2><div id="busyList"><p class="note">Ничего не в пути</p></div></div>
@@ -189,17 +225,6 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   <div class="panel"><h2>Слоты деталей</h2><div id="cdSlots"></div></div>
   <div class="panel"><h2>Тюнинг</h2><div id="cdTune"></div></div>
   <div class="panel"><h2>Действия</h2><div id="cdActions"></div></div>
-</section>
-
-<section class="page" id="page-bonus">
-  <button class="btn-back" onclick="switchTab('home')">← Назад</button>
-  <div class="panel" style="text-align:center">
-    <div style="font-size:48px">🎁</div><h2>Ежедневный бонус</h2>
-    <p class="note">+50 ⭐ за вход, серия — до +200 ⭐</p>
-    <button class="btn" onclick="claimBonus()">Забрать</button>
-    <div id="bonusMsg" style="margin-top:10px;color:#c4b5fd;font-weight:700;font-size:13px"></div>
-  </div>
-  <div class="panel"><h2>Задания</h2><p class="note">Прогресс копится сам — как только выполнено, забирай ⭐.</p><div id="tasksList"></div></div>
 </section>
 
 <section class="page" id="page-garage">
@@ -226,17 +251,8 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
 
   <div class="wsec on" id="wsec-dep">
     <div class="panel">
-      <h2>Обмены</h2>
-      <p class="note">⭐ → 💰: 1 ⭐ = 10 виртов. 💵 → 💰: 1 ₽ = 20 виртов (можно пустить заработок обратно в игру).</p>
-      <input type="number" id="exStars" class="input-field" placeholder="Сколько ⭐ обменять на вирты" inputmode="numeric">
-      <button class="btn" style="margin-top:8px" onclick="exStarsToVirt()">⭐ → 💰</button>
-      <input type="number" id="exReal" class="input-field" placeholder="Сколько ₽ (заработанных) обменять на вирты" inputmode="numeric">
-      <button class="btn btn-grn" style="margin-top:8px" onclick="exRealToVirt()">💵 → 💰</button>
-      <div id="exStatus" style="margin-top:10px;font-size:13px;color:var(--mut)"></div>
-    </div>
-    <div class="panel">
       <h2>Пополнение (вирты)</h2>
-      <p class="note">Минимум 25 ₽. Переведи на карту — вирты зачислятся сразу после проверки админом. Пополнение идёт в баланс виртов, не в реальные.</p>
+      <p class="note">Минимум 25 ₽. 1 ₽ = 20 виртов. После проверки админом вирты зачислятся сразу.</p>
       <div class="card-box" id="cardDisplay"></div>
       <button class="btn btn-dark" style="margin-top:8px" onclick="copyCard()">📋 Скопировать карту</button>
       <div class="chips">
@@ -254,8 +270,8 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   <div class="wsec" id="wsec-out">
     <div class="panel">
       <h2>Вывод на карту</h2>
-      <p class="note">Только с 💵 реального баланса (заработок с заказов). Минимум 100 ₽.</p>
-      <div class="fee-note">Комиссия 10%: из 1000 ₽ на карту придёт 900 ₽. <b id="feePreview"></b></div>
+      <p class="note">Только заработок с заказов 💵. Минимум 100 ₽.</p>
+      <div class="fee-note">Комиссия 10%: <b id="feePreview"></b></div>
       <input type="text" id="wFio" class="input-field" placeholder="ФИО получателя">
       <input type="text" id="wCard" class="input-field" placeholder="Номер карты (16 цифр)" inputmode="numeric">
       <input type="number" id="wAmount" class="input-field" placeholder="Сумма, ₽ (мин. 100)" inputmode="numeric" oninput="updFeePreview()">
@@ -276,7 +292,6 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
     <h2>Балансы игрока</h2>
     <div class="statline"><span>Игрок</span><b id="admUser">—</b></div>
     <div class="statline"><span>Telegram ID</span><b id="admTgId">—</b></div>
-    <div class="statline"><span>⭐ звёзды</span><b id="admStars">0</b></div>
     <div class="statline"><span>💰 вирты</span><b id="admVirt">0</b></div>
     <div class="statline"><span>💵 заработано реальных</span><b id="admReal">0 ₽</b></div>
     <div class="statline"><span>Уровень</span><b id="admLvl">1</b></div>
@@ -285,14 +300,13 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   </div>
   <div class="panel">
     <h2>🛠 Ручное управление</h2>
-    <input type="number" id="admAddStars" class="input-field" placeholder="⭐ (можно −)">
     <input type="number" id="admAddVirt" class="input-field" placeholder="💰 (можно −)">
     <input type="number" id="admAddReal" class="input-field" placeholder="💵 ₽ (можно −)">
     <button class="btn" style="margin-top:8px" onclick="admApply()">Применить</button>
   </div>
   <div class="panel">
     <h2>💳 Пополнения → вирты</h2>
-    <p class="note">Исправь сумму на реальную. Зачисление идёт в баланс виртов игрока.</p>
+    <p class="note">Исправь сумму на реальную. Зачисление идёт в вирты (1 ₽ = 20 виртов).</p>
     <div id="adminDeps"></div>
   </div>
   <div class="panel">
@@ -329,6 +343,7 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   <button class="tab" id="tab-cases" onclick="switchTab('cases')"><span class="ti">📦</span>Кейсы</button>
   <button class="tab" id="tab-orders" onclick="switchTab('orders')"><span class="ti">💼</span>Заказы</button>
   <button class="tab" id="tab-garage" onclick="switchTab('garage')"><span class="ti">🚲</span>Гараж</button>
+  <button class="tab" id="tab-bonus" onclick="switchTab('bonus')"><span class="ti">🎁</span>Бонусы</button>
   <button class="tab" id="tab-wallet" onclick="switchTab('wallet')"><span class="ti">💱</span>Кошелёк</button>
 </nav>
 
@@ -337,13 +352,14 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
 /* === НАСТРОЙКИ === */
 var ADMIN_PASS="11973";
 var ADMIN_CARD="2202 2092 2642 7861";
-var MARKET_FEE=0.10;   /* комиссия продаж */
-var WD_FEE=0.10;       /* комиссия вывода */
-var STARS_TO_VIRT=10;  /* 1 ⭐ = 10 виртов */
-var REAL_TO_VIRT=20;   /* 1 ₽ = 20 виртов */
-var DEP_MIN=25;        /* мин пополнение → вирты */
-var WD_MIN=100;        /* мин вывод (реальные с заказов) */
+var MARKET_FEE=0.10;
+var WD_FEE=0.10;
+var REAL_TO_VIRT=20;
+var DEP_MIN=25;
+var WD_MIN=100;
 var CASE_MIN_PCT=0.5, CASE_MAX_MULT=1.4;
+var BONUS_BASE=500, BONUS_MAX=2000;
+var WHEEL_COST=2000; /* платный спин, если бесплатный уже был */
 var ADMIN_DEFAULT_CMT="Спасибо, что вы с нами!";
 
 /* === ВХОД === */
@@ -352,7 +368,7 @@ if(tg){try{tg.ready();tg.expand();}catch(e){}}
 var tgUser=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user?tg.initDataUnsafe.user:null;
 var userName=tgUser?(tgUser.first_name||tgUser.username||"Игрок"):"Игрок";
 var userId=tgUser?tgUser.id:null;
-var SAVE_KEY=userId?("automarket_v9_"+userId):"automarket_v9";
+var SAVE_KEY=userId?("automarket_v11_"+userId):"automarket_v11";
 
 /* === ДАННЫЕ === */
 var rLabel={common:"Обычный",rare:"Редкий",epic:"Эпический",mythic:"Легендарный"};
@@ -372,7 +388,7 @@ var vehicles=[];
   for(i=0;i<16;i++){p=bp[i];vehicles.push({id:id++,kind:"bike",name:b[i%8]+" "+m[(i*3)%8],price:p,rarity:rarOf(p)})}
   b=["Kugoo","Ninebot","Xiaomi","X-Rider","Vsett","Kaabo","E-Twow","KugooKirin"];
   m=["M4","G30","Pro 2","M365","GT","S9","F2","E2"];
-  var sp=geoSeries(600,6000,16);
+  var sp=geoSeries(500,6000,16);
   for(i=0;i<16;i++){p=sp[i];vehicles.push({id:id++,kind:"scooter",name:b[i%8]+" "+m[(i*5)%8],price:p,rarity:rarOf(p)})}
   b=["Урал","Honda","Yamaha","Kawasaki","Ducati","Harley-Davidson","KTM","BMW"];
   m=["M-67","CBR","R6","Ninja","Monster","Softail","Duke","S1000"];
@@ -393,13 +409,14 @@ function pickVehicleNear(target,n){
   for(i=0;i<sorted.length;i++){if(x<w[i])return sorted[i];x-=w[i]}
   return sorted[0];
 }
-/* Оплата заказов — РЕАЛЬНЫЕ ₽ */
+/* Оплата заказов — реальные ₽ */
 var RAR_PAY_RUB={common:2,rare:6,epic:15,mythic:40};
-var CASE_EMOJI=["📦","🎁","🧰","🛴","🚲","🏍️","💰","💼","💎","👑","🏆","🔥","⚡","🌟","🚀","👑"];
-var casesData=[[25,"Велосипедный"],[50,"Стартовый"],[100,"Самокатный"],[200,"Мото-бокс"],[400,"Мотопремиум"],[800,"Серебряный"],[1500,"Золотой"],[3000,"Платиновый"],[6000,"Титановый"],[12000,"Авто-люкс"],[25000,"Спорт"],[50000,"Божественный"]];
-var cases=casesData.map(function(a,i){
-  var V=a[0]*STARS_TO_VIRT;
-  return{price:a[0],name:a[1],emoji:CASE_EMOJI[i],virt:V,minV:Math.round(V*CASE_MIN_PCT),maxV:Math.round(V*CASE_MAX_MULT)};
+/* Кейсы — за вирты */
+var CASE_PRICES=[500,1000,2000,4000,8000,15000,30000,60000,120000,240000,500000,1000000];
+var CASE_NAMES=["Бюджетный","Стартовый","Рабочий","Мото-бокс","Мотопремиум","Серебряный","Золотой","Платиновый","Титановый","Авто-люкс","Спорт","Божественный"];
+var CASE_EMOJI=["📦","🎁","🧰","🛴","🚲","🏍️","💰","💼","💎","👑","🏆","👑"];
+var cases=CASE_PRICES.map(function(p,i){
+  return{price:p,name:CASE_NAMES[i],emoji:CASE_EMOJI[i],virt:p,minV:Math.round(p*CASE_MIN_PCT),maxV:Math.round(p*CASE_MAX_MULT)};
 });
 var PARTS=[["Колесо","🛞"],["Двигатель","⚙️"],["Бампер","🛡️"],["Фара","💡"],["Руль","🎮"],["Глушитель","🎺"],["АКБ","🔋"],["Коробка","🔧"],["Тормоза","🛑"],["Фильтр","🌀"],["Радиатор","❄️"],["Капот","🔶"],["Дверь","🚪"],["Крыло","🪶"],["Стекло","🪟"],["Сиденье","💺"],["Багажник","🧳"],["Выхлоп","💨"],["Рессора","🔗"],["Бензобак","⛽"]];
 var PART_NAMES=PARTS.map(function(x){return x[0]});
@@ -424,24 +441,23 @@ var ORDERS=[
  {id:"inter",type:"Междугородний рейс",ic:"🛣️",mult:3.5,dur:90,need:"car+eng3+trunk"}
 ];
 var TASKS=[
- {id:"kur5",ic:"🛴",txt:"Выполни 5 заказов курьером",rw:150,p:5,k:"kur"},
- {id:"bike5",ic:"🚲",txt:"Выполни 5 заказов велокурьером",rw:150,p:5,k:"bike"},
- {id:"taxi3",ic:"🚕",txt:"Выполни 3 заказа «Такси»",rw:150,p:3,k:"taxi"},
- {id:"del5",ic:"📦",txt:"Выполни 5 доставок посылок",rw:200,p:5,k:"del"},
- {id:"gruz1",ic:"🚚",txt:"Выполни грузоперевозку",rw:180,p:1,k:"gruz"},
- {id:"night1",ic:"🌙",txt:"Отработай ночную смену",rw:300,p:1,k:"night"},
- {id:"inter1",ic:"🛣️",txt:"Съезди в междугородний рейс",rw:400,p:1,k:"inter"},
- {id:"earn100",ic:"💵",txt:"Заработай 100 ₽ на заказах",rw:250,p:100,k:"earnR"},
- {id:"tune3",ic:"⚙️",txt:"Прокачай тюнинг 3 раза",rw:150,p:3,k:"tune"},
- {id:"fix1",ic:"🔧",txt:"Отремонтируй транспорт",rw:100,p:1,k:"repairs"},
- {id:"build1",ic:"🚗",txt:"Собери транспорт из 20 деталей",rw:300,p:1,k:"built"},
- {id:"case10",ic:"📦",txt:"Открой 10 кейсов",rw:200,p:10,k:"cases"},
- {id:"garage3",ic:"🚲",txt:"Собери 3 единицы транспорта",rw:250,p:3,k:"garage"}
+ {id:"kur5",ic:"🛴",txt:"Выполни 5 заказов курьером",rw:500,p:5,k:"kur"},
+ {id:"bike5",ic:"🚲",txt:"Выполни 5 заказов велокурьером",rw:500,p:5,k:"bike"},
+ {id:"taxi3",ic:"🚕",txt:"Выполни 3 заказа «Такси»",rw:500,p:3,k:"taxi"},
+ {id:"del5",ic:"📦",txt:"Выполни 5 доставок посылок",rw:600,p:5,k:"del"},
+ {id:"gruz1",ic:"🚚",txt:"Выполни грузоперевозку",rw:600,p:1,k:"gruz"},
+ {id:"night1",ic:"🌙",txt:"Отработай ночную смену",rw:800,p:1,k:"night"},
+ {id:"inter1",ic:"🛣️",txt:"Съезди в междугородний рейс",rw:1000,p:1,k:"inter"},
+ {id:"build1",ic:"🚗",txt:"Собери транспорт из 20 деталей",rw:1000,p:1,k:"built"},
+ {id:"case10",ic:"📦",txt:"Открой 10 кейсов",rw:800,p:10,k:"cases"},
+ {id:"garage3",ic:"🚲",txt:"Собери 3 единицы транспорта",rw:800,p:3,k:"garage"}
 ];
+/* Колесо фортуны: 8 секторов, средний выигрыш ~1000 виртов */
+var WHEEL_PRIZES=[250,500,1000,2500,500,10000,1000,5000];
 
 /* === СОСТОЯНИЕ === */
 var state=null;
-function freshState(){return{stars:0,virt:0,real:0,level:1,xp:0,casesOpened:0,ordersDone:0,garage:[],parts:{},lastBonus:null,bonusStreak:0,doneTasks:{},stats:{kur:0,bike:0,taxi:0,del:0,tow:0,gruz:0,night:0,inter:0,earnR:0,tune:0,repairs:0,built:0},reqs:[],depReqs:[],reqSeq:1,depSeq:1,totalDep:0,totalPaid:0,log:[]}}
+function freshState(){return{virt:0,real:0,level:1,xp:0,casesOpened:0,ordersDone:0,garage:[],parts:{},lastBonus:null,bonusStreak:0,lastWheel:null,spinsBought:0,winsTotal:0,doneTasks:{},stats:{kur:0,bike:0,taxi:0,del:0,tow:0,gruz:0,night:0,inter:0,earnR:0,tune:0,repairs:0,built:0},reqs:[],depReqs:[],reqSeq:1,depSeq:1,totalDep:0,totalPaid:0,log:[]}}
 function save(){try{localStorage.setItem(SAVE_KEY,JSON.stringify(state))}catch(e){}}
 function load(){
   state=freshState();
@@ -468,7 +484,6 @@ function renderHeader(){
   document.getElementById("hdrId").textContent=userId?("TG ID: "+userId):"Гость";
 }
 function updateUI(){
-  document.getElementById("sStars").textContent=state.stars.toLocaleString("ru");
   document.getElementById("sVirt").textContent=state.virt.toLocaleString("ru");
   document.getElementById("sReal").textContent=state.real.toLocaleString("ru");
   save();
@@ -491,7 +506,7 @@ function switchTab(n){
   if(n==="cardetail")renderCarDetail();
   if(n==="wallet")renderReqs();
   if(n==="admin")renderAdmin();
-  if(n==="bonus")renderTasks();
+  if(n==="bonus"){renderTasks();renderWheel()}
   if(n==="home")renderHome();
   window.scrollTo(0,0);
 }
@@ -506,14 +521,15 @@ function walletSub(w){
 /* === ГЛАВНАЯ === */
 function renderHome(){
   document.getElementById("greet").textContent="Привет, "+userName+"!";
-  document.getElementById("hStars").textContent=state.stars.toLocaleString("ru")+" ⭐";
   document.getElementById("hVirt").textContent=state.virt.toLocaleString("ru")+" 💰";
   document.getElementById("hReal").textContent=state.real.toLocaleString("ru")+" ₽";
   var steps="",i;
   function step(ic,txt,done){steps+='<div class="step'+(done?" done":"")+'"><div class="si">'+(done?"✅":ic)+'</div><div>'+txt+'</div></div>'}
-  if(state.lastBonus===null)step("🎁","Забери дневной бонус — первые 50 ⭐.",false);
+  if(state.lastBonus===null)step("🎁","Забери дневной бонус и крутани колесо — первые вирты.",false);
   else step("🎁","Бонус получен. Серия: "+(state.bonusStreak||0)+" дн.",true);
-  step("📦","Крути кейсы за ⭐ — внутри транспорт и детали в виртах.",state.casesOpened>0);
+  if(state.lastWheel===null)step("🎡","Бесплатный спин колеса ждёт тебя в разделе Бонусы!",false);
+  else step("🎡","Колесо крутилось сегодня. Заходи завтра!",true);
+  step("📦","Крути кейсы за вирты — внутри транспорт и детали.",state.casesOpened>0);
   if(state.garage.length===0)step("🚲","Собери транспорт из 20 разных деталей или кручи кейсы.",false);
   else step("🚲","В гараже: "+state.garage.length+". Отправляй на заказы — платят реальными ₽!",true);
   if(state.garage.length>0&&state.ordersDone===0)step("💼","Отправь транспорт на заказ — заработок идёт на реальный баланс.",false);
@@ -533,11 +549,11 @@ function renderCases(){
   var g=document.getElementById("casesGrid"),html="",i;
   for(i=0;i<cases.length;i++){
     var c=cases[i],ring;
-    if(c.price>=6000)ring="background:linear-gradient(160deg,rgba(251,191,36,.5),rgba(120,53,15,.4))";
-    else if(c.price>=1500)ring="background:linear-gradient(160deg,rgba(168,85,247,.5),rgba(76,29,149,.4))";
-    else if(c.price>=400)ring="background:linear-gradient(160deg,rgba(59,130,246,.45),rgba(30,58,138,.4))";
+    if(c.price>=120000)ring="background:linear-gradient(160deg,rgba(251,191,36,.5),rgba(120,53,15,.4))";
+    else if(c.price>=30000)ring="background:linear-gradient(160deg,rgba(168,85,247,.5),rgba(76,29,149,.4))";
+    else if(c.price>=8000)ring="background:linear-gradient(160deg,rgba(59,130,246,.45),rgba(30,58,138,.4))";
     else ring="background:linear-gradient(160deg,rgba(80,80,140,.35),rgba(30,30,60,.35))";
-    html+='<div class="case-card" style="'+ring+'"><div class="inner" data-i="'+i+'"><div style="font-size:34px">'+c.emoji+'</div><div style="font-weight:800;margin:6px 0 2px">'+c.name+'</div><div class="star" style="font-weight:800">'+c.price.toLocaleString("ru")+' ⭐</div><div class="case-cap">приз: '+c.minV.toLocaleString("ru")+'–'+c.maxV.toLocaleString("ru")+' 💰</div></div></div>';
+    html+='<div class="case-card" style="'+ring+'"><div class="inner" data-i="'+i+'"><div style="font-size:34px">'+c.emoji+'</div><div style="font-weight:800;margin:6px 0 2px">'+c.name+'</div><div class="cash" style="font-weight:800">'+c.price.toLocaleString("ru")+' 💰</div><div class="case-cap">приз: '+c.minV.toLocaleString("ru")+'–'+c.maxV.toLocaleString("ru")+' 💰</div></div></div>';
   }
   g.innerHTML=html;
   var cs=g.querySelectorAll(".inner");
@@ -561,15 +577,16 @@ function showCase(c){
   currentCase=c;opened=false;currentPrize=null;
   document.getElementById("ovBox").textContent=c.emoji;
   document.getElementById("ovCase").textContent="Кейс «"+c.name+"»";
-  document.getElementById("ovPrice").textContent=c.price.toLocaleString("ru")+" ⭐ · приз: "+c.minV.toLocaleString("ru")+"–"+c.maxV.toLocaleString("ru")+" 💰";
+  document.getElementById("ovPrice").textContent=c.price.toLocaleString("ru")+" 💰 · приз: "+c.minV.toLocaleString("ru")+"–"+c.maxV.toLocaleString("ru")+" 💰";
   var msg=document.getElementById("ovMsg");
-  if(state.stars<c.price){
-    msg.style.display="block";msg.style.cssText="background:rgba(239,68,68,.15);border:1px solid #ef4444;color:#fca5a5;border-radius:12px;padding:10px;font-size:13px;margin-top:12px";
-    msg.textContent="❌ Не хватает "+(c.price-state.stars).toLocaleString("ru")+" ⭐. Звёзды: бонус, задания, уровни.";
+  if(state.virt<c.price){
+    msg.style.display="block";
+    msg.style.cssText="background:rgba(239,68,68,.15);border:1px solid #ef4444;color:#fca5a5;border-radius:12px;padding:10px;font-size:13px;margin-top:12px";
+    msg.textContent="❌ Не хватает "+(c.price-state.virt).toLocaleString("ru")+" 💰. Вирты: пополнение (1 ₽ = 20 💰), бонус, колесо, задания, продажа вещей.";
     document.getElementById("ovOpen").style.display="none";
   }else{
     msg.style.display="none";
-    document.getElementById("ovOpen").textContent="Открыть за "+c.price.toLocaleString("ru")+" ⭐";
+    document.getElementById("ovOpen").textContent="Открыть за "+c.price.toLocaleString("ru")+" 💰";
     document.getElementById("ovOpen").style.display="block";
   }
   document.getElementById("ovReady").style.display="block";
@@ -578,9 +595,9 @@ function showCase(c){
 }
 function doOpen(){
   if(opened||!currentCase)return;
-  if(state.stars<currentCase.price){toast("Не хватает звёзд!",true);return}
+  if(state.virt<currentCase.price){toast("Не хватает виртов!",true);return}
   opened=true;
-  state.stars-=currentCase.price;state.casesOpened++;
+  state.virt-=currentCase.price;state.casesOpened++;
   addLog("Открыт кейс «"+currentCase.name+"»","spend");
   var box=document.getElementById("ovBox");
   box.classList.add("shake");
@@ -625,7 +642,7 @@ function claimPrize(keep){
 }
 function spinAgain(){
   if(!currentCase)return;
-  if(state.stars<currentCase.price){toast("Не хватает звёзд!",true);return}
+  if(state.virt<currentCase.price){toast("Не хватает виртов!",true);return}
   autoTake();
   currentPrize=null;opened=false;
   document.getElementById("ovResult").style.display="none";
@@ -883,24 +900,73 @@ function addXp(amount){
   while(state.xp>=lvlNeed(state.level)){
     state.xp-=lvlNeed(state.level);
     state.level++;
-    var bonus=25*state.level;
-    state.stars+=bonus;
-    addLog("🎉 Уровень "+state.level+" («"+lvlName(state.level)+"»): +"+bonus+" ⭐","gain");
-    toast("🎉 Уровень "+state.level+"! +"+bonus+" ⭐");
+    var bonus=250*state.level;
+    state.virt+=bonus;
+    addLog("🎉 Уровень "+state.level+" («"+lvlName(state.level)+"»): +"+bonus+" 💰","gain");
+    toast("🎉 Уровень "+state.level+"! +"+bonus+" 💰");
   }
 }
 function lvlName(l){return LVL_NAMES[Math.min(LVL_NAMES.length-1,Math.floor((l-1)/3))]}
 
-/* === БОНУС === */
+/* === БОНУСЫ === */
 function claimBonus(){
   var today=new Date().toDateString();
   if(state.lastBonus===today){document.getElementById("bonusMsg").textContent="Уже получено! Завтра.";return}
   state.bonusStreak=(state.bonusStreak||0)+1;
-  var amt=50+Math.min(150,(state.bonusStreak-1)*10);
-  state.stars+=amt;state.lastBonus=today;
-  document.getElementById("bonusMsg").textContent="+"+amt+" ⭐ (серия: "+state.bonusStreak+" дн.)";
-  addLog("Ежедневный бонус: +"+amt+" ⭐","gain");
-  updateUI();
+  var amt=BONUS_BASE+Math.min(BONUS_MAX-BONUS_BASE,(state.bonusStreak-1)*100);
+  state.virt+=amt;state.lastBonus=today;
+  document.getElementById("bonusMsg").textContent="+"+amt+" 💰 (серия: "+state.bonusStreak+" дн.)";
+  addLog("Ежедневный бонус: +"+amt+" 💰","gain");
+  toast("🎁 +"+amt+" 💰");
+  updateUI();renderHome();
+}
+
+/* Колесо фортуны */
+function renderWheel(){
+  var today=new Date().toDateString();
+  var free=(state.lastWheel!==today);
+  var btn=document.getElementById("spinBtn"),msg=document.getElementById("wlMsg");
+  if(!free){
+    btn.textContent="Крутить за "+WHEEL_COST.toLocaleString("ru")+" 💰";
+    msg.className="wl-msg";msg.textContent="Бесплатный спин уже был — возвращайся завтра!";
+  }else{
+    btn.textContent="🎡 Крутить бесплатно";
+    msg.className="wl-msg free";msg.textContent="Бесплатный спин доступен!";
+  }
+}
+var wheelSpinning=false,wheelAngle=0;
+function spinWheel(){
+  if(wheelSpinning)return;
+  var today=new Date().toDateString();
+  var free=(state.lastWheel!==today);
+  if(!free){
+    if(state.virt<WHEEL_COST){toast("Не хватает виртов на спин!",true);return}
+    state.virt-=WHEEL_COST;
+  }
+  state.lastWheel=today;
+  var idx=Math.floor(Math.random()*WHEEL_PRIZES.length);
+  var prize=WHEEL_PRIZES[idx];
+  /* сектор: 45° на сектор, указатель сверху; добиваем 4 полных оборота */
+  var seg=360/8;
+  var target=360*4+(360-(idx*seg+seg/2));
+  wheelAngle=(wheelAngle%360)+target;
+  wheelSpinning=true;
+  var w=document.getElementById("wheel");
+  w.style.transform="rotate("+wheelAngle+"deg)";
+  var btn=document.getElementById("spinBtn"),msg=document.getElementById("wlMsg");
+  btn.disabled=true;
+  msg.className="wl-msg";msg.textContent="Крутится…";
+  if(!free)addLog("Платный спин колеса: −"+WHEEL_COST.toLocaleString("ru")+" 💰","spend");
+  setTimeout(function(){
+    wheelSpinning=false;
+    btn.disabled=false;
+    state.virt+=prize;state.winsTotal++;
+    msg.className="wl-msg win";
+    msg.textContent="🎉 Выигрыш: +"+prize.toLocaleString("ru")+" 💰!";
+    addLog("🎡 Колесо фортуны: +"+prize.toLocaleString("ru")+" 💰","gain");
+    try{if(tg&&tg.HapticFeedback)tg.HapticFeedback.notificationOccurred("success")}catch(e){}
+    renderWheel();renderTasks();updateUI();renderHome();
+  },3300);
 }
 
 /* === ЗАДАНИЯ === */
@@ -915,11 +981,10 @@ function renderTasks(){
     var t=TASKS[i];
     var done=state.doneTasks[t.id];
     var prog=taskProgress(t);
-    var progTxt=t.k==="earnR"?(prog+" / "+t.p+" ₽"):(prog+" / "+t.p);
-    var btn=done?'<span style="color:#22c55e;font-weight:800">✅</span>'
-      :'<button class="'+(prog>=t.p?"ok":"no")+'" onclick="doTask(\''+t.id+'\')">'+(prog>=t.p?"Забрать +"+t.rw+" ⭐":"…")+'</button>';
-    h+='<div class="req">'+t.ic+' <b>'+t.txt+'</b> — <b class="star">+'+t.rw+' ⭐</b><br>'
-      +'<span class="note">'+progTxt+'</span>'
+    var btn=done?'<span style="color:#22c55e;font-weight:800">✅ Забрано</span>'
+      :'<button class="'+(prog>=t.p?"ok":"no")+'" onclick="doTask(\''+t.id+'\')">'+(prog>=t.p?"Забрать +"+t.rw+" 💰":"В процессе")+'</button>';
+    h+='<div class="req">'+t.ic+' <b>'+t.txt+'</b> — <b class="cash">+'+t.rw+' 💰</b><br>'
+      +'<span class="note">'+prog+" / "+t.p+'</span>'
       +'<div class="tprog"><div style="width:'+Math.min(100,prog/t.p*100)+'%"></div></div>'
       +'<div style="margin-top:6px">'+btn+'</div></div>';
   }
@@ -931,9 +996,9 @@ function doTask(id){
   if(!t||state.doneTasks[id])return;
   if(taskProgress(t)<t.p){toast("Ещё не готово!",true);return}
   state.doneTasks[id]=true;
-  state.stars+=t.rw;
-  toast("⭐ +"+t.rw);
-  addLog("Задание: "+t.txt+" → +"+t.rw+" ⭐","gain");
+  state.virt+=t.rw;
+  toast("💰 +"+t.rw);
+  addLog("Задание: "+t.txt+" → +"+t.rw+" 💰","gain");
   save();renderTasks();updateUI();
 }
 
@@ -950,14 +1015,14 @@ function makeDeposit(){
   if(fio.length<3){st.textContent="❌ Укажи ФИО.";return}
   if(!amount||amount<DEP_MIN){st.textContent="❌ Минимум "+DEP_MIN+" ₽.";return}
   state.depReqs.unshift({id:state.depSeq++,user:userName+(userId?(" ID"+userId):""),fio:fio,amount:amount,status:"Ожидает проверки",ts:new Date().toLocaleString("ru")});
-  st.textContent="✅ Заявка №"+(state.depSeq-1)+". После проверки админом вирты попадут в твой баланс 💰.";
+  st.textContent="✅ Заявка №"+(state.depSeq-1)+". После проверки админом получишь "+(amount*REAL_TO_VIRT).toLocaleString("ru")+" 💰.";
   addLog("Заявка на пополнение: "+amount.toLocaleString("ru")+" ₽ → вирты","info");
   document.getElementById("depFio").value="";document.getElementById("depAmount").value="";
   save();renderReqs();
 }
 function updFeePreview(){
   var n=parseInt(document.getElementById("wAmount").value,10);
-  document.getElementById("feePreview").textContent=n&&n>0?("Ты заявишь "+n.toLocaleString("ru")+" ₽ → получишь "+Math.round(n*(1-WD_FEE)).toLocaleString("ru")+" ₽"):"";
+  document.getElementById("feePreview").textContent=n&&n>0?("из "+n.toLocaleString("ru")+" ₽ на карту придёт "+Math.round(n*(1-WD_FEE)).toLocaleString("ru")+" ₽"):"";
 }
 function withdraw(){
   var digits=document.getElementById("wCard").value.replace(/\D/g,"");
@@ -967,7 +1032,7 @@ function withdraw(){
   if(fio.length<3){st.textContent="❌ Укажи ФИО.";return}
   if(digits.length!==16){st.textContent="❌ Нужны 16 цифр.";return}
   if(!amount||amount<WD_MIN){st.textContent="❌ Минимум "+WD_MIN+" ₽.";return}
-  if(amount>state.real){st.textContent="❌ Заработано только "+state.real.toLocaleString("ru")+" ₽. Вирты и звёзды не выводятся.";return}
+  if(amount>state.real){st.textContent="❌ Заработано только "+state.real.toLocaleString("ru")+" ₽. Вирты не выводятся.";return}
   var payout=Math.round(amount*(1-WD_FEE));
   state.real-=amount;
   state.reqs.unshift({id:state.reqSeq++,user:userName+(userId?(" ID"+userId):""),fio:fio,card:digits,amount:amount,payout:payout,status:"В обработке",ts:new Date().toLocaleString("ru")});
@@ -977,30 +1042,6 @@ function withdraw(){
   save();renderReqs();updateUI();
 }
 function cardFmt(d){return String(d).replace(/(\d{4})(?=\d)/g,"$1 ")}
-
-/* === ОБМЕН === */
-function exStarsToVirt(){
-  var n=parseInt(document.getElementById("exStars").value,10),st=document.getElementById("exStatus");
-  if(!n||n<1){st.textContent="❌ Введи количество.";return}
-  if(n>state.stars){st.textContent="❌ Только "+state.stars.toLocaleString("ru")+" ⭐.";return}
-  var got=n*STARS_TO_VIRT;
-  state.stars-=n;state.virt+=got;
-  st.textContent="✅ "+n.toLocaleString("ru")+" ⭐ → "+got.toLocaleString("ru")+" 💰";
-  addLog("Обмен: "+n+" ⭐ → "+got+" 💰","info");
-  document.getElementById("exStars").value="";
-  updateUI();
-}
-function exRealToVirt(){
-  var n=parseInt(document.getElementById("exReal").value,10),st=document.getElementById("exStatus");
-  if(!n||n<1){st.textContent="❌ Введи сумму.";return}
-  if(n>state.real){st.textContent="❌ Заработано только "+state.real.toLocaleString("ru")+" ₽.";return}
-  var got=n*REAL_TO_VIRT;
-  state.real-=n;state.virt+=got;
-  st.textContent="✅ "+n.toLocaleString("ru")+" ₽ → "+got.toLocaleString("ru")+" 💰";
-  addLog("Обмен: "+n.toLocaleString("ru")+" ₽ → "+got.toLocaleString("ru")+" 💰","info");
-  document.getElementById("exReal").value="";
-  updateUI();
-}
 
 /* === ЗАЯВКИ ИГРОКА === */
 function renderReqs(){
@@ -1024,7 +1065,6 @@ function renderReqs(){
 function renderAdmin(){
   document.getElementById("admUser").textContent=userName+(userId?" (Telegram)":" (гость)");
   document.getElementById("admTgId").textContent=userId?String(userId):"—";
-  document.getElementById("admStars").textContent=state.stars.toLocaleString("ru");
   document.getElementById("admVirt").textContent=state.virt.toLocaleString("ru");
   document.getElementById("admReal").textContent=state.real.toLocaleString("ru")+" ₽";
   document.getElementById("admLvl").textContent="Ур. "+state.level+" · "+lvlName(state.level);
@@ -1032,8 +1072,8 @@ function renderAdmin(){
   document.getElementById("admPaid").textContent=state.totalPaid.toLocaleString("ru")+" ₽";
   var pend=state.depReqs.filter(function(r){return r.status==="Ожидает проверки"});
   document.getElementById("adminDeps").innerHTML=pend.length?pend.map(function(r){
-    return '<div class="req">№'+r.id+' | '+r.user+'<br>От: <b>'+r.fio+'</b> — <b class="real">'+r.amount.toLocaleString("ru")+' ₽</b> → '+r.amount.toLocaleString("ru")+' виртов<br><span class="note">'+r.ts+'</span><br>'
-      +'<span style="font-size:11px">Реальная сумма (₽ → столько же виртов):</span><br><input type="number" id="admAmt-'+r.id+'" class="amt-in" value="'+r.amount+'" inputmode="numeric"> ₽<br>'
+    return '<div class="req">№'+r.id+' | '+r.user+'<br>От: <b>'+r.fio+'</b> — <b class="real">'+r.amount.toLocaleString("ru")+' ₽</b> → '+(r.amount*REAL_TO_VIRT).toLocaleString("ru")+' 💰<br><span class="note">'+r.ts+'</span><br>'
+      +'<span style="font-size:11px">Реальная сумма (₽, столько же виртов ×20):</span><br><input type="number" id="admAmt-'+r.id+'" class="amt-in" value="'+r.amount+'" inputmode="numeric"> ₽<br>'
       +'<input type="text" id="admCmt-'+r.id+'" class="cmt-in" placeholder="Сообщение игроку">'
       +'<button class="btn-sm" onclick="fillCmt('+r.id+')">Вставить «'+ADMIN_DEFAULT_CMT+'»</button><br>'
       +'<button class="ok" onclick="admDep('+r.id+',1)">Зачислить вирты</button><button class="no" onclick="admDep('+r.id+',0)">Отклонить</button></div>';
@@ -1050,15 +1090,13 @@ function renderAdmin(){
 function fillCmt(id){var el=document.getElementById("admCmt-"+id);if(el)el.value=ADMIN_DEFAULT_CMT}
 function getCmt(id){var el=document.getElementById("admCmt-"+id);return el?el.value.trim().slice(0,200):""}
 function admApply(){
-  var ds=parseInt(document.getElementById("admAddStars").value,10)||0;
   var dv=parseInt(document.getElementById("admAddVirt").value,10)||0;
   var dr=parseInt(document.getElementById("admAddReal").value,10)||0;
-  if(!ds&&!dv&&!dr){toast("Введи сумму",true);return}
-  state.stars=Math.max(0,state.stars+ds);
+  if(!dv&&!dr){toast("Введи сумму",true);return}
   state.virt=Math.max(0,state.virt+dv);
   state.real=Math.max(0,state.real+dr);
-  addLog("🛠 Корректировка админом: "+(ds?((ds>0?"+":"")+ds+" ⭐ "):"")+(dv?((dv>0?"+":"")+dv+" 💰 "):"")+(dr?((dr>0?"+":"")+dr+" ₽"):""),"info");
-  document.getElementById("admAddStars").value="";document.getElementById("admAddVirt").value="";document.getElementById("admAddReal").value="";
+  addLog("🛠 Корректировка админом: "+(dv?((dv>0?"+":"")+dv+" 💰 "):"")+(dr?((dr>0?"+":"")+dr+" ₽"):""),"info");
+  document.getElementById("admAddVirt").value="";document.getElementById("admAddReal").value="";
   toast("Применено");
   renderAdmin();updateUI();
 }
@@ -1073,7 +1111,7 @@ function admDep(id,ok){
       r.finalAmount=amt;r.status="Зачислен";
       if(cmt)r.adminCmt=cmt;
       state.totalDep+=amt;
-      state.virt+=amt*REAL_TO_VIRT; /* пополнение → сразу вирты */
+      state.virt+=amt*REAL_TO_VIRT;
       addLog("Пополнение зачислено: "+amt.toLocaleString("ru")+" ₽ → "+(amt*REAL_TO_VIRT).toLocaleString("ru")+" 💰","gain");
       if(cmt)addLog("💬 Админ: «"+cmt+"»","info");
     }else{r.status="Отклонён";if(cmt)r.adminCmt=cmt;addLog("Пополнение №"+r.id+" отклонено","info")}
@@ -1116,6 +1154,7 @@ function startGame(){
   document.getElementById("loginScreen").style.display="none";
   renderHeader();
   document.getElementById("cardDisplay").textContent=ADMIN_CARD;
+  renderWheel();
   renderHome();renderCases();renderGarage();renderReqs();renderTasks();updateUI();
 }
 (function initLogin(){
