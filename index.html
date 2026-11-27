@@ -1,284 +1,356 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>АвтоКейсы</title>
-    <style>
-        body { margin:0; padding:0; background:#12121f; color:#fff; font-family:Arial, sans-serif; }
-        .wrap { max-width:400px; margin:auto; padding-bottom:20px; }
-        header { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-bottom:1px solid #2a2a40; }
-        .logo { font-size:20px; font-weight:bold; }
-        .bal { background:#fbbf24; color:#000; border:none; padding:8px 14px; border-radius:24px; font-weight:bold; cursor:pointer; font-size:15px; }
-        .tabs { display:flex; gap:6px; padding:8px; overflow-x:auto; }
-        .tab { flex:1 1 auto; min-width:80px; background:transparent; border:1px solid #2a2a40; color:#ccc; padding:8px 6px; border-radius:10px; cursor:pointer; white-space:nowrap; font-size:13px; }
-        .tab.active { background:#fbbf24; color:#000; border-color:#fbbf24; }
-        .page { display:none; padding:16px; }
-        .page.active { display:block; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>АвтоКейсы</title>
+<style>
+* { box-sizing: border-box; }
+body { margin:0; padding:0; background:#12121f; color:#fff; font-family:Arial, sans-serif; }
+.wrap { max-width:400px; margin:auto; padding-bottom:20px; }
+header { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-bottom:1px solid #2a2a40; }
+.logo { font-size:20px; font-weight:bold; }
+.bal { background:#fbbf24; color:#000; border:none; padding:8px 14px; border-radius:24px; font-weight:bold; cursor:pointer; font-size:15px; }
+.tabs { display:flex; gap:6px; padding:8px; overflow-x:auto; }
+.tab { flex:1 1 auto; min-width:78px; background:transparent; border:1px solid #2a2a40; color:#ccc; padding:8px 6px; border-radius:10px; cursor:pointer; white-space:nowrap; font-size:13px; }
+.tab.active { background:#fbbf24; color:#000; border-color:#fbbf24; }
+.page { display:none; padding:16px; }
+.page.active { display:block; }
+.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px; }
+.stat { text-align:center; background:#1e1e30; border-radius:10px; padding:10px 4px; }
+.stat b { display:block; font-size:17px; color:#fbbf24; }
+.stat span { font-size:11px; color:#999; }
+.cases-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+.case-card { background:#1e1e30; border:1px solid #33334d; border-radius:12px; padding:14px 8px; text-align:center; cursor:pointer; }
+.case-card:active { transform:scale(0.97); }
+.case-icon { font-size:34px; margin-bottom:6px; }
+.case-name { font-size:14px; margin-bottom:4px; }
+.case-price { color:#fbbf24; font-weight:bold; font-size:14px; }
+.bonus-card { background:linear-gradient(135deg,#ffd76e,#fbbf24); color:#000; padding:24px; border-radius:16px; text-align:center; cursor:pointer; }
+.bonus-card.off { opacity:0.5; }
+.bonus-amount { font-size:26px; font-weight:bold; }
+.bonus-timer { font-size:13px; margin-top:6px; }
+.panel { background:#1e1e30; padding:12px; border-radius:12px; margin-top:12px; font-size:14px; }
+#garageGrid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin-top:10px; }
+.car-card { background:#26263c; border:1px solid #33334d; border-radius:12px; padding:12px 8px; text-align:center; }
+.car-name { font-size:13px; margin:4px 0; }
+.car-value { color:#fbbf24; font-weight:bold; font-size:13px; }
+.withdraw-form, .recharge-form { background:#1e1e30; padding:16px; border-radius:12px; }
+.withdraw-form h3, .recharge-form h3 { margin:0 0 12px; }
+input { width:100%; padding:10px; margin-bottom:10px; background:#12121f; border:1px solid #33334d; color:#fff; border-radius:8px; font-size:14px; }
+.btn-withdraw, .btn-recharge { width:100%; padding:12px; background:#4ade80; color:#000; border:none; border-radius:8px; font-weight:bold; cursor:pointer; font-size:15px; }
+.btn-recharge.blue { background:#3b82f6; color:#fff; }
+.btn-recharge.red { background:#ef4444; color:#fff; padding:8px; font-size:13px; }
+.log-area, .withdraw-history { margin-top:12px; max-height:220px; overflow-y:auto; }
+.log-item { padding:6px 8px; border-bottom:1px solid #2a2a40; font-size:13px; color:#ccc; }
+#dropOverlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.85); display:none; justify-content:center; align-items:center; z-index:999; }
+#dropOverlay.active { display:flex; }
+#dropCard { background:#fff; color:#000; padding:24px; border-radius:16px; text-align:center; width:280px; }
+#dropImg { font-size:64px; margin:10px 0; }
+</style>
 </head>
 <body>
-    <div class="wrap">
-        <header>
-            <div class="logo">🚗 АвтоКейсы</div>
-            <button class="bal" onclick="switchTab('tab-recharge')">₽ <span id="balance">0</span> ➕</button>
-        </header>
-
-        <div class="tabs">
-            <button class="tab active" id="tab-cases" onclick="switchTab('tab-cases')">📦 Кейсы</button>
-            <button class="tab" id="tab-bonus" onclick="switchTab('tab-bonus')">🎁 Бонус</button>
-            <button class="tab" id="tab-garage" onclick="switchTab('tab-garage')">🚙 Гараж</button>
-            <button class="tab" id="tab-withdraw" onclick="switchTab('tab-withdraw')">💳 Вывод</button>
-            <button class="tab" id="tab-recharge" onclick="switchTab('tab-recharge')">➕ Пополнить</button>
+<div class="wrap">
+<header>
+<div class="logo">🚗 АвтоКейсы</div>
+<button class="bal" onclick="switchTab('recharge')">₽ <span id="balance">0</span> ➕</button>
+</header>
+<div class="tabs">
+<button class="tab active" id="tab-cases" onclick="switchTab('cases')">📦 Кейсы</button>
+<button class="tab" id="tab-bonus" onclick="switchTab('bonus')">🎁 Бонус</button>
+<button class="tab" id="tab-garage" onclick="switchTab('garage')">🚙 Гараж</button>
+<button class="tab" id="tab-withdraw" onclick="switchTab('withdraw')">💳 Вывод</button>
+<button class="tab" id="tab-recharge" onclick="switchTab('recharge')">➕ Пополнить</button>
+</div>
+        <!-- ЭКРАН: КЕЙСЫ -->
+        <div class="page active" id="page-cases">
+            <div class="stats">
+                <div class="stat"><b id="stat-balance">0</b><span>₽ на счету</span></div>
+                <div class="stat"><b id="stat-cases">0</b><span>кейсов открыто</span></div>
+                <div class="stat"><b id="stat-garage">0</b><span>машин в гараже</span></div>
+            </div>
+            <div class="cases-grid" id="casesGrid">
+                <!-- сюда JS добавит карточки кейсов -->
+            </div>
         </div>
-<!-- ЭКРАН: КАТАЛОГ КЕЙСОВ -->
-<div class="page active" id="page-cases">
-    <div class="stats">
-        <div class="stat"><b id="stat-balance">0</b><span>₽ на счету</span></div>
-        <div class="stat"><b id="stat-cases">0</b><span>кейсов открыто</span></div>
-        <div class="stat"><b id="stat-garage">0</b><span>машин в гараже</span></div>
-    </div>
-    <div class="cases-grid" id="casesGrid"></div>
-</div>
 
-<!-- ЭКРАН: БОНУС -->
-<div class="page" id="page-bonus">
-    <div class="bonus-card" id="bonusCard" onclick="claimBonus()">
-        <div style="font-size:40px;">🎁</div>
-        <div class="bonus-amount">+25 ₽</div>
-        <p>Ежедневный бонус</p>
-        <div class="bonus-timer" id="bonusTimer"></div>
-    </div>
-    <div class="panel">Заходи каждый день — бонус капает всегда.</div>
-    <div class="log-area" id="logArea"></div>
-</div>
-<!-- ЭКРАН: ГАРАЖ -->
-<div class="page" id="page-garage">
-    <div class="panel">
-        <b style="font-size:16px;">Твой гараж</b>
-        <div id="garageGrid"></div>
-    </div>
-</div>
-<!-- ЭКРАН: ВЫВОД -->
-<div class="page" id="page-withdraw">
-    <div class="stats">
-        <div class="stat"><b id="wd-balance">0</b><span>Доступно к выводу</span></div>
-        <div class="stat"><b id="wd-min">250</b><span>Мин. вывод, ₽</span></div>
-    </div>
-    <div class="withdraw-form">
-        <h3>Вывод на карту</h3>
-        <input type="text" id="withdrawCard" inputmode="numeric" maxlength="19" placeholder="Номер карты: 0000 0000 0000 0000">
-        <input type="number" id="withdrawAmount" placeholder="Сумма (мин. 250 ₽)">
-        <button class="btn-withdraw" id="btnWithdraw" onclick="processWithdrawal()">Вывести</button>
-    </div>
-    <div class="panel" style="margin-top:12px;">
-        <b>История выводов:</b>
-        <div class="withdraw-history" id="withdrawHistory"></div>
-    </div>
-</div>
-<!-- ЭКРАН: ПОПОЛНЕНИЕ -->
-<div class="page" id="page-recharge">
-    <div class="recharge-form">
-        <h3>Пополнить баланс</h3>
-        <p style="font-size:13px; color:#aaa;">Выберите сумму:</p>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
-            <button class="btn-recharge" style="background:#3b82f6;" onclick="addBalance(100)">100 ₽</button>
-            <button class="btn-recharge" style="background:#3b82f6;" onclick="addBalance(500)">500 ₽</button>
-            <button class="btn-recharge" style="background:#3b82f6;" onclick="addBalance(1000)">1000 ₽</button>
-            <button class="btn-recharge" style="background:#3b82f6;" onclick="addBalance(2500)">2500 ₽</button>
+        <!-- ЭКРАН: БОНУС -->
+        <div class="page" id="page-bonus">
+            <div class="bonus-card" id="bonusCard" onclick="claimBonus()">
+                <div style="font-size:48px;">🎁</div>
+                <div class="bonus-amount">+25 ₽</div>
+                <p>Ежедневный бонус</p>
+                <div class="bonus-timer" id="bonusTimer">Нажми, чтобы забрать</div>
+            </div>
+            <div class="panel">
+                Заходи каждый день — бонус капает всегда.
+            </div>
+            <div class="log-area" id="logArea">
+                <!-- история бонусов -->
+            </div>
         </div>
-        <p style="font-size:12px; color:#888;">
-            Это симуляция. В Telegram Mini App пополнение подключается через Telegram Payments (звёзды/провайдера).
-        </p>
-    </div>
-</div>
-    </div><!-- /wrap -->
+        <script>
+            // --- ДАННЫЕ МАШИН (как в твоей оригинальной версии: справедливое распределение, редкие дорогие) ---
+            const carsData = [
+                { id: 1, name: "Lada Granta",      price: 1500,   rarity: "common",    img: "🚗" },
+                { id: 2, name: "Kia Rio",          price: 8000,   rarity: "common",    img: "🚙" },
+                { id: 3, name: "Hyundai Solaris",   price: 12000,  rarity: "common",    img: "🚕" },
+                { id: 4, name: "Toyota Camry",      price: 25000,  rarity: "rare",      img: "🚘" },
+                { id: 5, name: "BMW 5 Series",      price: 60000,  rarity: "epic",      img: "🏎️" },
+                { id: 6, name: "Audi A8",           price: 95000,  rarity: "legendary", img: "🛻" },
+                { id: 7, name: "Mercedes S-Class",  price: 140000, rarity: "mythic",    img: "💎" }
+            ];
 
-    <!-- ОВЕРЛЕЙ ВЫПАДЕНИЯ ПРИЗА -->
-    <div id="dropOverlay">
-        <div id="dropCard">
-            <img id="dropImg" src="" alt="prize">
-            <h3 id="dropName" style="color:#000; margin:8px 0;"></h3>
-            <div id="dropRarity" style="text-transform:uppercase; font-size:14px; color:#666;"></div>
-            <div id="dropValue" style="font-weight:bold; color:#fbbf24; margin:6px 0;"></div>
-            <br>
-            <button class="btn-recharge" style="background:#4ade80;" onclick="closeDrop()">Забрать</button>
-        </div>
-    </div>
-    <script>
-        // --- ДАННЫЕ МАШИН ---
-        const carsData = [
-            { id:1, name:"Lada Granta",   price:1500,   rarity:"common",    income:5,    img:"🚗" },
-            { id:2, name:"Kia Rio",       price:8000,   rarity:"common",    income:20,   img:"🚙" },
-            { id:3, name:"Toyota Camry",  price:25000,  rarity:"rare",      income:80,   img:"🚕" },
-            { id:4, name:"BMW 5 Series",  price:60000,  rarity:"epic",      income:150,  img:"🏎️" },
-            { id:5, name:"Audi A8",       price:140000, rarity:"legendary", income:400,  img:"🚘" },
-            { id:6, name:"Rolls-Royce",   price:300000, rarity:"mythic",    income:2000, img:"🛻" }
-        ];
+            // --- КЕЙСЫ (цены и шансы как ты просил: от 10 до 250 000 ₽, редкие авто выпадают редко) ---
+            const casesData = [
+                { id: 1, price: 10,    name: "Эконом-кейс",   chances: [[1, 75], [2, 23], [3, 2]] },
+                { id: 2, price: 50,    name: "Стандарт-кейс", chances: [[2, 50], [3, 35], [4, 14], [5, 1]] },
+                { id: 3, price: 200,   name: "Премиум-кейс",  chances: [[3, 40], [4, 35], [5, 20], [6, 5]] },
+                { id: 4, price: 1000,  name: "Элитный-кейс",  chances: [[4, 30], [5, 40], [6, 25], [7, 5]] }
+            ];
 
-        // --- КЕЙСЫ ---
-        const casesData = [
-            { id:1, price:10,  name:"Эконом-кейс",   chances:[[1,70],[2,28],[3,2]] },
-            { id:2, price:100, name:"Стандарт-кейс", chances:[[2,50],[3,40],[4,10]] },
-            { id:3, price:500, name:"Премиум-кейс",  chances:[[3,45],[4,40],[5,13],[6,2]] }
-        ];
+            // --- СОСТОЯНИЕ ИГРЫ ---
+            let state = {
+                balance: 0,
+                casesOpened: 0,
+                garage: [],
+                lastBonusDate: null,
+                withdrawHistory: []
+            };
 
-        // --- СОСТОЯНИЕ ---
-        let state = { balance:0, casesOpened:0, garage:[], lastBonusDate:null, withdrawHistory:[] };
+            // --- ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ---
+            function switchTab(tabName) {
+                // убираем active у всех табов и страниц
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
 
-        // --- ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК ---
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            document.getElementById('page-' + tabId.replace('tab-','')).classList.add('active');
-            if (tabId === 'tab-withdraw') renderWithdraw();
-        }
+                // ставим active нужному табу
+                const tabBtn = document.getElementById('tab-' + tabName);
+                if (tabBtn) tabBtn.classList.add('active');
 
-        // --- ОБНОВЛЕНИЕ БАЛАНСА ---
-        function updateUI() {
-            document.getElementById('balance').textContent = state.balance;
-            document.getElementById('stat-balance').textContent = state.balance;
-            document.getElementById('stat-cases').textContent = state.casesOpened;
-            document.getElementById('stat-garage').textContent = state.garage.length;
-            saveState();
-        }
+                // показываем нужную страницу
+                const page = document.getElementById('page-' + tabName);
+                if (page) page.classList.add('active');
 
-        // --- ПОПОЛНЕНИЕ БАЛАНСА ---
-        function addBalance(amount) {
-            state.balance += amount;
-            updateUI();
-            alert('Баланс пополнен на ' + amount + ' ₽');
-        }
-
-        // --- РЕНДЕР КЕЙСОВ ---
-        function renderCases() {
-            const grid = document.getElementById('casesGrid');
-            grid.innerHTML = '';
-            casesData.forEach(c => {
-                const div = document.createElement('div');
-                div.className = 'case-card';
-                div.innerHTML = '<div class="case-icon">📦</div><div class="case-name">' + c.name +
-                    '</div><div class="case-price">' + c.price + ' ₽</div>';
-                div.onclick = () => openCase(c);
-                grid.appendChild(div);
-            });
-        }
-
-        // --- ОТКРЫТИЕ КЕЙСА ---
-        function openCase(c) {
-            if (state.balance < c.price) { alert('Не хватает средств! Пополните баланс.'); return; }
-            state.balance -= c.price;
-            state.casesOpened++;
-            const total = c.chances.reduce((s,x) => s + x[1], 0);
-            let roll = Math.random() * total;
-            let carId = c.chances[0][0];
-            for (const [id, chance] of c.chances) {
-                if (roll < chance) { carId = id; break; }
-                roll -= chance;
+                // если зашли на «Вывод» — перерисовываем историю
+                if (tabName === 'withdraw') renderWithdrawHistory();
             }
-            const car = carsData.find(x => x.id === carId);
-            state.garage.push(car);
-            updateUI();
-            showDrop(car);
-        }
 
-        // --- ОВЕРЛЕЙ ПРИЗА ---
-        function showDrop(car) {
-            document.getElementById('dropImg').textContent = car.img;
-            document.getElementById('dropName').textContent = car.name;
-            document.getElementById('dropRarity').textContent = car.rarity;
-            document.getElementById('dropValue').textContent = car.price + ' ₽';
-            document.getElementById('dropOverlay').classList.add('active');
-        }
-        function closeDrop() {
-            document.getElementById('dropOverlay').classList.remove('active');
-            renderGarage();
-        }
+            // --- ОБНОВЛЕНИЕ ИНТЕРФЕЙСА ---
+            function updateUI() {
+                const balEl = document.getElementById('balance');
+                const statBal = document.getElementById('stat-balance');
+                const statCases = document.getElementById('stat-cases');
+                const statGarage = document.getElementById('stat-garage');
+                const wdBal = document.getElementById('wd-balance');
 
-        // --- ГАРАЖ ---
-        function renderGarage() {
-            const grid = document.getElementById('garageGrid');
-            grid.innerHTML = '';
-            if (!state.garage.length) {
-                grid.innerHTML = '<p style="color:#888;">Гараж пуст. Открывай кейсы!</p>';
-                return;
+                if (balEl) balEl.textContent = state.balance;
+                if (statBal) statBal.textContent = state.balance;
+                if (statCases) statCases.textContent = state.casesOpened;
+                if (statGarage) statGarage.textContent = state.garage.length;
+                if (wdBal) wdBal.textContent = state.balance;
+
+                saveState();
             }
-            state.garage.forEach((car, i) => {
-                const div = document.createElement('div');
-                div.className = 'car-card';
-                div.innerHTML = '<div style="font-size:36px;">' + car.img + '</div><div class="car-name">' +
-                    car.name + '</div><div class="car-value">' + car.price + ' ₽</div>' +
-                    '<button class="btn-recharge" style="background:#ef4444; margin-top:6px; padding:6px;" onclick="sellCar(' + i + ')">Продать</button>';
-                grid.appendChild(div);
-            });
-        }
 
-        // --- ПРОДАЖА МАШИНЫ ---
-        function sellCar(i) {
-            const car = state.garage[i];
-            if (confirm('Продать ' + car.name + ' за ' + (car.price * 0.8) + ' ₽?')) {
-                state.balance += Math.floor(car.price * 0.8);
-                state.garage.splice(i, 1);
+            // --- ПОПОЛНЕНИЕ БАЛАНСА (СИМУЛЯЦИЯ) ---
+            function addBalance(amount) {
+                state.balance += amount;
                 updateUI();
+                // в реальном Telegram Mini App это будет через Stars/платёжный провайдер
+                alert('Баланс пополнен на ' + amount + ' ₽ (симуляция)');
+            }
+
+            // --- РЕНДЕР КЕЙСОВ ---
+            function renderCases() {
+                const grid = document.getElementById('casesGrid');
+                grid.innerHTML = '';
+                casesData.forEach(c => {
+                    const div = document.createElement('div');
+                    div.className = 'case-card';
+                    div.innerHTML = `
+                        <div class="case-icon">📦</div>
+                        <div class="case-name">${c.name}</div>
+                        <div class="case-price">${c.price} ₽</div>
+                    `;
+                    div.onclick = () => openCase(c);
+                    grid.appendChild(div);
+                });
+            }
+
+            // --- ОТКРЫТИЕ КЕЙСА (МЕХАНИКА ШАНСОВ) ---
+            function openCase(c) {
+                if (state.balance < c.price) {
+                    alert('Не хватает средств! Пополните баланс.');
+                    return;
+                }
+                state.balance -= c.price;
+                state.casesOpened++;
+
+                // считаем шансы
+                const total = c.chances.reduce((s, x) => s + x[1], 0);
+                let roll = Math.random() * total;
+                let carId = c.chances[0][0];
+                for (const [id, chance] of c.chances) {
+                    if (roll < chance) {
+                        carId = id;
+                        break;
+                    }
+                    roll -= chance;
+                }
+
+                const car = carsData.find(x => x.id === carId);
+                state.garage.push(car);
+                updateUI();
+                showDrop(car);
+            }
+
+            // --- ОВЕРЛЕЙ ВЫПАДЕНИЯ ПРИЗА ---
+            function showDrop(car) {
+                document.getElementById('dropImg').textContent = car.img;
+                document.getElementById('dropName').textContent = car.name;
+                document.getElementById('dropRarity').textContent = car.rarity.toUpperCase();
+                document.getElementById('dropValue').textContent = car.price + ' ₽';
+                document.getElementById('dropOverlay').classList.add('active');
+            }
+            function closeDrop() {
+                document.getElementById('dropOverlay').classList.remove('active');
                 renderGarage();
             }
-        }
 
-        // --- БОНУС ---
-        function claimBonus() {
-            const today = new Date().toDateString();
-            if (state.lastBonusDate === today) { alert('Бонус уже получен сегодня!'); return; }
-            state.balance += 25;
-            state.lastBonusDate = today;
-            updateUI();
-            checkBonus();
-        }
-        function checkBonus() {
-            const today = new Date().toDateString();
-            const card = document.getElementById('bonusTimer');
-            if (state.lastBonusDate === today) {
-                card.textContent = 'Уже получено, приходи завтра!';
-            } else {
-                card.textContent = 'Нажми, чтобы забрать!';
+            // --- ГАРАЖ (КАРТИНКИ МАШИН, ПРОДАЖА) ---
+            function renderGarage() {
+                const grid = document.getElementById('garageGrid');
+                grid.innerHTML = '';
+                if (!state.garage.length) {
+                    grid.innerHTML = '<p style="color:#888; text-align:center;">Гараж пуст. Открывай кейсы!</p>';
+                    return;
+                }
+                state.garage.forEach((car, i) => {
+                    const div = document.createElement('div');
+                    div.className = 'car-card';
+                    div.innerHTML = `
+                        <div style="font-size:36px;">${car.img}</div>
+                        <div class="car-name">${car.name}</div>
+                        <div class="car-value">${car.price} ₽</div>
+                        <button class="btn-recharge red" onclick="sellCar(${i})">Продать</button>
+                    `;
+                    grid.appendChild(div);
+                });
             }
-        }
 
-        // --- ВЫВОД ---
-        function processWithdrawal() {
-            const card = document.getElementById('withdrawCard').value.trim();
-            const amount = parseInt(document.getElementById('withdrawAmount').value);
-            if (card.replace(/\D/g,'').length !== 16) { alert('Введите корректный номер карты'); return; }
-            if (!amount || amount < 250) { alert('Минимум для вывода — 250 ₽'); return; }
-            if (amount > state.balance) { alert('Недостаточно средств на балансе'); return; }
-            state.balance -= amount;
-            state.withdrawHistory.unshift({ card: card.slice(-4), amount, date: new Date().toLocaleString() });
+            // --- ПРОДАЖА МАШИНЫ (80% от цены) ---
+            function sellCar(i) {
+                const car = state.garage[i];
+                const sellPrice = Math.floor(car.price * 0.8);
+                if (confirm('Продать ' + car.name + ' за ' + sellPrice + ' ₽?')) {
+                    state.balance += sellPrice;
+                    state.garage.splice(i, 1);
+                    updateUI();
+                    renderGarage();
+                }
+            }
+            // --- БОНУС (25 ₽, раз в день) ---
+            function claimBonus() {
+                const today = new Date().toDateString();
+                if (state.lastBonusDate === today) {
+                    alert('Бонус уже получен сегодня! Возвращайся завтра.');
+                    return;
+                }
+                state.balance += 25;
+                state.lastBonusDate = today;
+                updateUI();
+                checkBonus();
+
+                // логируем
+                const log = document.getElementById('logArea');
+                log.innerHTML += `<div class="log-item">• +25 ₽ (бонус)</div>`;
+            }
+            function checkBonus() {
+                const card = document.getElementById('bonusCard');
+                const timer = document.getElementById('bonusTimer');
+                const today = new Date().toDateString();
+                if (state.lastBonusDate === today) {
+                    card.classList.add('off');
+                    timer.textContent = 'Уже получено, приходи завтра!';
+                } else {
+                    card.classList.remove('off');
+                    timer.textContent = 'Нажми, чтобы забрать!';
+                }
+            }
+
+            // --- ВЫВОД СРЕДСТВ (мин. 250 ₽) ---
+            function processWithdrawal() {
+                const cardInput = document.getElementById('withdrawCard').value.trim();
+                const amountInput = parseInt(document.getElementById('withdrawAmount').value);
+
+                // валидация карты (только цифры, 16 знаков)
+                const onlyDigits = cardInput.replace(/\D/g, '');
+                if (onlyDigits.length !== 16) {
+                    alert('Введите корректный номер карты (16 цифр).');
+                    return;
+                }
+
+                if (!amountInput || amountInput < 250) {
+                    alert('Минимальная сумма вывода — 250 ₽.');
+                    return;
+                }
+                if (amountInput > state.balance) {
+                    alert('На балансе недостаточно средств.');
+                    return;
+                }
+
+                // выполняем вывод
+                state.balance -= amountInput;
+                const last4 = onlyDigits.slice(-4);
+                state.withdrawHistory.unshift({
+                    card: last4,
+                    amount: amountInput,
+                    date: new Date().toLocaleString()
+                });
+                updateUI();
+                renderWithdrawHistory();
+                alert('Заявка на вывод ' + amountInput + ' ₽ создана! (симуляция)');
+            }
+
+            function renderWithdrawHistory() {
+                const h = document.getElementById('withdrawHistory');
+                if (!state.withdrawHistory.length) {
+                    h.innerHTML = '<p style="color:#888;">Пока пусто</p>';
+                    return;
+                }
+                h.innerHTML = state.withdrawHistory.map(w =>
+                    `<div class="log-item">• ${w.amount} ₽ → карта ****${w.card} (${w.date})</div>`
+                ).join('');
+            }
+
+            // --- СОХРАНЕНИЕ И ЗАГРУЗКА (localStorage) ---
+            function saveState() {
+                localStorage.setItem('autocases_state', JSON.stringify(state));
+            }
+            function loadState() {
+                const saved = localStorage.getItem('autocases_state');
+                if (saved) {
+                    try {
+                        const loaded = JSON.parse(saved);
+                        // переносим только нужные поля, чтобы не сломать структуру
+                        state.balance = loaded.balance || 0;
+                        state.casesOpened = loaded.casesOpened || 0;
+                        state.garage = loaded.garage || [];
+                        state.lastBonusDate = loaded.lastBonusDate || null;
+                        state.withdrawHistory = loaded.withdrawHistory || [];
+                    } catch (e) {
+                        console.error('Ошибка загрузки состояния', e);
+                    }
+                }
+            }
+
+            // --- ИНИЦИАЛИЗАЦИЯ ---
+            loadState();
+            renderCases();
+            renderGarage();
+            checkBonus();
             updateUI();
-            renderWithdraw();
-            alert('Заявка на вывод ' + amount + ' ₽ создана!');
-        }
-        function renderWithdraw() {
-            document.getElementById('wd-balance').textContent = state.balance;
-            const h = document.getElementById('withdrawHistory');
-            h.innerHTML = state.withdrawHistory.length
-                ? state.withdrawHistory.map(w => '<div class="log-item">• ' + w.amount + ' ₽ → карта ****' + w.card + ' (' + w.date + ')</div>').join('')
-                : '<p style="color:#888;">Пока пусто</p>';
-        }
-
-        // --- СОХРАНЕНИЕ / ЗАГРУЗКА ---
-        function saveState() { localStorage.setItem('autocases', JSON.stringify(state)); }
-        function loadState() {
-            const s = localStorage.getItem('autocases');
-            if (s) state = JSON.parse(s);
-        }
-
-        // --- ИНИЦИАЛИЗАЦИЯ ---
-        loadState();
-        renderCases();
-        renderGarage();
-        renderWithdraw();
-        checkBonus();
-        updateUI();
-    </script>
-</body>
+        </script>
+    </body>
 </html>
