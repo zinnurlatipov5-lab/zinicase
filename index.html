@@ -76,13 +76,16 @@
             <button class="btn-back" onclick="switchToWelcome()">← Главная</button>
             <div class="cases-grid">
                 <!-- Здесь будет логика отображения кейсов -->
+                <button class="btn" onclick="openCase()">Открыть кейс</button>
             </div>
         </div>
 
         <div class="page" id="garage">
             <h2>Ваш гараж</h2>
             <button class="btn-back" onclick="switchToWelcome()">← Главная</button>
-            <div id="garageGrid"></div>
+            <div id="garageGrid">
+                <!-- Здесь будет логика отображения машин -->
+            </div>
         </div>
     </div>
 
@@ -102,6 +105,10 @@
             document.getElementById('welcome').classList.remove('active');
             document.getElementById('cases').classList.remove('active');
             document.getElementById('garage').classList.add('active');
+        }
+
+        function openCase() {
+            alert('Открываем кейс!'); // Здесь должна быть ваша логика открытия кейса
         }
     </script>
 </body>
