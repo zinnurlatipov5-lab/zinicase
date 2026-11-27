@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>АвтоКейсы — Админ-панель</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:system-ui,-apple-system,sans-serif}
+body{background:#12122a;color:#fff;min-height:100vh}
+.wrap{max-width:600px;margin:0 auto;padding:16px 14px 40px}
+h1{font-size:22px;color:#fbbf24;margin-bottom:4px}
+.sub{color:#889;font-size:13px;margin-bottom:16px}
+.btn{background:#fbbf24;color:#000;border:none;border-radius:12px;padding:12px 18px;font-size:15px;font-weight:800;cursor:pointer}
+.btn:active{opacity:.85}
+.btn-dark{background:#23234a;color:#fff;border:1px solid #3d3d6e}
+.btn-red{background:#b91c1c;color:#fff}
+.panel{background:#1c1c38;border:1px solid #3d3d6e;border-radius:18px;padding:16px;margin-bottom:14px}
+.panel h2{font-size:16px;margin-bottom:10px;color:#fde047}
+.adm-line{display:flex;justify-content:space-between;background:#181838;border-radius:10px;padding:10px 12px;margin-top:6px;font-size:14px}
+.adm-line b{color:#fbbf24}
+.req{background:#181838;border:1px solid #3d3d6e;border-radius:14px;padding:12px;margin-top:10px;font-size:14px}
+.req .num{color:#889;font-size:12px}
+.req button{margin:8px 8px 0 0;padding:8px 16px;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px}
+.ok{background:#15803d;color:#fff}
+.no{background:#b91c1c;color:#fff}
+.stat-done{color:#22c55e;font-weight:700}
+.stat-rej{color:#ef4444;font-weight:700}
+.stat-wait{color:#fbbf24;font-weight:700}
+.input-field{width:100%;padding:12px;background:#14142a;border:1px solid #3d3d6e;color:#fff;border-radius:12px;font-size:14px;outline:none;margin-top:8px}
+.hint{color:#889;font-size:12px;margin-top:10px;line-height:1.5}
+#loginBox{max-width:360px;margin:80px auto;text-align:center}
+#loginBox input{width:100%;padding:14px;background:#14142a;border:1px solid #3d3d6e;color:#fff;border-radius:12px;font-size:16px;text-align:center;letter-spacing:2px}
+#warn{display:none;background:rgba(239,68,68,.12);border:1px solid #ef4444;color:#fca5a5;border-radius:12px;padding:12px;font-size:13px;margin-top:14px;line-height:1.5}
+</style>
+</head>
+<body>
+
+<!-- Экран входа -->
+<div id="loginBox" class="wrap">
+  <h1>🛠 Админ-панель</h1>
+  <p class="sub">АвтоКейсы</p>
+  <input type="password" id="passInput" placeholder="Пароль админа">
+  <div style="height:12px"></div>
+  <button class="btn" style="width:100%" onclick="tryLogin()">Войти</button>
+  <div id="warn"></div>
+</div>
+
+<!-- Панель -->
+<div id="panel" class="wrap" style="display:none">
+  <h1>🛠 Админ-панель</h1>
+  <p class="sub">АвтоКейсы · данные из браузера игрока</p>
+
+  <div class="panel">
+    <h2>📊 Финансы</h2>
+    <div class="adm-line"><span>Баланс игрока сейчас</span><b id="admBalance">0 ₽</b></div>
+    <div class="adm-line"><span>Выручка (ставки игроков)</span><b id="admRevenue">0 ₽</b></div>
+    <div class="adm-line"><span>Депозитов зачислено</span><b id="admDep">0 ₽</b></div>
+    <div class="adm-line"><span>Выплачено игрокам</span><b id="admPaid">0 ₽</b></div>
+    <div class="adm-line"><span>Профит на руках (выручка − выплаты)</span><b id="admProfit">0 ₽</b></div>
+    <div class="adm-line"><span>Кейсов открыто</span><b id="admCases">0</b></div>
+    <div class="adm-line"><span>Машин в гараже</span><b id="admGarage">0</b></div>
+  </div>
+
+  <div class="panel">
+    <h2>💳 Заявки на пополнение</h2>
+    <p class="hint">Проверь, что деньги реально пришли на твою карту, только потом жми «Зачислить». Отклонённая заявка вернёт игроку право на повтор.</p>
+    <div id="adminDeps"></div>
+  </div>
+
+  <div class="panel">
+    <h2>💸 Заявки на вывод</h2>
+    <p class="hint">«Выплатить» — ты реально перевёл игроку и помечаешь заявку. «Отклонить» — деньги вернутся на баланс игрока.</p>
+    <div id="adminReqs"></div>
+  </div>
+
+  <div class="panel">
+    <h2>⚙️ Управление балансом</h2>
+    <p class="hint">Ручная корректировка: начислить бонус, исправить баланс после ошибки и т.п. В минус уйти нельзя — проверка на достаточность.</p>
+    <input type="number" id="adjAmount" class="input-field" placeholder="Сумма, ₽ (можно с минусом)" inputmode="numeric">
+    <div style="display:flex;gap:10px;margin-top:10px">
+      <button class="btn" style="flex:1" onclick="adjust(1)">➕ Начислить</button>
+      <button class="btn btn-red" style="flex:1" onclick="adjust(-1)">➖ Списать</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>🧹 Опасная зона</h2>
+    <button class="btn btn-red" style="width:100%" onclick="resetAll()">🗑 Сбросить все данные игры</button>
+    <p class="hint">Удалит баланс, гараж, детали и заявки игрока. Действие необратимо.</p>
+  </div>
+
+  <button class="btn btn-dark" style="width:100%" onclick="logout()">🚪 Выйти</button>
+</div>
+
+<script>
+"use strict";
+var ADMIN_PASS="admin2026";   /* поменяй пароль здесь */
+var STORE="autocases_v9";     /* тот же ключ, что в игре */
+
+var authed=false;
+try{authed=sessionStorage.getItem("autocases_admin")==="1"}catch(e){}
+
+function getState(){
+  try{return JSON.parse(localStorage.getItem(STORE))}catch(e){return null}
+}
+function setState(s){
+  try{localStorage.setItem(STORE,JSON.stringify(s))}catch(e){}
+}
+function fmt(v){return (v||0).toLocaleString("ru")+" ₽"}
+
+function tryLogin(){
+  var p=document.getElementById("passInput").value;
+  if(p===ADMIN_PASS){
+    authed=true;
+    try{sessionStorage.setItem("autocases_admin","1")}catch(e){}
+    showPanel();
+  }else{
+    var w=document.getElementById("warn");
+    w.textContent="❌ Неверный пароль";
+    w.style.display="block";
+  }
+}
+function logout(){
+  authed=false;
+  try{sessionStorage.removeItem("autocases_admin")}catch(e){}
+  document.getElementById("panel").style.display="none";
+  document.getElementById("loginBox").style.display="block";
+}
+function showPanel(){
+  document.getElementById("loginBox").style.display="none";
+  document.getElementById("panel").style.display="block";
+  render();
+}
+document.getElementById("passInput").addEventListener("keydown",function(e){if(e.key==="Enter")tryLogin()});
+
+function render(){
+  var s=getState();
+  if(!s){
+    document.getElementById("warn").textContent="⚠️ Данные игры не найдены. Открой игру в этом же браузере, чтобы админка видела заявки.";
+    document.getElementById("warn").style.display="block";
+  }
+  s=s||{balance:0,revenue:0,totalDep:0,totalPaid:0,casesOpened:0,garage:[],depReqs:[],reqs:[]};
+
+  document.getElementById("admBalance").textContent=fmt(s.balance);
+  document.getElementById("admRevenue").textContent=fmt(s.revenue);
+  document.getElementById("admDep").textContent=fmt(s.totalDep);
+  document.getElementById("admPaid").textContent=fmt(s.totalPaid);
+  document.getElementById("admProfit").textContent=fmt((s.revenue||0)-(s.totalPaid||0));
+  document.getElementById("admCases").textContent=s.casesOpened||0;
+  document.getElementById("admGarage").textContent=(s.garage||[]).length;
+
+  /* пополнения */
+  var deps=(s.depReqs||[]).filter(function(r){return r.status==="Ожидает проверки"});
+  var db=document.getElementById("adminDeps");
+  if(!deps.length)db.innerHTML='<p class="hint" style="margin-top:8px">Новых заявок на пополнение нет</p>';
+  else db.innerHTML=deps.map(function(r){
+    return '<div class="req"><span class="num">Заявка №'+r.id+' · '+r.ts+'</span><br><b>'+r.user+'</b>: '+fmt(r.amount)+
+      '<br><span class="stat-wait">Ожидает проверки</span><br>'+
+      '<button class="ok" onclick="admDep('+r.id+',1)">✅ Зачислить</button>'+
+      '<button class="no" onclick="admDep('+r.id+',0)">❌ Отклонить</button></div>';
+  }).join("");
+
+  /* выводы */
+  var wds=(s.reqs||[]).filter(function(r){return r.status==="В обработке"});
+  var wb=document.getElementById("adminReqs");
+  if(!wds.length)wb.innerHTML='<p class="hint" style="margin-top:8px">Новых заявок на вывод нет</p>';
+  else wb.innerHTML=wds.map(function(r){
+    return '<div class="req"><span class="num">Заявка №'+r.id+' · '+r.ts+'</span><br><b>'+r.user+'</b>: '+fmt(r.amount)+' на карту '+r.card+
+      '<br><span class="stat-wait">В обработке</span><br>'+
+      '<button class="ok" onclick="adminDecide('+r.id+',1)">✅ Выплатил</button>'+
+      '<button class="no" onclick="adminDecide('+r.id+',0)">❌ Отклонить</button></div>';
+  }).join("");
+}
+
+function admDep(id,ok){
+  var s=getState();if(!s)return;
+  for(var i=0;i<(s.depReqs||[]).length;i++){
+    if(s.depReqs[i].id===id){
+      if(ok){s.depReqs[i].status="Зачислен";s.totalDep=(s.totalDep||0)+s.depReqs[i].amount;s.balance=(s.balance||0)+s.depReqs[i].amount}
+      else s.depReqs[i].status="Отклонён";
+    }
+  }
+  setState(s);render();
+}
+function adminDecide(id,ok){
+  var s=getState();if(!s)return;
+  for(var i=0;i<(s.reqs||[]).length;i++){
+    if(s.reqs[i].id===id){
+      if(ok){s.reqs[i].status="Выплачено";s.totalPaid=(s.totalPaid||0)+s.reqs[i].amount}
+      else{s.reqs[i].status="Отклонено";s.balance=(s.balance||0)+s.reqs[i].amount}
+    }
+  }
+  setState(s);render();
+}
+function adjust(sign){
+  var v=parseInt(document.getElementById("adjAmount").value,10);
+  if(!v){alert("Введи сумму");return}
+  var s=getState();if(!s){alert("Данные игры не найдены — открой игру в этом браузере");return}
+  var delta=v*sign;
+  if(s.balance+delta<0){alert("Нельзя списать больше текущего баланса ("+fmt(s.balance)+")");return}
+  s.balance+=delta;
+  setState(s);
+  document.getElementById("adjAmount").value="";
+  render();
+}
+function resetAll(){
+  if(!confirm("Точно сбросить ВСЕ данные игры? Баланс, гараж, заявки будут удалены."))return;
+  localStorage.removeItem(STORE);
+  render();
+}
+
+if(authed)showPanel();
+</script>
+</body>
+</html>
