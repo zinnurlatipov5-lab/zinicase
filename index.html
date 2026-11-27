@@ -42,6 +42,7 @@ header h1{font-size:20px;font-weight:900;letter-spacing:.5px;
 .btn:disabled{opacity:.4;box-shadow:none}
 .btn-dark{background:linear-gradient(135deg,#2a2a52,#1e1e3c);color:#e5e5f5;border:1px solid var(--line);box-shadow:none}
 .btn-vio{background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;box-shadow:0 4px 16px rgba(124,58,237,.35)}
+.btn-grn{background:linear-gradient(135deg,#34d399,#059669);color:#fff;box-shadow:0 4px 16px rgba(16,185,129,.3)}
 .btn-sm{background:linear-gradient(135deg,#2a2a52,#1e1e3c);color:var(--amber);border:1px solid var(--line);border-radius:10px;padding:8px 11px;font-size:12px;font-weight:700;cursor:pointer}
 .btn-sm:active{opacity:.8}
 .btn-back{display:inline-block;background:linear-gradient(135deg,#2a2a52,#1e1e3c);color:#aab;border:1px solid var(--line);border-radius:20px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;margin-bottom:12px}
@@ -63,6 +64,12 @@ header h1{font-size:20px;font-weight:900;letter-spacing:.5px;
 .haggle{background:linear-gradient(90deg,rgba(234,88,12,.18),rgba(251,191,36,.08));border:1px solid rgba(234,88,12,.6);border-radius:14px;padding:10px 12px;margin-top:10px;font-size:13px;display:flex;gap:10px;align-items:center;text-align:left}
 .haggle .hi{font-size:24px;flex-shrink:0;animation:hag 3s ease-in-out infinite}
 @keyframes hag{0%,100%{transform:translateX(0)}50%{transform:translateX(4px)}}
+.promo{background:linear-gradient(90deg,rgba(16,185,129,.18),rgba(34,197,94,.08));border:1px solid rgba(16,185,129,.6);border-radius:14px;padding:10px 12px;margin-top:10px;font-size:13px;display:flex;gap:10px;align-items:center;text-align:left;line-height:1.45}
+.promo .pi{font-size:24px;flex-shrink:0;animation:pop-p 2.4s ease-in-out infinite}
+@keyframes pop-p{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
+.ref-box{background:linear-gradient(135deg,rgba(16,185,129,.2),rgba(13,115,74,.25));border:1px dashed #10b981;border-radius:14px;padding:12px;margin-top:12px;font-size:13px;text-align:left}
+.ref-box b{color:#6ee7b7}
+.code-box{background:rgba(12,12,24,.9);border:1px solid #10b981;border-radius:12px;padding:10px;font-size:17px;font-weight:900;letter-spacing:3px;margin-top:8px;text-align:center;color:#6ee7b7}
 .offer-card{background:linear-gradient(135deg,rgba(234,88,12,.24),rgba(120,53,15,.28));border:1px solid #ea580c;border-radius:16px;padding:14px;margin:14px 0;font-size:13px;box-shadow:0 6px 20px rgba(234,88,12,.25)}
 .offer-card .ob{color:#fdba74;font-weight:800;font-size:14px;margin-bottom:4px}
 .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
@@ -112,19 +119,22 @@ header h1{font-size:20px;font-weight:900;letter-spacing:.5px;
 .input-field{width:100%;padding:13px;background:rgba(12,12,24,.9);border:1px solid var(--line);color:#fff;border-radius:12px;font-size:14px;outline:none;margin-top:8px}
 .input-field:focus{border-color:var(--amber)}
 .amt-in{width:110px;padding:9px;background:rgba(12,12,24,.9);border:1px solid var(--amber);color:#fde047;border-radius:10px;font-size:13px;font-weight:700;outline:none}
+.cmt-in{width:100%;padding:10px;background:rgba(12,12,24,.9);border:1px solid var(--line);color:#e5e5f5;border-radius:10px;font-size:13px;outline:none;margin-top:8px}
+.cmt-in:focus{border-color:var(--green)}
 .card-box{background:rgba(12,12,24,.9);border:1px dashed var(--amber);border-radius:14px;padding:13px;font-size:15px;font-weight:800;letter-spacing:2px;margin-top:10px;text-align:center;color:#fde047}
 .row{display:flex;gap:10px;margin-top:12px}.row .btn{padding:12px 8px;font-size:13px}
 .chips{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 .chips button{background:var(--panel2);border:1px solid var(--line);color:var(--amber);border-radius:10px;padding:8px 12px;font-size:12px;font-weight:800;cursor:pointer}
 .chips button:active{background:rgba(251,191,36,.2)}
-.subnav{display:flex;gap:8px;margin-bottom:12px}
-.subnav button{flex:1;border:1px solid var(--line);background:var(--panel2);color:var(--mut);border-radius:12px;padding:11px 4px;font-size:13px;font-weight:700;cursor:pointer}
+.subnav{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.subnav button{flex:1;border:1px solid var(--line);background:var(--panel2);color:var(--mut);border-radius:12px;padding:11px 4px;font-size:13px;font-weight:700;cursor:pointer;min-width:90px}
 .subnav button.on{background:linear-gradient(135deg,#fcd34d,#f59e0b);color:#1a1408;border-color:transparent}
 .wsec{display:none}.wsec.on{display:block}
 .case-card{border-radius:18px;padding:1px}
-.case-card .inner{background:linear-gradient(165deg,#1e1e3c,#131324);border-radius:17px;padding:16px 10px;text-align:center;cursor:pointer;border-radius:17px}
+.case-card .inner{background:linear-gradient(165deg,#1e1e3c,#131324);border-radius:17px;padding:16px 10px;text-align:center;cursor:pointer}
 .case-card .inner:active{transform:scale(.97)}
 .case-cap{font-size:10px;color:var(--mut);margin-top:5px}
+.fee-note{background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.5);border-radius:10px;padding:8px 10px;font-size:12px;margin-top:8px;color:#fca5a5}
 nav{position:fixed;bottom:0;left:0;right:0;z-index:70;display:flex;
   background:linear-gradient(180deg,rgba(10,10,20,.94),rgba(6,6,14,.98));
   border-top:1px solid var(--line2);padding-bottom:env(safe-area-inset-bottom)}
@@ -146,6 +156,7 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
 #ovMsg{display:none;background:rgba(239,68,68,.15);border:1px solid var(--red);color:#fca5a5;border-radius:12px;padding:10px;font-size:13px;margin-top:12px}
 #toast{position:fixed;bottom:128px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;padding:11px 22px;border-radius:22px;font-weight:800;display:none;z-index:200;white-space:nowrap;max-width:92vw;box-shadow:0 8px 24px rgba(34,197,94,.4)}
 #toast.err{background:linear-gradient(135deg,#ef4444,#b91c1c)}
+.adm-cmt{color:#6ee7b7;font-size:12px;margin-top:4px;background:rgba(16,185,129,.1);border-radius:8px;padding:6px 8px}
 </style>
 </head>
 <body>
@@ -164,12 +175,25 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
     <h2 id="greet">Привет, игрок!</h2>
     <p id="homeSub">Твой личный авто-бизнес</p>
     <div class="lvl-wrap">
-      <div class="lvl-top"><span class="lv" id="lvlName">Ур. 1 · Новичок</span><span class="xp" id="lvlXp">0 / 250 XP</span></div>
+      <div class="lvl-top"><span class="lv" id="lvlName">Ур. 1 · Новичок</span><span class="xp" id="lvlXp">0 / 300 XP</span></div>
       <div class="pbar"><div class="pfill" id="lvlFill" style="width:0%"></div></div>
-      <p class="note" style="margin-top:6px">Опыт капает с каждого заказа. Уровень вверх — бонус ⭐</p>
     </div>
     <div class="tip"><div class="mi">🧑‍🔧</div><div id="mechTip"></div></div>
     <div class="haggle"><div class="hi">🤝</div><div id="haggleBanner">Перекуп заглянул на рынок…</div></div>
+    <div class="promo"><div class="pi">📣</div><div id="promoBanner">Позови друга — оба получите по 50 ⭐!</div></div>
+  </div>
+  <div class="panel">
+    <h2>Пригласи друга</h2>
+    <p class="note">За каждого друга по твоей ссылке: <b class="star">+50 ⭐</b> тебе и <b class="star">+50 ⭐</b> ему.</p>
+    <div class="ref-box">
+      Твой код: <b id="refCode">—</b>
+      <div class="code-box" id="refCodeBox">—</div>
+    </div>
+    <div class="row">
+      <button class="btn btn-grn" onclick="shareRef()">📢 Пригласить друга</button>
+      <button class="btn btn-dark" onclick="copyRef()">📋 Копировать</button>
+    </div>
+    <div class="statline" style="margin-top:10px"><span>Друзей приглашено</span><b id="refCount">0</b></div>
   </div>
   <div id="homeOffer"></div>
   <div class="stat-grid">
@@ -186,7 +210,8 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
     <h2>Курс обмена</h2>
     <div class="statline"><span>1 ⭐ → ₽</span><b>2 ₽</b></div>
     <div class="statline"><span>1 ₽ → ⭐</span><b>0,5 ⭐</b></div>
-    <p class="note" style="margin-top:8px">Звёзды добываются игрой: дневной бонус и задания. Приз кейса всегда близок к его цене: 60–150% стоимости кейса в ₽.</p>
+    <div class="fee-note">⚠️ Комиссия вывода 10%: заявил 1000 ₽ → на карту придёт 900 ₽.</div>
+    <p class="note" style="margin-top:8px">Звёзды добываются игрой: дневной бонус, задания и друзья. Приз кейса — от 50% до 140% его цены.</p>
   </div>
   <div class="panel">
     <h2>Последние события</h2>
@@ -196,7 +221,7 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
 
 <section class="page" id="page-cases">
   <button class="btn-back" onclick="switchTab('home')">← Назад</button>
-  <div class="panel"><p class="note">📦 Внутри — только транспорт и детали. Звёзды не выпадают. Приз всегда близок к цене кейса: 60–150% его стоимости.</p></div>
+  <div class="panel"><p class="note">📦 Внутри — только транспорт и детали. Звёзды не выпадают. Приз всегда в диапазоне 50–140% цены кейса.</p></div>
   <div class="grid2" id="casesGrid"></div>
 </section>
 
@@ -204,7 +229,7 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   <button class="btn-back" onclick="switchTab('home')">← Назад</button>
   <div class="panel">
     <h2>Доска заказов</h2>
-    <p class="note">Работа для транспорта: курьеры для великов и самокатов, такси и грузы — для авто. Требования указаны на каждом заказе.</p>
+    <p class="note">Работа для транспорта: курьеры для великов и самокатов, такси и грузы — для авто.</p>
     <div id="ordersList"></div>
   </div>
   <div class="panel">
@@ -218,7 +243,7 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   <div class="panel" id="cdHead"></div>
   <div class="panel">
     <h2>Слоты деталей</h2>
-    <p class="note">Поставь деталь из инвентаря — она даёт бонус, пока стоит в слоте. Снять — вернётся в инвентарь.</p>
+    <p class="note">Поставь деталь из инвентаря — она даёт бонус, пока стоит в слоте.</p>
     <div id="cdSlots"></div>
   </div>
   <div class="panel">
@@ -250,7 +275,7 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   <button class="btn-back" onclick="switchTab('home')">← Назад</button>
   <div class="panel">
     <h2>Твой гараж</h2>
-    <p class="note">Нажми на транспорт — откроется карточка со слотами деталей, тюнингом и продажей.</p>
+    <p class="note">Нажми на транспорт — откроется карточка со слотами, тюнингом и продажей.</p>
     <div class="grid2" id="garageGrid"></div>
   </div>
   <div class="panel">
@@ -258,7 +283,7 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
     <div class="pbar" style="margin-top:8px"><div class="pfill pfill2" id="pfill" style="width:0%"></div></div>
     <div class="grid2" id="partsList" style="grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px"></div>
     <button class="btn" id="buildBtn" style="margin-top:12px" onclick="buildVehicle()">🔧 Собрать транспорт</button>
-    <p class="note" style="margin-top:8px">Цена сборки = стоимость вложенных деталей +10%. Дешёвые детали → велик или самокат, дорогие → мотоцикл или авто.</p>
+    <p class="note" style="margin-top:8px">Цена сборки = стоимость вложенных деталей. Дешёвые детали → велик, дорогие → авто.</p>
   </div>
 </section>
 
@@ -272,12 +297,10 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   </div>
   <div class="panel">
     <h2>Выставить на продажу</h2>
-    <p class="note">Укажи свою цену рядом с вещью и нажми «Выставить».</p>
     <div id="marketCreate"></div>
   </div>
   <div class="panel">
     <h2>Быстрая продажа (−10%)</h2>
-    <p class="note">Сразу по базовой цене за вычетом комиссии — деньги сразу в кошелёк.</p>
     <div id="mySellables"></div>
   </div>
 </section>
@@ -302,7 +325,7 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
     </div>
     <div class="panel">
       <h2>Пополнение кошелька</h2>
-      <p class="note">Минимум — 25 ₽. Переведи сумму на карту и заполни заявку: ФИО, с карты которой пришёл перевод, и сумму. Админ сверит.</p>
+      <p class="note">Минимум — 25 ₽. Переведи сумму на карту и заполни заявку.</p>
       <div class="card-box" id="cardDisplay"></div>
       <button class="btn btn-dark" style="margin-top:8px" onclick="copyCard()">📋 Скопировать номер карты</button>
       <div class="chips">
@@ -320,10 +343,11 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   <div class="wsec" id="wsec-out">
     <div class="panel">
       <h2>Вывод на карту</h2>
-      <p class="note">Минимум 250 ₽. Укажи ФИО получателя — как в банковской карте. Админ проверит заявку и может скорректировать сумму.</p>
+      <p class="note">Минимум 250 ₽. Укажи ФИО получателя — как в банковской карте.</p>
+      <div class="fee-note">Комиссия за вывод — 10%. На карту придёт <b id="feePreview">—</b></div>
       <input type="text" id="wFio" class="input-field" placeholder="ФИО получателя">
       <input type="text" id="wCard" class="input-field" placeholder="Номер карты (16 цифр)" inputmode="numeric">
-      <input type="number" id="wAmount" class="input-field" placeholder="Сумма, ₽ (минимум 250)" inputmode="numeric">
+      <input type="number" id="wAmount" class="input-field" placeholder="Сумма, ₽ (минимум 250)" inputmode="numeric" oninput="updFeePreview()">
       <button class="btn" style="margin-top:10px" onclick="withdraw()">Вывести</button>
       <div id="wdStatus" style="margin-top:8px;font-size:13px;color:var(--mut)"></div>
     </div>
@@ -353,12 +377,12 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
   </div>
   <div class="panel">
     <h2>Пополнения</h2>
-    <p class="note">Сумму в заявке можно исправить перед зачислением — впиши реальную сумму перевода.</p>
+    <p class="note">Сумму можно исправить перед зачислением. Оставь игроку сообщение — он его увидит.</p>
     <div id="adminDeps"></div>
   </div>
   <div class="panel">
     <h2>Выводы</h2>
-    <p class="note">Сумму выплаты тоже можно поправить: меньше — остаток вернётся игроку.</p>
+    <p class="note">Сумму выплаты можно поправить: меньше — остаток вернётся игроку.</p>
     <div id="adminReqs" style="margin-top:6px"></div>
   </div>
 </section>
@@ -400,12 +424,15 @@ nav .tab.active .ti{filter:none;transform:translateY(-2px);text-shadow:0 0 12px 
 var ADMIN_PASS="11973";
 var ADMIN_CARD="2202 2092 2642 7861";
 var MARKET_FEE=0.10;
-var EX_STAR_TO_RUB=2;   /* 1 ⭐ = 2 ₽ */
-var EX_RUB_TO_STAR=0.5; /* 1 ₽ = 0,5 ⭐ */
-var DEP_MIN=25;         /* минимум пополнения */
-var WD_MIN=250;         /* минимум вывода */
-var CASE_MIN_PCT=0.6;   /* приз не дешевле 60% цены кейса */
-var CASE_MAX_MULT=1.5;  /* и не дороже 150% */
+var WD_FEE=0.10;
+var EX_STAR_TO_RUB=2;
+var EX_RUB_TO_STAR=0.5;
+var DEP_MIN=25;
+var WD_MIN=250;
+var CASE_MIN_PCT=0.5;
+var CASE_MAX_MULT=1.4;
+var REF_BONUS=50;
+var ADMIN_DEFAULT_CMT="Спасибо, что вы с нами!";
 
 var tg=window.Telegram&&window.Telegram.WebApp?window.Telegram.WebApp:null;
 if(tg){tg.ready();tg.expand();}
@@ -441,18 +468,18 @@ var vehicles=[];
   for(i=0;i<140;i++){p=cp[i];vehicles.push({id:id++,kind:"car",name:brands[i%16]+" "+models[(i*7)%20],price:p,rarity:rarOf(p)})}
 })();
 function vById(id){for(var i=0;i<vehicles.length;i++)if(vehicles[i].id===id)return vehicles[i];return vehicles[0]}
-/* ближайшие по цене виды транспорта с весами, прижатыми к целевой цене */
 function pickVehicleNear(target,n){
+  var t2=target*0.9;
   var sorted=vehicles.slice().sort(function(a,b){
-    return Math.abs(Math.log(a.price/target))-Math.abs(Math.log(b.price/target));
+    return Math.abs(Math.log(a.price/t2))-Math.abs(Math.log(b.price/t2));
   }).slice(0,n);
-  var w=sorted.map(function(x){return 1/(0.08+Math.abs(Math.log(x.price/target)))});
+  var w=sorted.map(function(x){return 1/(0.08+Math.abs(Math.log(x.price/t2)))});
   var tot=0,i;for(i=0;i<w.length;i++)tot+=w[i];
   var x=Math.random()*tot;
   for(i=0;i<sorted.length;i++){if(x<w[i])return sorted[i];x-=w[i]}
   return sorted[0];
 }
-var RAR_INCOME={common:6,rare:20,epic:60,mythic:180};
+var RAR_INCOME={common:3,rare:10,epic:30,mythic:90};
 var RAR_BASE_RUB={common:60,rare:250,epic:900,mythic:4000};
 var RAR_MULT={1:1,2:2.5,3:6,4:14};
 
@@ -513,6 +540,13 @@ var HAGGLE_SALES=[
  "«Быстрее оформим — быстрее деньги»",
  "«Не гони цену, я всё равно скину»"
 ];
+var PROMOS=[
+ "Позови друга по своей ссылке — оба получите по 50 ⭐!",
+ "Друзья копят звёзды быстрее: за каждого приглашённого +50 ⭐.",
+ "Скидывай ссылку в чат — вместе играть выгоднее!",
+ "Каждый твой друг — это +50 ⭐ к твоему бонусу. Зови, не стесняйся!",
+ "Чем больше друзей — тем быстрее до «Божественного» кейса."
+];
 
 var TASKS=[
  {id:"kur5",ic:"🛴",txt:"Выполни 5 заказов курьером",rw:150,p:5,k:"kur"},
@@ -530,10 +564,12 @@ var TASKS=[
  {id:"build1",ic:"🚗",txt:"Собери транспорт из 20 деталей",rw:300,p:1,k:"built"},
  {id:"resell1",ic:"🤝",txt:"Продай вещь перекупщику",rw:100,p:1,k:"reseller"},
  {id:"case10",ic:"📦",txt:"Открой 10 кейсов",rw:200,p:10,k:"cases"},
- {id:"garage3",ic:"🚲",txt:"Собери 3 единицы транспорта в гараже",rw:250,p:3,k:"garage"}
+ {id:"garage3",ic:"🚲",txt:"Собери 3 единицы транспорта в гараже",rw:250,p:3,k:"garage"},
+ {id:"ref1",ic:"📣",txt:"Пригласи первого друга",rw:100,p:1,k:"refs"},
+ {id:"ref3",ic:"👥",txt:"Пригласи трёх друзей",rw:300,p:3,k:"refs"}
 ];
 
-var state={stars:0,cash:0,level:1,xp:0,casesOpened:0,ordersDone:0,garage:[],parts:{},listings:[],listSeq:1,lastBonus:null,bonusStreak:0,doneTasks:{},stats:{kur:0,bike:0,taxi:0,del:0,tow:0,gruz:0,night:0,inter:0,earn:0,tune:0,repairs:0,lots:0,built:0,reseller:0},offer:null,reqs:[],depReqs:[],reqSeq:1,depSeq:1,feeTotal:0,totalDep:0,totalPaid:0,log:[]};
+var state={stars:0,cash:0,level:1,xp:0,casesOpened:0,ordersDone:0,garage:[],parts:{},listings:[],listSeq:1,lastBonus:null,bonusStreak:0,doneTasks:{},stats:{kur:0,bike:0,taxi:0,del:0,tow:0,gruz:0,night:0,inter:0,earn:0,tune:0,repairs:0,lots:0,built:0,reseller:0,refs:0},refCode:"",refUsed:false,offer:null,reqs:[],depReqs:[],reqSeq:1,depSeq:1,feeTotal:0,totalDep:0,totalPaid:0,log:[]};
 function save(){try{localStorage.setItem("automarket_v7",JSON.stringify(state))}catch(e){}}
 function load(){
   try{var s=JSON.parse(localStorage.getItem("automarket_v7"));if(s)for(var k in state)if(s[k]!==undefined)state[k]=s[k]}catch(e){}
@@ -546,7 +582,22 @@ function load(){
   if(!state.log)state.log=[];
   if(!state.level)state.level=1;
   if(state.xp===undefined)state.xp=0;
-  if(!state.stats)state.stats={kur:0,bike:0,taxi:0,del:0,tow:0,gruz:0,night:0,inter:0,earn:0,tune:0,repairs:0,lots:0,built:0,reseller:0};
+  if(!state.stats)state.stats={kur:0,bike:0,taxi:0,del:0,tow:0,gruz:0,night:0,inter:0,earn:0,tune:0,repairs:0,lots:0,built:0,reseller:0,refs:0};
+  if(!state.refCode){
+    var abc="ABCDEFGHJKLMNPQRSTUVWXYZ23456789",cd="",i;
+    for(i=0;i<6;i++)cd+=abc[Math.floor(Math.random()*abc.length)];
+    state.refCode=cd;
+  }
+  try{
+    var params=new URLSearchParams(window.location.search);
+    var ref=params.get("ref");
+    if(ref&&!state.refUsed&&state.stars===0&&state.casesOpened===0){
+      state.refUsed=true;
+      state.stars+=REF_BONUS;
+      addLog("🎁 Бонус по приглашению друга: +"+REF_BONUS+" ⭐ (код "+ref+")","gain");
+      setTimeout(function(){toast("🎁 Приветственный бонус: +"+REF_BONUS+" ⭐")},600);
+    }
+  }catch(e){}
 }
 function newVehicle(id){return{vid:id,wear:100,eng:0,tire:0,trunk:0,busyUntil:null,ord:null,slots:{eng:null,tire:null,trunk:null,brake:null}}}
 function addLog(text,type){
@@ -555,7 +606,7 @@ function addLog(text,type){
 }
 
 /* --- уровни --- */
-function lvlNeed(l){return 150+l*100}
+function lvlNeed(l){return 300+l*150}
 function addXp(amount){
   state.xp+=amount;
   var ups=0;
@@ -606,14 +657,14 @@ function updateUI(){
   save();
 }
 function mechTip(){
-  if(state.casesOpened===0)return"Звёзд на старте нет — забери дневной бонус (+50 ⭐) и выполни задания. Призы кейсов всегда близки к их цене.";
+  if(state.casesOpened===0)return"Звёзд на старте нет — забери дневной бонус (+50 ⭐), выполни задания и позови друга (+50 ⭐).";
   if(partsGot()<20)return"Для сборки нужны 20 РАЗНЫХ деталей. Дубликаты не считаются — лишние продай перекупам.";
-  if(state.garage.length===0)return"Деталей хватает — иди в гараж и жми «Собрать транспорт». Дешёвые детали дадут велик, дорогие — авто.";
+  if(state.garage.length===0)return"Деталей хватает — иди в гараж и жми «Собрать транспорт».";
   if(state.ordersDone===0)return"Курьер и велокурьер доступны даже велику. «Курьер на самокате» — самый короткий заказ: 10 минут.";
   if(state.cash<250)return"До минимума для вывода (250 ₽) осталось накопить. Ночные смены и междугородний рейс платят больше всех.";
-  return"Совет: если перекуп предложил цену — сравни с быстрой продажей. Иногда его офферта даже выгоднее, чем −10% комиссии.";
+  return"Совет: учти комиссию 10% при выводе — заявляй сумму с запасом.";
 }
-var hagIdx=0;
+var hagIdx=0,promoIdx=0;
 function renderHome(){
   document.getElementById("greet").textContent=userName?"Привет, "+userName+"!":"Привет, игрок!";
   document.getElementById("mechTip").textContent="Механик: "+mechTip();
@@ -624,6 +675,9 @@ function renderHome(){
   document.getElementById("lvlName").textContent="Ур. "+state.level+" · "+lvlName(state.level);
   document.getElementById("lvlXp").textContent=state.xp.toLocaleString("ru")+" / "+lvlNeed(state.level).toLocaleString("ru")+" XP";
   document.getElementById("lvlFill").style.width=Math.min(100,state.xp/lvlNeed(state.level)*100)+"%";
+  document.getElementById("refCode").textContent=state.refCode;
+  document.getElementById("refCodeBox").textContent=state.refCode;
+  document.getElementById("refCount").textContent=state.stats.refs;
   var steps="",busyN=0,i;
   for(i=0;i<state.garage.length;i++)if(state.garage[i].busyUntil&&state.garage[i].busyUntil>Date.now())busyN++;
   function step(ic,txt,done){steps+='<div class="step'+(done?" done":"")+'"><div class="si">'+(done?"✅":ic)+'</div><div>'+txt+'</div></div>'}
@@ -635,6 +689,8 @@ function renderHome(){
   else step("🚲","В гараже: "+state.garage.length+". Поставь детали в слоты и качай тюнинг.",true);
   if(state.garage.length>0&&state.ordersDone===0)step("💼","Отправь транспорт на заказ — он привезёт ₽ и опыт.",false);
   else if(state.ordersDone>0)step("💼","Выполнено заказов: "+state.ordersDone+". Держи транспорт в работе!",true);
+  if(state.stats.refs===0)step("📣","Позови друга по своей ссылке — +50 ⭐ обоим.",false);
+  else step("📣","Друзей приглашено: "+state.stats.refs+". За каждого — +50 ⭐.",true);
   if(state.cash<250)step("💸","Накопи 250 ₽ — минимум для вывода на карту.",false);
   else step("💸","Можно выводить! Заявка — в разделе Кошелёк.",true);
   if(busyN>0)steps+='<div class="step"><div class="si">⏳</div><div>Прямо сейчас в пути: '+busyN+' — деньги придут автоматически.</div></div>';
@@ -652,6 +708,27 @@ setInterval(function(){
   var el=document.getElementById("haggleBanner");
   if(el)el.innerHTML=HAGGLE_PHRASES[hagIdx];
 },12000);
+setInterval(function(){
+  promoIdx=(promoIdx+1)%PROMOS.length;
+  var el=document.getElementById("promoBanner");
+  if(el)el.textContent=PROMOS[promoIdx];
+},18000);
+
+/* --- приглашение друзей --- */
+function refLink(){
+  var base=window.location.href.split("?")[0].split("#")[0];
+  return base+"?ref="+state.refCode;
+}
+function shareRef(){
+  var txt="🚗 Заходи в АвтоРынок по моей ссылке — получишь +50 ⭐ на старте! "+refLink();
+  if(navigator.share){navigator.share({title:"АвтоРынок",text:txt}).catch(function(){});}
+  else copyRef();
+}
+function copyRef(){
+  var l=refLink();
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(l).then(function(){toast("Ссылка скопирована!")},function(){});
+  else toast("Скопируй адрес из строки браузера",true);
+}
 
 /* --- кейсы --- */
 function renderCases(){
@@ -669,27 +746,13 @@ function renderCases(){
   for(i=0;i<cs.length;i++)(function(idx){cs[idx].onclick=function(){showCase(cases[idx])}})(i);
 }
 var currentCase=null,currentPrize=null,opened=false;
-function rollPartRarity(P){
-  var r=Math.random(),m,e;
-  if(P>=100000){m=0.05;e=0.18}
-  else if(P>=20000){m=0.03;e=0.12}
-  else if(P>=2000){m=0.015;e=0.07}
-  else if(P>=400){m=0.006;e=0.03}
-  else{m=0.002;e=0.015}
-  if(r<m)return 4;
-  if(r<m+e)return 3;
-  if(r<m+e+0.28)return 2;
-  return 1;
-}
 function rollPrize(c){
   var R=c.rub,lo=Math.round(R*CASE_MIN_PCT),hi=Math.round(R*CASE_MAX_MULT);
   var r=Math.random();
-  /* 25% — транспорт: 14 ближайших по цене к стоимости кейса, веса прижаты к центру */
   if(r<0.25){
     var v=pickVehicleNear(R,14);
     return{isVeh:true,vid:v.id,name:v.name,value:v.price,rarity:v.rarity,emoji:KIND_EMOJI[v.kind]};
   }
-  /* 75% — деталь: 60–150% цены кейса, в среднем ровно цена */
   var nm=PART_NAMES[Math.floor(Math.random()*PART_NAMES.length)];
   var val=Math.round(R*(CASE_MIN_PCT+Math.random()*(CASE_MAX_MULT-CASE_MIN_PCT)));
   if(val<lo)val=lo;if(val>hi)val=hi;
@@ -703,7 +766,7 @@ function showCase(c){
   document.getElementById("ovPrice").textContent=c.price.toLocaleString("ru")+" ⭐ · приз: "+c.minRub.toLocaleString("ru")+"–"+c.maxRub.toLocaleString("ru")+" ₽";
   var msg=document.getElementById("ovMsg");
   if(state.stars<c.price){
-    msg.textContent="❌ Не хватает "+(c.price-state.stars).toLocaleString("ru")+" ⭐. Звёзды даёт бонус и задания.";
+    msg.textContent="❌ Не хватает "+(c.price-state.stars).toLocaleString("ru")+" ⭐. Звёзды даёт бонус, задания и друзья.";
     msg.style.display="block";
     document.getElementById("ovOpen").style.display="none";
   }else{
@@ -830,7 +893,7 @@ function buildVehicle(){
     b=state.parts[PART_NAMES[i]];
     for(ri=4;ri>=1;ri--){if(b[ri]>0){sum+=partValue(ri);b[ri]--;break}}
   }
-  var price=Math.round(sum*1.1);
+  var price=Math.round(sum*0.95);
   var best=pickVehicleNear(price,1);
   state.garage.push(newVehicle(best.id));
   state.stats.built++;
@@ -1043,7 +1106,7 @@ setInterval(function(){
     if(g.busyUntil&&g.busyUntil<=Date.now()){completeOrder(g);changed=true}
   }
   for(i=state.listings.length-1;i>=0;i--){
-    if(Math.random()<0.08){
+    if(Math.random()<0.03){
       var L=state.listings[i];
       var payout=Math.round(L.price*(1-MARKET_FEE));
       state.cash+=payout;
@@ -1088,12 +1151,12 @@ function genOffer(){
     var gc=state.garage[pick.idx],v=vById(gc.vid);
     base=Math.round(v.price*(gc.wear/100));
     name=KIND_EMOJI[v.kind]+" "+v.name;
-    state.offer={kind:"veh",idx:pick.idx,price:Math.round(base*(0.8+Math.random()*0.15)),buyer:buyer,phrase:phrase,exp:Date.now()+5*60000};
+    state.offer={kind:"veh",idx:pick.idx,price:Math.round(base*(0.75+Math.random()*0.15)),buyer:buyer,phrase:phrase,exp:Date.now()+5*60000};
   }else{
     var br=bestRarOf(pick.name);
     base=partValue(br);
     name=partEmoji(pick.name)+" "+pick.name;
-    state.offer={kind:"part",ref:pick.name,price:Math.round(base*(0.8+Math.random()*0.15)),buyer:buyer,phrase:phrase,exp:Date.now()+5*60000};
+    state.offer={kind:"part",ref:pick.name,price:Math.round(base*(0.75+Math.random()*0.15)),buyer:buyer,phrase:phrase,exp:Date.now()+5*60000};
   }
   state.offer.name=name;
   addLog("🤝 "+buyer+" предлагает купить: "+name+" за "+state.offer.price.toLocaleString("ru")+" ₽","info");
@@ -1142,17 +1205,17 @@ setInterval(function(){
     if(document.getElementById("page-market").classList.contains("active"))renderMarket();
   }
 },15000);
-setInterval(genOffer,60000);
+setInterval(genOffer,90000);
 
 /* --- рынок --- */
 function goListingCar(idx){cdIdx=idx;switchTab("market");renderMarket()}
 function renderMarket(){
   renderOffer("marketOffer");
   var h="",i;
-  if(!state.listings.length)h='<p class="note">Объявлений пока нет. Выстави свою вещь ниже — перекупщики их выкупают.</p>';
+  if(!state.listings.length)h='<p class="note">Объявлений пока нет. Выстави свою вещь ниже — перекупщики их выкупают, но не сразу.</p>';
   else for(i=0;i<state.listings.length;i++){
     var L=state.listings[i];
-    h+='<div class="req"><b>🏪 Лот №'+L.id+'</b> · '+L.name+'<br><b class="cash">'+L.price.toLocaleString("ru")+' ₽</b> · выставлено: '+L.ts+'<br><span class="note">Ожидает покупателя (перекупы заглядывают). При продаже: −10% комиссии.</span><br><button class="no" onclick="cancelListing('+L.id+')">Снять с продажи</button></div>';
+    h+='<div class="req"><b>🏪 Лот №'+L.id+'</b> · '+L.name+'<br><b class="cash">'+L.price.toLocaleString("ru")+' ₽</b> · выставлено: '+L.ts+'<br><span class="note">При продаже: −10% комиссии.</span><br><button class="no" onclick="cancelListing('+L.id+')">Снять с продажи</button></div>';
   }
   document.getElementById("marketListings").innerHTML=h;
   var cr="",j;
@@ -1334,10 +1397,14 @@ function makeDeposit(){
   if(fio.length<3){st.textContent="❌ Укажи ФИО, с карты которого придёт перевод.";return}
   if(!amount||amount<DEP_MIN){st.textContent="❌ Минимум — "+DEP_MIN+" ₽.";return}
   state.depReqs.unshift({id:state.depSeq++,user:userName||"Игрок",fio:fio,amount:amount,status:"Ожидает проверки",ts:new Date().toLocaleString("ru")});
-  st.textContent="✅ Заявка №"+(state.depSeq-1)+" создана: "+fio+", "+amount.toLocaleString("ru")+" ₽. Админ сверит перевод и зачислит (сумму может скорректировать).";
+  st.textContent="✅ Заявка №"+(state.depSeq-1)+" создана: "+fio+", "+amount.toLocaleString("ru")+" ₽. Админ сверит перевод и зачислит.";
   addLog("Заявка на пополнение: "+amount.toLocaleString("ru")+" ₽","info");
   document.getElementById("depFio").value="";document.getElementById("depAmount").value="";
   save();renderReqs();
+}
+function updFeePreview(){
+  var n=parseInt(document.getElementById("wAmount").value,10);
+  document.getElementById("feePreview").textContent=n&&n>0?(Math.round(n*(1-WD_FEE)).toLocaleString("ru")+" ₽ (из "+n.toLocaleString("ru")+" ₽)"):"—";
 }
 function withdraw(){
   var digits=document.getElementById("wCard").value.replace(/\D/g,"");
@@ -1348,30 +1415,35 @@ function withdraw(){
   if(digits.length!==16){st.textContent="❌ Нужны 16 цифр карты.";return}
   if(!amount||amount<WD_MIN){st.textContent="❌ Минимум — "+WD_MIN+" ₽.";return}
   if(amount>state.cash){st.textContent="❌ Недостаточно средств.";return}
+  var payout=Math.round(amount*(1-WD_FEE));
   state.cash-=amount;
-  state.reqs.unshift({id:state.reqSeq++,user:userName||"Игрок",fio:fio,card:digits,amount:amount,status:"В обработке",ts:new Date().toLocaleString("ru")});
-  st.textContent="✅ Заявка №"+(state.reqSeq-1)+" отправлена админу.";
-  addLog("Заявка на вывод: "+amount.toLocaleString("ru")+" ₽","spend");
+  state.reqs.unshift({id:state.reqSeq++,user:userName||"Игрок",fio:fio,card:digits,amount:amount,payout:payout,status:"В обработке",ts:new Date().toLocaleString("ru")});
+  st.textContent="✅ Заявка №"+(state.reqSeq-1)+" создана. На карту придёт "+payout.toLocaleString("ru")+" ₽ (комиссия 10%).";
+  addLog("Заявка на вывод: "+amount.toLocaleString("ru")+" ₽ (к выплате "+payout.toLocaleString("ru")+" ₽)","spend");
   document.getElementById("wFio").value="";document.getElementById("wCard").value="";document.getElementById("wAmount").value="";
   save();renderReqs();updateUI();
 }
 function cardFmt(d){return String(d).replace(/(\d{4})(?=\d)/g,"$1 ")}
 
-/* --- админ-панель с редактируемыми суммами --- */
+/* --- заявки игрока (с комментариями админа) --- */
 function renderReqs(){
   var h="";
   state.depReqs.forEach(function(r){
     var col=r.status==="Зачислен"?"#22c55e":(r.status==="Отклонён"?"#ef4444":"#fbbf24");
     var fin=r.finalAmount!==undefined?'<br>Зачислено фактически: <b class="cash">'+r.finalAmount.toLocaleString("ru")+' ₽</b>':'';
-    h+='<div class="req">💳 Пополнение №'+r.id+' — <b style="color:'+col+'">'+r.status+'</b><br>От: <b>'+r.fio+'</b><br>Заявлено: <b class="cash">'+r.amount.toLocaleString("ru")+' ₽</b>'+fin+'<br><span class="note">'+r.ts+'</span></div>';
+    var cmt=r.adminCmt?'<div class="adm-cmt">💬 Админ: '+r.adminCmt+'</div>':'';
+    h+='<div class="req">💳 Пополнение №'+r.id+' — <b style="color:'+col+'">'+r.status+'</b><br>От: <b>'+r.fio+'</b><br>Заявлено: <b class="cash">'+r.amount.toLocaleString("ru")+' ₽</b>'+fin+cmt+'<br><span class="note">'+r.ts+'</span></div>';
   });
   state.reqs.forEach(function(r){
     var col=r.status==="Выплачено"?"#22c55e":(r.status==="Отклонено"?"#ef4444":"#fbbf24");
     var fin=r.finalAmount!==undefined?'<br>Выплачено фактически: <b class="cash">'+r.finalAmount.toLocaleString("ru")+' ₽</b>':'';
-    h+='<div class="req">💸 Вывод №'+r.id+' — <b style="color:'+col+'">'+r.status+'</b><br>Получатель: <b>'+r.fio+'</b><br>Карта: <b>'+cardFmt(r.card)+'</b><br>Заявлено: <b class="cash">'+r.amount.toLocaleString("ru")+' ₽</b>'+fin+'<br><span class="note">'+r.ts+'</span></div>';
+    var cmt=r.adminCmt?'<div class="adm-cmt">💬 Админ: '+r.adminCmt+'</div>':'';
+    h+='<div class="req">💸 Вывод №'+r.id+' — <b style="color:'+col+'">'+r.status+'</b><br>Получатель: <b>'+r.fio+'</b><br>Карта: <b>'+cardFmt(r.card)+'</b><br>Заявлено: <b class="cash">'+r.amount.toLocaleString("ru")+' ₽</b>'+(r.payout!==undefined?'<br>К выплате (−10%): <b>'+r.payout.toLocaleString("ru")+' ₽</b>':'')+fin+cmt+'<br><span class="note">'+r.ts+'</span></div>';
   });
   document.getElementById("myReqs").innerHTML=h||'<p class="note">Заявок нет</p>';
 }
+
+/* --- админ-панель с комментариями --- */
 function renderAdmin(){
   document.getElementById("admCash").textContent=state.cash.toLocaleString("ru")+" ₽";
   document.getElementById("admStars").textContent=state.stars.toLocaleString("ru")+" ⭐";
@@ -1383,55 +1455,71 @@ function renderAdmin(){
   document.getElementById("adminDeps").innerHTML=pend.length?pend.map(function(r){
     return '<div class="req">№'+r.id+' | '+r.user+'<br>Перевод от: <b>'+r.fio+'</b><br>Заявлено: <b class="cash">'+r.amount.toLocaleString("ru")+' ₽</b><br><span class="note">'+r.ts+'</span><br>'
       +'<span style="font-size:11px;color:#8aa">Реальная сумма:</span><br><input type="number" id="admAmt-'+r.id+'" class="amt-in" value="'+r.amount+'" inputmode="numeric"> ₽<br>'
+      +'<input type="text" id="admCmt-'+r.id+'" class="cmt-in" placeholder="Сообщение игроку (напиши своё)">'
+      +'<button class="btn-sm" onclick="fillCmt('+r.id+')">Вставить «'+ADMIN_DEFAULT_CMT+'»</button><br>'
       +'<button class="ok" onclick="admDep('+r.id+',1)">Зачислить</button><button class="no" onclick="admDep('+r.id+',0)">Отклонить</button></div>';
   }).join(""):'<p class="note">Новых нет</p>';
   var wq=state.reqs.filter(function(r){return r.status==="В обработке"});
   document.getElementById("adminReqs").innerHTML=wq.length?wq.map(function(r){
-    return '<div class="req">№'+r.id+' | '+r.user+'<br>Получатель: <b>'+r.fio+'</b><br>Карта: <b>'+cardFmt(r.card)+'</b><br>Заявлено: <b class="cash">'+r.amount.toLocaleString("ru")+' ₽</b><br><span class="note">'+r.ts+'</span><br>'
-      +'<span style="font-size:11px;color:#8aa">Сумма выплаты:</span><br><input type="number" id="admAmt-'+r.id+'" class="amt-in" value="'+r.amount+'" inputmode="numeric"> ₽<br>'
+    return '<div class="req">№'+r.id+' | '+r.user+'<br>Получатель: <b>'+r.fio+'</b><br>Карта: <b>'+cardFmt(r.card)+'</b><br>Заявлено: <b class="cash">'+r.amount.toLocaleString("ru")+' ₽</b> · к выплате: <b>'+r.payout.toLocaleString("ru")+' ₽</b><br><span class="note">'+r.ts+'</span><br>'
+      +'<span style="font-size:11px;color:#8aa">Сумма выплаты:</span><br><input type="number" id="admAmt-'+r.id+'" class="amt-in" value="'+r.payout+'" inputmode="numeric"> ₽<br>'
+      +'<input type="text" id="admCmt-'+r.id+'" class="cmt-in" placeholder="Сообщение игроку (напиши своё)">'
+      +'<button class="btn-sm" onclick="fillCmt('+r.id+')">Вставить «'+ADMIN_DEFAULT_CMT+'»</button><br>'
       +'<button class="ok" onclick="adminDecide('+r.id+',1)">Выплатил</button><button class="no" onclick="adminDecide('+r.id+',0)">Отклонить</button></div>';
   }).join(""):'<p class="note">Новых нет</p>';
+}
+function fillCmt(id){
+  var el=document.getElementById("admCmt-"+id);
+  if(el)el.value=ADMIN_DEFAULT_CMT;
+}
+function getCmt(id){
+  var el=document.getElementById("admCmt-"+id);
+  return el?el.value.trim().slice(0,200):"";
 }
 function admDep(id,ok){
   for(var i=0;i<state.depReqs.length;i++)if(state.depReqs[i].id===id){
     var r=state.depReqs[i];
+    var cmt=getCmt(id);
     if(ok){
       var el=document.getElementById("admAmt-"+id);
       var amt=parseInt(el?el.value:r.amount,10);
       if(!amt||amt<0)amt=0;
-      r.finalAmount=amt;
-      r.status="Зачислен";
-      state.totalDep+=amt;
-      state.cash+=amt;
+      r.finalAmount=amt;r.status="Зачислен";
+      if(cmt)r.adminCmt=cmt;
+      state.totalDep+=amt;state.cash+=amt;
       if(amt!==r.amount)addLog("Пополнение №"+r.id+": зачислено "+amt.toLocaleString("ru")+" ₽ (в заявке было "+r.amount.toLocaleString("ru")+" ₽)","gain");
       else addLog("Пополнение зачислено: +"+amt.toLocaleString("ru")+" ₽","gain");
-    }else{r.status="Отклонён";addLog("Пополнение №"+r.id+" отклонено админом","info")}
+      if(cmt)addLog("💬 Сообщение от админа: «"+cmt+"»","info");
+    }else{r.status="Отклонён";if(cmt)r.adminCmt=cmt;addLog("Пополнение №"+r.id+" отклонено админом","info")}
   }
-  save();renderAdmin();updateUI();
+  save();renderAdmin();updateUI();renderReqs();
 }
 function adminDecide(id,ok){
   for(var i=0;i<state.reqs.length;i++)if(state.reqs[i].id===id){
     var r=state.reqs[i];
+    var cmt=getCmt(id);
     if(ok){
       var el=document.getElementById("admAmt-"+id);
-      var amt=parseInt(el?el.value:r.amount,10);
+      var amt=parseInt(el?el.value:r.payout,10);
       if(!amt||amt<0)amt=0;
-      if(amt>r.amount)amt=r.amount; /* выплатить больше, чем списано, нельзя */
-      r.finalAmount=amt;
-      r.status="Выплачено";
+      if(amt>r.payout)amt=r.payout;
+      var diff=r.payout-amt;
+      r.finalAmount=amt;r.status="Выплачено";
+      if(cmt)r.adminCmt=cmt;
       state.totalPaid+=amt;
-      if(amt<r.amount){
-        var back=r.amount-amt;
-        state.cash+=back;
-        addLog("Вывод №"+r.id+": выплачено "+amt.toLocaleString("ru")+" ₽, возврат "+back.toLocaleString("ru")+" ₽ (заявлено было "+r.amount.toLocaleString("ru")+" ₽)","info");
+      if(diff>0){
+        state.cash+=diff;
+        addLog("Вывод №"+r.id+": выплачено "+amt.toLocaleString("ru")+" ₽, возврат "+diff.toLocaleString("ru")+" ₽","info");
       }else addLog("Вывод выплачен: "+amt.toLocaleString("ru")+" ₽","info");
+      if(cmt)addLog("💬 Сообщение от админа: «"+cmt+"»","info");
     }else{
       r.status="Отклонено";
+      if(cmt)r.adminCmt=cmt;
       state.cash+=r.amount;
       addLog("Вывод №"+r.id+" отклонён: возврат "+r.amount.toLocaleString("ru")+" ₽","info");
     }
   }
-  save();renderAdmin();updateUI();
+  save();renderAdmin();updateUI();renderReqs();
 }
 function adminLogin(){
   var p=prompt("Пароль админа:");
